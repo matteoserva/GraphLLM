@@ -79,6 +79,7 @@ class Formatter:
         if not formatter["enable_system"]:
             system_name = "user"
         a = a.replace("{p:bos}\n",formatter["bos"])
+        a = a.replace("{p:bos}",formatter["bos"])
         a = a.replace("\n{p:system}\n",formatter["bor"]+formatter["system_name"]+formatter["eor"])
         a = a.replace("{p:eom}\n",formatter["eom"])
         a = a.replace("\n{p:user}\n",formatter["bor"]+formatter["user_name"]+formatter["eor"])
