@@ -46,13 +46,19 @@ def parse_raw(message):
 
 import re
 
-
 def find_matching_parenthesis(test, start):
-    initial_char = test[start]
-    stack_pos = 1
-    posB = test.find("}",start)
-    return posB
-  
+  stack_pos = 0
+  for i,v in [(i,v) for i,v in enumerate(test[start:]) if v in ["{","}"] ]:
+     if v == "{":
+        stack_pos += 1
+     else:
+        stack_pos -= 1
+     print(i,v,stack_pos)
+     if stack_pos == 0:
+        posB = start + i
+        return posB
+  return -1
+
 def get_next_tag(prompt):
     pattern = re.compile("{[fsdrwv]:")
     b=pattern.search(prompt)
