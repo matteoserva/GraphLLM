@@ -43,7 +43,7 @@ class Client:
                 yield json_decoded["content"]
 
 
-    def _send_prompt_text(self, p, params={}):
+    def _send_prompt_text(self, p, params):
         a={}
         a["n_predict"] = 128*8
         a["stop"] = ["<|end|>","<|im_end|>"]
@@ -65,21 +65,23 @@ class Client:
         #print(a,"\n-\n" + p + "-")
         url = "http://" + self.host + ":8080/completion"
         headers = {"Content-Type": "application/json"}
-        
+
         data = js
         r = requests.post(url,data=data,headers=headers,stream=True)
         g = self.ricevi(r)
         return g
-    
-    def _send_prompt_builder(self,p,params={}):
+
+    def _send_prompt_builder(self,p,params):
         prompt = p._build()
         return self._send_prompt_text(prompt,params)
-    
+
     def apply_format_templates(self,prompt):
         return self.formatter.apply_format_templates(prompt)
-    
-    def send_prompt(self,p):
+
+    def send_prompt(self,p,params=None):
+        if params is None:
+            params = self.parameters
         if isinstance(p,str):
-            return self._send_prompt_text(p,self.parameters)
+            return self._send_prompt_text(p,params)
         else:
-            return self._send_prompt_builder(p,self.parameters)
+            return self._send_prompt_builder(p,params)
