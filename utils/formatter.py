@@ -60,7 +60,7 @@ class Formatter:
             formatter["eor"]="|>\n"
 
             formatter["eom"]="""<|end|>\n"""
-            formatter["system_name"]="user"
+            formatter["system_name"]="system"
             formatter["user_name"]="user"
             formatter["assistant_name"]="assistant"
 
@@ -95,7 +95,7 @@ class Formatter:
         a = a.replace("\n{p:assistant}\n",formatter["bor"]+formatter["assistant_name"]+formatter["eor"])
         return a
     
-    def build_prompt(self,messages):
+    def build_prompt(self,messages,force_system=False):
         formatter = self.f
         skip_bos = False
         skip_final = False
@@ -118,7 +118,10 @@ class Formatter:
         for i in range(len(messages)):
             el = messages[i]
             if el["role"] not in formatter["roles"]:
-                continue
+                if el["role"] == "system" and force_system:
+                     pass
+                else:
+                     continue
 
             if el["role"] == "raw":
                 val = self.apply_format_templates(el["content"])
@@ -129,7 +132,9 @@ class Formatter:
                     if "role_string" in formatter:
                          prompt = prompt + formatter["role_string"][el["role"]]
                     else:
-                         prompt = prompt + formatter["bor"] + (formatter["assistant_name"] if el["role"] == "assistant" else el["role"]) + formatter["eor"]
+                         role_name = formatter["assistant_name"] if el["role"] == "assistant" else el["role"]
+                         role_name = formatter["system_name"] if el["role"] == "system" else role_name
+                         prompt = prompt + formatter["bor"] + role_name + formatter["eor"]
                 prompt = prompt + el["content"]
                 if skip_postamble != i:
                     if "role_eom" in formatter:
@@ -153,7 +158,7 @@ class PromptBuilder:
     def __init__(self):
         self.formatter = Formatter()
         self.sysprompt = "You are a helpful assistant"
-
+        self.force_system=False
         self.reset()
     
     def _check_special_tokens(self,m):
@@ -163,16 +168,20 @@ class PromptBuilder:
             if m.find(el) >= 0:
                 is_raw = True
         return is_raw
-    
+ 
+    def set_param(self,name,val):
+        if name== "force_system":
+             self.force_system = val
+
     def _build(self):
-        
-        text_prompt = self.formatter.build_prompt(self.messages)
+
+        text_prompt = self.formatter.build_prompt(self.messages,force_system=self.force_system)
 #        print(text_prompt)
         return text_prompt
-    
+
     def load_model(self,model_name):
         self.formatter.load_model(model_name)
-    
+
     def reset(self):
         self.messages = []
         self.messages.append({"role":"system","content":self.sysprompt})

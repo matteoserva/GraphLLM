@@ -34,6 +34,7 @@ p,_ = solve_templates(p,[ops_string])
 if True:
     builder = PromptBuilder()
     builder.load_model(client.get_model_name())
+    builder.set_param("force_system",True)
     builder.add_request(p)
     p = builder._build()
 p = client.apply_format_templates(p)
