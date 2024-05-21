@@ -15,14 +15,32 @@ if len(sys.argv) > 1:
 client = Client()
 client.connect()
 
-
 parameters = {}
 parameters["repeat_penalty"] = 1.0
 parameters["penalize_nl"] = False
 parameters["seed"] = -1
 client.set_parameters(parameters)
 
-execRow = StatelessExecutor(client)
+class SequenceExecutor:
+    def __init__(self,client):
+        #builder = PromptBuilder()
+        #builder.load_model(client.get_model_name())
+        #self.builder=builder
+        self.client = client
+        self.execRow = StatelessExecutor(client)
+
+    def load_config(self,cl_args=None):
+        for i,el in enumerate(cl_args):
+            try:
+                cl_args[i] = readfile(el)
+            except:
+                pass
+        for el in cl_args[1:]:
+            cl_args[0].replace("{}",el,1)
+        return cl_args
+
+seqExec = SequenceExecutor(client)
+execRow = seqExec.execRow
 
 def execute_row(inputs,variables={}):
     for i in range(len(inputs)):
@@ -36,9 +54,13 @@ def execute_row(inputs,variables={}):
 
     return res
 
-def execute_list(instructions):
+def execute_list(instructions, cl_args):
     pos = 1
     variables={}
+    for i,v in enumerate(cl_args):
+        idx = i+1
+        stri = "c" + str(idx)
+        variables[stri] = v
     for instr in instructions:
         res = execute_row(instr,variables)
         fn = "/tmp/llm_exec_" + str(pos) + ".txt"
@@ -49,13 +71,11 @@ def execute_list(instructions):
         pos = pos + 1
 
 
-lista_istruzioni = readfile(fn)
-
-for el in sys.argv[2:]:
-    lista_istruzioni = lista_istruzioni.replace("{}",el,1)
+cl_args = seqExec.load_config(sys.argv[1:])
+lista_istruzioni = cl_args[0]
 
 instructions = [ [ es  for es in el.strip().split(" ") if len(es) > 0] for el in lista_istruzioni.strip().split("\n")]
 
-execute_list(instructions)
+execute_list(instructions, cl_args[1:])
 
 
