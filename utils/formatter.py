@@ -5,6 +5,7 @@ class Formatter:
         pass
     
     def load_model(self,model_name):
+#        print("Model name:",model_name)
         formatter={}
         formatter["enable_system"] = True
         if model_name.find("c4ai-command-r") >= 0:
@@ -19,7 +20,6 @@ class Formatter:
             formatter["user_name"]="USER"
             formatter["assistant_name"]="CHATBOT"
 
-            #formatter["row"]=formatter["row1"] + formatter["row2"]
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
@@ -47,16 +47,26 @@ class Formatter:
             formatter["eor"]="\n"
 
             formatter["eom"]="""<end_of_turn>\n"""
-            
             formatter["system_name"]="user"
             formatter["user_name"]="user"
             formatter["assistant_name"]="model"
-            
-            #formatter["row"]=formatter["row1"] + formatter["row2"]
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
-        else:
+        elif model_name.lower().startswith("phi"):
+            formatter={}
+            formatter["bos"]=""
+            formatter["bor"]="<|"
+            formatter["eor"]="|>\n"
+
+            formatter["eom"]="""<|end|>\n"""
+            formatter["system_name"]="user"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
+
+            formatter["enable_system"] = False
+            formatter["roles"] = ["raw","user","assistant"]
+        else: #llama
 
             formatter["bos"]="<|begin_of_text|>" ##non capisco
             formatter["bor"]="<|start_header_id|>"
@@ -65,7 +75,6 @@ class Formatter:
             formatter["eom"]="""<|eot_id|>"""
             #formatter["row"]=formatter["row1"] + formatter["row2"]
             formatter["roles"] = ["raw","system", "user","assistant"]
-            
             formatter["system_name"]="system"
             formatter["user_name"]="user"
             formatter["assistant_name"]="assistant"
@@ -132,7 +141,7 @@ class Formatter:
                 prompt = prompt + formatter["role_string"]["assistant"]
             else:
                 prompt = prompt + formatter["bor"] + formatter["assistant_name"] + formatter["eor"]
-        #print(prompt)
+#        print(prompt)
         return prompt
     
 

@@ -21,7 +21,7 @@ class Client:
 
     def set_parameters(self,parameters):
         self.parameters = parameters
-        
+
     def get_model_name(self):
         return self.model_name
 
