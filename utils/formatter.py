@@ -1,4 +1,4 @@
-from .parser import parse_raw
+from .parser import parse_raw, check_special_tokens
 
 class Formatter:
     def __init__(self):
@@ -162,11 +162,7 @@ class PromptBuilder:
         self.reset()
     
     def _check_special_tokens(self,m):
-        special_tokens = ["{p:bos}","<|START_OF_TURN_TOKEN|>","<BOS_TOKEN>","<|user|>","<|start_header_id|>","{p:user}"]
-        is_raw = False
-        for el in special_tokens:
-            if m.find(el) >= 0:
-                is_raw = True
+        is_raw = check_special_tokens(m)
         return is_raw
  
     def set_param(self,name,val):
@@ -194,7 +190,6 @@ class PromptBuilder:
         m = message
         is_raw = self._check_special_tokens(m)
 
-        #print("-",m)
         if  is_raw:
             try:
                 self.messages = parse_raw(message)

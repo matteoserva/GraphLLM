@@ -1,4 +1,15 @@
 
+raw_tokens = ["<|im_start|>","<|START_OF_TURN_TOKEN|>","<BOS_TOKEN>","<|user|>","<|start_header_id|>"]
+def check_special_tokens(m):
+        special_tokens = ["{p:bos}","<|im_start|>","<|START_OF_TURN_TOKEN|>","<BOS_TOKEN>","<|user|>","<|start_header_id|>","{p:user}"]
+        is_raw = False
+        for el in special_tokens:
+            if m.find(el) >= 0:
+                is_raw = True
+        return is_raw
+
+
+
 def readfile(fn):
     f = open(fn)
     p = f.read()
@@ -8,6 +19,10 @@ def readfile(fn):
 def parse_raw(message):
     token = ""
     res = []
+    for el in raw_tokens:
+         if message.find(el) >= 0:
+               raise Exception("found raw token")
+
     while True:
         m1 = -1
         for el in ["{p:system}\n","{p:user}\n","{p:assistant}\n"]:
