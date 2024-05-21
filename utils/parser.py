@@ -53,7 +53,7 @@ def find_matching_parenthesis(test, start):
         stack_pos += 1
      else:
         stack_pos -= 1
-     print(i,v,stack_pos)
+#     print(i,v,stack_pos)
      if stack_pos == 0:
         posB = start + i
         return posB
