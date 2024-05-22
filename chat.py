@@ -33,9 +33,12 @@ client.set_parameters(parameters)
 
 executor = StatefulExecutor(client)
 executor.print_prompt = len(sys.argv) > 1
+executor.load_config(sys.argv[1:])
 
 for i in range(10):
-    m = get_input(user_prompt[0],user_prompt[1:])
+    prompt_len = executor.get_prompt_len()
+    
+    m = [get_input() for _ in range(prompt_len)]
 
     executor(m)
     executor.print_prompt = False

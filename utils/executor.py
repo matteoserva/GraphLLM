@@ -38,11 +38,20 @@ class StatefulExecutor:
         self.builder=builder
         self.client = client
         self.print_prompt = True
+        self.current_prompt="{}"
 
-    def __call__(self,m):
+    def load_config(self,cl_args=None):
+        new_prompt, _ = solve_templates(self.current_prompt,cl_args)
+        self.current_prompt = new_prompt
+
+    def get_prompt_len(self):
+        return self.current_prompt.count("{}")
+
+    def __call__(self,prompt_args):
         builder = self.builder
         client = self.client
-
+        m ,_ = solve_templates(self.current_prompt,prompt_args)
+        self.current_prompt="{}"
         messages = builder.add_request(m)
         prompt = builder._build()
         if self.print_prompt:
@@ -50,7 +59,7 @@ class StatefulExecutor:
         res = send_chat(builder,client)
         messages = builder.add_response(str(res))
         return res
-    
+
 class SequenceExecutor:
     def __init__(self,client):
 

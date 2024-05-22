@@ -6,7 +6,7 @@ from .common import get_formatter,build_prompt
 from .formatter import Formatter
 
 class Client:
-    def __init__(self,host="matteopc"):
+    def __init__(self,host="minipd"):
         self.host = host
         self.parameters = {}
 

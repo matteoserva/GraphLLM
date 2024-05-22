@@ -133,5 +133,5 @@ def solve_templates(prompt,args_stack=[],variables={}):
         break;
       prompt = prompt.replace("{}", args_stack[0], 1)
       args_stack = args_stack[1:]
-      
+
     return prompt, need_more
