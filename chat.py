@@ -3,7 +3,7 @@ import sys
 from utils.common import get_input,get_formatter,readfile,build_prompt,solve_templates
 from utils.client import Client
 from utils.formatter import Formatter,PromptBuilder
-from utils.executor import StatefulExecutor
+from utils.executor import StatefulExecutor, StatelessExecutor
 
 client = Client()
 client.connect()

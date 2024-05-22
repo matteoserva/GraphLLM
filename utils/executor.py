@@ -17,12 +17,25 @@ class StatelessExecutor:
         builder.load_model(client.get_model_name())
         self.builder=builder
         self.client = client
+        self.current_prompt="{}"
+
+    def load_config(self,cl_args=None):
+        for i,el in enumerate(cl_args):
+            try:
+                cl_args[i] = readfile(el)
+            except:
+                pass
+        new_prompt, _ = solve_templates(self.current_prompt,cl_args)
+        self.current_prompt = new_prompt
+
+    def get_prompt_len(self):
+        return self.current_prompt.count("{}")
 
 
-    def __call__(self,m):
+    def __call__(self,prompt_args):
         builder = self.builder
         client = self.client
-
+        m ,_ = solve_templates(self.current_prompt,prompt_args)
         builder.reset()
         messages = builder.add_request(m)
         prompt = builder._build()
