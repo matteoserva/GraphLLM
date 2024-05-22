@@ -6,8 +6,6 @@ from utils.formatter import Formatter,PromptBuilder
 
 from utils.executor import SequenceExecutor
 
-
-
 fn = "sequences/reddit_eval.txt"
 if len(sys.argv) > 1:
     fn = sys.argv[1]
@@ -22,11 +20,10 @@ parameters["seed"] = -1
 client.set_parameters(parameters)
 
 
-        
 seqExec = SequenceExecutor(client)
 execRow = seqExec.execRow
 cl_args = seqExec.load_config(sys.argv[1:])
-
+print(cl_args)
 seqExec(cl_args[1:])
 
 

@@ -39,7 +39,7 @@ class Client:
             if line:
                 decoded_line = line.decode('utf-8')
                 json_decoded = json.loads(decoded_line[6:])
-                #print(json_decoded)
+#                print(json_decoded)
                 yield json_decoded["content"]
 
 

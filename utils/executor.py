@@ -2,8 +2,8 @@ from .formatter import PromptBuilder
 from .parser import solve_templates
 from .common import readfile
 
-def send_chat(builder,client):
-    r = client.send_prompt(builder)
+def send_chat(builder,client,client_parameters=None):
+    r = client.send_prompt(builder,params=client_parameters)
     ret = ""
     for line in r:
         print(line, end="", flush=True)
@@ -18,6 +18,10 @@ class StatelessExecutor:
         self.builder=builder
         self.client = client
         self.current_prompt="{}"
+        self.client_parameters = None
+
+    def set_client_parameters(self,p):
+        self.client_parameters = p
 
     def load_config(self,cl_args=None):
         for i,el in enumerate(cl_args):
@@ -40,7 +44,7 @@ class StatelessExecutor:
         messages = builder.add_request(m)
         prompt = builder._build()
         print(builder._build(),end="")
-        res = send_chat(builder,client)
+        res = send_chat(builder,client,self.client_parameters)
         messages = builder.add_response(str(res))
         return res
 
@@ -52,6 +56,10 @@ class StatefulExecutor:
         self.client = client
         self.print_prompt = True
         self.current_prompt="{}"
+        self.client_parameters = None
+
+    def set_client_parameters(self,p):
+        self.client_parameters = p
 
     def load_config(self,cl_args=None):
         for i,el in enumerate(cl_args):
@@ -74,7 +82,7 @@ class StatefulExecutor:
         prompt = builder._build()
         if self.print_prompt:
             print(builder._build(),end="")
-        res = send_chat(builder,client)
+        res = send_chat(builder,client,self.client_parameters)
         messages = builder.add_response(str(res))
         return res
 
@@ -83,6 +91,10 @@ class SequenceExecutor:
 
         self.client = client
         self.execRow = StatelessExecutor(client)
+        self.client_parameters = None
+
+    def set_client_parameters(self,p):
+        self.execRow.set_client_parameters(p)
 
     def load_config(self,cl_args=None):
         for i,el in enumerate(cl_args):
@@ -103,9 +115,9 @@ class SequenceExecutor:
             except:
                 pass
         m,_ = solve_templates(inputs[0],inputs[1:],variables)
-        res = self.execRow(m)
+        res = self.execRow([m])
         return res
-    
+
     def _execute_list(self,instructions, cl_args):
         pos = 1
         variables={}
