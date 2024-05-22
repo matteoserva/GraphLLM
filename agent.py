@@ -26,7 +26,7 @@ params["temperature"] = 0.01
 params["seed"] = -1
 params["cache_prompt"] = True
 params["repeat_penalty"] = 1.0
-params["penalize_nl"] = False
+params["penalize_nl"] = True
 
 client = Client()
 client.connect()
@@ -58,12 +58,20 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 p=""
-executor.print_response=False
+executor.print_response="partial"
+
+def clean_response(resp):
+    resp = resp.strip()
+    while "\n\n" in resp:
+       resp = resp.replace("\n\n","\n")
+    resp = resp+"\n"
+    return resp
+
 for i in range(10):
     resp = executor([p])
     executor.print_prompt=False
 #    print(resp,end="")
-    resp = resp.strip()
+    resp = clean_response(resp)
     comando = resp[resp.find("Action:")+7:].split("\n")[0].strip()
     if comando.find("(") >= 0: #forma compatta comando(parametri)
         c1 = comando.split("(")
@@ -72,7 +80,7 @@ for i in range(10):
     else:
         parametri = resp[resp.find("Inputs:")+7:].strip()
 
-    print(resp,end="")
+#    print(resp,end="")
     if comando == "answer":
         print("")
         print(f"{bcolors.WARNING}Risposta: " + parametri + f"{bcolors.ENDC}")
@@ -82,7 +90,7 @@ for i in range(10):
         print("")
         break
     risposta = esegui_comando(comando,parametri)
-    resp2 = "\nObservation: " + risposta + "\nThought: "
+    resp2 = "Observation: " + risposta + "\nThought: "
     print(resp2,end="")
     p = p + resp + resp2
     #print("-"+p+"-")

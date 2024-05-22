@@ -1,9 +1,9 @@
 import inspect
 
 class AgentAnswer():
-	def answer(self, a):
-		"""provides the answer to the user request."""
-		print ("-------------",a)
+	def answer(self, computed_answer):
+		"""outputs the answer to the user request."""
+		print ("-------------",computed_answer)
 		return "Operation complete"
 
 class AgentMath():

@@ -9,7 +9,7 @@ def send_chat(builder,client,client_parameters=None,print_response=True):
         if print_response:
              print(line, end="", flush=True)
         ret = ret + line
-    if print_response:
+    if print_response and print_response != "partial":
         print("")
     return ret
 
