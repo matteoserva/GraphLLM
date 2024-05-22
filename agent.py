@@ -4,6 +4,7 @@ from utils import agent_ops
 from utils.client import Client
 from utils.common import solve_templates
 from utils.formatter import PromptBuilder
+from utils.executor import StatelessExecutor
 
 agent = agent_ops.AgentOps()
 
@@ -15,39 +16,8 @@ f = open(fn)
 p = f.read()
 f.close()
 
-#host="minipd"
-
-
-
-import json
-import requests
-
-
-
-
-
-client = Client()
-client.connect()
-
-ops_string = agent.get_formatted_ops()
-p,_ = solve_templates(p,[ops_string])
-if True:
-    builder = PromptBuilder()
-    builder.load_model(client.get_model_name())
-    builder.set_param("force_system",True)
-    builder.add_request(p)
-    p = builder._build()
-p = client.apply_format_templates(p)
-print(p,end="")
-
-import re
-def esegui_comando(istruzione, parametri):
-    try:
-        res = agent(istruzione,parametri)
-    except Exception as e:
-        res = "Error: " + str(e)
-    return str(res)
-
+#import json
+#import requests
 
 params={}
 params["n_predict"] = 128
@@ -57,8 +27,24 @@ params["seed"] = -1
 params["cache_prompt"] = True
 params["repeat_penalty"] = 1.0
 params["penalize_nl"] = False
-client.set_parameters(params)
-#params["top_k"] = 1
+
+client = Client()
+client.connect()
+
+ops_string = agent.get_formatted_ops()
+
+executor = StatelessExecutor(client)
+executor.set_client_parameters(params)
+executor.load_config(["{}{}"] + sys.argv[1:]+[ops_string])
+executor.builder.set_param("force_system",True)
+
+#import re
+def esegui_comando(istruzione, parametri):
+    try:
+        res = agent(istruzione,parametri)
+    except Exception as e:
+        res = "Error: " + str(e)
+    return str(res)
 
 class bcolors:
     HEADER = '\033[95m'
@@ -71,10 +57,13 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+p=""
+executor.print_response=False
 for i in range(10):
-    resp = client.send_prompt(p)
-    r2 = "".join(resp)
-    resp = r2.strip()
+    resp = executor([p])
+    executor.print_prompt=False
+#    print(resp,end="")
+    resp = resp.strip()
     comando = resp[resp.find("Action:")+7:].split("\n")[0].strip()
     if comando.find("(") >= 0: #forma compatta comando(parametri)
         c1 = comando.split("(")
@@ -87,9 +76,8 @@ for i in range(10):
     if comando == "answer":
         print("")
         print(f"{bcolors.WARNING}Risposta: " + parametri + f"{bcolors.ENDC}")
-
         break;
-    
+
     if resp.find("Answer:")>= 0:
         print("")
         break
@@ -98,4 +86,4 @@ for i in range(10):
     print(resp2,end="")
     p = p + resp + resp2
     #print("-"+p+"-")
-    
+

@@ -2,13 +2,15 @@ from .formatter import PromptBuilder
 from .parser import solve_templates
 from .common import readfile
 
-def send_chat(builder,client,client_parameters=None):
+def send_chat(builder,client,client_parameters=None,print_response=True):
     r = client.send_prompt(builder,params=client_parameters)
     ret = ""
     for line in r:
-        print(line, end="", flush=True)
+        if print_response:
+             print(line, end="", flush=True)
         ret = ret + line
-    print("")
+    if print_response:
+        print("")
     return ret
 
 class StatelessExecutor:
@@ -17,6 +19,8 @@ class StatelessExecutor:
         builder.load_model(client.get_model_name())
         self.builder=builder
         self.client = client
+        self.print_prompt=True
+        self.print_response=True
         self.current_prompt="{}"
         self.client_parameters = None
 
@@ -43,8 +47,9 @@ class StatelessExecutor:
         builder.reset()
         messages = builder.add_request(m)
         prompt = builder._build()
-        print(builder._build(),end="")
-        res = send_chat(builder,client,self.client_parameters)
+        if self.print_prompt:
+            print(builder._build(),end="")
+        res = send_chat(builder,client,self.client_parameters,self.print_response)
         messages = builder.add_response(str(res))
         return res
 
