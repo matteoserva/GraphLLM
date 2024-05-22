@@ -78,12 +78,13 @@ class Formatter:
             formatter["eor"]="|>\n"
 
             formatter["eom"]="""<|end|>\n"""
-            formatter["system_name"]="system"
+            formatter["system_name"]="user"
             formatter["user_name"]="user"
             formatter["assistant_name"]="assistant"
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
+            formatter["role_eom"] = {"user":"<|end|>\n","assistant":"<|end|>\n","system":"\n\n"}
         else: #llama
 
             formatter["bos"]="<|begin_of_text|>" ##non capisco
@@ -117,17 +118,22 @@ class Formatter:
         formatter = self.f
         skip_bos = False
         skip_final = False
+        modifiers = [ {"skip_preamble":False,"skip_postamble":False} for el in messages]
         skip_preamble = -1
         skip_postamble = -1
 
         if messages[0]["role"] == "raw":
             skip_bos = True
             if len(messages) > 1 and messages[1]["role"] == "assistant":
-                skip_preamble = 1
+                modifiers[1]["skip_preamble"] = True
         if messages[-1]["role"] == "raw" or messages[-1]["role"] == "assistant":
             skip_final = True
         if messages[-1]["role"] == "assistant":
+            modifiers[-1]["skip_postamble"] = True
             skip_postamble = len(messages) - 1
+        if messages[0]["role"] == "system" and len(messages) > 1 and force_system:
+            #modifiers[0]["skip_postamble"] = True
+            modifiers[1]["skip_preamble"] = True
 
         prompt=""
         if not skip_bos:
@@ -146,7 +152,7 @@ class Formatter:
                 #print(val,end="")
                 prompt = prompt + val
             else:
-                if skip_preamble != i:
+                if not modifiers[i]["skip_preamble"]:
                     if "role_string" in formatter:
                          prompt = prompt + formatter["role_string"][el["role"]]
                     else:
@@ -154,7 +160,7 @@ class Formatter:
                          role_name = formatter["system_name"] if el["role"] == "system" else role_name
                          prompt = prompt + formatter["bor"] + role_name + formatter["eor"]
                 prompt = prompt + el["content"]
-                if skip_postamble != i:
+                if not modifiers[i]["skip_postamble"]:
                     if "role_eom" in formatter:
                         prompt = prompt + formatter["role_eom"][el["role"]]
                     else:
