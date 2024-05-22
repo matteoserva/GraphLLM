@@ -40,6 +40,22 @@ class Formatter:
 
             formatter["enable_system"] = True
             formatter["roles"] = ["raw","system","user","assistant"]
+        elif model_name.lower().startswith("mistral"):
+            formatter={}
+            formatter["bos"]=""
+            formatter["bor"]=""
+            formatter["eor"]=""
+
+            formatter["eom"]=""
+
+            formatter["system_name"]="system"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
+            formatter["role_string"] = {"user":"[INST]","assistant":"","system":"[INST]"}
+            formatter["role_eom"] = {"user":"[/INST]","assistant":"","system":"[/INST]"} 
+
+            formatter["enable_system"] = False
+            formatter["roles"] = ["raw","user","assistant"]
         elif model_name.startswith("gemma"):
             formatter={}
             formatter["bos"]=""
@@ -56,6 +72,8 @@ class Formatter:
         elif model_name.lower().startswith("phi"):
             formatter={}
             formatter["bos"]=""
+            if model_name.lower().find("medium") >= 0:
+                formatter["bos"]="<s>"
             formatter["bor"]="<|"
             formatter["eor"]="|>\n"
 

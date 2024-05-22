@@ -1,7 +1,7 @@
 
-raw_tokens = ["<|im_start|>","<|START_OF_TURN_TOKEN|>","<BOS_TOKEN>","<|user|>","<|start_header_id|>"]
+raw_tokens = ["<s>","[INST]","<|im_start|>","<|START_OF_TURN_TOKEN|>","<BOS_TOKEN>","<|user|>","<|start_header_id|>"]
 def check_special_tokens(m):
-        special_tokens = ["{p:bos}","<|im_start|>","<|START_OF_TURN_TOKEN|>","<BOS_TOKEN>","<|user|>","<|start_header_id|>","{p:user}"]
+        special_tokens = raw_tokens + ["{p:bos}","{p:user}"]
         is_raw = False
         for el in special_tokens:
             if m.find(el) >= 0:
