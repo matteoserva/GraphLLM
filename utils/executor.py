@@ -41,6 +41,11 @@ class StatefulExecutor:
         self.current_prompt="{}"
 
     def load_config(self,cl_args=None):
+        for i,el in enumerate(cl_args):
+            try:
+                cl_args[i] = readfile(el)
+            except:
+                pass
         new_prompt, _ = solve_templates(self.current_prompt,cl_args)
         self.current_prompt = new_prompt
 
