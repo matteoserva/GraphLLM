@@ -75,19 +75,21 @@ for i in range(10):
     comando = resp[resp.find("Action:")+7:].split("\n")[0].strip()
     if comando.find("(") >= 0: #forma compatta comando(parametri)
         c1 = comando.split("(")
-        comando = c1[0]
+        comando = c1[0].strip()
         parametri = c1[1][:-1]
     else:
         parametri = resp[resp.find("Inputs:")+7:].strip()
 
 #    print(resp,end="")
     if comando == "answer":
-        print("")
+        #print("")
         print(f"{bcolors.WARNING}Risposta: " + parametri + f"{bcolors.ENDC}")
         break;
 
     if resp.find("Answer:")>= 0:
         print("")
+        risposta = resp[resp.find("Answer:")+7:].strip().split("\n")[0]
+        print(f"{bcolors.WARNING}Risposta: " + risposta + f"{bcolors.ENDC}")
         break
     risposta = esegui_comando(comando,parametri)
     resp2 = "Observation: " + risposta + "\nThought: "

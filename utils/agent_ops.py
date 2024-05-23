@@ -71,7 +71,7 @@ class AgentOps():
 			raise Exception("error, the parameters must be in the correct format.")
 
 		if fname not in self.tools:
-			raise Exception("The requested operation doesn't exist")
+			raise Exception("The requested operation, " + fname + ", doesn't exist")
 		row = self.tools[fname]
 		l1 = row["num_parameters"]
 		l2 = len(params)

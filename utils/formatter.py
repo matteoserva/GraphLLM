@@ -88,6 +88,7 @@ class Formatter:
         else: #llama
 
             formatter["bos"]="<|begin_of_text|>" ##non capisco
+            formatter["bos"]=""
             formatter["bor"]="<|start_header_id|>"
             formatter["eor"]="<|end_header_id|>\n\n"
 
@@ -119,8 +120,6 @@ class Formatter:
         skip_bos = False
         skip_final = False
         modifiers = [ {"skip_preamble":False,"skip_postamble":False} for el in messages]
-        skip_preamble = -1
-        skip_postamble = -1
 
         if messages[0]["role"] == "raw":
             skip_bos = True
