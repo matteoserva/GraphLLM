@@ -13,7 +13,8 @@ def send_chat(builder,client,client_parameters=None,print_response=True):
         print("")
     return ret
 
-class StatelessExecutor:
+
+class BaseExecutor:
     def __init__(self,client):
         builder = PromptBuilder()
         builder.load_model(client.get_model_name())
@@ -38,13 +39,11 @@ class StatelessExecutor:
 
     def get_prompt_len(self):
         return self.current_prompt.count("{}")
-
-
-    def __call__(self,prompt_args):
-        builder = self.builder
+    
+    def basic_exec(self,text_prompt):
+        m = text_prompt
         client = self.client
-        m ,_ = solve_templates(self.current_prompt,prompt_args)
-        builder.reset()
+        builder = self.builder
         messages = builder.add_request(m)
         prompt = builder._build()
         if self.print_prompt:
@@ -53,42 +52,26 @@ class StatelessExecutor:
         messages = builder.add_response(str(res))
         return res
 
-class StatefulExecutor:
+class StatelessExecutor(BaseExecutor):
     def __init__(self,client):
-        builder = PromptBuilder()
-        builder.load_model(client.get_model_name())
-        self.builder=builder
-        self.client = client
-        self.print_prompt = True
-        self.current_prompt="{}"
-        self.client_parameters = None
-
-    def set_client_parameters(self,p):
-        self.client_parameters = p
-
-    def load_config(self,cl_args=None):
-        for i,el in enumerate(cl_args):
-            try:
-                cl_args[i] = readfile(el)
-            except:
-                pass
-        new_prompt, _ = solve_templates(self.current_prompt,cl_args)
-        self.current_prompt = new_prompt
-
-    def get_prompt_len(self):
-        return self.current_prompt.count("{}")
+        super().__init__(client)
 
     def __call__(self,prompt_args):
-        builder = self.builder
-        client = self.client
+        m ,_ = solve_templates(self.current_prompt,prompt_args)
+        self.builder.reset()
+        
+        res = self.basic_exec(m)
+        return res
+
+class StatefulExecutor(BaseExecutor):
+    def __init__(self,client):
+        super().__init__(client)
+
+    def __call__(self,prompt_args):
         m ,_ = solve_templates(self.current_prompt,prompt_args)
         self.current_prompt="{}"
-        messages = builder.add_request(m)
-        prompt = builder._build()
-        if self.print_prompt:
-            print(builder._build(),end="")
-        res = send_chat(builder,client,self.client_parameters)
-        messages = builder.add_response(str(res))
+        
+        res = self.basic_exec(m)
         return res
 
 class SequenceExecutor:
