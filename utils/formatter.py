@@ -40,6 +40,23 @@ class Formatter:
 
             formatter["enable_system"] = True
             formatter["roles"] = ["raw","system","user","assistant"]
+        elif model_name.lower().startswith("wizardlm"):
+            formatter={}
+            formatter["bos"]=""
+            formatter["bos"]=""
+            formatter["bor"]=""
+            formatter["eor"]=""
+
+            formatter["eom"]="\n"
+
+            formatter["system_name"]="system"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
+            formatter["role_string"] = {"user":"USER: ","assistant":"ASSISTANT: ","system":""}
+            formatter["role_eom"] = {"user":" ","assistant":"</s>","system":" "} 
+
+            formatter["enable_system"] = True
+            formatter["roles"] = ["raw","system","user","assistant"]
         elif model_name.lower().startswith("mistral"):
             formatter={}
             formatter["bos"]=""
@@ -51,7 +68,7 @@ class Formatter:
             formatter["system_name"]="system"
             formatter["user_name"]="user"
             formatter["assistant_name"]="assistant"
-            formatter["role_string"] = {"user":"[INST]","assistant":"","system":"[INST]"}
+            formatter["role_string"] = {"user":"[INST]_","assistant":"","system":"[INST]"}
             formatter["role_eom"] = {"user":"[/INST]","assistant":"","system":"[/INST]"} 
 
             formatter["enable_system"] = False
@@ -157,6 +174,7 @@ class Formatter:
                     else:
                          role_name = formatter["assistant_name"] if el["role"] == "assistant" else el["role"]
                          role_name = formatter["system_name"] if el["role"] == "system" else role_name
+                         role_name = formatter["user_name"] if el["role"] == "user" else role_name
                          prompt = prompt + formatter["bor"] + role_name + formatter["eor"]
                 prompt = prompt + el["content"]
                 if not modifiers[i]["skip_postamble"]:
