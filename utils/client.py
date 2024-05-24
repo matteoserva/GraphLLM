@@ -6,7 +6,7 @@ from .common import get_formatter,build_prompt
 from .formatter import Formatter
 
 class Client:
-    def __init__(self,host="minipd"):
+    def __init__(self,host="matteopc"):
         self.host = host
         self.parameters = {}
 
@@ -46,6 +46,7 @@ class Client:
                     print(json.dumps(json_decoded,indent=4))
                     
                     raise Exception("truncated")
+                #print(json_decoded)
                 yield json_decoded["content"]
 
     def tokenize(self,p):
@@ -87,6 +88,7 @@ class Client:
         a["seed"] = 0
         a["cache_prompt"] = True
         a["stream"] = True
+        #a["n_probs"] = 10
         #a["n_keep"] = -1
         #a["top_k"] = 5
 

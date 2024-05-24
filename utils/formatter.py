@@ -23,6 +23,18 @@ class Formatter:
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
+        elif model_name.lower().find("platypus-yi") >= 0:
+            formatter["bos"]="<|begin_of_text|>" ##non capisco
+            #formatter["bos"]=""
+            formatter["bor"]="<|start_header_id|>"
+            formatter["eor"]="<|end_header_id|>\n\n"
+
+            formatter["eom"]="""<|eot_id|>"""
+            #formatter["row"]=formatter["row1"] + formatter["row2"]
+            formatter["roles"] = ["raw","system", "user","assistant"]
+            formatter["system_name"]="system"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
         elif model_name.lower().startswith("yi"):
             formatter={}
             formatter["bos"]="<|startoftext|>"
