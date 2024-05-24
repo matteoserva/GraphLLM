@@ -88,12 +88,12 @@ class Formatter:
             formatter["roles"] = ["raw","user","assistant"]
         elif model_name.lower().startswith("phi"):
             formatter={}
-            formatter["bos"]=""
+            formatter["bos"]="<s>"
             if model_name.lower().find("medium") >= 0:
                 formatter["bos"]="<s>"
             formatter["bor"]="<|"
             formatter["eor"]="|>\n"
-
+            formatter["lf"] = "<0x0A>"
             formatter["eom"]="""<|end|>\n"""
             formatter["system_name"]="user"
             formatter["user_name"]="user"
@@ -105,7 +105,7 @@ class Formatter:
         else: #llama
 
             formatter["bos"]="<|begin_of_text|>" ##non capisco
-            formatter["bos"]=""
+            #formatter["bos"]=""
             formatter["bor"]="<|start_header_id|>"
             formatter["eor"]="<|end_header_id|>\n\n"
 
@@ -187,6 +187,9 @@ class Formatter:
                 prompt = prompt + formatter["role_string"]["assistant"]
             else:
                 prompt = prompt + formatter["bor"] + formatter["assistant_name"] + formatter["eor"]
+        if "lf" in formatter:
+            pass
+            #prompt = prompt.replace("\n",formatter["lf"])
 #        print(prompt)
         return prompt
     

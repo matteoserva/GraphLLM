@@ -62,9 +62,23 @@ class Client:
         r4 = r3["tokens"]
         #print("tokens: ", len(r4))
         return r4
-
+    
+    def detokenize(self,p):
+        url = "http://" + self.host + ":8080/detokenize"
+        a={}
+        a["tokens"] = p
+        js = json.dumps(a)
+        headers = {"Content-Type": "application/json"}
+        r = requests.post(url,data=js,headers=headers)
+        r1 = r.text
+        r2 = r1
+        r3 = json.loads(r2)
+        print(r3)
+        return r3
+    
     def _send_prompt_text(self, p, params):
         tokens = self.tokenize(p)
+        #self.detokenize(tokens)
         if len(tokens) +10 > self.context_size:
             raise Exception("context size exceeded: " + str(len(tokens)))
         a={}
@@ -82,7 +96,7 @@ class Client:
                 a["stop"].extend(params[el])
             else:
                 a[el] = params[el]
-        a["prompt"] = p
+        a["prompt"] = tokens
 
         #a = {"messages":p}
         js = json.dumps(a)
