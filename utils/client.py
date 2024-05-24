@@ -29,6 +29,8 @@ class Client:
         url = "http://" + self.host + ":8080/props"
         r = requests.get(url)
         resp = json.loads(r.content)
+        max_context = resp["default_generation_settings"]["n_ctx"]
+        self.context_size = max_context
         return resp
 
     def ricevi(self,r1):
@@ -39,11 +41,32 @@ class Client:
             if line:
                 decoded_line = line.decode('utf-8')
                 json_decoded = json.loads(decoded_line[6:])
-#                print(json_decoded)
+                if "truncated" in json_decoded and (json_decoded["truncated"] or False):
+                    del json_decoded["prompt"]
+                    print(json.dumps(json_decoded,indent=4))
+                    
+                    raise Exception("truncated")
                 yield json_decoded["content"]
 
+    def tokenize(self,p):
+        url = "http://" + self.host + ":8080/tokenize"
+        a={}
+        a["content"] = p
+        a["add_special"] = False
+        js = json.dumps(a)
+        headers = {"Content-Type": "application/json"}
+        r = requests.post(url,data=js,headers=headers)
+        r1 = r.text
+        r2 = r1
+        r3 = json.loads(r2)
+        r4 = r3["tokens"]
+        #print("tokens: ", len(r4))
+        return r4
 
     def _send_prompt_text(self, p, params):
+        tokens = self.tokenize(p)
+        if len(tokens) +10 > self.context_size:
+            raise Exception("context size exceeded: " + str(len(tokens)))
         a={}
         a["n_predict"] = 128*8
         a["stop"] = ["<|end|>","<|im_end|>"]
@@ -51,6 +74,7 @@ class Client:
         a["seed"] = 0
         a["cache_prompt"] = True
         a["stream"] = True
+        #a["n_keep"] = -1
         #a["top_k"] = 5
 
         for el in params:
