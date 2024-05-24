@@ -6,7 +6,7 @@ from .common import get_formatter,build_prompt
 from .formatter import Formatter
 
 class Client:
-    def __init__(self,host="matteopc"):
+    def __init__(self,host="minipd"):
         self.host = host
         self.parameters = {}
 
@@ -79,8 +79,7 @@ class Client:
     def _send_prompt_text(self, p, params):
         tokens = self.tokenize(p)
         #self.detokenize(tokens)
-        if len(tokens) +10 > self.context_size:
-            raise Exception("context size exceeded: " + str(len(tokens)))
+        #MIN_PREDICT = 128
         a={}
         a["n_predict"] = 128*8
         a["stop"] = ["<|end|>","<|im_end|>"]
@@ -97,6 +96,9 @@ class Client:
             else:
                 a[el] = params[el]
         a["prompt"] = tokens
+
+        if len(tokens) +a["n_predict"] >= self.context_size:
+            raise Exception("context size exceeded: " + str(len(tokens)) + " + " + str(a["n_predict"]))
 
         #a = {"messages":p}
         js = json.dumps(a)
