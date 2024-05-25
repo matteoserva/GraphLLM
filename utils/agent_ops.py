@@ -18,7 +18,26 @@ class AgentMath():
 	def mul(self, a,b):
 		"""multiplies the two arguments."""
 		return a*b
-	
+
+import random
+import string
+class AgentMath2():
+	def __init__(self):
+		self.cache={}
+	def sum(self, a,b):
+		"""sums two numbers."""
+		res = a+b
+		r = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+		self.cache[r] = res
+		return "Result saved in variable " + r
+
+	def neg(self, a):
+		"""calculates the negated value of the argument."""
+		return -a
+
+	def mul(self, a,b):
+		"""multiplies the two arguments."""
+		return a*b	
 	
 
 from ast import literal_eval
@@ -27,14 +46,16 @@ class AgentOps():
 	def __init__(self):
 		print("inizio")
 		self.tools = {}
-		self.add_tool(AgentMath())
+		self.add_tool(AgentMath2())
 		self.add_tool(AgentAnswer())
 
 	
 	def add_tool(self, tool):
-		ops = [el for el in dir(tool) if not el.startswith("_")]
+		ops = [el for el in dir(tool) if not el.startswith("_") ]
 		for op in ops:
 			c = getattr(tool,op)
+			if not c:
+				continue
 			d = inspect.signature(c)
 			e = len(d.parameters)
 			params = list(d.parameters.keys())
@@ -45,6 +66,7 @@ class AgentOps():
 			row["params"] = params
 			row["doc"] = c.__doc__
 			row["function"] = c
+			row["tool"] = tool
 			self.tools[op] = row
 	
 	def get_ops(self):
@@ -65,14 +87,22 @@ class AgentOps():
 		return res
 
 	def exec(self, fname, text_params):
+		if fname not in self.tools:
+			raise Exception("The requested operation, " + fname + ", doesn't exist")
+		row = self.tools[fname]
+		tool = row["tool"]
+
+		if "cache" in dir(tool):
+			params = [el.strip() for el in text_params.split(",")]
+			params = [str(tool.cache[el]) if el in tool.cache else el for el in params]
+			text_params = ",".join(params)
 		try:
 			params = literal_eval(text_params)
 		except:
 			raise Exception("error, the parameters must be in the correct format.")
 
-		if fname not in self.tools:
-			raise Exception("The requested operation, " + fname + ", doesn't exist")
-		row = self.tools[fname]
+
+
 		l1 = row["num_parameters"]
 		l2 = len(params)
 		if l1 != l2:

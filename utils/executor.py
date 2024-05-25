@@ -127,6 +127,7 @@ class SequenceExecutor:
             f.close()
             variables[str(pos)] = res
             var_r[pos] = res
+            var_r[0] = res #pos 0 contiene sempre l'ultima
             pos = pos + 1
         return res
 
