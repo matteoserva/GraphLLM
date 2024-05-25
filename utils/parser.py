@@ -104,7 +104,13 @@ def readstring_hierarchical(prompt,variables):
         print("newprompt: " + prompt + "-")
     elif tag == "v":
         fnfull = content
-        r = variables[fnfull]
+        if fnfull.find("[") > 0:
+            rs = fnfull.split("[",1)
+            r1 = rs[0]
+            r2 = int(rs[1][:-1])
+            r = variables[r1][r2]
+        else:
+            r = variables[fnfull]
         prompt = prompt.replace(foundString,r)
     elif tag == "r": # fa una sostituzione dei {p:placeholder} con quello del {r:placeholder:nuovo}
         prompt = prompt.replace(foundString, "",1)

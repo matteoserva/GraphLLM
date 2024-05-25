@@ -83,7 +83,7 @@ class Client:
         #MIN_PREDICT = 128
         a={}
         a["n_predict"] = 128*8
-        a["stop"] = ["<|end|>","<|im_end|>"]
+        a["stop"] = ["<|end|>","<|im_end|>","</s>"]
 #        a["temperature"] = 0.0
         a["seed"] = 0
         a["cache_prompt"] = True

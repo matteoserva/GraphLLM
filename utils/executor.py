@@ -110,10 +110,15 @@ class SequenceExecutor:
         pos = 1
         variables={}
         res = None
+        var_c = ["base"]*(1+len(cl_args))
+        var_r = ["base"]*(1+len(instructions))
         for i,v in enumerate(cl_args):
             idx = i+1
+            var_c[idx] = v
             stri = "c" + str(idx)
             variables[stri] = v
+        variables["c"] = var_c
+        variables["r"] = var_r
         for instr in instructions:
             res = self._execute_row(instr,variables)
             fn = "/tmp/llm_exec_" + str(pos) + ".txt"
@@ -121,6 +126,7 @@ class SequenceExecutor:
             f.write(res)
             f.close()
             variables[str(pos)] = res
+            var_r[pos] = res
             pos = pos + 1
         return res
 

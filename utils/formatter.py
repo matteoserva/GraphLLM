@@ -24,17 +24,22 @@ class Formatter:
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
         elif model_name.lower().find("platypus-yi") >= 0:
-            formatter["bos"]="<|begin_of_text|>" ##non capisco
-            #formatter["bos"]=""
-            formatter["bor"]="<|start_header_id|>"
-            formatter["eor"]="<|end_header_id|>\n\n"
+            formatter={}
+            formatter["bos"]=""
+            formatter["bos"]=""
+            formatter["bor"]=""
+            formatter["eor"]=""
 
-            formatter["eom"]="""<|eot_id|>"""
-            #formatter["row"]=formatter["row1"] + formatter["row2"]
-            formatter["roles"] = ["raw","system", "user","assistant"]
+            formatter["eom"]="\n"
+
             formatter["system_name"]="system"
             formatter["user_name"]="user"
             formatter["assistant_name"]="assistant"
+            formatter["role_string"] = {"user":"USER: ","assistant":"ASSISTANT: ","system":""}
+            formatter["role_eom"] = {"user":"\n","assistant":"\n","system":"\n"} 
+
+            formatter["enable_system"] = True
+            formatter["roles"] = ["raw","system","user","assistant"]
         elif model_name.lower().startswith("yi"):
             formatter={}
             formatter["bos"]="<|startoftext|>"
@@ -69,7 +74,7 @@ class Formatter:
 
             formatter["enable_system"] = True
             formatter["roles"] = ["raw","system","user","assistant"]
-        elif model_name.lower().startswith("mistral"):
+        elif model_name.lower().startswith("mistral") or model_name.lower().startswith("mixtral"):
             formatter={}
             formatter["bos"]=""
             formatter["bor"]=""
