@@ -5,6 +5,18 @@ from . import common
 from .common import get_formatter,build_prompt
 from .formatter import Formatter
 
+class DummyClient:
+
+    def send_prompt(self,p,params=None):
+        print(p.messages)
+        return [""]
+
+    def connect(self):
+        pass
+
+    def get_model_name(self):
+        return ""
+
 class Client:
     def __init__(self,host="minipd"):
         self.host = host
