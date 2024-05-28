@@ -275,10 +275,10 @@ class PromptBuilder:
         self.messages = []
         self.messages.append({"role":"system","content":self.sysprompt})
         self.first_prompt = True
-    
+
     def set_from_raw(self,message):
         self.messages = parse_raw(message)
-        
+
     def add_request(self, message):
         m = message
         is_raw = self._check_special_tokens(m)
@@ -292,7 +292,7 @@ class PromptBuilder:
             self.messages.append({"role":"user","content":str(m)})
         #print(self.messages)
         return self.messages
-    
+
     def add_response(self,message):
         if(self.messages[-1]["role"] == "assistant"):
             self.messages[-1]["content"] = self.messages[-1]["content"]  + str(message)
