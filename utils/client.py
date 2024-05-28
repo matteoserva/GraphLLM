@@ -5,6 +5,11 @@ from . import common
 from .common import get_formatter,build_prompt
 from .formatter import Formatter
 
+try:
+   from .grokclient import GrokClient
+except:
+    pass
+
 class DummyClient:
 
     def send_prompt(self,p,params=None):
