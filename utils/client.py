@@ -5,10 +5,17 @@ from . import common
 from .common import get_formatter,build_prompt
 from .formatter import Formatter
 
-try:
-   from .grokclient import GrokClient
-except:
-    pass
+
+class GrokClient(object):
+    def __new__(cls, *args,**kwargs):
+        print("loading subgrokclient")
+        try:
+           retval = object.__new__(GrokClientInner,*args,**kwargs)
+        except:
+           from .grokclient import GrokClient as GrokClientInner
+           retval = object.__new__(GrokClientInner,*args,**kwargs)
+        retval.__init__(*args,**kwargs)
+        return retval
 
 class DummyClient:
 
@@ -63,7 +70,8 @@ class Client:
                     print(json.dumps(json_decoded,indent=4))
                     
                     raise Exception("truncated")
-                #print(json_decoded)
+                if "content" not in json_decoded:
+                    print(json_decoded)
                 yield json_decoded["content"]
 
     def tokenize(self,p):
