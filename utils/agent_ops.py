@@ -28,6 +28,8 @@ class AgentMath2():
 		"""sums two numbers."""
 		res = a+b
 		r = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+		while r in self.cache:
+			r = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
 		self.cache[r] = res
 		return "Result saved in variable " + r
 

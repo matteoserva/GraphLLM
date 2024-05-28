@@ -40,7 +40,39 @@ class Formatter:
 
             formatter["enable_system"] = True
             formatter["roles"] = ["raw","system","user","assistant"]
-        elif model_name.lower().startswith("yi"):
+        elif model_name.lower().find("deepseek") >= 0:
+            formatter={}
+            formatter["bos"]="<｜begin▁of▁sentence｜>"
+            formatter["bor"]=""
+            formatter["eor"]=""
+
+            formatter["eom"]="\n"
+
+            formatter["system_name"]="system"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
+            formatter["role_string"] = {"user":"User: ","assistant":"Assistant: ","system":""}
+            formatter["role_eom"] = {"user":"\n\n","assistant":"<｜end▁of▁sentence｜>","system":"\n\n"} 
+
+            formatter["enable_system"] = True
+            formatter["roles"] = ["raw","system","user","assistant"]
+        elif model_name.lower().startswith("internlm"):
+            formatter={}
+            formatter["bos"]="<s>"
+            formatter["bor"]="<|im_start|>"
+            formatter["eor"]="\n"
+
+            formatter["eom"]="<|im_end|>\n"
+
+            formatter["system_name"]="system"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
+            #formatter["role_string"] = {"user":"<|im_start|>user\n","assistant":"<|im_start|>assistant\n","system":""}
+            #formatter["role_eom"] = {"user":"<|im_end|>\n","assistant":"<|im_end|>\n","system":""} 
+
+            formatter["enable_system"] = True
+            formatter["roles"] = ["raw","system","user","assistant"]
+        elif model_name.lower().startswith("yi") or model_name.lower().startswith("faro"):
             formatter={}
             formatter["bos"]="<|startoftext|>"
             formatter["bos"]=""
