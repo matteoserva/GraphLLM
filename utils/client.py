@@ -5,6 +5,16 @@ from . import common
 from .common import get_formatter,build_prompt
 from .formatter import Formatter
 
+import copy
+
+def merge_params(base,update):
+        res = copy.deepcopy(base)
+        for el in update:
+            if el == "stop":
+                res["stop"].extend(update[el])
+            else:
+                res[el] = update[el]
+        return res
 
 class GrokClient(object):
     def __new__(cls, *args,**kwargs):
@@ -116,12 +126,7 @@ class Client:
         #a["n_probs"] = 10
         #a["n_keep"] = -1
         #a["top_k"] = 5
-
-        for el in params:
-            if el == "stop":
-                a["stop"].extend(params[el])
-            else:
-                a[el] = params[el]
+        a = merge_params(a,params)
         a["prompt"] = tokens
 
         if len(tokens) +a["n_predict"] >= self.context_size:
