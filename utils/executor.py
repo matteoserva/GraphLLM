@@ -39,7 +39,7 @@ class BaseExecutor:
 
     def get_prompt_len(self):
         return self.current_prompt.count("{}")
-    
+
     def basic_exec(self,text_prompt):
         m = text_prompt
         client = self.client
@@ -59,7 +59,7 @@ class StatelessExecutor(BaseExecutor):
     def __call__(self,prompt_args):
         m ,_ = solve_templates(self.current_prompt,prompt_args)
         self.builder.reset()
-        
+
         res = self.basic_exec(m)
         return res
 
@@ -70,14 +70,14 @@ class StatefulExecutor(BaseExecutor):
     def __call__(self,prompt_args):
         m ,_ = solve_templates(self.current_prompt,prompt_args)
         self.current_prompt="{}"
-        
+
         res = self.basic_exec(m)
         return res
 
 class SequenceExecutor:
     def __init__(self,client):
 
-        self.client = client
+#       self.client = client
         self.execRow = StatelessExecutor(client)
         self.client_parameters = None
 

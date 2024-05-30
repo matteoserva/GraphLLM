@@ -27,6 +27,7 @@ params["seed"] = -1
 params["cache_prompt"] = True
 params["repeat_penalty"] = 1.0
 params["penalize_nl"] = True
+params["top_k"] = 20
 
 client = Client()
 client.connect()

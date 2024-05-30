@@ -40,7 +40,7 @@ class DummyClient:
         return ""
 
 class Client:
-    def __init__(self,host="minipd"):
+    def __init__(self,host="matteopc"):
         self.host = host
         self.parameters = {}
 
@@ -67,7 +67,7 @@ class Client:
         self.context_size = max_context
         return resp
 
-    def ricevi(self,r1):
+    def ricevi(self,r1, pass_raw=False):
         a = 1
         for line in r1.iter_lines():
             # filter out keep-alive new lines
@@ -82,7 +82,19 @@ class Client:
                     raise Exception("truncated")
                 if "content" not in json_decoded:
                     print(json_decoded)
-                yield json_decoded["content"]
+                
+                
+                if pass_raw and len(json_decoded["content"]) > 0:
+                    tmp_res = json_decoded['completion_probabilities']
+                    if len(tmp_res) == 0:
+                        continue
+                    tmp_res = tmp_res[0]["probs"]
+                    tmp_res = [ (el["tok_str"],el["prob"]) for el in tmp_res ]
+                    tmp_res = str(tmp_res) + "\n"
+                    #print(tmp_res)
+                else:
+                    tmp_res =json_decoded["content"]
+                yield tmp_res
 
     def tokenize(self,p):
         url = "http://" + self.host + ":8080/tokenize"
@@ -140,7 +152,8 @@ class Client:
 
         data = js
         r = requests.post(url,data=data,headers=headers,stream=True)
-        g = self.ricevi(r)
+        pass_raw = "n_probs" in a
+        g = self.ricevi(r,pass_raw)
         return g
 
     def _send_prompt_builder(self,p,params):

@@ -6,7 +6,7 @@ class GrokClient():
         print("grokclient init")
         self.client = None
         self.model_name="llama3-70b-8192"
-        self.default_params={ "temperature":0.1, "max_tokens":1024//2, "top_p":1, "stream":True, "stop":None}
+        self.default_params={ "temperature":0.1, "max_tokens":1024//2, "stream":True, "stop":None}
 
     def send_prompt(self,p,params=None):
         if isinstance(p,list):
@@ -21,6 +21,7 @@ class GrokClient():
 
     def ricevi(self,completion):
         for chunk in completion:
+             #print(chunk)
              val = chunk.choices[0].delta.content or ""
              yield val
 
