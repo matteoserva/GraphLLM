@@ -23,6 +23,22 @@ class Formatter:
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
+        elif model_name.lower().find("yuan") >= 0:
+            formatter={}
+            formatter["bos"]=""
+            formatter["bos"]=""
+            formatter["bor"]=""
+            formatter["eor"]=""
+
+            formatter["eom"]="\n"
+
+            formatter["system_name"]=""
+            formatter["user_name"]="Instruction: "
+            formatter["assistant_name"]="Response:\n"
+            formatter["role_string"] = {"user":"Instruction: ","assistant":"Response:\n","system":""}
+            formatter["role_eom"] = {"user":"\n","assistant":"<eod>","system":"\nInstruction: "} 
+            formatter["enable_system"] = False
+            formatter["roles"] = ["raw","user","assistant"]
         elif model_name.lower().find("platypus-yi") >= 0:
             formatter={}
             formatter["bos"]=""
