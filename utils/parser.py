@@ -108,7 +108,10 @@ def readstring_hierarchical(prompt,variables):
             rs = fnfull.split("[",1)
             r1 = rs[0]
             r2 = int(rs[1][:-1])
-            r = variables[r1][r2]
+            try:
+                r = variables[r1][r2]
+            except:
+                r = variables[r1][str(r2)]
         else:
             r = variables[fnfull]
         prompt = prompt.replace(foundString,r)

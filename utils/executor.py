@@ -1,6 +1,15 @@
 from .formatter import PromptBuilder
 from .parser import solve_templates
 from .common import readfile
+from . import graph
+
+def parse_files(cl_args):
+    for i, el in enumerate(cl_args):
+        try:
+            cl_args[i] = readfile(el)
+        except:
+            pass
+    return cl_args
 
 def send_chat(builder,client,client_parameters=None,print_response=True):
     r = client.send_prompt(builder,params=client_parameters)
@@ -85,11 +94,7 @@ class SequenceExecutor:
         self.execRow.set_client_parameters(p)
 
     def load_config(self,cl_args=None):
-        for i,el in enumerate(cl_args):
-            try:
-                cl_args[i] = readfile(el)
-            except:
-                pass
+        parse_files(cl_args)
         for el in cl_args[1:]:
             cl_args[0].replace("{}",el,1)
         self.instructions_raw = cl_args[0]
@@ -138,6 +143,113 @@ class SequenceExecutor:
         #     except:
         #         pass
         lista_istruzioni = self.instructions_raw
-        instructions = [ [ es  for es in el.strip().split(" ") if len(es) > 0] for el in lista_istruzioni.strip().split("\n")]
+        instructions = [ [ es  for es in el.strip().split(" ") if len(es) > 0] for el in lista_istruzioni.strip().split("\n") if not el.startswith("#")]
         res = self._execute_list(instructions, prompt)
+        return res
+
+
+
+class GraphExecutor:
+    def __init__(self,client):
+
+        #self.execRow = StatelessExecutor(client)
+        self.client = client
+        self.client_parameters = None
+        self.variables={"c": {}, "r":{}}
+
+    def set_client_parameters(self,p):
+        self.client_parameters = p
+        #self.execRow.set_client_parameters(p)
+
+    def load_config(self,cl_args=None):
+        parse_files(cl_args)
+        for i,v in enumerate(cl_args):
+            idx = i
+            stri = "c" + str(idx)
+            self.variables[stri] = v
+            self.variables["c"][str(idx)] = v
+        instructions_raw = None
+        graph_raw = graph.parse_executor_graph(cl_args[0],cl_args[1:])
+
+        node_configs = graph_raw
+
+
+        graph_nodes = []
+        for el in node_configs:
+            node = {}
+            if el["type"] == "stateless":
+                ex_args = el["exec"]
+                node["executor"] = StatelessExecutor(self.client)
+                if "init" in el:
+                    init_args = el["init"]
+                    for i,v in enumerate(init_args):
+                        init_args[i], _ = solve_templates(init_args[i], [], self.variables)
+                    node["executor"].load_config(el["init"])
+                node["executor"].set_client_parameters(self.client_parameters)
+            elif el["type"] == "command_line":
+                val = el["init"]
+                def dummy_return(d):
+                    return val
+
+                node["executor"] = dummy_return
+
+            graph_nodes.append(node)
+
+        node_connections = graph.create_arcs(node_configs)
+        for el in node_connections:
+            el["input_available"] = [False] * len(el["deps"])
+
+        self.graph_nodes = graph_nodes
+        self.node_configs = node_configs
+        self.node_connections = node_connections
+        return cl_args
+
+    def _execute_node(self,node_index):
+        node = self.graph_nodes[node_index]
+        config = self.node_configs[node_index]
+        inputs = [self.variables["r"][el] for el in config["exec"]]
+
+#        m,_ = solve_templates(inputs[0],inputs[1:],self.variables)
+        ex = node["executor"]
+        res = ex(inputs)
+
+        connections = self.node_connections[node_index]
+        connections["input_available"] = [False]*len(connections["input_available"])
+        if len(connections["input_available"]) == 0:
+            connections["input_available"] = [False]
+
+        for i in connections["forwards"]:
+           dest = self.node_connections[i]
+           for j in range(len(dest["deps"])):
+               if dest["deps"][j] == node_index:
+                   dest["input_available"][j] = True
+        return res
+
+    def _is_runnable(self,node_index):
+        connections = self.node_connections[node_index]
+        empty_inputs = [el for el in connections["input_available"] if not el]
+        full_outputs = []
+        for i in connections["forwards"]:
+           dest = self.node_connections[i]
+           for j in range(len(dest["deps"])):
+               if dest["deps"][j] == node_index and dest["input_available"][j]:
+                   full_outputs.append(i)
+        runnable = len(empty_inputs) == 0 and len(full_outputs) == 0
+        return runnable
+
+    def __call__(self,prompt):
+        res = None
+
+        while True:
+            runnable = [i for i in range(len(self.graph_nodes)) if self._is_runnable(i)]
+            if len(runnable) == 0:
+                break
+            for i in runnable:
+                res = self._execute_node(i)
+                config = self.node_configs[i]
+                name = config["name"]
+                rname = "r" + name
+                self.variables[rname] = res
+                self.variables["r"][name] = res
+
         return res
