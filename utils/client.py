@@ -2,19 +2,12 @@
 import json
 import requests
 from . import common
-from .common import get_formatter,build_prompt
+from .common import get_formatter,build_prompt,merge_params
 from .formatter import Formatter
 
 import copy
 
-def merge_params(base,update):
-        res = copy.deepcopy(base)
-        for el in update:
-            if el == "stop":
-                res["stop"].extend(update[el])
-            else:
-                res[el] = update[el]
-        return res
+
 
 class GrokClient(object):
     def __new__(cls, *args,**kwargs):
@@ -31,7 +24,7 @@ class DummyClient:
 
     def send_prompt(self,p,params=None):
         print(p.messages)
-        return [""]
+        return ["dummy response"]
 
     def connect(self):
         pass

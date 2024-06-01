@@ -1,6 +1,7 @@
 from .formatter import PromptBuilder
 from .parser import solve_templates
-from .common import readfile
+from .common import readfile,merge_params
+from .grammar import load_grammar
 from . import graph
 
 def parse_files(cl_args):
@@ -149,6 +150,8 @@ class SequenceExecutor:
 
 
 
+
+
 class GraphExecutor:
     def __init__(self,client):
 
@@ -161,6 +164,35 @@ class GraphExecutor:
         self.client_parameters = p
         #self.execRow.set_client_parameters(p)
 
+    def _make_node(self,node_config):
+        node = {}
+        el = node_config
+        if el["type"] == "stateless":
+            ex_args = el["exec"]
+            node["executor"] = StatelessExecutor(self.client)
+            if "init" in el:
+                init_args = el["init"]
+                for i, v in enumerate(init_args):
+                    init_args[i], _ = solve_templates(init_args[i], [], self.variables)
+                node["executor"].load_config(el["init"])
+            executor_parameters = self.client_parameters
+            if "conf" in el and "grammar" in el["conf"]:
+                grammarfile = el["conf"]["grammar"]
+                grammar = load_grammar(grammarfile)
+                new_obj = {grammar["format"]: grammar["schema"]}
+                executor_parameters = merge_params(executor_parameters, new_obj)
+                pass
+
+            node["executor"].set_client_parameters(executor_parameters)
+        elif el["type"] == "command_line":
+            val = el["init"]
+
+            def dummy_return(d):
+                return val
+
+            node["executor"] = dummy_return
+        return node
+
     def load_config(self,cl_args=None):
         parse_files(cl_args)
         for i,v in enumerate(cl_args):
@@ -170,34 +202,21 @@ class GraphExecutor:
             self.variables["c"][str(idx)] = v
         instructions_raw = None
         graph_raw = graph.parse_executor_graph(cl_args[0],cl_args[1:])
-
+        node_connections = graph.create_arcs(graph_raw)
         node_configs = graph_raw
 
 
         graph_nodes = []
         for el in node_configs:
-            node = {}
-            if el["type"] == "stateless":
-                ex_args = el["exec"]
-                node["executor"] = StatelessExecutor(self.client)
-                if "init" in el:
-                    init_args = el["init"]
-                    for i,v in enumerate(init_args):
-                        init_args[i], _ = solve_templates(init_args[i], [], self.variables)
-                    node["executor"].load_config(el["init"])
-                node["executor"].set_client_parameters(self.client_parameters)
-            elif el["type"] == "command_line":
-                val = el["init"]
-                def dummy_return(d):
-                    return val
-
-                node["executor"] = dummy_return
-
+            node = self._make_node(el)
             graph_nodes.append(node)
 
-        node_connections = graph.create_arcs(node_configs)
-        for el in node_connections:
-            el["input_available"] = [False] * len(el["deps"])
+
+        for i,el in enumerate(node_connections):
+            num_inputs = len(el["deps"])
+            num_outputs = len(el["forwards"])
+            graph_nodes[i]["inputs"] = [None] * num_inputs
+            graph_nodes[i]["outputs"] = [None] * num_outputs
 
         self.graph_nodes = graph_nodes
         self.node_configs = node_configs
@@ -207,35 +226,51 @@ class GraphExecutor:
     def _execute_node(self,node_index):
         node = self.graph_nodes[node_index]
         config = self.node_configs[node_index]
-        inputs = [self.variables["r"][el] for el in config["exec"]]
+        inputs = node["inputs"]
 
 #        m,_ = solve_templates(inputs[0],inputs[1:],self.variables)
         ex = node["executor"]
         res = ex(inputs)
+        if not isinstance(res,list):
+            res = [res]
 
-        connections = self.node_connections[node_index]
-        connections["input_available"] = [False]*len(connections["input_available"])
-        if len(connections["input_available"]) == 0:
-            connections["input_available"] = [False]
+        #consuma gli input
+        if len(inputs) > 0:
+            node["inputs"] = [None] * len(inputs)
+        else:
+            node["inputs"] = [None]
 
-        for i in connections["forwards"]:
-           dest = self.node_connections[i]
-           for j in range(len(dest["deps"])):
-               if dest["deps"][j] == node_index:
-                   dest["input_available"][j] = True
+        #salva gli output
+        for i,el in enumerate(res):
+            if i < len(node["outputs"]):
+                node["outputs"][i] = el
         return res
 
     def _is_runnable(self,node_index):
-        connections = self.node_connections[node_index]
-        empty_inputs = [el for el in connections["input_available"] if not el]
-        full_outputs = []
-        for i in connections["forwards"]:
-           dest = self.node_connections[i]
-           for j in range(len(dest["deps"])):
-               if dest["deps"][j] == node_index and dest["input_available"][j]:
-                   full_outputs.append(i)
-        runnable = len(empty_inputs) == 0 and len(full_outputs) == 0
+        node = self.graph_nodes[node_index]
+
+        missing_inputs = len([el for el in node["inputs"] if el is None])
+        blocked_outputs = len([el for el in node["outputs"] if not el is None])
+
+
+        runnable = (missing_inputs + blocked_outputs) == 0
         return runnable
+
+    def _execute_arcs(self):
+        for node_index,node in enumerate(self.graph_nodes):
+            source_outputs = node["outputs"]
+            forwards = self.node_connections[node_index]["forwards"]
+            for source_port,forwards in enumerate(forwards):
+                current_output = source_outputs[source_port]
+                destination_inputs = [self.graph_nodes[i]["inputs"][p] for i,p in forwards]
+                destination_ready = len([el for el in destination_inputs if el is not None]) == 0
+                source_ready = current_output is not None
+                if (not source_ready) or (not destination_ready):
+                    continue
+                for di,dp in forwards:
+                    self.graph_nodes[di]["inputs"][dp] = current_output
+                node["outputs"][source_port] = None
+                pass
 
     def __call__(self,prompt):
         res = None
@@ -251,5 +286,5 @@ class GraphExecutor:
                 rname = "r" + name
                 self.variables[rname] = res
                 self.variables["r"][name] = res
-
+            self._execute_arcs()
         return res

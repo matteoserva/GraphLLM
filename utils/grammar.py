@@ -6,9 +6,9 @@ def load_grammar(fn):
     f.close()
     res = {}
     try:
-        res["grammar"] = json.loads(a)
-        res["format"] = "json"
+        res["schema"] = json.loads(a)
+        res["format"] = "json_schema"
     except:
-        res["grammar"] = a
-        res["format"] = "formal"
+        res["schema"] = a
+        res["format"] = "grammar"
     return res

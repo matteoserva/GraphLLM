@@ -1,6 +1,8 @@
 
 from .formatter import Formatter
 from .parser import solve_templates
+import copy
+
 try:
 	from scraper import scrape
 except:
@@ -12,7 +14,14 @@ def readfile(fn):
     f.close()
     return p
 
-
+def merge_params(base,update):
+        res = copy.deepcopy(base)
+        for el in update:
+            if el == "stop":
+                res["stop"].extend(update[el])
+            else:
+                res[el] = update[el]
+        return res
 
 def get_input_simple(inprompt = "> "):
   prompt = input(inprompt)

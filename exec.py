@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 import sys
 from utils.common import get_input,get_formatter,readfile,build_prompt
-from utils.client import Client
+from utils.client import Client,DummyClient
 from utils.formatter import Formatter,PromptBuilder
 
 from utils.executor import GraphExecutor
 
-client = Client()
+client = DummyClient()
 client.connect()
 
 parameters = {}
