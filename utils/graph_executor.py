@@ -8,7 +8,6 @@ class GraphNode:
         node = {}
         el = node_config
         if el["type"] == "stateless":
-            ex_args = el["exec"]
             self.executor = StatelessExecutor(graph.client)
             if "init" in el:
                 init_args = el["init"]
@@ -32,6 +31,28 @@ class GraphNode:
             r = dummy_return
             self.executor = r
             pass
+
+    def execute(self):
+        node=self
+        inputs = node["inputs"]
+
+        #        m,_ = solve_templates(inputs[0],inputs[1:],self.variables)
+        ex = node["executor"]
+        res = ex(inputs)
+        if not isinstance(res, list):
+            res = [res]
+
+        # consuma gli input
+        if len(inputs) > 0:
+            node["inputs"] = [None] * len(inputs)
+        else:
+            node["inputs"] = [None]
+
+        # salva gli output
+        for i, el in enumerate(res):
+            if i < len(node["outputs"]):
+                node["outputs"][i] = el
+        return res
 
     def __getitem__(self, item):
         return getattr(self, item)
@@ -94,28 +115,6 @@ class GraphExecutor:
         self.node_connections = node_connections
         return cl_args
 
-    def _execute_node(self,node_index):
-        node = self.graph_nodes[node_index]
-        config = self.node_configs[node_index]
-        inputs = node["inputs"]
-
-#        m,_ = solve_templates(inputs[0],inputs[1:],self.variables)
-        ex = node["executor"]
-        res = ex(inputs)
-        if not isinstance(res,list):
-            res = [res]
-
-        #consuma gli input
-        if len(inputs) > 0:
-            node["inputs"] = [None] * len(inputs)
-        else:
-            node["inputs"] = [None]
-
-        #salva gli output
-        for i,el in enumerate(res):
-            if i < len(node["outputs"]):
-                node["outputs"][i] = el
-        return res
 
     def _is_runnable(self,node_index):
         node = self.graph_nodes[node_index]
@@ -151,7 +150,7 @@ class GraphExecutor:
             if len(runnable) == 0:
                 break
             for i in runnable:
-                res = self._execute_node(i)
+                res = self.graph_nodes[i].execute()
                 config = self.node_configs[i]
                 name = config["name"]
                 rname = "r" + name
