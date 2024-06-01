@@ -5,6 +5,8 @@ from utils.executor import *
 class GraphNode:
     def __init__(self,graph,node_config):
         self.graph = graph
+        self.free_runs = 0
+        self.disable_execution = False
         node = {}
         el = node_config
         if el["type"] == "stateless":
@@ -25,7 +27,7 @@ class GraphNode:
             self.executor.set_client_parameters(executor_parameters)
         elif el["type"] == "command_line":
             val = el["init"]
-
+            self.free_runs = 1
             def dummy_return(d):
                 return val
             r = dummy_return
@@ -43,16 +45,32 @@ class GraphNode:
             res = [res]
 
         # consuma gli input
-        if len(inputs) > 0:
+        if self["free_runs"] > 0:
+            self["free_runs"] -= 1
+        elif len(inputs) > 0:
             node["inputs"] = [None] * len(inputs)
         else:
-            node["inputs"] = [None]
+            self.disable_execution = True
 
         # salva gli output
         for i, el in enumerate(res):
             if i < len(node["outputs"]):
                 node["outputs"][i] = el
+
         return res
+
+    def is_runnable(self):
+        node = self
+        if self["free_runs"]> 0:
+            return True
+        if self.disable_execution:
+            return False
+
+        missing_inputs = len([el for el in node["inputs"] if el is None])
+        blocked_outputs = len([el for el in node["outputs"] if not el is None])
+
+        runnable = (missing_inputs + blocked_outputs) == 0
+        return runnable
 
     def __getitem__(self, item):
         return getattr(self, item)
@@ -146,7 +164,7 @@ class GraphExecutor:
         res = None
 
         while True:
-            runnable = [i for i in range(len(self.graph_nodes)) if self._is_runnable(i)]
+            runnable = [i for i,v in enumerate(self.graph_nodes) if v.is_runnable()]
             if len(runnable) == 0:
                 break
             for i in runnable:
