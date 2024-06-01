@@ -1,12 +1,10 @@
 import yaml
 import copy
 
-def parse_executor_graph(instructions_raw,cl_args):
+def parse_executor_graph(instructions_raw):
     instruction_rows = yaml.safe_load(instructions_raw)
     instruction_flat = []
-    for i,v in enumerate(cl_args,1):
-        input_obj = {"name": "_C[" + str(i)+"]", "type":"command_line", "conf":i,"init":cl_args[i-1]}
-        instruction_flat.append(input_obj)
+
     instruction_flat.extend(instruction_rows.values())
 
     for el in instruction_flat:
@@ -16,15 +14,6 @@ def parse_executor_graph(instructions_raw,cl_args):
             el["exec"] = []
     for el in instruction_rows:
         instruction_rows[el]["name"] = el
-
-    # replace {} with cl_args
-    ins_temp = [el for el in instruction_rows.values() if "init" in el]
-    graph_temp = "\n".join([el["init"] for el in ins_temp])
-    for el in cl_args:
-        graph_temp.replace("{}", el, 1)
-    graph_temp = graph_temp.split("\n")
-    for i, el in enumerate(ins_temp):
-        ins_temp[i]["init"] = graph_temp[i]
 
     # make arrays
     for el in instruction_rows.values():
@@ -58,9 +47,17 @@ def create_arcs(graph_nodes):
 
         if "exec" in el:
             for di,nn in enumerate(el["exec"]):
-                si = nodes_map[nn]
-                source_node = si
-                source_port = 0
+                spos = nn.find("[")
+                if spos > 0:
+                    ssi =  nn[:spos]
+                    si = nodes_map[ssi]
+                    ssp = nn[spos+1:-1]
+                    source_node = si
+                    source_port = int(ssp)
+                else:
+                    si = nodes_map[nn]
+                    source_node = si
+                    source_port = 0
                 dest_node = i
                 dest_port = di
                 if num_outputs[source_node] < (source_port+1):
@@ -70,7 +67,7 @@ def create_arcs(graph_nodes):
     graph_connections = []
     for i, _ in enumerate(graph_nodes):
         num_outs = num_outputs[i]
-        farray = [[]]* num_outs
+        farray = [[] for _ in range(num_outs)]
         conn = {"forwards": farray, "deps": []}
         graph_connections.append(conn)
 
