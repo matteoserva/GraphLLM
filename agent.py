@@ -19,25 +19,75 @@ f.close()
 #import json
 #import requests
 
-params={}
-params["n_predict"] = 128
-params["stop"] = ["Observation:"]
-params["temperature"] = 0.01
-params["seed"] = -1
-params["cache_prompt"] = True
-params["repeat_penalty"] = 1.0
-params["penalize_nl"] = True
-params["top_k"] = 20
+class AgentExecutor:
+    def __init__(self, client):
+        self.tokens=["Thought:","Action:","Inputs:","Observation:"]
+        executor = StatelessExecutor(client)
+        self.executor = executor
+        self.current_prompt = ""
+        params={}
+        params["n_predict"] = 128
+        params["stop"] = ["Observation:"]
+        params["temperature"] = 0.01
+        params["seed"] = -1
+        params["cache_prompt"] = True
+        params["repeat_penalty"] = 1.0
+        params["penalize_nl"] = True
+        params["top_k"] = 20
+        executor.set_client_parameters(params)
+        executor.builder.set_param("force_system", True)
+        executor.print_response = "partial"
+
+    def load_config(self,args):
+        self.executor.load_config(args)
+
+    def __call__(self,prompt_args):
+        new_observation = prompt_args[0]
+        if len(prompt_args[0]) > 0:
+            new_observation = "Observation: " + new_observation + "\nThought: "
+        self.current_prompt += new_observation
+        current_prompt = self.current_prompt
+        resp = self.executor([current_prompt])
+
+        resp = self._clean_response(resp)
+        self.current_prompt +=resp
+        respo = self._parse_response(resp)
+        self.executor.print_prompt = False
+        respo["raw"] = resp
+        return respo
+
+    def _clean_response(self, resp):
+        resp = resp.strip()
+        while "\n\n" in resp:
+           resp = resp.replace("\n\n","\n")
+        resp = resp+"\n"
+        return resp
+
+    def _parse_response(self,resp):
+        comando = resp[resp.find("Action:") + 7:].split("\n")[0].strip()
+        if comando.find("(") >= 0:  # forma compatta comando(parametri)
+            c1 = comando.split("(")
+            comando = c1[0].strip()
+            parametri = c1[1][:-1]
+        else:
+            parametri = resp[resp.find("Inputs:") + 7:].strip()
+
+        if resp.find("Answer:") >= 0:
+            comando = "answer"
+            parametri = resp[resp.find("Answer:") + 7:].strip().split("\n")[0]
+        resp = {"command":comando,"args":parametri}
+        return resp
 
 client = Client()
 client.connect()
 
 ops_string = agent.get_formatted_ops()
 
-executor = StatelessExecutor(client)
-executor.set_client_parameters(params)
-executor.load_config(["{}{}"] + sys.argv[1:]+[ops_string])
-executor.builder.set_param("force_system",True)
+agentExecutor = AgentExecutor(client)
+
+agent_args = ["{}{}"] + sys.argv[1:]+[ops_string]
+agentExecutor.load_config(agent_args)
+
 
 #import re
 def esegui_comando(istruzione, parametri):
@@ -58,40 +108,19 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-p=""
-executor.print_response="partial"
-
-def clean_response(resp):
-    resp = resp.strip()
-    while "\n\n" in resp:
-       resp = resp.replace("\n\n","\n")
-    resp = resp+"\n"
-    return resp
+risposta=""
 
 for i in range(10):
-    resp = executor([p])
-    executor.print_prompt=False
-#    print(resp,end="")
-    resp = clean_response(resp)
-    comando = resp[resp.find("Action:")+7:].split("\n")[0].strip()
-    if comando.find("(") >= 0: #forma compatta comando(parametri)
-        c1 = comando.split("(")
-        comando = c1[0].strip()
-        parametri = c1[1][:-1]
-    else:
-        parametri = resp[resp.find("Inputs:")+7:].strip()
+    respo = agentExecutor([risposta])
+    resp = respo["raw"]
+    comando,parametri=respo["command"],respo["args"]
 
-#    print(resp,end="")
     if comando == "answer":
         #print("")
         print(f"{bcolors.WARNING}Risposta: " + parametri + f"{bcolors.ENDC}")
         break;
 
-    if resp.find("Answer:")>= 0:
-        print("")
-        risposta = resp[resp.find("Answer:")+7:].strip().split("\n")[0]
-        print(f"{bcolors.WARNING}Risposta: " + risposta + f"{bcolors.ENDC}")
-        break
+
     risposta = esegui_comando(comando,parametri)
     resp2 = "Observation: " + risposta + "\nThought: "
     print(resp2,end="")
