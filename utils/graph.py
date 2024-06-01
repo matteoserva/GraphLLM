@@ -1,6 +1,11 @@
 import yaml
 import copy
 
+def get_clean_config(instructions_raw):
+    instruction_rows = yaml.safe_load(instructions_raw)
+    res = yaml.dump(instruction_rows)
+    return res
+
 def parse_executor_graph(instructions_raw):
     instruction_rows = yaml.safe_load(instructions_raw)
     instruction_flat = []

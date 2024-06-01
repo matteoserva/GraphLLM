@@ -201,7 +201,13 @@ class GraphExecutor:
             self.variables[stri] = v
             self.variables["c"][str(idx)] = v
         instructions_raw = None
-        graph_raw = graph.parse_executor_graph(cl_args[0])
+
+        clean_config = cl_args[0]
+        clean_config = graph.get_clean_config(clean_config)
+        for i,el in enumerate(cl_args[1:],1):
+            rstr = "{v:c["+ str(i) + "]}"
+            clean_config = clean_config.replace("{}",rstr,1)
+        graph_raw = graph.parse_executor_graph(clean_config)
 
         #add command_line node
         input_obj = {"name": "_C", "type": "command_line", "conf": i, "init": cl_args}
