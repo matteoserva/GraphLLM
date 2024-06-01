@@ -14,6 +14,14 @@ def readfile(fn):
     f.close()
     return p
 
+def try_solve_files(cl_args):
+    for i, el in enumerate(cl_args):
+        try:
+            cl_args[i] = readfile(el)
+        except:
+            pass
+    return cl_args
+
 def merge_params(base,update):
         res = copy.deepcopy(base)
         for el in update:
