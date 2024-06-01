@@ -1,9 +1,43 @@
-from . import graph
+from . import graph_utils
 from .common import readfile,merge_params,try_solve_files
 from utils.executor import *
 
 class GraphNode:
-    pass
+    def __init__(self,graph,node_config):
+        self.graph = graph
+        node = {}
+        el = node_config
+        if el["type"] == "stateless":
+            ex_args = el["exec"]
+            self.executor = StatelessExecutor(graph.client)
+            if "init" in el:
+                init_args = el["init"]
+                for i, v in enumerate(init_args):
+                    init_args[i], _ = solve_templates(init_args[i], [], graph.variables)
+                self.executor.load_config(el["init"])
+            executor_parameters = graph.client_parameters
+            if "conf" in el and "grammar" in el["conf"]:
+                grammarfile = el["conf"]["grammar"]
+                grammar = load_grammar(grammarfile)
+                new_obj = {grammar["format"]: grammar["schema"]}
+                executor_parameters = merge_params(executor_parameters, new_obj)
+                pass
+
+            self.executor.set_client_parameters(executor_parameters)
+        elif el["type"] == "command_line":
+            val = el["init"]
+
+            def dummy_return(d):
+                return val
+            r = dummy_return
+            self.executor = r
+            pass
+
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+    def __setitem__(self, key, value):
+        setattr(self,key,value)
 
 class GraphExecutor:
     def __init__(self,client):
@@ -17,34 +51,7 @@ class GraphExecutor:
         self.client_parameters = p
         #self.execRow.set_client_parameters(p)
 
-    def _make_node(self,node_config):
-        node = {}
-        el = node_config
-        if el["type"] == "stateless":
-            ex_args = el["exec"]
-            node["executor"] = StatelessExecutor(self.client)
-            if "init" in el:
-                init_args = el["init"]
-                for i, v in enumerate(init_args):
-                    init_args[i], _ = solve_templates(init_args[i], [], self.variables)
-                node["executor"].load_config(el["init"])
-            executor_parameters = self.client_parameters
-            if "conf" in el and "grammar" in el["conf"]:
-                grammarfile = el["conf"]["grammar"]
-                grammar = load_grammar(grammarfile)
-                new_obj = {grammar["format"]: grammar["schema"]}
-                executor_parameters = merge_params(executor_parameters, new_obj)
-                pass
 
-            node["executor"].set_client_parameters(executor_parameters)
-        elif el["type"] == "command_line":
-            val = el["init"]
-
-            def dummy_return(d):
-                return val
-
-            node["executor"] = dummy_return
-        return node
 
     def load_config(self,cl_args=None):
         try_solve_files(cl_args)
@@ -56,23 +63,23 @@ class GraphExecutor:
         instructions_raw = None
 
         clean_config = cl_args[0]
-        clean_config = graph.get_clean_config(clean_config)
+        clean_config = graph_utils.get_clean_config(clean_config)
         for i,el in enumerate(cl_args[1:],1):
             rstr = "{v:c["+ str(i) + "]}"
             clean_config = clean_config.replace("{}",rstr,1)
-        graph_raw = graph.parse_executor_graph(clean_config)
+        graph_raw = graph_utils.parse_executor_graph(clean_config)
 
         #add command_line node
         input_obj = {"name": "_C", "type": "command_line", "conf": i, "init": cl_args}
         graph_raw.insert(0,input_obj)
 
-        node_connections = graph.create_arcs(graph_raw)
+        node_connections = graph_utils.create_arcs(graph_raw)
         node_configs = graph_raw
 
 
         graph_nodes = []
         for el in node_configs:
-            node = self._make_node(el)
+            node = GraphNode(self,el)
             graph_nodes.append(node)
 
 
