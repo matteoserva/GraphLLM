@@ -32,7 +32,7 @@ def parse_executor_graph(instructions_raw):
                     el[name] = val_split
                 elif isinstance(el[name],dict):
                     val = list(el[name].keys())
-                    el[name] = "{" + str(val[0])+"}"
+                    el[name] = ["{" + str(val[0])+"}"]
                     pass
 
 
