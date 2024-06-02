@@ -26,7 +26,14 @@ def merge_params(base,update):
         res = copy.deepcopy(base)
         for el in update:
             if el == "stop":
-                res["stop"].extend(update[el])
+                stoparr = update[el]
+                if isinstance(stoparr,str):
+                    stoparr = [stoparr]
+
+                if "stop" in res:
+                    res["stop"].extend(stoparr)
+                else:
+                    res["stop"] = stoparr
             else:
                 res[el] = update[el]
         return res

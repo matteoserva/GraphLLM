@@ -6,7 +6,7 @@ from utils.formatter import Formatter,PromptBuilder
 
 from utils.graph_executor import GraphExecutor
 
-client = DummyClient()
+client = Client()
 client.connect()
 
 parameters = {}

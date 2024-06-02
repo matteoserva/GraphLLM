@@ -22,7 +22,7 @@ def parse_executor_graph(instructions_raw):
 
     # make arrays
     for el in instruction_rows.values():
-        for name in ["init","exec"]:
+        for name in ["init","exec","deps"]:
             if name in el:
                 if isinstance(el[name], str):
                     val_raw = el[name]

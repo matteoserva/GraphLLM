@@ -2,7 +2,7 @@ from .formatter import PromptBuilder
 from .parser import solve_templates
 from .common import readfile,merge_params,try_solve_files
 from .grammar import load_grammar
-
+from .agent_ops import AgentOps
 
 
 def send_chat(builder,client,client_parameters=None,print_response=True):
@@ -30,6 +30,10 @@ class BaseExecutor:
 
     def set_client_parameters(self,p):
         self.client_parameters = p
+
+    def set_param(self,key,value):
+        if key == "force_system":
+            self.builder.set_param(key, value)
 
     def load_config(self,cl_args=None):
         for i,el in enumerate(cl_args):
@@ -141,7 +145,92 @@ class SequenceExecutor:
         res = self._execute_list(instructions, prompt)
         return res
 
+class AgentController:
+    def __init__(self, *args):
+        self.current_prompt = ""
+        self.base_prompt = ""
+        self.tokens=["Thought:","Action:","Inputs:","Observation:"]
+        self.state = "INIT"
+        self.current_iteration = 0
+
+    def load_config(self,args):
+
+        ops_string = self.ops_executor.get_formatted_ops()
+        template_args =  try_solve_files(args + [ops_string])
+        base_template , _ = solve_templates("{}", template_args)
+        self.current_prompt = base_template
+        self.base_prompt = base_template
+        pass
+
+    def set_dependencies(self,args):
+        self.ops_executor = args[0]
+
+    def _handle_tool_response(self,prompt_args):
+        if (self.state == "COMPLETE"):
+            return None
+        self.current_iteration += 1
+        new_observation = str(prompt_args)
+        if len(new_observation) > 0:
+            new_observation = "Observation: " + new_observation + "\nThought: "
+        self.current_prompt += new_observation
+        return self.current_prompt
+
+    def _handle_query(self,prompt_args):
+        self.current_prompt = self.base_prompt
+        return self.current_prompt
+
+    def _handle_llm_response(self,resp):
+
+        resp = self._clean_response(resp)
+        self.current_prompt += resp
+        respo = self._parse_response(resp)
+        respo["raw"] = resp
+
+        return respo
+
+    def _handle_graph_request(self,inputs):
+        outputs = [None] * 3
+        if inputs[0] is not None:
+            outputs[1] = self._handle_query(inputs[0])
+            inputs[0] = None
+        elif inputs[1] is not None:
+            outputs[2] = self._handle_llm_response(inputs[1])
+            inputs[1] = None
+        elif inputs[2] is not None:
+            outputs[1] = self._handle_tool_response(inputs[2])
+            inputs[2] = None
+        if self.current_iteration >= 10:
+            outputs = [None] * 3
+        return outputs
+
+    def __call__(self,*args,**kwargs):
+        return self._handle_graph_request(*args,**kwargs)
+
+    def _clean_response(self, resp):
+        resp = resp.strip()
+        while "\n\n" in resp:
+           resp = resp.replace("\n\n","\n")
+        resp = resp+"\n"
+        return resp
+
+    def _parse_response(self,resp):
+        comando = resp[resp.find("Action:") + 7:].split("\n")[0].strip()
+        if comando.find("(") >= 0:  # forma compatta comando(parametri)
+            c1 = comando.split("(")
+            comando = c1[0].strip()
+            parametri = c1[1][:-1]
+        else:
+            parametri = resp[resp.find("Inputs:") + 7:].strip()
+
+        if resp.find("Answer:") >= 0:
+            comando = "answer"
+            parametri = resp[resp.find("Answer:") + 7:].strip().split("\n")[0]
+        resp = {"command":comando,"args":parametri}
+        if(comando == "answer"):
+            self.state = "COMPLETE"
+        return resp
 
 
-
+class ToolExecutor(AgentOps):
+    pass
 

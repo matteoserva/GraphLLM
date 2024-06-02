@@ -4,7 +4,7 @@ from utils import agent_ops
 from utils.client import Client
 from utils.common import solve_templates
 from utils.formatter import PromptBuilder
-from utils.executor import StatelessExecutor
+from utils.executor import StatelessExecutor,AgentController
 
 agent = agent_ops.AgentOps()
 
@@ -19,9 +19,11 @@ f.close()
 #import json
 #import requests
 
-class AgentExecutor:
+
+
+class AgentGraph:
     def __init__(self, client):
-        self.tokens=["Thought:","Action:","Inputs:","Observation:"]
+        self.agent_node = AgentController(client)
         executor = StatelessExecutor(client)
         self.executor = executor
         self.current_prompt = ""
@@ -35,64 +37,42 @@ class AgentExecutor:
         params["penalize_nl"] = True
         params["top_k"] = 20
         executor.set_client_parameters(params)
-        executor.builder.set_param("force_system", True)
+        executor.set_param("force_system", True)
         executor.print_response = "partial"
 
     def load_config(self,args):
-        self.executor.load_config(args)
+        self.agent_node.load_config(args)
+
+
 
     def __call__(self,prompt_args):
-        new_observation = prompt_args[0]
-        if len(prompt_args[0]) > 0:
-            new_observation = "Observation: " + new_observation + "\nThought: "
-        self.current_prompt += new_observation
-        current_prompt = self.current_prompt
-        resp = self.executor([current_prompt])
 
-        resp = self._clean_response(resp)
-        self.current_prompt +=resp
-        respo = self._parse_response(resp)
+        new_prompt = self.agent_node._handle_tool_response(prompt_args[0])
+
+        llm_response = self.executor([new_prompt])
         self.executor.print_prompt = False
-        respo["raw"] = resp
+        respo = self.agent_node._handle_llm_response(llm_response)
         return respo
 
-    def _clean_response(self, resp):
-        resp = resp.strip()
-        while "\n\n" in resp:
-           resp = resp.replace("\n\n","\n")
-        resp = resp+"\n"
-        return resp
 
-    def _parse_response(self,resp):
-        comando = resp[resp.find("Action:") + 7:].split("\n")[0].strip()
-        if comando.find("(") >= 0:  # forma compatta comando(parametri)
-            c1 = comando.split("(")
-            comando = c1[0].strip()
-            parametri = c1[1][:-1]
-        else:
-            parametri = resp[resp.find("Inputs:") + 7:].strip()
-
-        if resp.find("Answer:") >= 0:
-            comando = "answer"
-            parametri = resp[resp.find("Answer:") + 7:].strip().split("\n")[0]
-        resp = {"command":comando,"args":parametri}
-        return resp
 
 client = Client()
 client.connect()
 
 ops_string = agent.get_formatted_ops()
 
-agentExecutor = AgentExecutor(client)
+agentExecutor = AgentGraph(client)
 
-agent_args = ["{}{}"] + sys.argv[1:]+[ops_string]
+agentExecutor.agent_node.set_dependencies([agent])
+
+agent_args = sys.argv[1:]
 agentExecutor.load_config(agent_args)
 
 
 #import re
-def esegui_comando(istruzione, parametri):
+def esegui_comando(respo):
     try:
-        res = agent(istruzione,parametri)
+        res = agent(respo)
     except Exception as e:
         res = "Error: " + str(e)
     return str(res)
@@ -121,7 +101,7 @@ for i in range(10):
         break;
 
 
-    risposta = esegui_comando(comando,parametri)
+    risposta = esegui_comando(respo)
     resp2 = "Observation: " + risposta + "\nThought: "
     print(resp2,end="")
     p = p + resp + resp2

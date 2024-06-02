@@ -2,37 +2,39 @@ from . import graph_utils
 from .common import readfile,merge_params,try_solve_files
 from utils.executor import *
 
+class ConstantNode:
+    def __init__(self,*args):
+        pass
+
+    def load_config(self,args):
+        self.retval = args
+
+    def __call__(self,*args):
+        ret = [el for el in self.retval]
+        return ret
+
 class GraphNode:
     def __init__(self,graph,node_config):
         self.graph = graph
         self.free_runs = 0
         self.disable_execution = False
+        self.input_rule="AND"
+        self.type = node_config["type"]
+        self.name = node_config["name"]
         node = {}
         el = node_config
         if el["type"] == "stateless":
             self.executor = StatelessExecutor(graph.client)
-            if "init" in el:
-                init_args = el["init"]
-                for i, v in enumerate(init_args):
-                    init_args[i], _ = solve_templates(init_args[i], [], graph.variables)
-                self.executor.load_config(el["init"])
-            executor_parameters = graph.client_parameters
-            if "conf" in el and "grammar" in el["conf"]:
-                grammarfile = el["conf"]["grammar"]
-                grammar = load_grammar(grammarfile)
-                new_obj = {grammar["format"]: grammar["schema"]}
-                executor_parameters = merge_params(executor_parameters, new_obj)
-                pass
 
-            self.executor.set_client_parameters(executor_parameters)
         elif el["type"] == "command_line":
-            val = el["init"]
-            self.free_runs = 1
-            def dummy_return(d):
-                return val
-            r = dummy_return
-            self.executor = r
+            self.executor = ConstantNode()
             pass
+
+        elif el["type"] == "agent":
+            self.executor = AgentController()
+            self.input_rule = "OR"
+        elif el["type"] == "tool":
+            self.executor = ToolExecutor()
 
     def execute(self):
         node=self
@@ -68,15 +70,57 @@ class GraphNode:
 
         missing_inputs = len([el for el in node["inputs"] if el is None])
         blocked_outputs = len([el for el in node["outputs"] if not el is None])
+        if (self.input_rule == "OR"):
+            available_inputs = len([el for el in node["inputs"] if el is not None])
+            missing_inputs = 0 if available_inputs > 0 else missing_inputs
 
         runnable = (missing_inputs + blocked_outputs) == 0
         return runnable
+
+    def set_dependencies(self,deps):
+        self.executor.set_dependencies(deps)
+
+    def prepare(self,args):
+        if self.type == "stateless":
+            executor_parameters = self.graph.client_parameters
+            self.executor.set_client_parameters(executor_parameters)
+            new_obj = {}
+            for key in ["stop", "n_predict","temperature","top_k"]:
+                if key in args:
+                    new_obj[key] = args[key]
+
+            if "grammar" in args:
+                grammarfile = args["grammar"]
+                grammar = load_grammar(grammarfile)
+                new_obj[grammar["format"]] = grammar["schema"]
+
+            executor_parameters = merge_params(executor_parameters, new_obj)
+            self.executor.set_client_parameters(executor_parameters)
+
+            for key in ["force_system"]:
+                if key in args:
+                    self.executor.set_param(key,args[key])
+
+        else:
+            self.executor.prepare(args)
+
+    def load_template(self,init_args):
+        for i, v in enumerate(init_args):
+            init_args[i], _ = solve_templates(init_args[i], [], self.graph.variables)
+        self.executor.load_config(init_args)
+
 
     def __getitem__(self, item):
         return getattr(self, item)
 
     def __setitem__(self, key, value):
         setattr(self,key,value)
+
+def _make_graph_node(graph,node_config):
+    node = GraphNode(graph, node_config)
+    return node
+
+
 
 class GraphExecutor:
     def __init__(self,client):
@@ -109,7 +153,7 @@ class GraphExecutor:
         graph_raw = graph_utils.parse_executor_graph(clean_config)
 
         #add command_line node
-        input_obj = {"name": "_C", "type": "command_line", "conf": i, "init": cl_args}
+        input_obj = {"name": "_C", "type": "command_line", "init": cl_args}
         graph_raw.insert(0,input_obj)
 
         node_connections = graph_utils.create_arcs(graph_raw)
@@ -118,9 +162,25 @@ class GraphExecutor:
 
         graph_nodes = []
         for el in node_configs:
-            node = GraphNode(self,el)
+            node = _make_graph_node(self,el)
             graph_nodes.append(node)
 
+        nodes_map = {el["name"]:el for el in graph_nodes}
+        for i,node in enumerate(graph_nodes):
+            config = node_configs[i]
+            if "deps" in config:
+                solved_deps = [nodes_map[el].executor for el in config["deps"]]
+                node.set_dependencies(solved_deps)
+
+        for i,node in enumerate(graph_nodes):
+            config = node_configs[i]
+            if "conf" in config:
+                node.prepare(config["conf"])
+
+        for i,node in enumerate(graph_nodes):
+            config = node_configs[i]
+            if "init" in config:
+                node.load_template(config["init"])
 
         for i,el in enumerate(node_connections):
             num_inputs = len(el["deps"])

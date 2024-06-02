@@ -45,13 +45,15 @@ class AgentMath2():
 from ast import literal_eval
 
 class AgentOps():
-	def __init__(self):
+	def __init__(self,*args):
 		print("inizio")
 		self.tools = {}
 		self.add_tool(AgentMath2())
 		self.add_tool(AgentAnswer())
 
-	
+	def prepare(self,args):
+		pass
+
 	def add_tool(self, tool):
 		ops = [el for el in dir(tool) if not el.startswith("_") ]
 		for op in ops:
@@ -102,7 +104,10 @@ class AgentOps():
 			params = literal_eval(text_params)
 		except:
 			raise Exception("error, the parameters must be in the correct format.")
-
+		if isinstance(params,tuple):
+			params=list(params)
+		if not isinstance(params,list):
+			params = [params]
 
 
 		l1 = row["num_parameters"]
@@ -113,8 +118,16 @@ class AgentOps():
 		res = f(*params)
 		return res
 
-	def __call__(self, fname, text_params):
-		res = self.exec(fname,text_params)
+	def __call__(self, fname, text_params=None):
+		if isinstance(fname,list) and text_params is None: #[{comando parametri}]
+			fname = fname [0]
+		if isinstance(fname,dict):
+			fname, text_params = fname["command"], fname["args"]
+		try:
+			res = self.exec(fname,text_params)
+		except Exception as e:
+			return e
+
 		return res
 
 
