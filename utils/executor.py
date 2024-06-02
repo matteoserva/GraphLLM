@@ -185,7 +185,8 @@ class AgentController:
         self.current_prompt += resp
         respo = self._parse_response(resp)
         respo["raw"] = resp
-
+        if (respo["command"] == "answer"):
+            self.state = "COMPLETE"
         return respo
 
     def _handle_graph_request(self,inputs):
@@ -226,8 +227,7 @@ class AgentController:
             comando = "answer"
             parametri = resp[resp.find("Answer:") + 7:].strip().split("\n")[0]
         resp = {"command":comando,"args":parametri}
-        if(comando == "answer"):
-            self.state = "COMPLETE"
+
         return resp
 
 
