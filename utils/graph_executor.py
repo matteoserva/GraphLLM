@@ -2,16 +2,7 @@ from . import graph_utils
 from .common import readfile,merge_params,try_solve_files
 from utils.executor import *
 
-class ConstantNode:
-    def __init__(self,*args):
-        pass
 
-    def load_config(self,args):
-        self.retval = args
-
-    def __call__(self,*args):
-        ret = [el for el in self.retval]
-        return ret
 
 class GraphNode:
     def __init__(self,graph,node_config):

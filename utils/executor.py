@@ -234,3 +234,13 @@ class AgentController:
 class ToolExecutor(AgentOps):
     pass
 
+class ConstantNode:
+    def __init__(self,*args):
+        pass
+
+    def load_config(self,args):
+        self.retval = args
+
+    def __call__(self,*args):
+        ret = [el for el in self.retval]
+        return ret
