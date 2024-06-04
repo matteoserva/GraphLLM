@@ -262,6 +262,8 @@ class ConstantNode:
         ret = [el for el in self.retval]
         return ret
 
+
+
 class CopyNode:
     def __init__(self,*args):
         self.parameters = {}

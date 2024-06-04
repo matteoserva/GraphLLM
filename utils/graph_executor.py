@@ -2,8 +2,6 @@ from . import graph_utils
 from .common import readfile,merge_params,try_solve_files
 from utils.executor import *
 
-
-
 class GraphNode:
     def __init__(self,graph,node_config):
         self.graph = graph
@@ -16,7 +14,7 @@ class GraphNode:
         el = node_config
         if el["type"] == "stateless":
             self.executor = StatelessExecutor(graph.client)
-        elif el["type"] == "command_line":
+        elif el["type"] == "constant":
             self.executor = ConstantNode()
         elif el["type"] == "agent":
             self.executor = AgentController()
@@ -164,8 +162,12 @@ class GraphExecutor:
         graph_raw = graph_utils.parse_executor_graph(clean_config)
 
         #add command_line node
-        input_obj = {"name": "_C", "type": "command_line", "init": cl_args}
+        input_obj = {"name": "_C", "type": "constant", "init": cl_args}
         graph_raw.insert(0,input_obj)
+
+        #add input node
+        input_obj = {"name": "_I", "type": "copy"}
+        graph_raw.insert(0, input_obj)
 
         node_connections = graph_utils.create_arcs(graph_raw)
         node_configs = graph_raw
@@ -233,9 +235,11 @@ class GraphExecutor:
                 node["outputs"][source_port] = None
                 pass
 
-    def __call__(self,prompt):
+    def __call__(self, input_data):
         res = None
 
+        input_node = [el for el in self.graph_nodes if el["name"] == "_I"][0]
+        input_node["inputs"] = input_data
         while True:
             runnable = [i for i,v in enumerate(self.graph_nodes) if v.is_runnable()]
             if len(runnable) == 0:
