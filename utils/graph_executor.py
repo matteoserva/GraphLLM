@@ -16,7 +16,6 @@ class GraphNode:
         el = node_config
         if el["type"] == "stateless":
             self.executor = StatelessExecutor(graph.client)
-
         elif el["type"] == "command_line":
             self.executor = ConstantNode()
         elif el["type"] == "agent":
@@ -124,11 +123,17 @@ def _make_graph_node(graph,node_config):
 
 
 class GraphExecutor:
-    def __init__(self,client):
+    def __init__(self,executor_config):
+        if not isinstance(executor_config, dict):
+            executor_config = {"client":executor_config}
 
-        #self.execRow = StatelessExecutor(client)
+        client = executor_config["client"]
+        if "client_parameters" in executor_config:
+            self.client_parameters = executor_config["client_parameters"]
+        else:
+            self.client_parameters = None
+
         self.client = client
-        self.client_parameters = None
         self.variables={"c": {}, "r":{}}
 
     def set_client_parameters(self,p):
