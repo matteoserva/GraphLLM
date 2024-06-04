@@ -100,6 +100,8 @@ class GraphNode:
                     self.executor.set_param(key,args[key])
         elif self.type == "copy":
             self.executor.set_parameters(args)
+        elif self.type == "tool":
+            self.executor.prepare(args)
         else:
             pass
 

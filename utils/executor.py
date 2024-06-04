@@ -92,9 +92,9 @@ class SequenceExecutor:
         self.execRow.set_client_parameters(p)
 
     def load_config(self,cl_args=None):
-        parse_files(cl_args)
+        cl_args[0] = try_solve_files([cl_args[0]])[0]
         for el in cl_args[1:]:
-            cl_args[0].replace("{}",el,1)
+            cl_args[0] = cl_args[0].replace("{}",el,1)
         self.instructions_raw = cl_args[0]
         return cl_args
 
