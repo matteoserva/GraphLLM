@@ -3,7 +3,7 @@ from .parser import solve_templates
 from .common import readfile,merge_params,try_solve_files
 from .grammar import load_grammar
 from .agent_ops import AgentOps
-
+import json
 
 def send_chat(builder,client,client_parameters=None,print_response=True):
     r = client.send_prompt(builder,params=client_parameters)
@@ -261,8 +261,17 @@ class ConstantNode:
 
 class CopyNode:
     def __init__(self,*args):
-        pass
+        self.parameters = {}
+
+    def set_parameters(self,args):
+        self.parameters = args
 
     def __call__(self,*args):
+
         res = list(*args)
+        if ("return_attr" in self.parameters):
+            attr_name = self.parameters["return_attr"]
+            v = res[0]
+            base = json.loads(v)
+            res[0] = base[attr_name]
         return res

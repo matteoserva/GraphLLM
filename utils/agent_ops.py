@@ -48,7 +48,7 @@ class AgentOps():
 	def __init__(self,*args):
 		print("inizio")
 		self.tools = {}
-		self.add_tool(AgentMath2())
+		self.add_tool(AgentMath())
 		self.add_tool(AgentAnswer())
 
 	def prepare(self,args):

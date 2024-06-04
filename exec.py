@@ -18,7 +18,8 @@ seqExec = GraphExecutor(client)
 seqExec.set_client_parameters(parameters)
 
 cl_args = seqExec.load_config(sys.argv[1:])
-seqExec(cl_args[1:])
+res = seqExec(cl_args[1:])
+print("Result:", res)
 
 
 

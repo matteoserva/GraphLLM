@@ -19,8 +19,6 @@ class GraphNode:
 
         elif el["type"] == "command_line":
             self.executor = ConstantNode()
-            pass
-
         elif el["type"] == "agent":
             self.executor = AgentController()
             self.input_rule = "OR"
@@ -30,7 +28,7 @@ class GraphNode:
             self.executor = CopyNode()
         elif el["type"] == "graph":
             self.executor = GraphExecutor(graph.client)
-            self.executor.set_client_parameters(graph.client_parameters)
+            #
     def execute(self):
         node=self
         inputs = node["inputs"]
@@ -76,7 +74,12 @@ class GraphNode:
         self.executor.set_dependencies(deps)
 
     def prepare(self,args):
-        if self.type == "stateless":
+        if self.type == "graph":
+            self.executor.set_client_parameters(self.graph.client_parameters)
+        elif args is  None:
+            if hasattr(self.executor, "prepare"):
+                pass
+        elif self.type == "stateless" :
             executor_parameters = self.graph.client_parameters
             self.executor.set_client_parameters(executor_parameters)
             new_obj = {}
@@ -95,9 +98,10 @@ class GraphNode:
             for key in ["force_system"]:
                 if key in args:
                     self.executor.set_param(key,args[key])
-
+        elif self.type == "copy":
+            self.executor.set_parameters(args)
         else:
-            self.executor.prepare(args)
+            pass
 
     def load_template(self,init_args):
         for i, v in enumerate(init_args):
@@ -171,6 +175,8 @@ class GraphExecutor:
             config = node_configs[i]
             if "conf" in config:
                 node.prepare(config["conf"])
+            else:
+                node.prepare(None)
 
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]
