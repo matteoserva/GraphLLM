@@ -20,14 +20,19 @@ class GraphNode:
             self.executor = ConstantNode()
         elif el["type"] == "agent":
             self.executor = AgentController()
-            self.input_rule = "OR"
         elif el["type"] == "tool":
             self.executor = ToolExecutor()
         elif el["type"] == "copy":
             self.executor = CopyNode()
         elif el["type"] == "graph":
             self.executor = GraphExecutor(graph.client)
-            #
+
+        if hasattr(self.executor, "get_properties"):
+            props = self.executor.get_properties()
+            if "input_rule" in props:
+                self.input_rule = props["input_rule"]
+
+
     def execute(self):
         node=self
         inputs = node["inputs"]

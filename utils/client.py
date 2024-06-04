@@ -36,6 +36,18 @@ class Client:
     def __init__(self,host="matteopc"):
         self.host = host
         self.parameters = {}
+        a = {}
+        a["n_predict"] = 128 * 8
+        a["stop"] = ["<|end|>", "<|im_end|>", "</s>"]
+        #        a["temperature"] = 0.0
+        a["seed"] = 0
+        a["cache_prompt"] = True
+        a["stream"] = True
+        # a["n_probs"] = 10
+        # a["n_keep"] = -1
+        # a["top_k"] = 5
+        self.default_params = a
+
 
     def connect(self):
         props = self.get_server_props()
@@ -119,19 +131,8 @@ class Client:
     
     def _send_prompt_text(self, p, params):
         tokens = self.tokenize(p)
-        #self.detokenize(tokens)
-        #MIN_PREDICT = 128
-        a={}
-        a["n_predict"] = 128*8
-        a["stop"] = ["<|end|>","<|im_end|>","</s>"]
-#        a["temperature"] = 0.0
-        a["seed"] = 0
-        a["cache_prompt"] = True
-        a["stream"] = True
-        #a["n_probs"] = 10
-        #a["n_keep"] = -1
-        #a["top_k"] = 5
-        a = merge_params(a,params)
+
+        a = merge_params(self.default_params,params)
         a["prompt"] = tokens
 
         if len(tokens) +a["n_predict"] >= self.context_size:

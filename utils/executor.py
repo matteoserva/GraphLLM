@@ -84,7 +84,6 @@ class StatefulExecutor(BaseExecutor):
 class SequenceExecutor:
     def __init__(self,client):
 
-#       self.client = client
         self.execRow = StatelessExecutor(client)
         self.client_parameters = None
 
@@ -153,6 +152,10 @@ class AgentController:
         self.state = "INIT"
         self.current_iteration = 0
         self.answer = ""
+
+    def get_properties(self):
+        res = {"input_rule":"OR"}
+        return res
 
     def _reset_internal_state(self):
         self.state = "INIT"
