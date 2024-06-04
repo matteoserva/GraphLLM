@@ -176,7 +176,7 @@ class AgentController:
 
     def _handle_tool_response(self,prompt_args):
 
-        self.current_iteration += 1
+
         new_observation = str(prompt_args)
         if len(new_observation) > 0:
             new_observation = "Observation: " + new_observation + "\nThought: "
@@ -203,11 +203,16 @@ class AgentController:
             outputs[1] = self._handle_query(inputs[0])
             inputs[0] = None
         elif inputs[1] is not None:
+            self.current_iteration += 1
             respo = self._handle_llm_response(inputs[1])
             if (respo["command"] == "answer"):
                 self.state = "COMPLETE"
                 self.answer = respo["args"]
-            outputs[2] = respo
+                outputs[2] = respo
+            elif self.current_iteration >= 10:
+                outputs[0] = Exception("llm agent overrun")
+            else:
+                outputs[2] = respo
             inputs[1] = None
         elif inputs[2] is not None:
             if (self.state == "COMPLETE"):
@@ -217,8 +222,7 @@ class AgentController:
             else:
                 outputs[1] = self._handle_tool_response(inputs[2])
             inputs[2] = None
-        if self.current_iteration >= 10:
-            return outputs
+
         return outputs
 
     def __call__(self,*args,**kwargs):
