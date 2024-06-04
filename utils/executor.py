@@ -152,6 +152,12 @@ class AgentController:
         self.tokens=["Thought:","Action:","Inputs:","Observation:"]
         self.state = "INIT"
         self.current_iteration = 0
+        self.answer = ""
+
+    def _reset_internal_state(self):
+        self.state = "INIT"
+        self.base_prompt = self.current_prompt
+        self.current_iteration = 0
 
     def load_config(self,args):
 
@@ -159,15 +165,14 @@ class AgentController:
         template_args =  try_solve_files(args + [ops_string])
         base_template , _ = solve_templates("{}", template_args)
         self.current_prompt = base_template
-        self.base_prompt = base_template
+        self._reset_internal_state()
         pass
 
     def set_dependencies(self,args):
         self.ops_executor = args[0]
 
     def _handle_tool_response(self,prompt_args):
-        if (self.state == "COMPLETE"):
-            return None
+
         self.current_iteration += 1
         new_observation = str(prompt_args)
         if len(new_observation) > 0:
@@ -185,23 +190,32 @@ class AgentController:
         self.current_prompt += resp
         respo = self._parse_response(resp)
         respo["raw"] = resp
-        if (respo["command"] == "answer"):
-            self.state = "COMPLETE"
+
         return respo
 
     def _handle_graph_request(self,inputs):
         outputs = [None] * 3
+
         if inputs[0] is not None:
             outputs[1] = self._handle_query(inputs[0])
             inputs[0] = None
         elif inputs[1] is not None:
-            outputs[2] = self._handle_llm_response(inputs[1])
+            respo = self._handle_llm_response(inputs[1])
+            if (respo["command"] == "answer"):
+                self.state = "COMPLETE"
+                self.answer = respo["args"]
+            outputs[2] = respo
             inputs[1] = None
         elif inputs[2] is not None:
-            outputs[1] = self._handle_tool_response(inputs[2])
+            if (self.state == "COMPLETE"):
+                outputs[0] = self.answer
+                self._reset_internal_state()
+
+            else:
+                outputs[1] = self._handle_tool_response(inputs[2])
             inputs[2] = None
         if self.current_iteration >= 10:
-            outputs = [None] * 3
+            return outputs
         return outputs
 
     def __call__(self,*args,**kwargs):
@@ -244,3 +258,11 @@ class ConstantNode:
     def __call__(self,*args):
         ret = [el for el in self.retval]
         return ret
+
+class CopyNode:
+    def __init__(self,*args):
+        pass
+
+    def __call__(self,*args):
+        res = list(*args)
+        return res

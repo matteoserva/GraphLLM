@@ -26,7 +26,11 @@ class GraphNode:
             self.input_rule = "OR"
         elif el["type"] == "tool":
             self.executor = ToolExecutor()
-
+        elif el["type"] == "copy":
+            self.executor = CopyNode()
+        elif el["type"] == "graph":
+            self.executor = GraphExecutor(graph.client)
+            self.executor.set_client_parameters(graph.client_parameters)
     def execute(self):
         node=self
         inputs = node["inputs"]
