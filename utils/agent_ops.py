@@ -119,8 +119,16 @@ class AgentOps():
 		return res
 
 	def __call__(self, fname, text_params=None):
-		if isinstance(fname,list) and text_params is None: #[{comando parametri}]
+		if isinstance(fname,list) and text_params is None: #[{comando parametri}] oppure #[comando,param1,param2]
+			if(len(fname) > 1):
+				text_params = ",".join(fname[1:])
 			fname = fname [0]
+
+		if isinstance(fname,str) and text_params is None and fname.find("(") > 0:
+			spl = fname.split("(")
+			fname = spl[0]
+			text_params = spl[1][:-1]
+
 		if isinstance(fname,dict):
 			fname, text_params = fname["command"], fname["args"]
 		try:
