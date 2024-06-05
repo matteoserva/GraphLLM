@@ -24,7 +24,7 @@ class DummyClient:
 
     def send_prompt(self,p,params=None):
         print(p.messages)
-        return ["dummy response"]
+        return ["{ \"answer\": \"dummy response\"}"]
 
     def connect(self):
         pass
@@ -33,7 +33,7 @@ class DummyClient:
         return ""
 
 class Client:
-    def __init__(self,host="matteopc"):
+    def __init__(self,host="minipd"):
         self.host = host
         self.parameters = {}
         a = {}

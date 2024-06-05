@@ -1,6 +1,7 @@
 from . import graph_utils
 from .common import readfile,merge_params,try_solve_files
 from utils.executor import *
+import threading
 
 class GraphNode:
     def __init__(self,graph,node_config):
@@ -37,9 +38,6 @@ class GraphNode:
 
         #        m,_ = solve_templates(inputs[0],inputs[1:],self.variables)
         ex = node["executor"]
-        res = ex(inputs)
-        if not isinstance(res, list):
-            res = [res]
 
         # consuma gli input
         if self["free_runs"] > 0:
@@ -49,7 +47,13 @@ class GraphNode:
         else:
             self.disable_execution = True
 
+        res = ex(inputs)
+        if not isinstance(res, list):
+            res = [res]
+
+
         # salva gli output
+        node["last_output"] = res
         for i, el in enumerate(res):
             if i < len(node["outputs"]):
                 node["outputs"][i] = el
@@ -244,8 +248,16 @@ class GraphExecutor:
             runnable = [i for i,v in enumerate(self.graph_nodes) if v.is_runnable()]
             if len(runnable) == 0:
                 break
+            if len(runnable) > 2:
+                runnable = runnable[0:2]
+            tds = [threading.Thread(target=self.graph_nodes[i].execute) for i in runnable]
+            for el in tds:
+                el.start()
+            for el in tds:
+                el.join()
             for i in runnable:
-                res = self.graph_nodes[i].execute()
+                res = self.graph_nodes[i]["last_output"]
+                #res = self.graph_nodes[i].execute()
                 config = self.node_configs[i]
                 name = config["name"]
                 rname = "r" + name
