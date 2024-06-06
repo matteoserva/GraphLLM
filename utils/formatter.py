@@ -35,10 +35,10 @@ class Formatter:
             formatter["system_name"]=""
             formatter["user_name"]="Instruction: "
             formatter["assistant_name"]="Response:\n"
-            formatter["role_string"] = {"user":"Instruction: ","assistant":"Response:\n","system":""}
-            formatter["role_eom"] = {"user":"\n","assistant":"<eod>","system":"\nInstruction: "} 
+            formatter["role_string"] = {"user":"","assistant":"","system":""}
+            formatter["role_eom"] = {"user":"<sep>","assistant":"","system":"\n"} 
             formatter["enable_system"] = False
-            formatter["roles"] = ["raw","user","assistant"]
+            formatter["roles"] = ["raw","system","user","assistant"]
         elif model_name.lower().find("platypus-yi") >= 0:
             formatter={}
             formatter["bos"]=""
@@ -262,10 +262,72 @@ class Formatter:
 
 
 ## questa è la parte che non ha bisongno di conoscere il modello
-    
+from transformers import AutoTokenizer
+import copy
+class HFFormatter():
+    def __init__(self):
+        pass
+
+    def load_model(self,model_name):
+
+        if model_name.lower().startswith("phi"):
+            tokenizer_path = "/home/matteo/var/scripts/esperimenti/llm/tokenizers/phi"
+        elif model_name.lower().startswith("glm"):
+            tokenizer_path = "/home/matteo/var/scripts/esperimenti/llm/tokenizers/glm-chat"
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path, trust_remote_code=True)
+        pass
+
+    def build_prompt(self,messages,force_system=False):
+        # se il primo è raw, allora salva così com'è
+        #     se il secondo è presente e assistant, appendi senza preamble?
+        # se l'ultimo è raw o assistant allora non mettere il generation token
+        # se l'ultimo è raw o assistant non mettere eom
+        # se il primo è system e manca il system, allora attaccalo al primo
+        messages = copy.copy(messages)
+        has_system = True
+        try:
+            has_system = self.tokenizer.chat_template.find("system") >= 0
+        except:
+            pass
+
+        if messages[0]["role"] == "system" and not has_system:
+            messages[0]["role"] = "user"
+            if len(messages) > 1:
+                messages[1]["content"] = messages[0]["content"]+"\n\n" + messages[1]["content"]
+                messages = messages[1:]
+
+        assistant_prompt = None
+        if messages[-1]["role"] == "assistant":
+            assistant_prompt = messages[-1]["content"]
+            messages = messages[:-1]
+
+        raw_prompt = None
+        if messages[0]["role"] == "raw":
+            raw_prompt = messages[0]["content"]
+            messages = messages[1:]
+
+        if raw_prompt is None:
+            input_string = self.tokenizer.apply_chat_template(messages, add_special_tokens=True, add_generation_prompt=True, tokenize=False)
+        else:
+            if len(messages) == 0:
+                input_string = raw_prompt
+            else:
+                assistant_response = messages[0]["content"]
+                placeholder_string="<<<<|>>>>PLACEHOLDER<<<|>>>"
+                messages[0]["content"]=placeholder_string
+                input_string = self.tokenizer.apply_chat_template(messages, add_special_tokens=True, add_generation_prompt=True, tokenize=False)
+
+                el = input_string.find(placeholder_string)+len(placeholder_string)
+                input_string = raw_prompt + assistant_response+input_string[el:]
+
+        if assistant_prompt is not None:
+            input_string = input_string + assistant_prompt
+
+        return input_string
+
 class PromptBuilder:
     def __init__(self):
-        self.formatter = Formatter()
+        self.formatter = HFFormatter()
         self.sysprompt = "You are a helpful assistant"
         self.force_system=False
         self.reset()
