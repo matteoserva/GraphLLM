@@ -8,6 +8,16 @@ from .formatter import Formatter
 import copy
 
 
+class GLMClient(object):
+    def __new__(cls, *args,**kwargs):
+        print("loading subglm")
+        try:
+           retval = object.__new__(GLMClientInner,*args,**kwargs)
+        except:
+           from .client_glm import GLMClient as GLMClientInner
+           retval = object.__new__(GLMClientInner,*args,**kwargs)
+        retval.__init__(*args,**kwargs)
+        return retval
 
 class GrokClient(object):
     def __new__(cls, *args,**kwargs):
@@ -33,7 +43,7 @@ class DummyClient:
         return ""
 
 class Client:
-    def __init__(self,host="minipd"):
+    def __init__(self,host="matteopc"):
         self.host = host
         self.parameters = {}
         a = {}

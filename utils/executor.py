@@ -232,6 +232,7 @@ class AgentController:
         resp = resp.strip()
         while "\n\n" in resp:
            resp = resp.replace("\n\n","\n")
+        resp = resp.split("\nObservation")[0]
         resp = resp+"\n"
         return resp
 

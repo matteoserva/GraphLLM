@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 from utils.common import get_input,get_formatter,readfile,build_prompt
-from utils.client import Client,DummyClient
+from utils.client import Client,DummyClient,GLMClient
 from utils.formatter import Formatter,PromptBuilder
 
 from utils.graph_executor import GraphExecutor
