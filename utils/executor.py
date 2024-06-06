@@ -159,15 +159,14 @@ class AgentController:
 
     def _reset_internal_state(self):
         self.state = "INIT"
-        self.base_prompt = self.current_prompt
+        self.current_prompt = self.base_prompt
         self.current_iteration = 0
 
     def load_config(self,args):
 
-        ops_string = self.ops_executor.get_formatted_ops()
-        template_args =  try_solve_files(args + [ops_string])
-        base_template , _ = solve_templates("{}", template_args)
-        self.current_prompt = base_template
+        template_args =  try_solve_files(args)
+        self.base_prompt , _ = solve_templates("{}", template_args)
+
         self._reset_internal_state()
         pass
 
@@ -184,7 +183,8 @@ class AgentController:
         return self.current_prompt
 
     def _handle_query(self,prompt_args):
-        self.current_prompt = self.base_prompt
+        ops_string = self.ops_executor.get_formatted_ops()
+        self.current_prompt ,_ = solve_templates(self.base_prompt, [ops_string])
         return self.current_prompt
 
     def _handle_llm_response(self,resp):
