@@ -276,12 +276,21 @@ class CopyNode:
     def set_parameters(self,args):
         self.parameters = args
 
+    def _json_parse(self,text):
+        r2 = text.find("{")
+        decoder = json.JSONDecoder()
+        val = decoder.raw_decode(text, r2)
+        if isinstance(val,tuple):
+            val = list(val)
+            val = val[0]
+        return val
+
     def __call__(self,*args):
 
         res = list(*args)
         if ("return_attr" in self.parameters):
             attr_name = self.parameters["return_attr"]
             v = res[0]
-            base = json.loads(v)
+            base = self._json_parse(v)
             res[0] = base[attr_name]
         return res
