@@ -24,12 +24,17 @@ import string
 class AgentMath2():
 	def __init__(self):
 		self.cache={}
-	def sum(self, a,b):
-		"""sums two numbers."""
-		res = a+b
+
+	def _make_random_name(self):
 		r = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
 		while r in self.cache:
 			r = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+		return r
+
+	def sum(self, a,b):
+		"""sums two numbers."""
+		res = a+b
+		r = self._make_random_name()
 		self.cache[r] = res
 		return "Result saved in variable " + r
 
@@ -39,7 +44,10 @@ class AgentMath2():
 
 	def mul(self, a,b):
 		"""multiplies the two arguments."""
-		return a*b	
+		res = a*b
+		r = self._make_random_name()
+		self.cache[r] = res
+		return res
 	
 
 from ast import literal_eval

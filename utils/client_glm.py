@@ -65,13 +65,29 @@ class GLMClient():
                     "max_new_tokens": 1024,
                     "do_sample": True,
                     "top_p": 0.8,
-                    "temperature": 0.1,
+                    "temperature": 0.6,
                     "stopping_criteria": StoppingCriteriaList([self.stop,stops]),
                     "repetition_penalty": 1.0,
+                    #"num_beams": 5,
                     "eos_token_id": self.model.config.eos_token_id,
                 }
+        if "n_predict" in params:
+            generate_kwargs["max_new_tokens"] = params["n_predict"]
+        if "temperature" in params:
+            generate_kwargs["temperature"] = params["temperature"]
+        if "top_k" in params:
+            generate_kwargs["top_k"] = params["top_k"]
+        if "repeat_penalty" in params:
+            generate_kwargs["repetition_penalty"] = params["repeat_penalty"]
+
+
         res = self.ricevi(self.model,generate_kwargs)
         return res
+
+    def ricevi2(self,model,generate_kwargs):
+        res = model.generate(**generate_kwargs)
+        res2 = self.tokenizer.decode(res, skip_special_tokens=True)
+        return res2
 
     def ricevi(self,model,generate_kwargs):
         t = Thread(target=model.generate, kwargs=generate_kwargs)
