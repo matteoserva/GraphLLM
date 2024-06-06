@@ -283,7 +283,7 @@ class HFFormatter():
         # se l'ultimo è raw o assistant allora non mettere il generation token
         # se l'ultimo è raw o assistant non mettere eom
         # se il primo è system e manca il system, allora attaccalo al primo
-        messages = copy.copy(messages)
+        messages = copy.deepcopy(messages)
         has_system = True
         try:
             has_system = self.tokenizer.chat_template.find("system") >= 0
