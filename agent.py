@@ -39,6 +39,7 @@ class AgentGraph:
         executor.set_client_parameters(params)
         executor.set_param("force_system", True)
         executor.print_response = "partial"
+        self.first_run = True
 
     def load_config(self,args):
         self.agent_node.load_config(args)
@@ -46,8 +47,11 @@ class AgentGraph:
 
 
     def __call__(self,prompt_args):
-
-        new_prompt = self.agent_node._handle_tool_response(prompt_args[0])
+        if self.first_run:
+            self.first_run = False
+            new_prompt = self.agent_node._handle_query(prompt_args[0])
+        else:
+            new_prompt = self.agent_node._handle_tool_response(prompt_args[0])
 
         llm_response = self.executor([new_prompt])
         self.executor.print_prompt = False
