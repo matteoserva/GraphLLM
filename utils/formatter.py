@@ -9,9 +9,11 @@ class Formatter:
     def load_hf_model(self,model_name):
 
         if model_name.lower().startswith("phi"):
-            tokenizer_path = "/home/matteo/var/scripts/esperimenti/llm/tokenizers/phi"
+            tokenizer_path = "tokenizers/phi"
         elif model_name.lower().startswith("glm"):
-            tokenizer_path = "/home/matteo/var/scripts/esperimenti/llm/tokenizers/glm-chat"
+            tokenizer_path = "tokenizers/glm-chat"
+        elif model_name.lower().startswith("qwen2"):
+            tokenizer_path = "tokenizers/Qwen2"
         else:
             return None
         tokenizer = AutoTokenizer.from_pretrained(tokenizer_path, trust_remote_code=True)
@@ -228,17 +230,19 @@ class Formatter:
         raw_prompt = None
         if messages[0]["role"] == "raw":
             raw_prompt = messages[0]["content"]
-            messages = messages[1:]
+            #messages = messages[1:]
 
         if raw_prompt is None:
             input_string = self.tokenizer.apply_chat_template(messages, add_special_tokens=True, add_generation_prompt=True, tokenize=False)
         else:
-            if len(messages) == 0:
+            if len(messages) == 1:
                 input_string = raw_prompt
             else:
-                assistant_response = messages[0]["content"]
+                assistant_response = messages[1]["content"]
                 placeholder_string="<<<<|>>>>PLACEHOLDER<<<|>>>"
-                messages[0]["content"]=placeholder_string
+                messages[0]["role"] ="user"
+                messages[0]["content"]="AAAA"
+                messages[1]["content"]=placeholder_string
                 input_string = self.tokenizer.apply_chat_template(messages, add_special_tokens=True, add_generation_prompt=True, tokenize=False)
 
                 el = input_string.find(placeholder_string)+len(placeholder_string)
