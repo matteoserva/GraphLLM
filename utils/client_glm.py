@@ -65,9 +65,11 @@ class GLMClient():
                     "max_new_tokens": 1024,
                     "do_sample": True,
                     "top_p": 0.8,
+                    "min_p": 0.1,
                     "temperature": 0.6,
                     "stopping_criteria": StoppingCriteriaList([self.stop,stops]),
                     "repetition_penalty": 1.0,
+                    #"output_scores": True, "return_dict_in_generate":True,
                     #"num_beams": 5,
                     "eos_token_id": self.model.config.eos_token_id,
                 }
@@ -86,7 +88,7 @@ class GLMClient():
 
     def ricevi2(self,model,generate_kwargs):
         res = model.generate(**generate_kwargs)
-        res2 = self.tokenizer.decode(res, skip_special_tokens=True)
+        res2 = self.tokenizer.decode(res.sequences[0], skip_special_tokens=True)
         return res2
 
     def ricevi(self,model,generate_kwargs):
