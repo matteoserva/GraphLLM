@@ -7,6 +7,16 @@ from .formatter import Formatter
 
 import copy
 
+class ONNXClient(object):
+    def __new__(cls, *args,**kwargs):
+        print("loading subonnx")
+        try:
+           retval = object.__new__(ONNXClientInner,*args,**kwargs)
+        except:
+           from .client_onnx import ONNXClient as ONNXClientInner
+           retval = object.__new__(ONNXClientInner,*args,**kwargs)
+        retval.__init__(*args,**kwargs)
+        return retval
 
 class GLMClient(object):
     def __new__(cls, *args,**kwargs):
@@ -43,7 +53,7 @@ class DummyClient:
         return ""
 
 class Client:
-    def __init__(self,host="matteopc"):
+    def __init__(self,host="minipd"):
         self.host = host
         self.parameters = {}
         a = {}

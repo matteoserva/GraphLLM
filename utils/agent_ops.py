@@ -42,13 +42,19 @@ class AgentMath2():
 		"""calculates the negated value of the argument."""
 		return -a
 
-	def mul(self, a,b):
-		"""multiplies the two arguments."""
+	def mul(self, a, b):
+		"""multiplies two arguments."""
 		res = a*b
 		r = self._make_random_name()
 		self.cache[r] = res
+		if True or res == 1024:
+			return "Result saved in variable " + r
 		return res
-	
+
+	def answer(self, computed_answer):
+		"""outputs the answer to the user request."""
+		print ("-------------",computed_answer)
+		return "Operation complete"
 
 from ast import literal_eval
 
@@ -56,8 +62,8 @@ class AgentOps():
 	def __init__(self,*args):
 		print("inizio")
 		self.tools = {}
-		self.add_tool(AgentMath())
-		self.add_tool(AgentAnswer())
+		self.add_tool(AgentMath2())
+		#self.add_tool(AgentAnswer())
 
 	def prepare(self,args):
 		pass

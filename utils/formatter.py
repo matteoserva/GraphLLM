@@ -7,9 +7,11 @@ class Formatter:
         self.hf_formatter = None
 
     def load_hf_model(self,model_name):
-
-        if model_name.lower().startswith("phi"):
-            tokenizer_path = "tokenizers/phi"
+        model_name = model_name.lower()
+        if model_name.lower().startswith("phi-3-small"):
+            tokenizer_path = "tokenizers/phi3-small"
+        elif model_name.lower().startswith("phi"):
+            tokenizer_path = "tokenizers/phi3-mini"
         elif model_name.lower().startswith("glm"):
             tokenizer_path = "tokenizers/glm-chat"
         elif model_name.lower().startswith("qwen2"):
@@ -52,7 +54,7 @@ class Formatter:
             formatter["user_name"]="Instruction: "
             formatter["assistant_name"]="Response:\n"
             formatter["role_string"] = {"user":"","assistant":"","system":""}
-            formatter["role_eom"] = {"user":"<sep>","assistant":"","system":"\n"} 
+            formatter["role_eom"] = {"user":"<sep>","assistant":"<n>","system":"\n"}
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","system","user","assistant"]
         elif model_name.lower().find("platypus-yi") >= 0:

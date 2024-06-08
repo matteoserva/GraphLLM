@@ -29,8 +29,12 @@ class GLMClient():
     def __init__(self,dummy=None):
         print("GLM client init")
         self.client = None
-        self.model_name="GLM-4"
-        self.model_path="/home/matteo/tmp/models_cache/glm-4-9b-chat"
+        if dummy == "Phi":
+            self.model_name="Phi-3-small"
+            self.model_path="/home/matteo/tmp/models_cache/Phi-3-small-8k-instruct"
+        else:
+            self.model_name="GLM-4"
+            self.model_path="/home/matteo/tmp/models_cache/glm-4-9b-chat"
         self.default_params = {}
 
 
@@ -67,7 +71,8 @@ class GLMClient():
                     "top_p": 0.8,
                     "min_p": 0.1,
                     "temperature": 0.6,
-                    "stopping_criteria": StoppingCriteriaList([self.stop,stops]),
+                    #"stopping_criteria": StoppingCriteriaList([self.stop,stops]),
+                    "stopping_criteria": StoppingCriteriaList([stops]),
                     "repetition_penalty": 1.0,
                     #"output_scores": True, "return_dict_in_generate":True,
                     #"num_beams": 5,
@@ -102,7 +107,10 @@ class GLMClient():
     def connect(self):
         device = "cuda"
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_path,low_cpu_mem_usage=True,trust_remote_code=True,load_in_4bit=True).eval()
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_path,low_cpu_mem_usage=True,trust_remote_code=True,
+            #load_in_4bit=True
+            load_in_8bit=True
+            ).eval()
         self.streamer = TextIteratorStreamer(tokenizer=self.tokenizer,timeout=60,skip_prompt=True,skip_special_tokens=True)
         self.stop = StopOnTokens(self.model)
         
@@ -110,7 +118,7 @@ class GLMClient():
         return self.model_name
 
 if __name__ == "__main__":
-    client = GLMClient()
+    client = GLMClient("Phi")
     client.connect()
     model = client.model
     tokenizer = client.tokenizer
