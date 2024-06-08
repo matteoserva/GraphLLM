@@ -31,6 +31,20 @@ class AgentMath2():
 			r = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
 		return r
 
+	def _parse_inputs(self,text_params):
+		params = [el.strip() for el in text_params.split(",")]
+		p2 = []
+		for el in params:
+
+			if el in self.cache:
+				p2.append(self.cache[el])
+			elif int(el) > 20:
+				raise Exception("Variable " + el + " not found")
+			else:
+				p2.append(int(el))
+		params = p2
+		return params
+
 	def sum(self, a,b):
 		"""sums two numbers."""
 		res = a+b
@@ -54,7 +68,7 @@ class AgentMath2():
 	def answer(self, computed_answer):
 		"""outputs the answer to the user request."""
 		print ("-------------",computed_answer)
-		return "Operation complete"
+		return computed_answer
 
 from ast import literal_eval
 
@@ -110,18 +124,21 @@ class AgentOps():
 		row = self.tools[fname]
 		tool = row["tool"]
 
-		if "cache" in dir(tool):
-			params = [el.strip() for el in text_params.split(",")]
-			params = [str(tool.cache[el]) if el in tool.cache else el for el in params]
-			text_params = ",".join(params)
-		try:
-			params = literal_eval(text_params)
-		except:
-			raise Exception("error, the parameters must be in the correct format.")
-		if isinstance(params,tuple):
-			params=list(params)
-		if not isinstance(params,list):
-			params = [params]
+		if "_parse_inputs" in dir(tool):
+			params = tool._parse_inputs(text_params)
+		else:
+			if "cache" in dir(tool):
+				params = [el.strip() for el in text_params.split(",")]
+				params = [str(tool.cache[el]) if el in tool.cache else el for el in params]
+				text_params = ",".join(params)
+			try:
+				params = literal_eval(text_params)
+			except:
+				raise Exception("error, the parameters must be in the correct format.")
+			if isinstance(params,tuple):
+				params=list(params)
+			if not isinstance(params,list):
+				params = [params]
 
 
 		l1 = row["num_parameters"]
