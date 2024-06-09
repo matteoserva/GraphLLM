@@ -37,11 +37,15 @@ class GLMClient():
             self.model_path="/home/matteo/tmp/models_cache/glm-4-9b-chat"
         self.default_params = {}
 
+    def tokenize(self,prompt):
+        mi = self.tokenizer(prompt, add_special_tokens=False)["input_ids"]
+        return mi
 
-    def send_prompt(self,p,params=None):
+    def send_prompt(self,p,params={}):
 
-
-        if isinstance(p,list):
+        if isinstance(p, list) and isinstance(p[0],int):
+            token_ids = p
+        elif isinstance(p,list):
             if isinstance(p,list):
                 messages = p
             else:
@@ -52,12 +56,16 @@ class GLMClient():
 
             input_string = self.tokenizer.apply_chat_template(messages,add_special_tokens=True, add_generation_prompt=True,tokenize=False)
             print(input_string)
+            token_ids = self.tokenize(input_string)
         elif isinstance(p,str):
             input_string = p
+            token_ids = self.tokenize(input_string)
         else:
             input_string = p._build()
+            token_ids = self.tokenize(input_string)
 
-        model_inputs = self.tokenizer(input_string,add_special_tokens=False,return_tensors="pt")["input_ids"].to(self.model.device)
+
+        model_inputs = torch.tensor([token_ids], dtype=torch.int64).to(self.model.device)
         #print(model_inputs)
         #model_in_native = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True,tokenize=True,return_tensors="pt").to(self.model.device)
         #print(model_in_native)
