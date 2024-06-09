@@ -89,7 +89,7 @@ class ModelHandler():
         server.end_headers()
 
         prompt = obj["prompt"]
-        res = self.model.send_prompt(prompt)
+        res = self.model.send_prompt(prompt,obj)
 
         for token in res:
             res = {"content": token}
