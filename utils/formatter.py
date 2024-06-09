@@ -250,6 +250,10 @@ class Formatter:
                 el = input_string.find(placeholder_string)+len(placeholder_string)
                 input_string = raw_prompt + assistant_response+input_string[el:]
 
+        #workaround
+        if self.hf_formatter.name.lower().startswith("glm4") and input_string.endswith("<|assistant|>"):
+            input_string += "\n"
+
         if assistant_prompt is not None:
             input_string = input_string + assistant_prompt
 
