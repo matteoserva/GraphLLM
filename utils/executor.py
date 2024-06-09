@@ -216,7 +216,7 @@ class AgentController:
             inputs[1] = None
         elif inputs[2] is not None:
             if (self.state == "COMPLETE"):
-                outputs[0] = self.answer
+                outputs[0] = inputs[2]
                 self._reset_internal_state()
 
             else:
