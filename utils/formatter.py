@@ -123,6 +123,23 @@ class Formatter:
 
             formatter["enable_system"] = True
             formatter["roles"] = ["raw","system","user","assistant"]
+        elif model_name.lower().startswith("calme"):
+            formatter={}
+            formatter["bos"]="<|startoftext|>"
+            formatter["bos"]=""
+            formatter["bor"]="<|im_start|>"
+            formatter["eor"]="\n"
+
+            formatter["eom"]="<|im_end|>\n"
+
+            formatter["system_name"]="system"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
+            formatter["role_string"] = {"user":"<|im_start|>user\n","assistant":"<|im_start|>assistant\n","system":""}
+            formatter["role_eom"] = {"user":"<|im_end|>\n","assistant":"<|im_end|>\n","system":"<|im_end|>\n"}
+
+            formatter["enable_system"] = True
+            formatter["roles"] = ["raw","system","user","assistant"]
         elif model_name.lower().startswith("wizardlm"):
             formatter={}
             formatter["bos"]=""
@@ -185,6 +202,18 @@ class Formatter:
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
             formatter["role_eom"] = {"user":"<|end|>\n","assistant":"<|end|>\n","system":"\n\n"}
+        elif model_name.lower().startswith("openchat"):
+            formatter["bos"] = "<|begin_of_text|>"  ##non capisco
+            # formatter["bos"]=""
+            formatter["bor"] = "<|start_header_id|>"
+            formatter["eor"] = "<|end_header_id|>\n\n"
+
+            formatter["eom"] = """<|eot_id|>"""
+            # formatter["row"]=formatter["row1"] + formatter["row2"]
+            formatter["roles"] = ["raw", "system", "user", "assistant"]
+            formatter["system_name"] = "System"
+            formatter["user_name"] = "GPT4 Correct User"
+            formatter["assistant_name"] = "GPT4 Correct Assistant"
         else: #llama
 
             formatter["bos"]="<|begin_of_text|>" ##non capisco
