@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 from utils.common import get_input,get_formatter,readfile,build_prompt,solve_templates
-from utils.client import Client,GLMClient
+from utils.client import Client,GLMClient,GrokClient
 from utils.formatter import Formatter,PromptBuilder
 from utils.executor import StatefulExecutor, StatelessExecutor
 

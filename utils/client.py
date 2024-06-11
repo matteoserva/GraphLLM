@@ -153,7 +153,7 @@ class Client:
         tokens = self.tokenize(p)
 
         a = merge_params(self.default_params,params)
-        a["prompt"] = tokens
+        a["prompt"] = p
 
         if len(tokens) +a["n_predict"] >= self.context_size:
             raise Exception("context size exceeded: " + str(len(tokens)) + " + " + str(a["n_predict"]))

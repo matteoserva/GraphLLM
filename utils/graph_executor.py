@@ -248,8 +248,9 @@ class GraphExecutor:
             runnable = [i for i,v in enumerate(self.graph_nodes) if v.is_runnable()]
             if len(runnable) == 0:
                 break
-            if len(runnable) > 2:
-                runnable = runnable[0:2]
+            parallel_jobs = 1
+            if len(runnable) > parallel_jobs:
+                runnable = runnable[0:parallel_jobs]
             tds = [threading.Thread(target=self.graph_nodes[i].execute) for i in runnable]
             for el in tds:
                 el.start()

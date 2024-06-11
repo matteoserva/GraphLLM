@@ -288,9 +288,13 @@ class CopyNode:
     def __call__(self,*args):
 
         res = list(*args)
-        if ("return_attr" in self.parameters):
-            attr_name = self.parameters["return_attr"]
-            v = res[0]
-            base = self._json_parse(v)
-            res[0] = base[attr_name]
+        if "subtype" in self.parameters:
+            if self.parameters["subtype"] == "cast":
+                res[0] = str(res[0])
+
+            elif ("return_attr" in self.parameters):
+                attr_name = self.parameters["return_attr"]
+                v = res[0]
+                base = self._json_parse(v)
+                res[0] = base[attr_name]
         return res
