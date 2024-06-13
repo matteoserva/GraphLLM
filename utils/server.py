@@ -5,10 +5,10 @@ from functools import partial
 from client_glm import GLMClient
 
 
-server_props=b"""{
+server_props={
   "system_prompt": "",
   "default_generation_settings": {
-    "n_ctx": 8192,
+    "n_ctx": 1024*128,
     "n_predict": -1,
     "model": "GLM-4-9b-chat",
     "seed": -1,
@@ -25,16 +25,16 @@ server_props=b"""{
     "presence_penalty": 0,
     "frequency_penalty": 0,
     "penalty_prompt_tokens": [],
-    "use_penalty_prompt_tokens": false,
+    "use_penalty_prompt_tokens": False,
     "mirostat": 0,
     "mirostat_tau": 5,
     "mirostat_eta": 0.100000001490116,
-    "penalize_nl": false,
+    "penalize_nl": False,
     "stop": [],
     "n_keep": 0,
     "n_discard": 0,
-    "ignore_eos": false,
-    "stream": true,
+    "ignore_eos": False,
+    "stream": True,
     "logit_bias": [],
     "n_probs": 0,
     "min_keep": 0,
@@ -49,7 +49,7 @@ server_props=b"""{
     ]
   },
   "total_slots": 1
-}"""
+}
 
 class ModelHandler():
     def __init__(self):
@@ -61,7 +61,9 @@ class ModelHandler():
         self.server.send_response(200)
         self.server.send_header('Content-type', 'application/json')
         self.server.end_headers()
-        self.server.wfile.write(server_props)
+        sp1 = json.dumps(server_props)
+        sp2 = sp1.encode()
+        self.server.wfile.write(sp2)
         #server.wfile.flush()
         server.close_connection = True
         pass
@@ -81,6 +83,10 @@ class ModelHandler():
         #server.wfile.flush()
         #server.finish()
 
+    def kill_pending(self):
+        self.model.kill_generation()
+
+
     def send_prompt(self,obj):
         server = self.server
         server.send_response(200)
@@ -89,17 +95,24 @@ class ModelHandler():
         server.end_headers()
 
         prompt = obj["prompt"]
-        res = self.model.send_prompt(prompt,obj)
 
-        for token in res:
-            res = {"content": token}
-            resp =json.dumps(res)
-            resp= "data: {}\n\n".format(resp)
-            l = len(resp)
-            encoded = '{:X}\r\n{}\r\n'.format(l, resp).encode('utf-8')
-            server.wfile.write(encoded)
-        close_chunk = '0\r\n\r\n'
-        server.wfile.write(close_chunk.encode(encoding='utf-8'))
+        try:
+            res = self.model.send_prompt(prompt,obj)
+
+
+            for token in res:
+                res = {"content": token}
+                resp =json.dumps(res)
+                resp= "data: {}\n\n".format(resp)
+                l = len(resp)
+                encoded = '{:X}\r\n{}\r\n'.format(l, resp).encode('utf-8')
+                server.wfile.write(encoded)
+            close_chunk = '0\r\n\r\n'
+            server.wfile.write(close_chunk.encode(encoding='utf-8'))
+        except:
+            self.kill_pending()
+
+
         server.close_connection = True
 
 
@@ -135,22 +148,6 @@ class HttpHandler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
 
 
-    ARG_SEP = '---'
-
-    args = sys.argv[1:]
-    if len(args) < 1:
-        print(f"usage: python openai_api.py path/to/chat/model path/to/fim/model [more args for chat model {ARG_SEP} more args for fim model]")
-        exit(-1)
-
-    chat_args = args[2:]
-    fim_args = []
-    if ARG_SEP in chat_args:
-        i = chat_args.index(ARG_SEP)
-        fim_args = chat_args[i + 1:]
-        chat_args = chat_args[:i]
-
-    basic_args = ['-i', '-m']
-
     model_handler = ModelHandler()
     http_handler = partial(HttpHandler, model_handler)
     http_server = HTTPServer(('0.0.0.0', 8080), http_handler)
@@ -158,11 +155,12 @@ if __name__ == '__main__':
 
 
     def handler(signal_received, frame):
-        http_server.shutdown()
+        print("Handler called\n")
+        #http_server.shutdown()
         sys.exit(0)
 
 
-    #signal.signal(signal.SIGINT, handler)
+    signal.signal(signal.SIGINT, handler)
 
 
 

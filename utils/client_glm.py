@@ -12,6 +12,7 @@ from transformers import (
     TextIteratorStreamer
 )
 from threading import Thread
+from multiprocessing import Process
 
 class StopOnTokens(StoppingCriteria):
     def __init__(self,model):
@@ -104,20 +105,38 @@ class GLMClient():
         res2 = self.tokenizer.decode(res.sequences[0], skip_special_tokens=True)
         return res2
 
+    def generation_runner(self,model,model_args):
+        try:
+            model.generate(**model_args)
+        except:
+            pass
+
+
     def ricevi(self,model,generate_kwargs):
-        t = Thread(target=model.generate, kwargs=generate_kwargs)
+        self.running_thread = Thread(target=self.generation_runner, kwargs={"model":model,"model_args":generate_kwargs})
+        t = self.running_thread
         t.start()
         for new_token in self.streamer:
                     if new_token:
                         yield new_token
         t.join()
 
+    def kill_generation(self):
+        tq = self.streamer.text_queue
+        self.streamer.text_queue = None
+        #self.running_thread.setDaemon(True)
+        self.running_thread.join()
+        self.streamer.text_queue = tq
+        for _ in self.streamer:
+            pass
+        pass
+
     def connect(self):
         device = "cuda"
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_path,low_cpu_mem_usage=True,trust_remote_code=True,
-            #load_in_4bit=True
-            load_in_8bit=True
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_path,low_cpu_mem_usage=True,trust_remote_code=True, device_map = 'auto',
+            load_in_4bit=True
+            #load_in_8bit=True
             ).eval()
         self.streamer = TextIteratorStreamer(tokenizer=self.tokenizer,timeout=60,skip_prompt=True,skip_special_tokens=True)
         self.stop = StopOnTokens(self.model)

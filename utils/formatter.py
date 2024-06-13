@@ -280,7 +280,7 @@ class Formatter:
                 input_string = raw_prompt + assistant_response+input_string[el:]
 
         #workaround
-        if self.hf_formatter.name.lower().startswith("glm4") and input_string.endswith("<|assistant|>"):
+        if hasattr(self.hf_formatter,"name") and self.hf_formatter.name.lower().startswith("glm4") and input_string.endswith("<|assistant|>"):
             input_string += "\n"
 
         if assistant_prompt is not None:
