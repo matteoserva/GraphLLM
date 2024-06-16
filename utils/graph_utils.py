@@ -3,7 +3,7 @@ import copy
 
 def get_clean_config(instructions_raw):
     instruction_rows = yaml.safe_load(instructions_raw)
-    res = yaml.dump(instruction_rows)
+    res = yaml.dump(instruction_rows, sort_keys=False)
     return res
 
 def parse_executor_graph(instructions_raw):
