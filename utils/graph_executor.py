@@ -66,6 +66,8 @@ class GraphNode:
             return True
         if self.disable_execution:
             return False
+        if len( node["inputs"]) == 0 and len(node["outputs"]) == 0:
+            return False
 
         missing_inputs = len([el for el in node["inputs"] if el is None])
         blocked_outputs = len([el for el in node["outputs"] if not el is None])

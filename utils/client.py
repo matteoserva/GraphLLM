@@ -53,7 +53,7 @@ class DummyClient:
         return ""
 
 class Client:
-    def __init__(self,host="matteopc"):
+    def __init__(self,host="minipd"):
         self.host = host
         self.parameters = {}
         a = {}
