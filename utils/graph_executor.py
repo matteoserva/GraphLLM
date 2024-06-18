@@ -31,6 +31,8 @@ class GraphNode:
             if "input_rule" in props:
                 self.input_rule = props["input_rule"]
 
+    def setup_complete(self):
+        pass
 
     def execute(self):
         node=self
@@ -83,7 +85,7 @@ class GraphNode:
         #print(r)
         self.executor.set_dependencies(r)
 
-    def prepare(self,args):
+    def set_config(self,args):
         if self.type == "graph":
             self.executor.set_client_parameters(self.graph.client_parameters)
         elif args is  None:
@@ -115,7 +117,7 @@ class GraphNode:
         else:
             pass
 
-    def load_template(self,init_args):
+    def set_template(self,init_args):
         for i, v in enumerate(init_args):
             init_args[i], _ = solve_templates(init_args[i], [], self.graph.variables)
         self.executor.load_config(init_args)
@@ -196,14 +198,17 @@ class GraphExecutor:
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]
             if "conf" in config:
-                node.prepare(config["conf"])
+                node.set_config(config["conf"])
             else:
-                node.prepare(None)
+                node.set_config(None)
 
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]
             if "init" in config:
-                node.load_template(config["init"])
+                node.set_template(config["init"])
+
+        for _,node in enumerate(graph_nodes):
+            node.setup_complete()
 
         for i,el in enumerate(node_connections):
             num_inputs = len(el["deps"])

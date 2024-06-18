@@ -19,14 +19,20 @@ def send_chat(builder,client,client_parameters=None,print_response=True):
 
 class BaseExecutor:
     def __init__(self,client):
-        builder = PromptBuilder()
-        builder.load_model(client.get_model_name())
-        self.builder=builder
-        self.client = client
         self.print_prompt=True
         self.print_response=True
         self.current_prompt="{}"
         self.client_parameters = None
+        if client is not None:
+           self.set_dependencies({"client":client})
+
+    def set_dependencies(self,d):
+        if "client" in d:
+           client = d["client"]
+           builder = PromptBuilder()
+           builder.load_model(client.get_model_name())
+           self.client = client
+           self.builder=builder
 
     def set_client_parameters(self,p):
         self.client_parameters = p
