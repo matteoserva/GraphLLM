@@ -79,7 +79,9 @@ class GraphNode:
         return runnable
 
     def set_dependencies(self,deps):
-        self.executor.set_dependencies(deps)
+        r = list(deps.values())
+        #print(r)
+        self.executor.set_dependencies(r)
 
     def prepare(self,args):
         if self.type == "graph":
@@ -188,7 +190,7 @@ class GraphExecutor:
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]
             if "deps" in config:
-                solved_deps = [nodes_map[el].executor for el in config["deps"]]
+                solved_deps = {el:nodes_map[config["deps"][el]].executor for el in config["deps"]}
                 node.set_dependencies(solved_deps)
 
         for i,node in enumerate(graph_nodes):
