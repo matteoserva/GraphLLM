@@ -154,10 +154,14 @@ class AgentController:
     def __init__(self, *args):
         self.current_prompt = ""
         self.base_prompt = ""
-        self.tokens=["Thought:","Action:","Inputs:","Observation:"]
+        self.tokens=["Thought: ","Action:","Inputs:","Observation: "]
         self.state = "INIT"
         self.current_iteration = 0
         self.answer = ""
+
+    def set_parameters(self,arg):
+        if "tokens" in arg:
+            self.tokens = arg["tokens"]
 
     def get_properties(self):
         res = {"input_rule":"OR"}
@@ -184,7 +188,7 @@ class AgentController:
 
         new_observation = str(prompt_args)
         if len(new_observation) > 0:
-            new_observation = "Observation: " + new_observation + "\nThought: "
+            new_observation = self.tokens[3] + new_observation + "\n" + self.tokens[0]
         self.current_prompt += new_observation
         return self.current_prompt
 
@@ -243,7 +247,7 @@ class AgentController:
         return resp
 
     def _parse_response(self,resp):
-        comando = resp[resp.find("Action:") + 7:].split("\n")[0].strip()
+        comando = resp[resp.find(self.tokens[1]) + len(self.tokens[1]):].split("\n")[0].strip()
         if comando.find("(") >= 0:  # forma compatta comando(parametri)
             c1 = comando.split("(")
             comando = c1[0].strip()

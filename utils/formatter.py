@@ -12,10 +12,12 @@ class Formatter:
             tokenizer_path = "tokenizers/phi3-small"
         elif model_name.lower().startswith("phi"):
             tokenizer_path = "tokenizers/phi3-mini"
-        elif model_name.lower().startswith("glm"):
+        elif model_name.lower().startswith("_glm"):
             tokenizer_path = "tokenizers/glm-chat"
         elif model_name.lower().startswith("qwen2"):
             tokenizer_path = "tokenizers/Qwen2"
+        elif model_name.lower().startswith("deepseek"):
+            tokenizer_path = "tokenizers/DeepSeek-V2-Lite-Chat"
         else:
             return None
         tokenizer = AutoTokenizer.from_pretrained(tokenizer_path, trust_remote_code=True)
@@ -41,6 +43,21 @@ class Formatter:
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
+        elif model_name.lower().find("glm") >= 0:
+            formatter={}
+            formatter["bos"]="[gMASK]<sop>"
+            formatter["bor"]="<|"
+            formatter["eor"]="|>\n"
+
+            formatter["eom"]=""
+
+            formatter["system_name"]="system"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
+
+
+            formatter["enable_system"] = False
+            formatter["roles"] = ["raw","user","assistant","system"]
         elif model_name.lower().find("yuan") >= 0:
             formatter={}
             formatter["bos"]=""
@@ -321,7 +338,7 @@ class Formatter:
         if messages[-1]["role"] == "assistant":
             modifiers[-1]["skip_postamble"] = True
             skip_postamble = len(messages) - 1
-        if messages[0]["role"] == "system" and len(messages) > 1 and force_system:
+        if messages[0]["role"] == "system" and len(messages) > 1 and "system" not in formatter["roles"] and force_system:
             #modifiers[0]["skip_postamble"] = True
             modifiers[1]["skip_preamble"] = True
 

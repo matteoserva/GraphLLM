@@ -114,6 +114,8 @@ class GraphNode:
             self.executor.set_parameters(args)
         elif self.type == "tool":
             self.executor.prepare(args)
+        elif self.type == "agent":
+            self.executor.set_parameters(args)
         else:
             pass
 

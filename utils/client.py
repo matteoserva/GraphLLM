@@ -53,7 +53,7 @@ class DummyClient:
         return ""
 
 class Client:
-    def __init__(self,host="minipd"):
+    def __init__(self,host="matteopc"):
         self.host = host
         self.parameters = {}
         a = {}
@@ -146,11 +146,12 @@ class Client:
         r1 = r.text
         r2 = r1
         r3 = json.loads(r2)
-        print(r3)
+        #print(r3)
         return r3
     
     def _send_prompt_text(self, p, params):
         tokens = self.tokenize(p)
+        #detokenized = self.detokenize(tokens)
 
         a = merge_params(self.default_params,params)
         a["prompt"] = tokens
