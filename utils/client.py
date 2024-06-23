@@ -55,7 +55,8 @@ class DummyClient:
 class Client:
     def __init__(self,host="matteopc"):
         self.host = host
-        self.parameters = {}
+        self.port = 8080
+        self.client_parameters = {}
         a = {}
         a["n_predict"] = 128 * 8
         a["stop"] = ["<|end|>", "<|im_end|>", "</s>"]
@@ -79,13 +80,18 @@ class Client:
         #get_formatter(props)
 
     def set_parameters(self,parameters):
-        self.parameters = parameters
+        client_config_names=["host","port"]
+        if "host" in parameters:
+            self.host = parameters["host"]
+            self.connect()
+        else:
+            self.parameters = parameters
 
     def get_model_name(self):
         return self.model_name
 
     def get_server_props(self):
-        url = "http://" + self.host + ":8080/props"
+        url = "http://" + self.host + ":" + str(self.port) + "/props"
         r = requests.get(url)
         resp = json.loads(r.content)
         max_context = resp["default_generation_settings"]["n_ctx"]
@@ -180,7 +186,7 @@ class Client:
 
     def send_prompt(self,p,params=None):
         if params is None:
-            params = self.parameters
+            params = self.client_parameters
         if isinstance(p,str):
             return self._send_prompt_text(p,params)
         else:

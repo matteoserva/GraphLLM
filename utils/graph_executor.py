@@ -1,6 +1,9 @@
 from . import graph_utils
 from .common import readfile,merge_params,try_solve_files
 from utils.executor import *
+
+from utils.client import Client,DummyClient,GLMClient,ONNXClient
+
 import threading
 
 class GraphNode:
@@ -25,6 +28,8 @@ class GraphNode:
             self.executor = CopyNode()
         elif el["type"] == "graph":
             self.executor = GraphExecutor(graph.client)
+        elif el["type"] == "client":
+            self.executor = Client()
 
         if hasattr(self.executor, "get_properties"):
             props = self.executor.get_properties()
@@ -83,12 +88,15 @@ class GraphNode:
     def set_dependencies(self,deps):
         r = list(deps.values())
         #print(r)
-        self.executor.set_dependencies(r)
+        if self.type=="stateless":
+            self.executor.set_dependencies(deps)
+        else:
+            self.executor.set_dependencies(r)
 
     def set_config(self,args):
         if self.type == "graph":
             self.executor.set_client_parameters(self.graph.client_parameters)
-        elif args is  None:
+        elif args is None:
             if hasattr(self.executor, "prepare"):
                 pass
         elif self.type == "stateless" :
@@ -116,6 +124,11 @@ class GraphNode:
             self.executor.prepare(args)
         elif self.type == "agent":
             self.executor.set_parameters(args)
+        elif self.type == "client":
+            self.executor.set_parameters(args)
+        elif isinstance(args,dict):
+            for el in args:
+                setattr(self.executor,el,args[el])
         else:
             pass
 
@@ -191,11 +204,7 @@ class GraphExecutor:
             graph_nodes.append(node)
 
         nodes_map = {el["name"]:el for el in graph_nodes}
-        for i,node in enumerate(graph_nodes):
-            config = node_configs[i]
-            if "deps" in config:
-                solved_deps = {el:nodes_map[config["deps"][el]].executor for el in config["deps"]}
-                node.set_dependencies(solved_deps)
+
 
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]
@@ -203,6 +212,12 @@ class GraphExecutor:
                 node.set_config(config["conf"])
             else:
                 node.set_config(None)
+
+        for i,node in enumerate(graph_nodes):
+            config = node_configs[i]
+            if "deps" in config:
+                solved_deps = {el:nodes_map[config["deps"][el]].executor for el in config["deps"]}
+                node.set_dependencies(solved_deps)
 
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]

@@ -277,7 +277,10 @@ class Formatter:
 
         raw_prompt = None
         if messages[0]["role"] == "raw":
-            raw_prompt = messages[0]["content"]
+            a = messages[0]["content"]
+            a = a.replace("{p:bos}\n", self.tokenizer.bos_token)
+            a = a.replace("{p:bos}", self.tokenizer.bos_token)
+            raw_prompt = a
             #messages = messages[1:]
 
         if raw_prompt is None:
