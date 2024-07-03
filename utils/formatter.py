@@ -350,6 +350,7 @@ class Formatter:
         skip_bos = False
         skip_final = False
         modifiers = [ {"skip_preamble":False,"skip_postamble":False} for el in messages]
+        fake_system = False
 
         if messages[0]["role"] == "raw":
             skip_bos = True
@@ -361,8 +362,9 @@ class Formatter:
             modifiers[-1]["skip_postamble"] = True
             skip_postamble = len(messages) - 1
         if messages[0]["role"] == "system" and len(messages) > 1 and "system" not in formatter["roles"] and force_system:
-            #modifiers[0]["skip_postamble"] = True
+            modifiers[0]["skip_postamble"] = True
             modifiers[1]["skip_preamble"] = True
+            fake_system = True
 
         prompt=""
         if not skip_bos:
@@ -390,6 +392,8 @@ class Formatter:
                          role_name = formatter["user_name"] if el["role"] == "user" else role_name
                          prompt = prompt + formatter["bor"] + role_name + formatter["eor"]
                 prompt = prompt + el["content"]
+                if i == 0 and fake_system:
+                    prompt += "\n\n"
                 if not modifiers[i]["skip_postamble"]:
                     if "role_eom" in formatter:
                         prompt = prompt + formatter["role_eom"][el["role"]]

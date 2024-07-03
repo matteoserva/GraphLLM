@@ -266,6 +266,36 @@ class AgentController:
 class ToolExecutor(AgentOps):
     pass
 
+from io import StringIO
+from contextlib import redirect_stdout
+import builtins
+
+class PythonExecutor:
+    def __init__(self,*args):
+        localParameters = {'print': print, 'dir': dir}
+        safe_list = ["sum","range"]
+        for el in safe_list:
+             localParameters[el] = getattr(builtins,el)
+        self.localParameters = localParameters
+        pass
+
+    def load_config(self,args):
+        self.retval = args
+
+    def __call__(self,scr, *args):
+        ret = scr
+        globalsParameter = {'__builtins__' : self.localParameters}
+
+        f = StringIO()
+        print("scr:", scr[0])
+        flocals = {}
+        with redirect_stdout(f):
+              exec(scr[0], globalsParameter, flocals)
+        s = f.getvalue()
+        s=s.rstrip()
+        #print("ret:", s)
+        return s
+
 class ConstantNode:
     def __init__(self,*args):
         pass

@@ -28,6 +28,8 @@ class GraphNode:
             self.executor = CopyNode()
         elif el["type"] == "graph":
             self.executor = GraphExecutor(graph.client)
+        elif el["type"] == "python":
+            self.executor = PythonExecutor()
         elif el["type"] == "client":
             self.executor = Client()
 
