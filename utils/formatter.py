@@ -10,12 +10,14 @@ class Formatter:
         model_name = model_name.lower()
         if model_name.lower().startswith("phi-3-small"):
             tokenizer_path = "tokenizers/phi3-small"
-        elif model_name.lower().startswith("phi"):
+        elif model_name.lower().startswith("_phi"):
             tokenizer_path = "tokenizers/phi3-mini"
         elif model_name.lower().startswith("_glm"):
             tokenizer_path = "tokenizers/glm-chat"
         elif model_name.lower().startswith("qwen2"):
             tokenizer_path = "tokenizers/Qwen2"
+        elif model_name.lower().startswith("_gemma"):
+            tokenizer_path = "tokenizers/gemma-2-27b-it"
         elif model_name.lower().startswith("deepseek"):
             tokenizer_path = "tokenizers/DeepSeek-V2-Lite-Chat"
         else:
@@ -123,7 +125,7 @@ class Formatter:
 
             formatter["enable_system"] = True
             formatter["roles"] = ["raw","system","user","assistant"]
-        elif model_name.lower().startswith("yi") or model_name.lower().startswith("faro"):
+        elif model_name.lower().startswith("yi") or model_name.lower().startswith("faro") or model_name.lower().startswith("orca"):
             formatter={}
             formatter["bos"]="<|startoftext|>"
             formatter["bos"]=""
@@ -192,7 +194,7 @@ class Formatter:
             formatter["roles"] = ["raw","user","assistant"]
         elif model_name.startswith("gemma"):
             formatter={}
-            formatter["bos"]=""
+            formatter["bos"]="<bos>"
             formatter["bor"]="<start_of_turn>"
             formatter["eor"]="\n"
 
@@ -203,6 +205,23 @@ class Formatter:
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
+        elif ( (model_name.lower().startswith("phi") and model_name.find("updated") >= 0) or
+              model_name.lower().startswith("phi-3.1") ):
+            formatter={}
+            formatter["bos"]="<s>"
+            if model_name.lower().find("medium") >= 0:
+                formatter["bos"]="<s>"
+            formatter["bor"]="<|"
+            formatter["eor"]="|>\n"
+            formatter["lf"] = "<0x0A>"
+            formatter["eom"]="""<|end|>\n"""
+            formatter["system_name"]="system"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
+            print("phi 3 updated")
+            formatter["enable_system"] = True
+            formatter["roles"] = ["raw","system","user","assistant"]
+            formatter["role_eom"] = {"user":"<|end|>\n","assistant":"<|end|>\n","system":"<|end|>\n"}
         elif model_name.lower().startswith("phi"):
             formatter={}
             formatter["bos"]="<s>"
@@ -300,8 +319,8 @@ class Formatter:
                 input_string = raw_prompt + assistant_response+input_string[el:]
 
         #workaround
-        if hasattr(self.hf_formatter,"name") and self.hf_formatter.name.lower().startswith("glm4") and input_string.endswith("<|assistant|>"):
-            input_string += "\n"
+        #if hasattr(self.hf_formatter,"name") and self.hf_formatter.name.lower().startswith("glm4") and input_string.endswith("<|assistant|>"):
+        #    input_string += "\n"
 
         if assistant_prompt is not None:
             input_string = input_string + assistant_prompt

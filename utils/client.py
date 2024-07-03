@@ -53,15 +53,15 @@ class DummyClient:
         return ""
 
 class Client:
-    def __init__(self,host="matteopc"):
+    def __init__(self,host="minipd"):
         self.host = host
         self.port = 8080
         self.client_parameters = {}
         a = {}
         a["n_predict"] = 128 * 8
-        a["stop"] = ["<|end|>", "<|im_end|>", "</s>"]
+        a["stop"] = ["<|end|>", "<|im_end|>", "</s>","<end_of_turn>"]
         #        a["temperature"] = 0.0
-        a["seed"] = 0
+        a["seed"] = -1
         a["cache_prompt"] = True
         a["stream"] = True
         # a["n_probs"] = 10
