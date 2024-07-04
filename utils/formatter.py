@@ -7,6 +7,7 @@ class Formatter:
         self.hf_formatter = None
 
     def load_hf_model(self,model_name):
+        self.model_name = model_name
         model_name = model_name.lower()
         if model_name.lower().startswith("phi-3-small"):
             tokenizer_path = "tokenizers/phi3-small"
@@ -28,6 +29,7 @@ class Formatter:
 
     def load_custom_model(self,model_name):
 #        print("Model name:",model_name)
+        self.model_name = model_name
         formatter={}
         formatter["enable_system"] = True
         if model_name.find("c4ai-command-r") >= 0:
@@ -348,8 +350,17 @@ class Formatter:
         messages = copy.deepcopy(messages)
         
         if self.hf_formatter is not None:
-            return self.build_hf_prompt(messages)
+            prompt = self.build_hf_prompt(messages,force_system)
+        else:
+            prompt = self.build_handmade_prompt(messages,force_system)
+        
+        #workaround per deepseek
+        if self.model_name.lower().startswith("deepseek") and prompt.endswith("Assistant: "):
+            prompt = prompt[:-1]
+        
+        return prompt
 
+    def build_handmade_prompt(self,messages,force_system=False):
     
         formatter = self.f
         skip_bos = False
@@ -413,6 +424,10 @@ class Formatter:
             pass
             #prompt = prompt.replace("\n",formatter["lf"])
 #        print(prompt)
+
+
+
+        #    input_string += "\n"
         return prompt
     
 
