@@ -18,7 +18,7 @@ class Formatter:
             tokenizer_path = "tokenizers/Qwen2"
         elif model_name.lower().startswith("_gemma"):
             tokenizer_path = "tokenizers/gemma-2-27b-it"
-        elif model_name.lower().startswith("deepseek"):
+        elif model_name.lower().startswith("_deepseek"):
             tokenizer_path = "tokenizers/DeepSeek-V2-Lite-Chat"
         else:
             return None
@@ -276,7 +276,7 @@ class Formatter:
         # se l'ultimo è raw o assistant allora non mettere il generation token
         # se l'ultimo è raw o assistant non mettere eom
         # se il primo è system e manca il system, allora attaccalo al primo
-        messages = copy.deepcopy(messages)
+        
         has_system = True
         try:
             has_system = self.tokenizer.chat_template.find("system") >= 0
@@ -322,6 +322,9 @@ class Formatter:
         #if hasattr(self.hf_formatter,"name") and self.hf_formatter.name.lower().startswith("glm4") and input_string.endswith("<|assistant|>"):
         #    input_string += "\n"
 
+        #if hasattr(self.hf_formatter,"name") and self.hf_formatter.name.lower().startswith("glm4") and input_string.endswith("<|assistant|>"):
+        #    input_string += "\n"
+
         if assistant_prompt is not None:
             input_string = input_string + assistant_prompt
 
@@ -342,10 +345,12 @@ class Formatter:
         return a
     
     def build_prompt(self,messages,force_system=False):
+        messages = copy.deepcopy(messages)
+        
         if self.hf_formatter is not None:
             return self.build_hf_prompt(messages)
 
-
+    
         formatter = self.f
         skip_bos = False
         skip_final = False

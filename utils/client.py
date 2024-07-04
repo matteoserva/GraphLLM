@@ -117,12 +117,13 @@ class Client:
                 
                 if pass_raw and len(json_decoded["content"]) > 0:
                     tmp_res = json_decoded['completion_probabilities']
+                    #print(tmp_res)
                     if len(tmp_res) == 0:
                         continue
                     tmp_res = tmp_res[0]["probs"]
                     tmp_res = [ (el["tok_str"],el["prob"]) for el in tmp_res ]
                     tmp_res = str(tmp_res) + "\n"
-                    #print(tmp_res)
+                    #
                 else:
                     tmp_res =json_decoded["content"]
                 yield tmp_res
