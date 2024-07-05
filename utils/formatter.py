@@ -357,7 +357,11 @@ class Formatter:
         #workaround per deepseek
         if self.model_name.lower().startswith("deepseek") and prompt.endswith("Assistant: "):
             prompt = prompt[:-1]
-        
+            # workaround per deepseek
+        if self.model_name.lower().startswith("glm") and prompt.endswith("<|assistant|>\n"):
+            prompt = prompt[:-1]
+
+
         return prompt
 
     def build_handmade_prompt(self,messages,force_system=False):
