@@ -272,29 +272,44 @@ import builtins
 
 class PythonExecutor:
     def __init__(self,*args):
-        localParameters = {'print': print, 'dir': dir}
-        safe_list = ["sum","range"]
-        for el in safe_list:
-             localParameters[el] = getattr(builtins,el)
-        self.localParameters = localParameters
+        
+        self.whitelist = ["sum","range","int"]
+
+        self.base_subst = "<<<<PYTHONSUBST>>>>"
+        self.base_template = self.base_subst
         pass
 
     def load_config(self,args):
-        self.retval = args
+        if len(args)> 0:
+            self.base_template = args[0]
+        #todo: gestire parametri successivi
+
 
     def __call__(self,scr, *args):
-        ret = scr
-        globalsParameter = {'__builtins__' : self.localParameters}
 
+        script = self.base_template
+        for el in scr:
+            #if self.base_subst in script:
+                script = script.replace(self.base_subst,el,1)
+            #else:
+            #    script = script + str(el)
+            
+        safe_builtins = {'print': print, 'dir': dir}
+        for el in self.whitelist:
+             safe_builtins[el] = getattr(builtins,el)
+
+        globalsParameter = {'__builtins__' : safe_builtins}
+        globalsParameter['__builtins__']["_C"] = scr
         f = StringIO()
-        print("scr:", scr[0])
-        flocals = {}
+        print("scr:", script)
+        #flocals = {"_C" : scr}
         with redirect_stdout(f):
-              exec(scr[0], globalsParameter, flocals)
+              exec(script, globalsParameter, globalsParameter)
         s = f.getvalue()
         s=s.rstrip()
+        del globalsParameter['__builtins__']
         #print("ret:", s)
-        return s
+        return [s,str(globalsParameter)]
 
 class ConstantNode:
     def __init__(self,*args):
