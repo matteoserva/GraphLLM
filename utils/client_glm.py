@@ -108,7 +108,9 @@ class GLMClient():
     def generation_runner(self,model,model_args):
         try:
             model.generate(**model_args)
-        except:
+        except Exception as e:
+            print (e)
+            self.streamer.end()
             pass
 
 
