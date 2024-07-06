@@ -3,6 +3,9 @@ from .parser import solve_templates
 from .common import readfile,merge_params,try_solve_files
 from .grammar import load_grammar
 from .agent_ops import AgentOps
+
+from .common import get_input
+
 import json
 
 def send_chat(builder,client,client_parameters=None,print_response=True):
@@ -324,14 +327,26 @@ class ConstantNode:
 
 class UserInputNode:
     def __init__(self,*args):
-        pass
+        self.current_prompt = "{}"
+
+    def get_properties(self):
+        res = {"input_rule":"OR"}
+        return res
 
     def load_config(self,args):
-        self.retval = args
+        cl_args = args[0]
+        if len(cl_args) > 0:
+            self.current_prompt,_ = solve_templates(cl_args[0],cl_args[1:])
+            self.retval = args
 
     def __call__(self,*args):
-        ret = ["ciao"]
-        return ret
+        while self.current_prompt.count("{}") > 0:
+            m = [get_input() ]
+            self.current_prompt , _ = solve_templates(self.current_prompt,m)
+        new_prompt = self.current_prompt
+        self.current_prompt = "{}"
+
+        return new_prompt
 
 class CopyNode:
     def __init__(self,*args):

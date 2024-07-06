@@ -114,7 +114,7 @@ def readstring_hierarchical(prompt,variables):
                 r = variables[r1][str(r2)]
         else:
             r = variables[fnfull]
-        prompt = prompt.replace(foundString,r)
+        prompt = prompt.replace(foundString,str(r))
     elif tag == "r": # fa una sostituzione dei {p:placeholder} con quello del {r:placeholder:nuovo}
         prompt = prompt.replace(foundString, "",1)
         content_array = content.split(":")

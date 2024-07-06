@@ -18,6 +18,8 @@ class GraphNode:
         el = node_config
         if el["type"] == "stateless":
             self.executor = StatelessExecutor(graph.client)
+        elif el["type"] == "stateful":
+            self.executor = StatefulExecutor(graph.client)
         elif el["type"] == "constant":
             self.executor = ConstantNode()
         elif el["type"] == "agent":
@@ -138,7 +140,10 @@ class GraphNode:
 
     def set_template(self,init_args):
         for i, v in enumerate(init_args):
-            init_args[i], _ = solve_templates(init_args[i], [], self.graph.variables)
+            if init_args[i] == "{v:c*}":
+                init_args[i] = self.graph.variables["c*"]
+            else:
+                init_args[i], _ = solve_templates(init_args[i], [], self.graph.variables)
         self.executor.load_config(init_args)
 
 
@@ -181,6 +186,7 @@ class GraphExecutor:
             stri = "c" + str(idx)
             self.variables[stri] = v
             self.variables["c"][str(idx)] = v
+        self.variables["c*"] = cl_args[1:]
         instructions_raw = None
 
         clean_config = cl_args[0]
