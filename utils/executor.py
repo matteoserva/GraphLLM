@@ -356,8 +356,20 @@ class UserInputNode:
 class CopyNode:
     def __init__(self,*args):
         self.parameters = {}
+        self._properties = {"input_rule":"AND"}
+        self._subtype="copy"
+
+    def get_properties(self):
+        res = self._properties
+        return res
 
     def set_parameters(self,args):
+        if "subtype" in args:
+            self._subtype = args["subtype"]
+            if args["subtype"] == "mux":
+                self._properties["input_rule"] = "OR"
+
+
         self.parameters = args
 
     def _json_parse(self,text):
@@ -372,13 +384,15 @@ class CopyNode:
     def __call__(self,*args):
 
         res = list(*args)
-        if "subtype" in self.parameters:
-            if self.parameters["subtype"] == "cast":
-                res[0] = str(res[0])
+        if self._subtype  == "cast":
+            res[0] = str(res[0])
+        elif self._subtype == "mux":
+            l = [el for el in res if el is not None]
+            res = l
 
-            elif ("return_attr" in self.parameters):
-                attr_name = self.parameters["return_attr"]
-                v = res[0]
-                base = self._json_parse(v)
-                res[0] = base[attr_name]
+        elif ("return_attr" in self.parameters):
+            attr_name = self.parameters["return_attr"]
+            v = res[0]
+            base = self._json_parse(v)
+            res[0] = base[attr_name]
         return res

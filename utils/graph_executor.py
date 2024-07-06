@@ -11,7 +11,7 @@ class GraphNode:
         self.graph = graph
         self.free_runs = 0
         self.disable_execution = False
-        self.input_rule="AND"
+
         self.type = node_config["type"]
         self.name = node_config["name"]
         node = {}
@@ -37,10 +37,19 @@ class GraphNode:
         elif el["type"] == "user":
             self.executor = UserInputNode()
 
+
+    def _get_input_rule(self):
+        self.input_rule = "AND"
+        props = None
         if hasattr(self.executor, "get_properties"):
             props = self.executor.get_properties()
+        elif hasattr(self.executor, "properties"):
+            props = self.executor.properties
+
+        if props is not None:
             if "input_rule" in props:
                 self.input_rule = props["input_rule"]
+        return self.input_rule
 
     def setup_complete(self):
         pass
@@ -84,7 +93,7 @@ class GraphNode:
 
         missing_inputs = len([el for el in node["inputs"] if el is None])
         blocked_outputs = len([el for el in node["outputs"] if not el is None])
-        if (self.input_rule == "OR"):
+        if (self._get_input_rule() == "OR"):
             available_inputs = len([el for el in node["inputs"] if el is not None])
             missing_inputs = 0 if available_inputs > 0 else missing_inputs
 
