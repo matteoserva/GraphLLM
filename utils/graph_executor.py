@@ -105,7 +105,7 @@ class GraphNode:
         elif args is None:
             if hasattr(self.executor, "prepare"):
                 pass
-        elif self.type == "stateless" :
+        elif self.type == "stateless" or self.type == "stateful" :
             executor_parameters = self.graph.client_parameters
             self.executor.set_client_parameters(executor_parameters)
             new_obj = {}
@@ -121,7 +121,7 @@ class GraphNode:
             executor_parameters = merge_params(executor_parameters, new_obj)
             self.executor.set_client_parameters(executor_parameters)
 
-            for key in ["force_system"]:
+            for key in ["force_system","print_prompt"]:
                 if key in args:
                     self.executor.set_param(key,args[key])
         elif self.type == "copy":

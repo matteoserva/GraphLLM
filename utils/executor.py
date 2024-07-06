@@ -43,6 +43,8 @@ class BaseExecutor:
     def set_param(self,key,value):
         if key == "force_system":
             self.builder.set_param(key, value)
+        elif key == "print_prompt":
+            self.print_prompt = value
 
     def load_config(self,cl_args=None):
         for i,el in enumerate(cl_args):
@@ -62,7 +64,10 @@ class BaseExecutor:
         builder = self.builder
         messages = builder.add_request(m)
         prompt = builder._build()
-        if self.print_prompt:
+        if bool(self.print_prompt):
+            x = self.print_prompt
+            if isinstance(x, (int, float, complex)) and not isinstance(x, bool):
+                self.print_prompt -= 1
             print(builder._build(),end="")
         res = send_chat(builder,client,self.client_parameters,self.print_response)
         messages = builder.add_response(str(res))
