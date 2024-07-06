@@ -110,7 +110,7 @@ class GLMClient():
             model.generate(**model_args)
         except Exception as e:
             print (e)
-            self.streamer.end()
+            #self.streamer.end()
             pass
 
 
@@ -128,9 +128,11 @@ class GLMClient():
         self.streamer.text_queue = None
         #self.running_thread.setDaemon(True)
         self.running_thread.join()
-        self.streamer.text_queue = tq
-        for _ in self.streamer:
-            pass
+        #self.streamer.text_queue = tq
+        #self.streamer.on_finalized_text("",True)
+        #for _ in self.streamer:
+        #    pass
+        self.streamer = TextIteratorStreamer(tokenizer=self.tokenizer, timeout=60, skip_prompt=True, skip_special_tokens=True)
         pass
 
     def connect(self):
