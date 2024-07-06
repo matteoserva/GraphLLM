@@ -322,7 +322,16 @@ class ConstantNode:
         ret = [el for el in self.retval]
         return ret
 
+class UserInputNode:
+    def __init__(self,*args):
+        pass
 
+    def load_config(self,args):
+        self.retval = args
+
+    def __call__(self,*args):
+        ret = ["ciao"]
+        return ret
 
 class CopyNode:
     def __init__(self,*args):

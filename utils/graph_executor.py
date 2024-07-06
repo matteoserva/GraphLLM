@@ -32,6 +32,8 @@ class GraphNode:
             self.executor = PythonExecutor()
         elif el["type"] == "client":
             self.executor = Client()
+        elif el["type"] == "user":
+            self.executor = UserInputNode()
 
         if hasattr(self.executor, "get_properties"):
             props = self.executor.get_properties()
