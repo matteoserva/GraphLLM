@@ -1,5 +1,5 @@
 
-raw_tokens = ["<s>","[INST]","<|im_start|>","<|START_OF_TURN_TOKEN|>","<BOS_TOKEN>","<|user|>","<|start_header_id|>","<bos>"]
+raw_tokens = ["<s>","<|begin_of_text|>","[INST]","<|im_start|>","<|START_OF_TURN_TOKEN|>","<BOS_TOKEN>","<|user|>","<|start_header_id|>","<bos>"]
 def check_special_tokens(m):
         special_tokens = raw_tokens + ["{p:bos}","{p:user}"]
         is_raw = False
@@ -99,6 +99,11 @@ def readstring_hierarchical(prompt,variables):
           prompt = prompt.replace("{}",r,1)
     elif tag == "w":
         fnfull = content
+        try:
+          _=scrape
+        except:
+          from scraper import scrape
+          
         r = scrape.scrape(fnfull)
         prompt = prompt.replace(foundString,r)
         print("newprompt: " + prompt + "-")

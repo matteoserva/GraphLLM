@@ -7,6 +7,8 @@ from .formatter import Formatter
 
 import copy
 
+DEFAULT_HOST="matteopc"
+
 class ONNXClient(object):
     def __new__(cls, *args,**kwargs):
         print("loading subonnx")
@@ -53,16 +55,16 @@ class DummyClient:
         return ""
 
 class Client:
-    def __init__(self,host="matteopc"):
+    def __init__(self,host=DEFAULT_HOST):
         self.host = host
         self.port = 8080
         self.client_parameters = {}
         a = {}
         a["n_predict"] = 128 * 8
-        a["stop"] = ["<|end|>", "<|im_end|>", "</s>","<end_of_turn>"]
+        a["stop"] = ["<|eom_id|>","<|eot_id|>","<|end|>", "<|im_end|>", "</s>","<end_of_turn>"]
         #        a["temperature"] = 0.0
         a["seed"] = -1
-        a["cache_prompt"] = True
+        a["cache_prompt"] = False
         a["stream"] = True
         # a["n_probs"] = 10
         # a["n_keep"] = -1

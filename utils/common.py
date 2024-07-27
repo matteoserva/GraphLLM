@@ -3,11 +3,6 @@ from .formatter import Formatter
 from .parser import solve_templates
 import copy
 
-try:
-	from scraper import scrape
-except:
-	pass
-
 def readfile(fn):
     f = open(fn)
     p = f.read()

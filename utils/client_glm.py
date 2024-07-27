@@ -33,6 +33,15 @@ class GLMClient():
         if dummy == "Phi":
             self.model_name="Phi-3-small"
             self.model_path="/home/matteo/tmp/models_cache/Phi-3-small-8k-instruct"
+        elif dummy == "codegeex":
+            self.model_name="GLM-4"
+            self.model_path="/home/matteo/tmp/models_cache/codegeex4-all-9b"
+        elif dummy == "mistral":
+            self.model_name="mistral-nemo"
+            self.model_path="/home/matteo/tmp/models_cache/Mistral-Nemo-Instruct-2407"
+        elif dummy == "llama":
+            self.model_name="llama-3.1"
+            self.model_path="/home/matteo/tmp/models_cache/Meta-Llama-3.1-8B-Instruct"
         else:
             self.model_name="GLM-4"
             self.model_path="/home/matteo/tmp/models_cache/glm-4-9b-chat"

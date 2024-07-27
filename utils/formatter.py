@@ -13,8 +13,14 @@ class Formatter:
             tokenizer_path = "tokenizers/phi3-small"
         elif model_name.lower().startswith("_phi"):
             tokenizer_path = "tokenizers/phi3-mini"
+        elif model_name.lower().find("llama-3.1") >= 0:
+            tokenizer_path = "/home/matteo/tmp/models_cache/Meta-Llama-3.1-8B-Instruct"
         elif model_name.lower().startswith("_glm"):
             tokenizer_path = "tokenizers/glm-chat"
+        elif model_name.lower().startswith("_mistral-nemo"):
+            tokenizer_path = "tokenizers/mistral-nemo"
+        elif model_name.lower().startswith("_codegeex"):
+            tokenizer_path = "/home/matteo/tmp/models_cache/codegeex4-all-9b"
         elif model_name.lower().startswith("qwen2"):
             tokenizer_path = "tokenizers/Qwen2"
         elif model_name.lower().startswith("_gemma"):
@@ -47,7 +53,7 @@ class Formatter:
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
-        elif model_name.lower().find("glm") >= 0:
+        elif model_name.lower().find("glm") >= 0 or model_name.lower().find("codegeex") >= 0:
             formatter={}
             formatter["bos"]="[gMASK]<sop>"
             formatter["bor"]="<|"
@@ -178,6 +184,22 @@ class Formatter:
 
             formatter["enable_system"] = True
             formatter["roles"] = ["raw","system","user","assistant"]
+        elif model_name.lower().startswith("mistral-nemo"):
+            formatter={}
+            formatter["bos"]="<s>"
+            formatter["bor"]=""
+            formatter["eor"]=""
+
+            formatter["eom"]=""
+
+            formatter["system_name"]="system"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
+            formatter["role_string"] = {"user":"[INST] ","assistant":"","system":"[INST]"}
+            formatter["role_eom"] = {"user":"[/INST]","assistant":"","system":"[/INST]"} 
+
+            formatter["enable_system"] = False
+            formatter["roles"] = ["raw","user","assistant"]
         elif model_name.lower().startswith("mistral") or model_name.lower().startswith("mixtral"):
             formatter={}
             formatter["bos"]=""
@@ -194,7 +216,7 @@ class Formatter:
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","user","assistant"]
-        elif model_name.startswith("gemma"):
+        elif model_name.lower().startswith("gemma"):
             formatter={}
             formatter["bos"]="<bos>"
             formatter["bor"]="<start_of_turn>"

@@ -14,8 +14,9 @@ parameters = {}
 parameters["seed"] = -1
 
 #for test
-#parameters["seed"] = 0
+#parameters["seed"] = 100
 #parameters["n_probs"] = 5
+#parameters["cache_prompt"] = False
 #parameters["temperature"] = 0.01
 
 executor = StatefulExecutor(client)

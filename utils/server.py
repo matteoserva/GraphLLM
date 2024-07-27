@@ -53,7 +53,7 @@ server_props={
 
 class ModelHandler():
     def __init__(self):
-        self.model = GLMClient()
+        self.model = GLMClient("llama")
         self.model.connect()
 
     def get_props(self):
@@ -61,7 +61,9 @@ class ModelHandler():
         self.server.send_response(200)
         self.server.send_header('Content-type', 'application/json')
         self.server.end_headers()
-        sp1 = json.dumps(server_props)
+        pr = server_props
+        pr["default_generation_settings"]["model"] = self.model.model_name
+        sp1 = json.dumps(pr)
         sp2 = sp1.encode()
         self.server.wfile.write(sp2)
         #server.wfile.flush()
