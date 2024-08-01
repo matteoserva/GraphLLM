@@ -69,6 +69,7 @@ class Client:
         # a["n_probs"] = 10
         # a["n_keep"] = -1
         # a["top_k"] = 5
+        self.prompt_metadata= {}
         self.default_params = a
 
 
@@ -108,6 +109,9 @@ class Client:
             if line:
                 decoded_line = line.decode('utf-8')
                 json_decoded = json.loads(decoded_line[6:])
+                if json_decoded["stop"]:
+                    self.prompt_metadata = json_decoded
+
                 if "truncated" in json_decoded and (json_decoded["truncated"] or False):
                     del json_decoded["prompt"]
                     print(json.dumps(json_decoded,indent=4))

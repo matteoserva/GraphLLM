@@ -3,6 +3,31 @@ from .formatter import Formatter
 from .parser import solve_templates
 import copy
 
+from io import StringIO
+from contextlib import redirect_stdout
+import builtins
+
+class PythonInterpreter:
+    def __init__(self):
+        self.whitelist = ["sum", "range", "int"]
+        pass
+
+    def execute(self,code, context):
+        safe_builtins = {'print': print, 'dir': dir}
+        for el in self.whitelist:
+            safe_builtins[el] = getattr(builtins, el)
+        globalsParameter = {'__builtins__': safe_builtins}
+        for el in context:
+            globalsParameter[el] = context[el]
+        f = StringIO()
+        with redirect_stdout(f):
+              exec(code, globalsParameter, globalsParameter)
+        del globalsParameter['__builtins__']
+        for el in globalsParameter:
+            context[el] = globalsParameter[el]
+        s = f.getvalue()
+        return s
+
 def readfile(fn):
     f = open(fn)
     p = f.read()

@@ -283,7 +283,8 @@ class Formatter:
 
             formatter["eom"]="""<|eot_id|>"""
             #formatter["row"]=formatter["row1"] + formatter["row2"]
-            formatter["roles"] = ["raw","system", "user","assistant"]
+            formatter["roles"] = ["raw","system", "user","assistant","ipython","call"]
+            formatter["role_eom"] = {"call":"<|eom_id|>"}
             formatter["system_name"]="system"
             formatter["user_name"]="user"
             formatter["assistant_name"]="assistant"
@@ -437,7 +438,7 @@ class Formatter:
                 if i == 0 and fake_system:
                     prompt += "\n\n"
                 if not modifiers[i]["skip_postamble"]:
-                    if "role_eom" in formatter:
+                    if "role_eom" in formatter and el["role"] in formatter["role_eom"] :
                         prompt = prompt + formatter["role_eom"][el["role"]]
                     else:
                         prompt = prompt + formatter["eom"]
@@ -475,6 +476,9 @@ class PromptBuilder:
     def set_param(self,name,val):
         if name== "force_system":
              self.force_system = val
+        elif name== "sysprompt":
+             self.sysprompt = val
+             self.reset()
 
     def _build(self):
 
@@ -493,7 +497,7 @@ class PromptBuilder:
     def set_from_raw(self,message):
         self.messages = parse_raw(message)
 
-    def add_request(self, message):
+    def add_request(self, message,role="user"):
         m = message
         is_raw = self._check_special_tokens(m)
 
@@ -503,15 +507,15 @@ class PromptBuilder:
             except:
                 self.messages = [{"role":"raw","content":str(m)}]
         else:
-            self.messages.append({"role":"user","content":str(m)})
+            self.messages.append({"role":role,"content":str(m)})
         #print(self.messages)
         return self.messages
 
-    def add_response(self,message):
+    def add_response(self,message,role = "assistant"):
         if(self.messages[-1]["role"] == "assistant"):
             self.messages[-1]["content"] = self.messages[-1]["content"]  + str(message)
         else:
-            self.messages.append({"role":"assistant","content":str(message)})
+            self.messages.append({"role":role,"content":str(message)})
         return self.messages
         
 

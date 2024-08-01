@@ -32,6 +32,8 @@ class GraphNode:
             self.executor = GraphExecutor(graph.client)
         elif el["type"] == "python":
             self.executor = PythonExecutor()
+        elif el["type"] == "llamatool":
+            self.executor = LlamaTool()
         elif el["type"] == "client":
             self.executor = Client()
         elif el["type"] == "user":
@@ -130,7 +132,7 @@ class GraphNode:
             executor_parameters = merge_params(executor_parameters, new_obj)
             self.executor.set_client_parameters(executor_parameters)
 
-            for key in ["force_system","print_prompt"]:
+            for key in ["force_system","print_prompt","sysprompt"]:
                 if key in args:
                     self.executor.set_param(key,args[key])
         elif self.type == "copy":

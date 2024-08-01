@@ -1,6 +1,6 @@
 from .formatter import PromptBuilder
 from .parser import solve_templates
-from .common import readfile,merge_params,try_solve_files
+from .common import readfile,merge_params,try_solve_files, PythonInterpreter
 from .grammar import load_grammar
 from .agent_ops import AgentOps
 
@@ -41,7 +41,7 @@ class BaseExecutor:
         self.client_parameters = p
 
     def set_param(self,key,value):
-        if key == "force_system":
+        if key in ["force_system","sysprompt"]:
             self.builder.set_param(key, value)
         elif key == "print_prompt":
             self.print_prompt = value
@@ -62,7 +62,10 @@ class BaseExecutor:
         m = text_prompt
         client = self.client
         builder = self.builder
-        messages = builder.add_request(m)
+        if isinstance(m,tuple):
+            messages = builder.add_request(m[1],m[0])
+        else:
+            messages = builder.add_request(m)
         prompt = builder._build()
         if bool(self.print_prompt):
             x = self.print_prompt
@@ -70,7 +73,10 @@ class BaseExecutor:
                 self.print_prompt -= 1
             print(builder._build(),end="")
         res = send_chat(builder,client,self.client_parameters,self.print_response)
-        messages = builder.add_response(str(res))
+        if client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
+            messages = builder.add_response(str(res),"call")
+        else:
+            messages = builder.add_response(str(res))
         return res
 
 class StatelessExecutor(BaseExecutor):
@@ -89,7 +95,10 @@ class StatefulExecutor(BaseExecutor):
         super().__init__(client)
 
     def __call__(self,prompt_args):
-        m ,_ = solve_templates(self.current_prompt,prompt_args)
+        if len(prompt_args) > 0 and isinstance(prompt_args[0],tuple):
+            m = prompt_args[0]
+        else:
+            m ,_ = solve_templates(self.current_prompt,prompt_args)
         self.current_prompt="{}"
 
         res = self.basic_exec(m)
@@ -274,30 +283,7 @@ class AgentController:
 class ToolExecutor(AgentOps):
     pass
 
-from io import StringIO
-from contextlib import redirect_stdout
-import builtins
 
-class PythonInterpreter:
-    def __init__(self):
-        self.whitelist = ["sum", "range", "int"]
-        pass
-
-    def execute(self,code, context):
-        safe_builtins = {'print': print, 'dir': dir}
-        for el in self.whitelist:
-            safe_builtins[el] = getattr(builtins, el)
-        globalsParameter = {'__builtins__': safe_builtins}
-        for el in context:
-            globalsParameter[el] = context[el]
-        f = StringIO()
-        with redirect_stdout(f):
-              exec(code, globalsParameter, globalsParameter)
-        del globalsParameter['__builtins__']
-        for el in globalsParameter:
-            context[el] = globalsParameter[el]
-        s = f.getvalue()
-        return s
 
 class PythonExecutor:
     def __init__(self,*args):
@@ -326,6 +312,30 @@ class PythonExecutor:
         s=s.rstrip()
         del globalsParameter["_C"]
         return [s,str(globalsParameter)]
+
+class LlamaTool:
+    def __init__(self,*args):
+        self.base_subst = "<<<<PYTHONSUBST>>>>"
+        self.base_template = self.base_subst
+        self.interpreter = PythonInterpreter()
+        pass
+
+    def load_config(self,args):
+        if len(args)> 0:
+            self.base_template = args[0]
+        #todo: gestire parametri successivi
+
+
+    def __call__(self,scr, *args):
+        if scr[0].startswith("<|python_tag|>"):
+            script=scr[0][14:]
+            s = self.interpreter.execute(script, {})
+            s = s.rstrip()
+            res = [None,("ipython",s)]
+        else:
+            res = [scr[0],None]
+        return res
+
 
 class ConstantNode:
     def __init__(self,*args):
