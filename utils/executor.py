@@ -278,13 +278,32 @@ from io import StringIO
 from contextlib import redirect_stdout
 import builtins
 
+class PythonInterpreter:
+    def __init__(self):
+        self.whitelist = ["sum", "range", "int"]
+        pass
+
+    def execute(self,code, context):
+        safe_builtins = {'print': print, 'dir': dir}
+        for el in self.whitelist:
+            safe_builtins[el] = getattr(builtins, el)
+        globalsParameter = {'__builtins__': safe_builtins}
+        for el in context:
+            globalsParameter[el] = context[el]
+        f = StringIO()
+        with redirect_stdout(f):
+              exec(code, globalsParameter, globalsParameter)
+        del globalsParameter['__builtins__']
+        for el in globalsParameter:
+            context[el] = globalsParameter[el]
+        s = f.getvalue()
+        return s
+
 class PythonExecutor:
     def __init__(self,*args):
-        
-        self.whitelist = ["sum","range","int"]
-
         self.base_subst = "<<<<PYTHONSUBST>>>>"
         self.base_template = self.base_subst
+        self.interpreter = PythonInterpreter()
         pass
 
     def load_config(self,args):
@@ -297,26 +316,15 @@ class PythonExecutor:
 
         script = self.base_template
         for el in scr:
-            #if self.base_subst in script:
                 script = script.replace(self.base_subst,el,1)
-            #else:
-            #    script = script + str(el)
-            
-        safe_builtins = {'print': print, 'dir': dir}
-        for el in self.whitelist:
-             safe_builtins[el] = getattr(builtins,el)
 
-        globalsParameter = {'__builtins__' : safe_builtins}
-        globalsParameter['__builtins__']["_C"] = scr
-        f = StringIO()
+        scriptContext = {"_C":scr}
+
         print("scr:", script)
-        #flocals = {"_C" : scr}
-        with redirect_stdout(f):
-              exec(script, globalsParameter, globalsParameter)
-        s = f.getvalue()
+        s = self.interpreter.execute(script,scriptContext)
+        globalsParameter = scriptContext
         s=s.rstrip()
-        del globalsParameter['__builtins__']
-        #print("ret:", s)
+        del globalsParameter["_C"]
         return [s,str(globalsParameter)]
 
 class ConstantNode:

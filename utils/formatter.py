@@ -13,7 +13,7 @@ class Formatter:
             tokenizer_path = "tokenizers/phi3-small"
         elif model_name.lower().startswith("_phi"):
             tokenizer_path = "tokenizers/phi3-mini"
-        elif model_name.lower().find("llama-3.1") >= 0:
+        elif model_name.lower().find("_llama-3.1") >= 0:
             tokenizer_path = "/home/matteo/tmp/models_cache/Meta-Llama-3.1-8B-Instruct"
         elif model_name.lower().startswith("_glm"):
             tokenizer_path = "tokenizers/glm-chat"
