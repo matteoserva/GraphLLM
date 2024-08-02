@@ -66,12 +66,13 @@ class BaseExecutor:
             messages = builder.add_request(m[1],m[0])
         else:
             messages = builder.add_request(m)
-        prompt = builder._build()
+
         if bool(self.print_prompt):
             x = self.print_prompt
             if isinstance(x, (int, float, complex)) and not isinstance(x, bool):
                 self.print_prompt -= 1
-            print(builder._build(),end="")
+            prompt = builder._build()
+            print(prompt,end="")
         res = send_chat(builder,client,self.client_parameters,self.print_response)
         if client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
             messages = builder.add_response(str(res),"call")

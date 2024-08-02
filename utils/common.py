@@ -12,11 +12,18 @@ class PythonInterpreter:
         self.whitelist = ["sum", "range", "int"]
         pass
 
+    def fakeimport(self, name, *args,**kwargs):
+        #print("fakeimport", name, args,kwargs)
+        if name in ["sympy"]:
+            return __import__(name)
+
+
     def execute(self,code, context):
         safe_builtins = {'print': print, 'dir': dir}
         for el in self.whitelist:
             safe_builtins[el] = getattr(builtins, el)
         globalsParameter = {'__builtins__': safe_builtins}
+        globalsParameter['__builtins__']["__import__"] = self.fakeimport
         for el in context:
             globalsParameter[el] = context[el]
         f = StringIO()
