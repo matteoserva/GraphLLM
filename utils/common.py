@@ -6,18 +6,25 @@ import copy
 from io import StringIO
 from contextlib import redirect_stdout
 import builtins
+import os
+
+class fake_os:
+    def listdir(self,dirname):
+      return os.listdir(dirname)
 
 class PythonInterpreter:
     def __init__(self):
         self.safe_builtins = ["sum", "range", "int", "print","dir"]
-        self.safe_imports = ["sympy","numpy","datetime"]
+        self.safe_imports = ["sympy","numpy","datetime","bs4","requests"]
+        self.fake_imports = {"os":fake_os}
         pass
 
     def fakeimport(self, name, *args,**kwargs):
         #print("fakeimport", name, args,kwargs)
         if name in self.safe_imports:
             return __import__(name)
-
+        if name in self.fake_imports:
+            return self.fake_imports[name]()
 
     def execute(self,code, context):
         current_builtins = {}
