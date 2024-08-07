@@ -74,11 +74,14 @@ class BaseExecutor:
             prompt = builder._build()
             print(prompt,end="")
         res = send_chat(builder,client,self.client_parameters,self.print_response)
+        resp = [res,{"role":"assistant"}]
+
         if client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
             messages = builder.add_response(str(res),"call")
+            resp = [res, {"role":"call"}]
         else:
             messages = builder.add_response(str(res))
-        return res
+        return resp
 
 class StatelessExecutor(BaseExecutor):
     def __init__(self,client):
@@ -328,11 +331,14 @@ class LlamaTool:
 
 
     def __call__(self,scr, *args):
-        if scr[0].startswith("<|python_tag|>"):
-            script=scr[0][14:]
-            s = self.interpreter.execute(script, {})
-            s = s.rstrip()
-            res = [None,("ipython",s)]
+        if scr[1]["role"] == "call":
+            if scr[0].startswith("<|python_tag|>"):
+                script=scr[0][14:]
+                s = self.interpreter.execute(script, {})
+                s = s.rstrip()
+                res = [None,("ipython",s)]
+            else:
+                res = [None, ("dummy", "dummy")]
         else:
             res = [scr[0],None]
         return res

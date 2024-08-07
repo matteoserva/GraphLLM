@@ -14,6 +14,9 @@ parameters["repeat_penalty"] = 1.0
 parameters["penalize_nl"] = False
 parameters["seed"] = -1
 
+#test
+#parameters["seed"] = 0
+
 executor_config = {"client":client, "client_parameters":parameters}
 
 seqExec = GraphExecutor(executor_config)

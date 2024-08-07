@@ -284,6 +284,7 @@ class Formatter:
             formatter["eom"]="""<|eot_id|>"""
             #formatter["row"]=formatter["row1"] + formatter["row2"]
             formatter["roles"] = ["raw","system", "user","assistant","ipython","call"]
+            formatter["role_string"] = {"call":"<|start_header_id|>assistant<|end_header_id|>\n\n"}
             formatter["role_eom"] = {"call":"<|eom_id|>"}
             formatter["system_name"]="system"
             formatter["user_name"]="user"
@@ -427,7 +428,7 @@ class Formatter:
                 prompt = prompt + val
             else:
                 if not modifiers[i]["skip_preamble"]:
-                    if "role_string" in formatter:
+                    if "role_string" in formatter and el["role"] in formatter["role_string"]:
                          prompt = prompt + formatter["role_string"][el["role"]]
                     else:
                          role_name = formatter["assistant_name"] if el["role"] == "assistant" else el["role"]
@@ -443,7 +444,7 @@ class Formatter:
                     else:
                         prompt = prompt + formatter["eom"]
         if not skip_final:
-            if "role_string" in formatter:
+            if "role_string" in formatter and el["role"] in formatter["role_string"]:
                 prompt = prompt + formatter["role_string"]["assistant"]
             else:
                 prompt = prompt + formatter["bor"] + formatter["assistant_name"] + formatter["eor"]

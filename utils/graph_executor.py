@@ -198,13 +198,20 @@ class GraphExecutor:
             self.variables[stri] = v
             self.variables["c"][str(idx)] = v
         self.variables["c*"] = cl_args[1:]
+        self.variables["current_date"] = "23 Jul 2024"
         instructions_raw = None
 
         clean_config = cl_args[0]
         clean_config = graph_utils.get_clean_config(clean_config)
+
         for i,el in enumerate(cl_args[1:],1):
             rstr = "{v:c["+ str(i) + "]}"
             clean_config = clean_config.replace("{}",rstr,1)
+
+        #variable_whitelist = ["current_date"]
+        #whitelisted_variables = {name:self.variables[name] for name in variable_whitelist if name in self.variables}
+        #clean_config, _ = solve_templates(clean_config, [], whitelisted_variables)
+        clean_config = clean_config.replace("{v:current_date}",self.variables["current_date"])
         graph_raw = graph_utils.parse_executor_graph(clean_config)
 
         #add command_line node

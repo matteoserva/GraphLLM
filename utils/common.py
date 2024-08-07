@@ -9,20 +9,21 @@ import builtins
 
 class PythonInterpreter:
     def __init__(self):
-        self.whitelist = ["sum", "range", "int"]
+        self.safe_builtins = ["sum", "range", "int", "print","dir"]
+        self.safe_imports = ["sympy","numpy","datetime"]
         pass
 
     def fakeimport(self, name, *args,**kwargs):
         #print("fakeimport", name, args,kwargs)
-        if name in ["sympy"]:
+        if name in self.safe_imports:
             return __import__(name)
 
 
     def execute(self,code, context):
-        safe_builtins = {'print': print, 'dir': dir}
-        for el in self.whitelist:
-            safe_builtins[el] = getattr(builtins, el)
-        globalsParameter = {'__builtins__': safe_builtins}
+        current_builtins = {}
+        for el in self.safe_builtins:
+            current_builtins[el] = getattr(builtins, el)
+        globalsParameter = {'__builtins__': current_builtins}
         globalsParameter['__builtins__']["__import__"] = self.fakeimport
         for el in context:
             globalsParameter[el] = context[el]
