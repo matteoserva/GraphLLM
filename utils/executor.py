@@ -357,22 +357,19 @@ class ListNode:
         self.retval = args
 
     def __call__(self,*args):
-        ret = [self.retval[self.current_iteration]]
+        ret = self.retval[self.current_iteration]
         #print(self.retval[self.current_iteration])
         self.current_iteration += 1
         self.free_runs -= 1
         return ret
 
-class ConstantNode: # da sostituire con un listnode in cui setta retval a array []
+class ConstantNode(ListNode):
     def __init__(self,*args):
-        pass
+        super().__init__(*args)
 
     def load_config(self,args):
-        self.retval = args
+        super().load_config([args])
 
-    def __call__(self,*args):
-        ret = [el for el in self.retval]
-        return ret
 
 class UserInputNode:
     def __init__(self,*args):
