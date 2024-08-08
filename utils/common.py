@@ -6,17 +6,26 @@ import copy
 from io import StringIO
 from contextlib import redirect_stdout
 import builtins
-import os
+from functools import partial
+import importlib
 
-class fake_os:
-    def listdir(self,dirname):
-      return os.listdir(dirname)
+class fake_module:
+    def __init__(self,module_name,module_attrs):
+        self.mod = importlib.import_module(module_name)
+        self.attrs = module_attrs
+    def __getattr__(self, key):
+        return partial(self.wrapper_function, key)
+
+    def wrapper_function(self,funcname, *args, **kwargs):
+        if funcname in self.attrs:
+            m = getattr(self.mod,funcname)
+            return m(*args, **kwargs)
 
 class PythonInterpreter:
     def __init__(self):
         self.safe_builtins = ["sum", "range", "int", "print","dir"]
         self.safe_imports = ["sympy","numpy","datetime","bs4","requests"]
-        self.fake_imports = {"os":fake_os}
+        self.fake_imports = {"os":["listdir"]}
         pass
 
     def fakeimport(self, name, *args,**kwargs):
@@ -24,7 +33,7 @@ class PythonInterpreter:
         if name in self.safe_imports:
             return __import__(name)
         if name in self.fake_imports:
-            return self.fake_imports[name]()
+            return fake_module(name,self.fake_imports[name])
 
     def execute(self,code, context):
         current_builtins = {}

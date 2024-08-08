@@ -26,6 +26,8 @@ class GraphNode:
             self.executor = AgentController()
         elif el["type"] == "tool":
             self.executor = ToolExecutor()
+        elif el["type"] == "list":
+            self.executor = ListNode()
         elif el["type"] == "copy":
             self.executor = CopyNode()
         elif el["type"] == "graph":
@@ -51,6 +53,8 @@ class GraphNode:
         if props is not None:
             if "input_rule" in props:
                 self.input_rule = props["input_rule"]
+            if "free_runs" in props:
+                self["free_runs"] = props["free_runs"]
         return self.input_rule
 
     def setup_complete(self):
@@ -86,6 +90,8 @@ class GraphNode:
 
     def is_runnable(self):
         node = self
+        input_rule = self._get_input_rule()
+
         if self["free_runs"]> 0:
             return True
         if self.disable_execution:
@@ -95,7 +101,7 @@ class GraphNode:
 
         missing_inputs = len([el for el in node["inputs"] if el is None])
         blocked_outputs = len([el for el in node["outputs"] if not el is None])
-        if (self._get_input_rule() == "OR"):
+        if ( input_rule == "OR"):
             available_inputs = len([el for el in node["inputs"] if el is not None])
             missing_inputs = 0 if available_inputs > 0 else missing_inputs
 

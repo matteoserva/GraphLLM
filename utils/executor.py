@@ -343,8 +343,27 @@ class LlamaTool:
             res = [scr[0],None]
         return res
 
+class ListNode:
+    def __init__(self,*args):
+        self.free_runs = 1
+        self.current_iteration = 0
 
-class ConstantNode:
+    def get_properties(self):
+        res = {"free_runs":self.free_runs}
+        return res
+
+    def load_config(self,args):
+        self.free_runs = len(args) - 1
+        self.retval = args
+
+    def __call__(self,*args):
+        ret = [self.retval[self.current_iteration]]
+        #print(self.retval[self.current_iteration])
+        self.current_iteration += 1
+        self.free_runs -= 1
+        return ret
+
+class ConstantNode: # da sostituire con un listnode in cui setta retval a array []
     def __init__(self,*args):
         pass
 
