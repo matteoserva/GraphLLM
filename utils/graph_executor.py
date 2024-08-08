@@ -304,25 +304,29 @@ class GraphExecutor:
 
         input_node = [el for el in self.graph_nodes if el["name"] == "_I"][0]
         input_node["inputs"] = input_data
-        while True:
-            runnable = [i for i,v in enumerate(self.graph_nodes) if v.is_runnable()]
-            if len(runnable) == 0:
-                break
-            parallel_jobs = 1
-            if len(runnable) > parallel_jobs:
-                runnable = runnable[0:parallel_jobs]
-            tds = [threading.Thread(target=self.graph_nodes[i].execute) for i in runnable]
-            for el in tds:
-                el.start()
-            for el in tds:
-                el.join()
-            for i in runnable:
-                res = self.graph_nodes[i]["last_output"]
-                #res = self.graph_nodes[i].execute()
-                config = self.node_configs[i]
-                name = config["name"]
-                rname = "r" + name
-                self.variables[rname] = res
-                self.variables["r"][name] = res
-            self._execute_arcs()
+        try:
+            while True:
+                runnable = [i for i,v in enumerate(self.graph_nodes) if v.is_runnable()]
+                if len(runnable) == 0:
+                    break
+                parallel_jobs = 1
+                if len(runnable) > parallel_jobs:
+                    runnable = runnable[0:parallel_jobs]
+                tds = [threading.Thread(target=self.graph_nodes[i].execute) for i in runnable]
+                for el in tds:
+                    el.start()
+                for el in tds:
+                    el.join()
+                for i in runnable:
+                    res = self.graph_nodes[i]["last_output"]
+                    #res = self.graph_nodes[i].execute()
+                    config = self.node_configs[i]
+                    name = config["name"]
+                    rname = "r" + name
+                    self.variables[rname] = res
+                    self.variables["r"][name] = res
+                self._execute_arcs()
+        except KeyboardInterrupt:
+            print("")
+            return [None]
         return res

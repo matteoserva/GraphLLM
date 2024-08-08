@@ -386,9 +386,12 @@ class UserInputNode:
             self.retval = args
 
     def __call__(self,*args):
-        while self.current_prompt.count("{}") > 0:
-            m = [get_input() ]
-            self.current_prompt , _ = solve_templates(self.current_prompt,m)
+        try:
+            while self.current_prompt.count("{}") > 0:
+                m = [get_input() ]
+                self.current_prompt , _ = solve_templates(self.current_prompt,m)
+        except EOFError:
+            return [None]
         new_prompt = self.current_prompt
         self.current_prompt = "{}"
 
