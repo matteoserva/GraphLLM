@@ -3,7 +3,7 @@ from contextlib import redirect_stdout
 import builtins
 from functools import partial
 import importlib
-
+import types
 
 class fake_method:
     def __init__(self,method_name):
@@ -27,6 +27,10 @@ class fake_module:
         self.mod = importlib.import_module(module_name)
         self.attrs = module_attrs
     def __getattr__(self, key):
+        m = getattr(self.mod,key)
+        if isinstance(m,types.ModuleType):
+            newName = self.module_name + "." + key
+            return fake_module(newName,["getsize"])
         return partial( self.wrapper_method, self.module_name, key)
 
     def wrapper_method(self,modname, funcname, *args, **kwargs):
