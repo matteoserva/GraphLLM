@@ -4,6 +4,8 @@ import builtins
 from functools import partial
 import importlib
 import types
+import traceback 
+import sys
 
 class fake_method:
     def __init__(self,method_name):
@@ -41,7 +43,7 @@ class fake_module:
 class PythonInterpreter:
     def __init__(self):
         self.safe_builtins = ["sum", "range", "int", "print","dir"]
-        self.safe_imports = ["sympy","numpy","datetime","bs4","requests"]
+        self.safe_imports = ["sympy","numpy","datetime","bs4","requests","webbrowser"]
         self.fake_imports = {"os":["listdir"]}
         self.fake_builtins = {"open":fake_method}
         pass
@@ -65,7 +67,12 @@ class PythonInterpreter:
             globalsParameter[el] = context[el]
         f = StringIO()
         with redirect_stdout(f):
-              exec(code, globalsParameter, globalsParameter)
+            try:
+                exec(code, globalsParameter, globalsParameter)
+            except Exception as e:
+                #traceback.print_exc() 
+                #traceback.print_exception(*sys.exc_info()) 
+                print(str(type(e).__name__ ) + ": " + str(e))
         del globalsParameter['__builtins__']
         for el in globalsParameter:
             context[el] = globalsParameter[el]

@@ -7,7 +7,7 @@ from .formatter import Formatter
 
 import copy
 
-DEFAULT_HOST="matteopc"
+DEFAULT_HOST="minipd"
 
 class ONNXClient(object):
     def __new__(cls, *args,**kwargs):
@@ -64,7 +64,7 @@ class Client:
         a["stop"] = ["<|eom_id|>","<|eot_id|>","<|end|>", "<|im_end|>", "</s>","<end_of_turn>"]
         #        a["temperature"] = 0.0
         a["seed"] = -1
-        a["cache_prompt"] = False
+        a["cache_prompt"] = True
         a["stream"] = True
         # a["n_probs"] = 10
         # a["n_keep"] = -1
