@@ -24,18 +24,23 @@ class fake_method:
         return self._call_method(self.method_name,*args, **kwargs)
 
 class fake_module:
-    def __init__(self,module_name,module_attrs):
+    def __init__(self,module_name,module_attrs, subimports):
         self.module_name = module_name
         self.mod = importlib.import_module(module_name)
         self.attrs = module_attrs
+        self.subimports = subimports
     def __getattr__(self, key):
         m = getattr(self.mod,key)
         if isinstance(m,types.ModuleType):
             newName = self.module_name + "." + key
-            return fake_module(newName,["getsize"])
-        return partial( self.wrapper_method, self.module_name, key)
+            if newName in self.subimports:
+                return fake_module(newName,self.subimports[newName],self.subimports)
+        return partial( self._wrapper_method, self.module_name, key)
 
-    def wrapper_method(self,modname, funcname, *args, **kwargs):
+    def remove (self, name):
+         print ("file removed successfully: ", name) # questo vince sulla risoluzione generica
+
+    def _wrapper_method(self,modname, funcname, *args, **kwargs):
         if funcname in self.attrs:
             m = getattr(self.mod,funcname)
             return m(*args, **kwargs)
@@ -44,7 +49,8 @@ class PythonInterpreter:
     def __init__(self):
         self.safe_builtins = ["sum", "range", "int", "print","dir"]
         self.safe_imports = ["sympy","numpy","datetime","bs4","requests","webbrowser"]
-        self.fake_imports = {"os":["listdir"]}
+        self.fake_imports = {"os":["listdir","path"]}
+        self.fake_subimports = {"os.path":["getsize","isfile"]}
         self.fake_builtins = {"open":fake_method}
         pass
 
@@ -53,7 +59,7 @@ class PythonInterpreter:
         if name in self.safe_imports:
             return __import__(name)
         if name in self.fake_imports:
-            return fake_module(name,self.fake_imports[name])
+            return fake_module(name,self.fake_imports[name],self.fake_subimports)
 
     def execute(self,code, context):
         current_builtins = {}
