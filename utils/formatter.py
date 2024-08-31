@@ -40,7 +40,7 @@ class Formatter:
         formatter["enable_system"] = True
         if model_name.find("c4ai-command-r") >= 0:
             formatter={}
-            formatter["bos"]=""
+            formatter["bos"]="<BOS_TOKEN>"
             formatter["bor"]="<|START_OF_TURN_TOKEN|><|"
             formatter["eor"]="_TOKEN|>"
 
@@ -52,7 +52,7 @@ class Formatter:
 
 
             formatter["enable_system"] = False
-            formatter["roles"] = ["raw","user","assistant"]
+            formatter["roles"] = ["raw","system","user","assistant"]
         elif model_name.lower().find("glm") >= 0 or model_name.lower().find("codegeex") >= 0:
             formatter={}
             formatter["bos"]="[gMASK]<sop>"
