@@ -47,7 +47,7 @@ class fake_module:
 
 class PythonInterpreter:
     def __init__(self):
-        self.safe_builtins = ["sum", "range", "int", "print","dir"]
+        self.safe_builtins = ["sum", "range", "int", "print","dir","len"]
         self.safe_imports = ["sympy","numpy","datetime","bs4","requests","webbrowser"]
         self.fake_imports = {"os":["listdir","path"]}
         self.fake_subimports = {"os.path":["getsize","isfile"]}

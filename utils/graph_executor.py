@@ -40,6 +40,8 @@ class GraphNode:
             self.executor = Client()
         elif el["type"] == "user":
             self.executor = UserInputNode()
+        elif el["type"] == "exec":
+            self.executor = ExecNode()
 
 
     def _get_input_rule(self):

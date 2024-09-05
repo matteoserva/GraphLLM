@@ -5,6 +5,7 @@ from .grammar import load_grammar
 from .agent_ops import AgentOps
 
 from .common import get_input
+import subprocess
 
 import json
 
@@ -294,6 +295,7 @@ class PythonExecutor:
         self.base_subst = "<<<<PYTHONSUBST>>>>"
         self.base_template = self.base_subst
         self.interpreter = PythonInterpreter()
+        self.saved_variables = {}
         pass
 
     def load_config(self,args):
@@ -309,12 +311,15 @@ class PythonExecutor:
                 script = script.replace(self.base_subst,el,1)
 
         scriptContext = {"_C":scr}
-
+        for el in self.saved_variables:
+            if el not in scriptContext:
+                scriptContext[el] = self.saved_variables[el]
         print("scr:", script)
         s = self.interpreter.execute(script,scriptContext)
         globalsParameter = scriptContext
         s=s.rstrip()
         del globalsParameter["_C"]
+        self.saved_variables = globalsParameter
         return [s,str(globalsParameter)]
 
 class LlamaTool:
@@ -361,6 +366,18 @@ class ListNode:
         #print(self.retval[self.current_iteration])
         self.current_iteration += 1
         self.free_runs -= 1
+        return ret
+
+class ExecNode:
+    def __init__(self,*args):
+        pass
+
+    def load_config(self,args):
+        self.args = args
+
+    def __call__(self,*args):
+        result = subprocess.run(self.args,capture_output = True,text = True)
+        ret = str(result.stdout)
         return ret
 
 class ConstantNode(ListNode):
@@ -433,6 +450,11 @@ class CopyNode:
         elif self._subtype == "mux":
             l = [el for el in res if el is not None]
             res = l
+        elif self._subtype == "log":
+            if "logfile" in self.parameters:
+              fn = self.parameters["logfile"]
+              with open(fn,"w") as f:
+                f.write(res[0])
 
         elif ("return_attr" in self.parameters):
             attr_name = self.parameters["return_attr"]

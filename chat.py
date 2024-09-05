@@ -17,7 +17,8 @@ parameters["seed"] = -1
 #parameters["seed"] = 0
 #parameters["n_probs"] = 5
 #parameters["cache_prompt"] = False
-#parameters["temperature"] = 0.01
+parameters["temperature"] = 0.01
+#parameters["n_predict"] = 1024*8
 
 executor = StatefulExecutor(client)
 executor.set_client_parameters(parameters)
