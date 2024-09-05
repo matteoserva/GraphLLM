@@ -222,6 +222,11 @@ class GraphExecutor:
         clean_config = clean_config.replace("{v:current_date}",self.variables["current_date"])
         graph_raw = graph_utils.parse_executor_graph(clean_config)
 
+        #add output node if there is only one node
+        if len(graph_raw) == 1:
+            obj = {"name": "_O", "type": "copy","exec":[graph_raw[0]["name"]]}
+            graph_raw.append(obj)
+
         #add command_line node
         input_obj = {"name": "_C", "type": "constant", "init": cl_args}
         graph_raw.insert(0,input_obj)
