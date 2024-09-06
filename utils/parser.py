@@ -75,11 +75,14 @@ def get_next_tag(prompt):
 
 def readstring_hierarchical(prompt,variables): 
 
+  searchPos = 0
   while True:
-    tag = get_next_tag(prompt)
+    tag = get_next_tag(prompt[searchPos:])
     if tag is None:
       break;
     posA,posB = tag
+    posA += searchPos
+    posB += searchPos
 
     foundString = prompt[posA:posB+1]
     tag = foundString[1]

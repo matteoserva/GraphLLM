@@ -6,7 +6,7 @@ from .agent_ops import AgentOps
 
 from .common import get_input
 import subprocess
-
+import copy
 import json
 
 def send_chat(builder,client,client_parameters=None,print_response=True):
@@ -376,7 +376,17 @@ class ExecNode:
         self.args = args
 
     def __call__(self,*args):
-        result = subprocess.run(self.args,capture_output = True,text = True)
+        execArgs = args[0]
+        confArgs = copy.copy(self.args)
+        for i in range(len(execArgs)):
+            name = "{p:exec" + str(i) + "}"
+            for j in range(len(self.args)):
+                val = confArgs[j]
+                v2 = val.replace(name,execArgs[i])
+                confArgs[j] = v2
+        fullargs = confArgs
+        concatenatedArgs = "\n----------------\n".join(execArgs)
+        result = subprocess.run(fullargs,capture_output = True,text = True, input = concatenatedArgs)
         ret = str(result.stdout)
         return ret
 
