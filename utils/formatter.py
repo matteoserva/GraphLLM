@@ -504,9 +504,14 @@ class PromptBuilder:
 
         if  is_raw:
             try:
-                self.messages = parse_raw(message)
+                parsed = parse_raw(message)
             except:
-                self.messages = [{"role":"raw","content":str(m)}]
+                parsed = [{"role":"raw","content":str(m)}]
+            if len(self.messages) >= 2 and self.messages[-1]["role"] == "assistant": #se ho già eseguito uno step, cerco di appendere
+                for el in parsed:
+                    self.messages.append(el)
+            else:
+                self.messages = parsed
         else:
             self.messages.append({"role":role,"content":str(m)})
         #print(self.messages)

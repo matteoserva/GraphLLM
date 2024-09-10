@@ -63,6 +63,7 @@ class BaseExecutor:
         m = text_prompt
         client = self.client
         builder = self.builder
+        print("m: ",m)
         if isinstance(m,tuple):
             messages = builder.add_request(m[1],m[0])
         else:
@@ -84,12 +85,20 @@ class BaseExecutor:
             messages = builder.add_response(str(res))
         return resp
 
+def solve_placeholders(base,confArgs):
+        for i in range(len(confArgs)):
+            name = "{p:exec" + str(i+1) + "}"
+            val = confArgs[i]
+            base = base.replace(name,val)
+        return base
+
 class StatelessExecutor(BaseExecutor):
     def __init__(self,client):
         super().__init__(client)
 
     def __call__(self,prompt_args):
         m ,_ = solve_templates(self.current_prompt,prompt_args)
+        m = solve_placeholders(m,prompt_args)
         self.builder.reset()
 
         res = self.basic_exec(m)
@@ -379,7 +388,7 @@ class ExecNode:
         execArgs = args[0]
         confArgs = copy.copy(self.args)
         for i in range(len(execArgs)):
-            name = "{p:exec" + str(i) + "}"
+            name = "{p:exec" + str(i+1) + "}"
             for j in range(len(self.args)):
                 val = confArgs[j]
                 v2 = val.replace(name,execArgs[i])
