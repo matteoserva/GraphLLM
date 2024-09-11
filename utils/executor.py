@@ -9,6 +9,9 @@ import subprocess
 import copy
 import json
 
+import queue
+import threading
+
 def send_chat(builder,client,client_parameters=None,print_response=True):
     r = client.send_prompt(builder,params=client_parameters)
     ret = ""
@@ -189,6 +192,10 @@ class AgentController:
         self.current_iteration = 0
         self.answer = ""
 
+        self.q_question = queue.Queue(maxsize=1)
+        self.q_response = queue.Queue(maxsize=1)
+        self.enabled_input = 0
+
     def set_parameters(self,arg):
         if "tokens" in arg:
             self.tokens = arg["tokens"]
@@ -236,32 +243,61 @@ class AgentController:
 
         return respo
 
-    def _handle_graph_request(self,inputs):
-        outputs = [None] * 3
+    def _send_output(self,id,val,wait=True):
+        v = (id,val)
+        self.q_question.put(v)
+        resp = None
+        if wait:
+            resp = self.q_response.get()
+        return resp
 
-        if inputs[0] is not None:
-            outputs[1] = self._handle_query(inputs[0])
-            inputs[0] = None
-        elif inputs[1] is not None:
+    def _execute_prompt(self, prompt):
+        print("sono thread")
+        # send query
+        res = self._handle_query(prompt)
+        llm_response = self._send_output(1,res)
+
+        while True:
+            # call tool
             self.current_iteration += 1
-            respo = self._handle_llm_response(inputs[1])
+            respo = self._handle_llm_response(llm_response)
             if (respo["command"] == "answer"):
                 self.state = "COMPLETE"
                 self.answer = respo["args"]
-                outputs[2] = respo
+                tool_response = self._send_output(2, respo)
             elif self.current_iteration >= 10:
-                outputs[0] = Exception("llm agent overrun")
+                return self._send_output(0, Exception("llm agent overrun"),False)
             else:
-                outputs[2] = respo
-            inputs[1] = None
-        elif inputs[2] is not None:
-            if (self.state == "COMPLETE"):
-                outputs[0] = inputs[2]
-                self._reset_internal_state()
+                tool_response = self._send_output(2, respo)
 
+            if (self.state == "COMPLETE"):
+
+                self._reset_internal_state()
+                return self._send_output(0, tool_response,False)
             else:
-                outputs[1] = self._handle_tool_response(inputs[2])
-            inputs[2] = None
+                res = self._handle_tool_response(tool_response)
+                llm_response = self._send_output(1, res)
+
+    def _handle_graph_request(self,inputs):
+        outputs = [None] * 3
+        true_inputs = len([el for el in inputs if el])
+        if(true_inputs != 1):
+            throw ("controller: invalid number of inputs")
+        if not inputs[self.enabled_input]:
+            throw("controller: unexpected input")
+
+        if self.enabled_input == 0:
+            self.t1 = threading.Thread(target=self._execute_prompt, args=(inputs[0],))
+            self.t1.start()
+        else:
+            self.q_response.put(inputs[self.enabled_input])
+
+        id, val = self.q_question.get()
+        self.enabled_input = id
+        outputs[id] = val
+        inputs[self.enabled_input] = None
+        if id == 0:
+            self.t1.join()
 
         return outputs
 
