@@ -7,7 +7,7 @@ from .formatter import Formatter
 
 import copy
 
-DEFAULT_HOST="minipd"
+DEFAULT_HOST="matteopc"
 
 class ONNXClient(object):
     def __new__(cls, *args,**kwargs):
@@ -84,6 +84,8 @@ class Client:
 
     def set_parameters(self,parameters):
         client_config_names=["host","port"]
+        if "port" in parameters:
+            self.port = parameters["port"]
         if "host" in parameters:
             self.host = parameters["host"]
             self.connect()
@@ -135,7 +137,7 @@ class Client:
                 yield tmp_res
 
     def tokenize(self,p):
-        url = "http://" + self.host + ":8080/tokenize"
+        url = "http://" + self.host + ":" + str(self.port) + "/tokenize"
         a={}
         a["content"] = p
         a["add_special"] = False
@@ -150,7 +152,7 @@ class Client:
         return r4
     
     def detokenize(self,p):
-        url = "http://" + self.host + ":8080/detokenize"
+        url = "http://" + self.host + ":" + str(self.port) + "/detokenize"
         a={}
         a["tokens"] = p
         js = json.dumps(a)
@@ -175,7 +177,7 @@ class Client:
         #a = {"messages":p}
         js = json.dumps(a)
         #print(a,"\n-\n" + p + "-")
-        url = "http://" + self.host + ":8080/completion"
+        url = "http://" + self.host + ":" + str(self.port) +"/completion"
         headers = {"Content-Type": "application/json"}
 
         data = js

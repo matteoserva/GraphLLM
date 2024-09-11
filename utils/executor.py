@@ -63,7 +63,6 @@ class BaseExecutor:
         m = text_prompt
         client = self.client
         builder = self.builder
-        print("m: ",m)
         if isinstance(m,tuple):
             messages = builder.add_request(m[1],m[0])
         else:

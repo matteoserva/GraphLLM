@@ -113,7 +113,7 @@ class GraphNode:
     def set_dependencies(self,deps):
         r = list(deps.values())
         #print(r)
-        if self.type=="stateless":
+        if self.type=="stateless" or self.type=="stateful":
             self.executor.set_dependencies(deps)
         else:
             self.executor.set_dependencies(r)
