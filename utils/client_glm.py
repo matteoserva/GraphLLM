@@ -13,6 +13,7 @@ from transformers import (
 )
 from threading import Thread
 from multiprocessing import Process
+from transformers import BitsAndBytesConfig
 
 class StopOnTokens(StoppingCriteria):
     def __init__(self,model):
@@ -42,6 +43,9 @@ class GLMClient():
         elif dummy == "llama":
             self.model_name="llama-3.1"
             self.model_path="/home/matteo/tmp/models_cache/Meta-Llama-3.1-8B-Instruct"
+        elif dummy == "solar":
+            self.model_name="solar-pro-preview-instruct"
+            self.model_path="/home/matteo/tmp/models_cache/solar-pro-preview-instruct"
         else:
             self.model_name="GLM-4"
             self.model_path="/home/matteo/tmp/models_cache/glm-4-9b-chat"
@@ -144,12 +148,25 @@ class GLMClient():
         self.streamer = TextIteratorStreamer(tokenizer=self.tokenizer, timeout=60, skip_prompt=True, skip_special_tokens=True)
         pass
 
-    def connect(self):
+    def connect_old(self):
         device = "cuda"
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
         self.model = AutoModelForCausalLM.from_pretrained(self.model_path,low_cpu_mem_usage=True,trust_remote_code=True, device_map = 'auto',
             load_in_4bit=True
             #load_in_8bit=True
+            ).eval()
+        self.streamer = TextIteratorStreamer(tokenizer=self.tokenizer,timeout=60,skip_prompt=True,skip_special_tokens=True)
+        self.stop = StopOnTokens(self.model)
+    
+    def connect(self):
+        quantization_config = BitsAndBytesConfig(
+            load_in_8bit_fp32_cpu_offload=True,
+            #load_in_8bit=True,
+            #bnb_4bit_compute_dtype=torch.bfloat16
+            )
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_path,low_cpu_mem_usage=True,trust_remote_code=True, device_map = 'auto',
+            quantization_config = quantization_config
             ).eval()
         self.streamer = TextIteratorStreamer(tokenizer=self.tokenizer,timeout=60,skip_prompt=True,skip_special_tokens=True)
         self.stop = StopOnTokens(self.model)

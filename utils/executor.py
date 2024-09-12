@@ -83,7 +83,7 @@ class BaseExecutor:
         res = send_chat(builder,client,self.client_parameters,self.print_response)
         resp = [res,{"role":"assistant"}]
 
-        if client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
+        if "stopped_word" in client.prompt_metadata and client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
             messages = builder.add_response(str(res),"call")
             resp = [res, {"role":"call"}]
         else:
@@ -113,7 +113,7 @@ class StatefulExecutor(BaseExecutor):
             m = prompt_args[0]
         else:
             m ,_ = solve_templates(self.current_prompt,prompt_args)
-        m = solve_placeholders(m, prompt_args)
+            m = solve_placeholders(m, prompt_args)
         self.current_prompt="{}"
 
         res = self.basic_exec(m)

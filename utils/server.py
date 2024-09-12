@@ -53,7 +53,7 @@ server_props={
 
 class ModelHandler():
     def __init__(self):
-        self.model = GLMClient("llama")
+        self.model = GLMClient("solar")
         self.model.connect()
 
     def get_props(self):
