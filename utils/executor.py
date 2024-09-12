@@ -9,9 +9,6 @@ import subprocess
 import copy
 import json
 
-import queue
-import threading
-
 def send_chat(builder,client,client_parameters=None,print_response=True):
     r = client.send_prompt(builder,params=client_parameters)
     ret = ""
@@ -23,6 +20,12 @@ def send_chat(builder,client,client_parameters=None,print_response=True):
         print("")
     return ret
 
+def solve_placeholders(base, confArgs):
+        for i in range(len(confArgs)):
+            name = "{p:exec" + str(i + 1) + "}"
+            val = confArgs[i]
+            base = base.replace(name, val)
+        return base
 
 class BaseExecutor:
     def __init__(self,client):
@@ -87,12 +90,7 @@ class BaseExecutor:
             messages = builder.add_response(str(res))
         return resp
 
-def solve_placeholders(base,confArgs):
-        for i in range(len(confArgs)):
-            name = "{p:exec" + str(i+1) + "}"
-            val = confArgs[i]
-            base = base.replace(name,val)
-        return base
+
 
 class StatelessExecutor(BaseExecutor):
     def __init__(self,client):
@@ -115,6 +113,7 @@ class StatefulExecutor(BaseExecutor):
             m = prompt_args[0]
         else:
             m ,_ = solve_templates(self.current_prompt,prompt_args)
+        m = solve_placeholders(m, prompt_args)
         self.current_prompt="{}"
 
         res = self.basic_exec(m)
@@ -192,8 +191,6 @@ class AgentController:
         self.current_iteration = 0
         self.answer = ""
 
-        self.q_question = queue.Queue(maxsize=1)
-        self.q_response = queue.Queue(maxsize=1)
         self.enabled_input = 0
 
     def set_parameters(self,arg):
