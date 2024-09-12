@@ -4,7 +4,7 @@ import requests
 from . import common
 from .common import get_formatter,build_prompt,merge_params
 from .formatter import Formatter
-
+import time
 import copy
 
 DEFAULT_HOST="matteopc"
@@ -97,8 +97,17 @@ class Client:
 
     def get_server_props(self):
         url = "http://" + self.host + ":" + str(self.port) + "/props"
-        r = requests.get(url)
-        resp = json.loads(r.content)
+
+        retries = 10
+        while retries > 0:
+            r = requests.get(url)
+            resp = json.loads(r.content)
+            retries -= 1
+            if "error" in resp:
+                print("server busy")
+                time.sleep(2)
+            else:
+                break
         max_context = resp["default_generation_settings"]["n_ctx"]
         self.context_size = max_context
         return resp
