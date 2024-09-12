@@ -15,6 +15,8 @@ class fake_method:
         #print(args,kwargs)
         if fname.startswith("/tmp/"):
             return open(fname,mode,*args, **kwargs)
+        if fname.startswith("test/"):
+            return open(fname,mode,*args, **kwargs)
     
     def _call_method(self,method_name,*args, **kwargs):
         f = getattr(self,method_name)
@@ -47,8 +49,8 @@ class fake_module:
 
 class PythonInterpreter:
     def __init__(self):
-        self.safe_builtins = ["sum", "range", "int", "print","dir","len"]
-        self.safe_imports = ["sympy","numpy","datetime","bs4","requests","webbrowser"]
+        self.safe_builtins = ["sum", "max", "min", "range", "int", "print","dir","len"]
+        self.safe_imports = ["sympy","numpy","datetime","bs4","requests","webbrowser","json"]
         self.fake_imports = {"os":["listdir","path"]}
         self.fake_subimports = {"os.path":["getsize","isfile"]}
         self.fake_builtins = {"open":fake_method}

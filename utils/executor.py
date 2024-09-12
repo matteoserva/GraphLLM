@@ -391,8 +391,12 @@ class ListNode:
         self.free_runs = len(args) - 1
         self.retval = args
 
-    def __call__(self,*args):
+    def __call__(self,*prompt_args):
         ret = self.retval[self.current_iteration]
+        if not isinstance(ret,list):
+            ret = [ret]
+        ret[0], _ = solve_templates(ret[0], prompt_args[0])
+        ret[0] = solve_placeholders(ret[0], prompt_args[0])
         #print(self.retval[self.current_iteration])
         self.current_iteration += 1
         self.free_runs -= 1
