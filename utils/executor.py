@@ -243,19 +243,12 @@ class AgentController:
 
         return respo
 
-    def _send_output(self,id,val,wait=True):
-        v = (id,val)
-        self.q_question.put(v)
-        resp = None
-        if wait:
-            resp = self.q_response.get()
-        return resp
-
-    def _execute_prompt(self, prompt):
+    def _execute_prompt(self):
+        prompt = yield
         print("sono thread")
         # send query
         res = self._handle_query(prompt)
-        llm_response = self._send_output(1,res)
+        llm_response = yield (1,res)
 
         while True:
             # call tool
@@ -264,19 +257,19 @@ class AgentController:
             if (respo["command"] == "answer"):
                 self.state = "COMPLETE"
                 self.answer = respo["args"]
-                tool_response = self._send_output(2, respo)
+                tool_response = yield (2, respo)
             elif self.current_iteration >= 10:
-                return self._send_output(0, Exception("llm agent overrun"),False)
+                yield (0, Exception("llm agent overrun"))
             else:
-                tool_response = self._send_output(2, respo)
+                tool_response = yield (2, respo)
 
             if (self.state == "COMPLETE"):
 
                 self._reset_internal_state()
-                return self._send_output(0, tool_response,False)
+                yield (0, tool_response)
             else:
                 res = self._handle_tool_response(tool_response)
-                llm_response = self._send_output(1, res)
+                llm_response = yield (1, res)
 
     def _handle_graph_request(self,inputs):
         outputs = [None] * 3
@@ -287,17 +280,13 @@ class AgentController:
             throw("controller: unexpected input")
 
         if self.enabled_input == 0:
-            self.t1 = threading.Thread(target=self._execute_prompt, args=(inputs[0],))
-            self.t1.start()
-        else:
-            self.q_response.put(inputs[self.enabled_input])
+            self.t1 = self._execute_prompt()
+            next(self.t1)
 
-        id, val = self.q_question.get()
+        id, val = self.t1.send(inputs[self.enabled_input])
         self.enabled_input = id
         outputs[id] = val
         inputs[self.enabled_input] = None
-        if id == 0:
-            self.t1.join()
 
         return outputs
 

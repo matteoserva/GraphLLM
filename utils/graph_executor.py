@@ -319,11 +319,15 @@ class GraphExecutor:
                 parallel_jobs = 1
                 if len(runnable) > parallel_jobs:
                     runnable = runnable[0:parallel_jobs]
-                tds = [threading.Thread(target=self.graph_nodes[i].execute) for i in runnable]
-                for el in tds:
-                    el.start()
-                for el in tds:
-                    el.join()
+                if parallel_jobs > 1:
+                    tds = [threading.Thread(target=self.graph_nodes[i].execute) for i in runnable]
+                    for el in tds:
+                        el.start()
+                    for el in tds:
+                        el.join()
+                else:
+                    for i in runnable:
+                        self.graph_nodes[i].execute()
                 for i in runnable:
                     res = self.graph_nodes[i]["last_output"]
                     #res = self.graph_nodes[i].execute()
