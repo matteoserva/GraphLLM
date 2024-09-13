@@ -484,21 +484,22 @@ class PromptBuilder:
         self.formatter = Formatter()
         self.sysprompt = "You are a helpful assistant"
         self.force_system=False
+        self.messages = []
         self.reset()
-    
-    def _check_special_tokens(self,m):
+
+    @staticmethod
+    def _check_special_tokens(m):
         is_raw = check_special_tokens(m)
         return is_raw
- 
+
     def set_param(self,name,val):
-        if name== "force_system":
+        if name == "force_system":
              self.force_system = val
-        elif name== "sysprompt":
+        elif name == "sysprompt":
              self.sysprompt = val
              self.reset()
 
     def _build(self):
-
         text_prompt = self.formatter.build_prompt(self.messages,force_system=self.force_system)
 #        print(text_prompt)
         return text_prompt
@@ -518,19 +519,23 @@ class PromptBuilder:
         m = message
         is_raw = self._check_special_tokens(m)
 
-        if  is_raw:
+        if is_raw:
             try:
                 parsed = parse_raw(message)
             except:
                 parsed = [{"role":"raw","content":str(m)}]
-            if len(self.messages) >= 2 and self.messages[-1]["role"] == "assistant": #se ho già eseguito uno step, cerco di appendere
-                for el in parsed:
-                    self.messages.append(el)
-            else:
-                self.messages = parsed
         else:
-            self.messages.append({"role":role,"content":str(m)})
-        #print(self.messages)
+            parsed = [{"role":role,"content":str(m)}]
+
+        for el in parsed:
+            if el == "raw":
+                self.messages = [el]
+            elif el == "system":
+                if self.messages[0]["role"] == "system":
+                    self.messages[0] = el
+            else:
+                self.messages.append(el)
+
         return self.messages
 
     def add_response(self,message,role = "assistant"):
