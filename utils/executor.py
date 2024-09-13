@@ -344,7 +344,7 @@ class PythonExecutor:
         for el in self.saved_variables:
             if el not in scriptContext:
                 scriptContext[el] = self.saved_variables[el]
-        print("scr:", script)
+        #print("scr:", script)
         s = self.interpreter.execute(script,scriptContext)
         globalsParameter = scriptContext
         s=s.rstrip()

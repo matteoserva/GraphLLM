@@ -23,7 +23,9 @@ seqExec = GraphExecutor(executor_config)
 
 cl_args = seqExec.load_config(sys.argv[1:])
 res = seqExec(cl_args[1:])
-print("Result:", res)
+print("Result:")
+for el in res:
+    print(el)
 
 
 
