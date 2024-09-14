@@ -94,18 +94,18 @@ class GraphNode:
         node = self
         input_rule = self._get_input_rule()
 
-        if self["free_runs"]> 0:
-            return True
-        if self.disable_execution:
-            return False
-        if len( node["inputs"]) == 0 and len(node["outputs"]) == 0:
-            return False
-
         missing_inputs = len([el for el in node["inputs"] if el is None])
         blocked_outputs = len([el for el in node["outputs"] if not el is None])
         if ( input_rule == "OR"):
             available_inputs = len([el for el in node["inputs"] if el is not None])
             missing_inputs = 0 if available_inputs > 0 else missing_inputs
+
+        if self["free_runs"]> 0 and blocked_outputs == 0:
+            return True
+        if self.disable_execution:
+            return False
+        if len( node["inputs"]) == 0 and len(node["outputs"]) == 0:
+            return False
 
         runnable = (missing_inputs + blocked_outputs) == 0
         return runnable

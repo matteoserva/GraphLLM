@@ -380,7 +380,7 @@ class LlamaTool:
 
 class ListNode:
     def __init__(self,*args):
-        self.free_runs = 1
+        self.free_runs = 0
         self.current_iteration = 0
 
     def get_properties(self):
@@ -388,18 +388,23 @@ class ListNode:
         return res
 
     def load_config(self,args):
-        self.free_runs = len(args) - 1
         self.retval = args
 
-    def __call__(self,*prompt_args):
+    def __call__(self,args0, *prompt_args):
         ret = self.retval[self.current_iteration]
+
         if not isinstance(ret,list):
             ret = [ret]
-        ret[0], _ = solve_templates(ret[0], prompt_args[0])
-        ret[0] = solve_placeholders(ret[0], prompt_args[0])
+        ret[0], _ = solve_templates(ret[0], args0)
+        if self.current_iteration == 0:
+            ret[0] = solve_placeholders(ret[0], args0)
         #print(self.retval[self.current_iteration])
-        self.current_iteration += 1
-        self.free_runs -= 1
+
+        self.current_iteration = (self.current_iteration + 1) % len(self.retval)
+        if self.free_runs > 0:
+            self.free_runs -= 1
+        else:
+            self.free_runs = len(self.retval) -1
         return ret
 
 class ExecNode:

@@ -528,9 +528,9 @@ class PromptBuilder:
             parsed = [{"role":role,"content":str(m)}]
 
         for el in parsed:
-            if el == "raw":
+            if el["role"] == "raw":
                 self.messages = [el]
-            elif el == "system":
+            elif el["role"] == "system":
                 if self.messages[0]["role"] == "system":
                     self.messages[0] = el
             else:
