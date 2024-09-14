@@ -66,6 +66,9 @@ class BaseExecutor:
         return self.current_prompt.count("{}")
 
     def basic_exec(self,text_prompt):
+        if text_prompt == "{p:eos}":
+            self.builder.reset()
+            return ["{p:eos}"]
         m = text_prompt
         client = self.client
         builder = self.builder
@@ -391,13 +394,18 @@ class ListNode:
         self.retval = args
 
     def __call__(self,args0, *prompt_args):
+
+
+        if self.current_iteration == 0:
+            for i,el in enumerate(self.retval):
+                self.retval[i] = solve_placeholders(el, args0)
+
         ret = self.retval[self.current_iteration]
 
         if not isinstance(ret,list):
             ret = [ret]
         ret[0], _ = solve_templates(ret[0], args0)
-        if self.current_iteration == 0:
-            ret[0] = solve_placeholders(ret[0], args0)
+
         #print(self.retval[self.current_iteration])
 
         self.current_iteration = (self.current_iteration + 1) % len(self.retval)
