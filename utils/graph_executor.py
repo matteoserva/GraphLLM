@@ -84,6 +84,13 @@ class GraphNode:
             consume_inputs[self["input_active"]] = True
             inputs = [None] * len(inputs)
             inputs[self["input_active"]] = node["inputs"][self["input_active"]]
+        elif self.input_rule == "OR":
+            consume_inputs = [False] * len(inputs)
+            available_inputs = [ i for i, el in enumerate(node["inputs"]) if el is not None]
+            input_active = available_inputs[0]
+            consume_inputs[input_active] = True
+            inputs = [None] * len(inputs)
+            inputs[input_active] = node["inputs"][input_active]
         elif len(inputs) > 0:
             node["inputs"] = [None] * len(inputs)
             consume_inputs = [True] * len(inputs)
