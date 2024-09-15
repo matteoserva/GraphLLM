@@ -57,6 +57,8 @@ class GraphNode:
                 self.input_rule = props["input_rule"]
             if "free_runs" in props:
                 self["free_runs"] = props["free_runs"]
+            if "input_active" in props:
+                self["input_active"] = props["input_active"]
         return self.input_rule
 
     def setup_complete(self):
@@ -64,19 +66,34 @@ class GraphNode:
 
     def execute(self):
         node=self
-        inputs = node["inputs"]
+        inputs = [el for el in node["inputs"]]
 
         #        m,_ = solve_templates(inputs[0],inputs[1:],self.variables)
         ex = node["executor"]
 
-        # consuma gli input
+
+
+        consume_inputs = [True] * len(inputs)
+
         if self["free_runs"] > 0:
             self["free_runs"] -= 1
             inputs = [""] * len(inputs)
+            consume_inputs = [False] * len(inputs)
+        elif self.input_rule == "XOR":
+            consume_inputs = [False] * len(inputs)
+            consume_inputs[self["input_active"]] = True
+            inputs = [None] * len(inputs)
+            inputs[self["input_active"]] = node["inputs"][self["input_active"]]
         elif len(inputs) > 0:
             node["inputs"] = [None] * len(inputs)
+            consume_inputs = [True] * len(inputs)
         else:
             self.disable_execution = True
+
+        # consuma gli input
+        for i, el in enumerate(consume_inputs):
+            if el:
+                node["inputs"][i] = None
 
         res = ex(inputs)
         if not isinstance(res, list):
@@ -100,6 +117,9 @@ class GraphNode:
         if ( input_rule == "OR"):
             available_inputs = len([el for el in node["inputs"] if el is not None])
             missing_inputs = 0 if available_inputs > 0 else missing_inputs
+        if ( input_rule == "XOR"):
+            input_available = node["inputs"][self["input_active"]] is not None
+            missing_inputs = 0 if input_available else 1
 
         if self["free_runs"]> 0 and blocked_outputs == 0:
             return True

@@ -501,7 +501,9 @@ class CopyNode:
             self._subtype = args["subtype"]
             if args["subtype"] == "mux":
                 self._properties["input_rule"] = "OR"
-
+            if args["subtype"] == "gate":
+                self._properties["input_rule"] = "XOR"
+                self._properties["input_active"] = 0
 
         self.parameters = args
 
@@ -519,6 +521,15 @@ class CopyNode:
         res = list(*args)
         if self._subtype  == "cast":
             res[0] = str(res[0])
+        elif self._subtype == "gate":
+            numInputs = len(res)
+            outval = [None] * numInputs
+            input_active = self._properties["input_active"]
+            outval[input_active] = res[input_active]
+            input_active = (input_active + 1) % numInputs
+
+            self._properties["input_active"] = input_active
+            res = outval
         elif self._subtype == "mux":
             if len(res) == 1: #mux nel tempo
                 if res[0] == "{p:eos}":
