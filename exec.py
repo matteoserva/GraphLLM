@@ -5,6 +5,7 @@ from utils.client import Client,DummyClient,GLMClient,ONNXClient
 from utils.formatter import Formatter,PromptBuilder
 
 from utils.graph_executor import GraphExecutor
+import json
 
 client = Client()
 client.connect()
@@ -25,7 +26,7 @@ cl_args = seqExec.load_config(sys.argv[1:])
 res = seqExec(cl_args[1:])
 print("Result:")
 for el in res:
-    print(el)
+    print(json.dumps(el, indent=4))
 
 
 

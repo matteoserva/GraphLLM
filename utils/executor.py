@@ -391,13 +391,14 @@ class ListNode:
         return res
 
     def load_config(self,args):
-        self.retval = args
+        self.base_retval = args
+        self.retval = ["" for el in args]
 
     def __call__(self,args0, *prompt_args):
 
 
         if self.current_iteration == 0:
-            for i,el in enumerate(self.retval):
+            for i,el in enumerate(self.base_retval):
                 self.retval[i] = solve_placeholders(el, args0)
 
         ret = self.retval[self.current_iteration]
@@ -424,15 +425,16 @@ class ExecNode:
 
     def __call__(self,*args):
         execArgs = args[0]
+        execArgsClean = [str(el) for el in execArgs]
         confArgs = copy.copy(self.args)
         for i in range(len(execArgs)):
             name = "{p:exec" + str(i+1) + "}"
             for j in range(len(self.args)):
                 val = confArgs[j]
-                v2 = val.replace(name,execArgs[i])
+                v2 = val.replace(name,execArgsClean[i])
                 confArgs[j] = v2
         fullargs = confArgs
-        concatenatedArgs = "\n----------------\n".join(execArgs)
+        concatenatedArgs = "\n----------------\n".join(execArgsClean)
         result = subprocess.run(fullargs,capture_output = True,text = True, input = concatenatedArgs)
         ret = str(result.stdout)
         return ret
@@ -476,6 +478,7 @@ class CopyNode:
         self.parameters = {}
         self._properties = {"input_rule":"AND"}
         self._subtype="copy"
+        self.stack = []
 
     def get_properties(self):
         res = self._properties
@@ -505,8 +508,16 @@ class CopyNode:
         if self._subtype  == "cast":
             res[0] = str(res[0])
         elif self._subtype == "mux":
-            l = [el for el in res if el is not None]
-            res = l
+            if len(res) == 1: #mux nel tempo
+                if res[0] == "{p:eos}":
+                    res = [self.stack]
+                    self.stack = []
+                else:
+                    self.stack.append(res[0])
+                    res = [None]
+            else: #mux nello spazio
+                l = [el for el in res if el is not None] #TODO: solo uno e mettere da parte gli altri
+                res = l
         elif self._subtype == "log":
             if "logfile" in self.parameters:
               fn = self.parameters["logfile"]
