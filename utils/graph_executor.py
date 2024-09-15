@@ -151,6 +151,8 @@ class GraphNode:
             self.executor.set_parameters(args)
         elif self.type == "client":
             self.executor.set_parameters(args)
+        elif hasattr(self.executor, "set_parameters"):
+            self.executor.set_parameters(args)
         elif isinstance(args,dict):
             for el in args:
                 setattr(self.executor,el,args[el])

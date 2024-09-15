@@ -329,6 +329,7 @@ class PythonExecutor:
         self.base_template = self.base_subst
         self.interpreter = PythonInterpreter()
         self.saved_variables = {}
+        self.properties = {}
         pass
 
     def load_config(self,args):
@@ -336,6 +337,9 @@ class PythonExecutor:
             self.base_template = args[0]
         #todo: gestire parametri successivi
 
+    def set_parameters(self,params):
+        if "free_runs" in params:
+            self.properties["free_runs"] = params["free_runs"]
 
     def __call__(self,scr, *args):
 
@@ -352,8 +356,15 @@ class PythonExecutor:
         globalsParameter = scriptContext
         s=s.rstrip()
         del globalsParameter["_C"]
+
+        retval = [s,str(globalsParameter)]
+        if "_O" in globalsParameter:
+            retval = globalsParameter["_O"]
+            del globalsParameter["_O"]
+            retval.append(s)
+            retval.append(str(globalsParameter))
         self.saved_variables = globalsParameter
-        return [s,str(globalsParameter)]
+        return retval
 
 class LlamaTool:
     def __init__(self,*args):
