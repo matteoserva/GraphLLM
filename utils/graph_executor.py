@@ -72,6 +72,7 @@ class GraphNode:
         # consuma gli input
         if self["free_runs"] > 0:
             self["free_runs"] -= 1
+            inputs = [""] * len(inputs)
         elif len(inputs) > 0:
             node["inputs"] = [None] * len(inputs)
         else:

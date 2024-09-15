@@ -342,9 +342,10 @@ class PythonExecutor:
             self.properties["free_runs"] = params["free_runs"]
 
     def __call__(self,scr, *args):
-
+        self.properties["free_runs"] = 0
         script = self.base_template
-        for el in scr:
+        if script.find(self.base_subst) >= 0:
+            for el in scr:
                 script = script.replace(self.base_subst,el,1)
 
         scriptContext = {"_C":scr}
