@@ -404,14 +404,17 @@ class ListNode:
 
     def load_config(self,args):
         self.base_retval = args
-        self.retval = ["" for el in args]
+        if len(args) == 0 or (not isinstance(args[0],list)):
+            self.base_retval = [args]
+        self.retval = [[] for el in args]
 
     def __call__(self,args0, *prompt_args):
 
 
         if self.current_iteration == 0:
             for i,el in enumerate(self.base_retval):
-                self.retval[i] = solve_placeholders(el, args0)
+                self.retval[i] = el
+                self.retval[i][0] = solve_placeholders(el[0], args0)
 
         ret = self.retval[self.current_iteration]
 
@@ -491,6 +494,7 @@ class CopyNode:
         self._properties = {"input_rule":"AND"}
         self._subtype="copy"
         self.stack = []
+        self.cache = None
 
     def get_properties(self):
         res = self._properties
@@ -521,6 +525,13 @@ class CopyNode:
         res = list(*args)
         if self._subtype  == "cast":
             res[0] = str(res[0])
+        elif self._subtype == "repeat":
+            if self.cache is None:
+                self.cache = res
+                self._properties["free_runs"] = 1
+            else:
+                res = self.cache
+            
         elif self._subtype == "gate":
             numInputs = len(res)
             outval = [None] * numInputs

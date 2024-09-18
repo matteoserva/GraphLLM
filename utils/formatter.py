@@ -17,10 +17,14 @@ class Formatter:
             tokenizer_path = "/home/matteo/tmp/models_cache/Meta-Llama-3.1-8B-Instruct"
         elif model_name.lower().startswith("_glm"):
             tokenizer_path = "tokenizers/glm-chat"
+        elif model_name.lower().startswith("mistral-small"):
+            tokenizer_path = "tokenizers/Mistral-Small-Instruct-2409"
         elif model_name.lower().startswith("_mistral-nemo"):
             tokenizer_path = "tokenizers/mistral-nemo"
         elif model_name.lower().startswith("_codegeex"):
             tokenizer_path = "/home/matteo/tmp/models_cache/codegeex4-all-9b"
+        elif model_name.lower().startswith("qwen2.5"):
+            tokenizer_path = "tokenizers/Qwen2.5-32B-Instruct"
         elif model_name.lower().startswith("qwen2"):
             tokenizer_path = "tokenizers/Qwen2"
         elif model_name.lower().startswith("_gemma"):
