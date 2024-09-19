@@ -20,10 +20,14 @@ def send_chat(builder,client,client_parameters=None,print_response=True):
         print("")
     return ret
 
-def solve_placeholders(base, confArgs):
+def solve_placeholders(base, confArgs, confVariables={}):
         for i in range(len(confArgs)):
             name = "{p:exec" + str(i + 1) + "}"
             val = confArgs[i]
+            base = base.replace(name, val)
+        for el in confVariables:
+            name = "{p:" + el + "}"
+            val = confVariables[el]
             base = base.replace(name, val)
         return base
 
@@ -233,7 +237,9 @@ class AgentController:
 
     def _handle_query(self,prompt_args):
         ops_string = self.ops_executor.get_formatted_ops()
+        variables = {"tools":ops_string}
         self.current_prompt ,_ = solve_templates(self.base_prompt, [ops_string])
+        self.current_prompt = solve_placeholders(self.current_prompt,[],variables)
         return self.current_prompt
 
     def _handle_llm_response(self,resp):
@@ -256,14 +262,14 @@ class AgentController:
             # call tool
             self.current_iteration += 1
             respo = self._handle_llm_response(llm_response)
-            if (respo["command"] == "answer"):
-                self.state = "COMPLETE"
-                self.answer = respo["args"]
-                tool_response = yield (2, respo)
-            elif self.current_iteration >= 10:
+            if self.current_iteration >= 10:
                 yield (0, Exception("llm agent overrun"))
             else:
                 tool_response = yield (2, respo)
+
+            if (respo["command"] == "answer") and not isinstance(tool_response, Exception):
+                self.state = "COMPLETE"
+                self.answer = respo["args"]
 
             # fase 3
             if isinstance(tool_response, Exception):
@@ -412,8 +418,8 @@ class ListNode:
 
     def load_config(self,args):
         self.base_retval = args
-        if len(args) == 0 or (not isinstance(args[0],list)):
-            self.base_retval = [args]
+        if not isinstance(args[0],list):
+            self.base_retval = [[el] for el in args]
         self.retval = [[] for el in args]
 
     def __call__(self,args0, *prompt_args):
