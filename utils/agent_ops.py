@@ -32,7 +32,7 @@ class AgentMath2():
 		return r
 
 	def _parse_inputs(self,text_params):
-		params = [el.strip() for el in text_params.split(",")]
+		params = [el.split("=")[-1].strip() for el in text_params.split(",")]
 		p2 = []
 		for el in params:
 

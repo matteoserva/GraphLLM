@@ -25,8 +25,9 @@ seqExec = GraphExecutor(executor_config)
 cl_args = seqExec.load_config(sys.argv[1:])
 res = seqExec(cl_args[1:])
 print("\n---------------\nResult:")
-print(json.dumps(res, indent=4))
-for el in res:
-    print(el)
-
+res2 = [str(el) for el in res]
+print(json.dumps(res2, indent=4))
+#for el in res:
+#    print(el)
+print(res2)
 

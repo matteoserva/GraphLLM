@@ -222,10 +222,12 @@ class AgentController:
 
     def _handle_tool_response(self,prompt_args):
 
-
         new_observation = str(prompt_args)
         if len(new_observation) > 0:
-            new_observation = self.tokens[3] + new_observation + "\n" + self.tokens[0]
+            if len(self.tokens[3]) > 0 and self.tokens[3][0] == "<" and self.tokens[3][-1] == ">":
+                new_observation = self.tokens[3] + new_observation + "</" + self.tokens[3][1:] + "\n" + self.tokens[0]
+            else:
+                new_observation = self.tokens[3] + new_observation + "\n" + self.tokens[0]
         self.current_prompt += new_observation
         return self.current_prompt
 
@@ -263,8 +265,10 @@ class AgentController:
             else:
                 tool_response = yield (2, respo)
 
+            # fase 3
+            if isinstance(tool_response, Exception):
+                tool_response = "Exception: " + str(tool_response)
             if (self.state == "COMPLETE"):
-
                 self._reset_internal_state()
                 yield (0, tool_response)
             else:
@@ -306,7 +310,11 @@ class AgentController:
         if comando.find("(") >= 0:  # forma compatta comando(parametri)
             c1 = comando.split("(")
             comando = c1[0].strip()
-            parametri = c1[1][:-1]
+            c2 = c1[1].find(")")
+            if c2 < 0:
+                parametri = c1[1][:-1]
+            else:
+                parametri = c1[1][:c2]
         else:
             parametri = resp[resp.find("Inputs:") + 7:].strip()
 

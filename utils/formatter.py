@@ -23,9 +23,9 @@ class Formatter:
             tokenizer_path = "tokenizers/mistral-nemo"
         elif model_name.lower().startswith("_codegeex"):
             tokenizer_path = "/home/matteo/tmp/models_cache/codegeex4-all-9b"
-        elif model_name.lower().startswith("qwen2.5"):
+        elif model_name.lower().startswith("_qwen2.5"):
             tokenizer_path = "tokenizers/Qwen2.5-32B-Instruct"
-        elif model_name.lower().startswith("qwen2"):
+        elif model_name.lower().startswith("_qwen2"):
             tokenizer_path = "tokenizers/Qwen2"
         elif model_name.lower().startswith("_gemma"):
             tokenizer_path = "tokenizers/gemma-2-27b-it"
@@ -57,6 +57,20 @@ class Formatter:
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw","system","user","assistant"]
+        elif model_name.lower().find("qwen2") >= 0:
+            formatter={}
+            formatter["bos"]=""
+            formatter["bor"]="<|im_start|>"
+            formatter["eor"]="\n"
+
+            formatter["eom"]="<|im_end|>\n"
+
+            formatter["system_name"]="system"
+            formatter["user_name"]="user"
+            formatter["assistant_name"]="assistant"
+
+            formatter["enable_system"] = True
+            formatter["roles"] = ["raw","user","assistant","system"]
         elif model_name.lower().find("glm") >= 0 or model_name.lower().find("codegeex") >= 0:
             formatter={}
             formatter["bos"]="[gMASK]<sop>"
