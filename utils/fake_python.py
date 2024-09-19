@@ -50,7 +50,7 @@ class fake_module:
 class PythonInterpreter:
     def __init__(self):
         self.safe_builtins = ["sum", "max", "min", "range", "int", "str", "print","dir","len","next"]
-        self.safe_imports = ["sympy","numpy","datetime","bs4","requests","webbrowser","json"]
+        self.safe_imports = ["sympy","numpy","datetime","bs4","requests","webbrowser","json","numpy.polynomial.polynomial"]
         self.fake_imports = {"os":["listdir","path"]}
         self.fake_subimports = {"os.path":["getsize","isfile"]}
         self.fake_builtins = {"open":fake_method}
@@ -59,7 +59,9 @@ class PythonInterpreter:
     def fakeimport(self, name, *args,**kwargs):
         #print("fakeimport", name, args,kwargs)
         if name in self.safe_imports:
-            return __import__(name)
+            #res = __import__(name,fromlist=[None])
+            res = importlib.import_module(name)
+            return res
         if name in self.fake_imports:
             return fake_module(name,self.fake_imports[name],self.fake_subimports)
 
