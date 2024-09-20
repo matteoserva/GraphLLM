@@ -197,12 +197,15 @@ class AgentController:
         self.state = "INIT"
         self.current_iteration = 0
         self.answer = ""
+        self.hints = ""
 
         self.enabled_input = 0
 
     def set_parameters(self,arg):
         if "tokens" in arg:
             self.tokens = arg["tokens"]
+        if "hints" in arg:
+            self.hints = arg["hints"]
 
     def get_properties(self):
         res = {"input_rule":"OR"}
@@ -237,7 +240,7 @@ class AgentController:
 
     def _handle_query(self,prompt_args):
         ops_string = self.ops_executor.get_formatted_ops()
-        variables = {"tools":ops_string}
+        variables = {"tools":ops_string, "hints": self.hints}
         self.current_prompt ,_ = solve_templates(self.base_prompt, [ops_string])
         self.current_prompt = solve_placeholders(self.current_prompt,[],variables)
         return self.current_prompt
@@ -267,7 +270,7 @@ class AgentController:
             else:
                 tool_response = yield (2, respo)
 
-            if (respo["command"] == "answer") and not isinstance(tool_response, Exception):
+            if (respo["command"].startswith("answer")) and not isinstance(tool_response, Exception):
                 self.state = "COMPLETE"
                 self.answer = respo["args"]
 
@@ -485,10 +488,10 @@ class UserInputNode:
         return res
 
     def load_config(self,args):
-        cl_args = args[0]
+        cl_args = args
         if len(cl_args) > 0:
             self.current_prompt,_ = solve_templates(cl_args[0],cl_args[1:])
-            self.retval = args
+
 
     def __call__(self,*args):
         try:

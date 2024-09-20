@@ -188,11 +188,15 @@ class GraphNode:
             pass
 
     def set_template(self,init_args):
+        new_init_args = []
         for i, v in enumerate(init_args):
-            if init_args[i] == "{v:c*}":
-                init_args[i] = self.graph.variables["c*"]
+            if v == "{v:c*}":
+                new_init_args.extend(self.graph.variables["c*"])
             else:
-                init_args[i], _ = solve_templates(init_args[i], [], self.graph.variables)
+                new_init_args.append(v)
+        init_args = new_init_args
+        for i, v in enumerate(init_args):
+            init_args[i], _ = solve_templates(init_args[i], [], self.graph.variables)
         self.executor.load_config(init_args)
 
 
