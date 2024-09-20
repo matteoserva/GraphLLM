@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 import sys
-from utils import agent_ops
+from utils.agent_tools import AgentOps
 from utils.client import Client
 from utils.common import solve_templates
 from utils.formatter import PromptBuilder
 from utils.executor import StatelessExecutor,AgentController
 
-agent = agent_ops.AgentOps()
+agent = AgentOps()
 
 fn = "profmpt.txt"
 if(len(sys.argv) > 1):

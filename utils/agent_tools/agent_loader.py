@@ -1,6 +1,4 @@
-
-from .agent_tools import *
-from ast import literal_eval
+from .all_ops import *
 
 class AgentOps():
 	def __init__(self,*args):
@@ -118,10 +116,3 @@ class AgentOps():
 			return e
 
 		return res
-
-if __name__ == "__main__":
-	a = AgentOps()
-	ops = a.get_ops()
-	#print(json.dumps(ops,indent=4))
-	print(a.get_formatted_ops())
-
