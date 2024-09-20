@@ -1,6 +1,9 @@
 import inspect
 import subprocess
 import os
+import random
+import string
+from ast import literal_eval
 
 class AgentAnswer():
 	def answer(self, computed_answer):
@@ -8,8 +11,6 @@ class AgentAnswer():
 		print ("-------------",computed_answer)
 		return "Operation complete"
 
-import random
-import string
 
 class GenericAgent():
 	def __init__(self):
