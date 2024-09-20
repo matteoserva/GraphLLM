@@ -1,6 +1,7 @@
 from ..formatter import PromptBuilder
 from ..parser import solve_templates
 from .common import send_chat,solve_placeholders
+from ..common import readfile
 
 class BaseExecutor:
     def __init__(self,client):
