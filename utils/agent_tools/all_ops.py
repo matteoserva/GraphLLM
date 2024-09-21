@@ -4,32 +4,9 @@ import os
 import random
 import string
 from ast import literal_eval
-
-class AgentAnswer():
-	def answer(self, computed_answer):
-		"""outputs the answer to the user request."""
-		print ("-------------",computed_answer)
-		return "Operation complete"
+from .common import *
 
 
-class GenericAgent():
-	def __init__(self):
-		pass
-
-	def _parse_inputs(self,fname, text_params):
-		val = """def args_to_dict(*args,**kwargs):\n  return args,kwargs\nres = args_to_dict({})\n"""
-		ex = val.format(text_params)
-		l = {}
-		exec(ex, l, l)
-		a,k = l["res"]
-		b=list(a)
-		return b,k
-
-
-	def answer(self, computed_answer):
-		"""outputs the answer to the user request."""
-		print ("-------------",computed_answer)
-		return computed_answer
 
 class AgentUtil(GenericAgent):
 	def __init__(self):
@@ -52,7 +29,7 @@ class AgentWeb(GenericAgent):
 	def download(self,url):
 		"""Downloads the webpage at url {url} and saves its html content to a temporary file"""
 		fullargs = ["python3", "../scraper/scrape.py", url]
-		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
+		#result = subprocess.run(fullargs, capture_output=True, text=True, input="")
 		return "Webpage at url " + url + " successfully saved at /tmp/pagina.md"
 
 class AgentLLM(GenericAgent):
@@ -68,7 +45,7 @@ class AgentLLM(GenericAgent):
 		val = literal_eval(val)[0]
 		return val
 
-	def ask(self,filename, question):
+	def query_file(self,filename, question):
 		"""Uses a external agent to answer a {question} about the file saved in {filename}."""
 		val = self._run_graph("graphs/file_question.txt",filename,question)
 		return val
@@ -100,13 +77,13 @@ class AgentFilesystem(GenericAgent):
 		file_size = file_stats.st_size
 
 		if file_size > 2048:
-			return f"file {file_name} is too large for read(). You should use the ask() tool to query its content if the tool is available."
+			return f"file {file_name} is too large for read(). You should use the query_file() tool to query its content if the tool is available."
 		with open(file_name,"r") as f:
 			content = f.read()
 		return content
 
-	def answerFile(self, file_name):
-		"""Returns a file as answer for the user question."""
+	def answer_file(self, file_name):
+		"""Returns a file as answer for the user question. This is the preferred way for returning an answer to the user."""
 		with open(file_name,"r") as f:
 			content = f.read()
 		print ("-------------\n" + content)
