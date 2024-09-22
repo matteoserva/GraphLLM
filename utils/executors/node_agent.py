@@ -1,6 +1,8 @@
 from ..parser import solve_templates
 from .common import solve_placeholders
 from ..common import try_solve_files
+import json
+
 
 class AgentController:
     def __init__(self, *args):
@@ -11,7 +13,7 @@ class AgentController:
         self.current_iteration = 0
         self.answer = ""
         self.hints = ""
-
+        self.subtype="simple"
         self.enabled_input = 0
 
     def set_parameters(self,arg):
@@ -19,6 +21,8 @@ class AgentController:
             self.tokens = arg["tokens"]
         if "hints" in arg:
             self.hints = arg["hints"]
+        if "subtype" in arg:
+            self.subtype = arg["subtype"]
 
     def get_properties(self):
         res = {"input_rule":"OR"}
@@ -77,10 +81,22 @@ class AgentController:
         while True:
             # call tool
             self.current_iteration += 1
-            respo = self._handle_llm_response(llm_response)
             if self.current_iteration >= 10:
                 yield (0, Exception("llm agent overrun"))
-            else:
+            respo = self._handle_llm_response(llm_response)
+
+            skip_tool_call = False
+            if self.subtype == "reflexion":
+                s0 = self.current_prompt.split("<planning>")[-1]
+                s1 = s0[s0.find("<thinking>"):]
+                current_trace = "<question>" + prompt + "</question>\n" + s1
+                reflexion_response = yield(3,current_trace)
+                parsed_response = json.loads(reflexion_response)
+                if parsed_response["result"] != "success":
+                    tool_response = "Exception: " + parsed_response["comment"]
+                    skip_tool_call = True
+
+            if not skip_tool_call:
                 tool_response = yield (2, respo)
 
             if (respo["command"].startswith("answer")) and not isinstance(tool_response, Exception):
@@ -98,7 +114,7 @@ class AgentController:
                 llm_response = yield (1, res)
 
     def _handle_graph_request(self,inputs):
-        outputs = [None] * 3
+        outputs = [None] * 4
         true_inputs = len([el for el in inputs if el])
         if(true_inputs != 1):
             throw ("controller: invalid number of inputs")

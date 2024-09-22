@@ -49,9 +49,14 @@ class AgentLLM(GenericAgent):
 		"""Uses a external agent to answer a {question} about the file saved in {filename}."""
 		val = self._run_graph("graphs/file_question.txt",filename,question)
 		return val
+		
+	def _query_information(self, question):
+		"""Queries a external agent to obtain information about everything."""
+		val = ""
+		return val
 
 	def summarize(self,filename):
-		"""Uses a external agent to process a saved file {filename} and generate a summary of its content."""
+		"""Uses a external agent to generate a plain-text summary of the content of a file."""
 		val = self._run_graph("graphs/run_template.txt","templates/summarize_full.txt",filename)
 		with open("/tmp/summary.txt","w") as f:
 			f.write(val)
