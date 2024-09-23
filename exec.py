@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 import sys
-from utils.common import get_input,get_formatter,readfile,build_prompt
-from utils.client import Client,DummyClient,GLMClient,ONNXClient
-from utils.formatter import Formatter,PromptBuilder
+from modules.common import get_input,get_formatter,readfile,build_prompt
+from modules.clients import Client,DummyClient,GLMClient,ONNXClient
+from modules.formatter import Formatter,PromptBuilder
 
-from utils.graph_executor import GraphExecutor
+from modules.graph_executor import GraphExecutor
 import json
 
 client = Client()

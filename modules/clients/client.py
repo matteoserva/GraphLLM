@@ -1,9 +1,9 @@
 
 import json
 import requests
-from . import common
-from .common import get_formatter,build_prompt,merge_params
-from .formatter import Formatter
+#from . import common
+from ..common import get_formatter,build_prompt,merge_params
+from ..formatter import Formatter
 import time
 import copy
 
