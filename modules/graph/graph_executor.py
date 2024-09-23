@@ -1,9 +1,9 @@
 from . import graph_utils
-from .common import readfile,merge_params,try_solve_files
+from ..common import readfile,merge_params,try_solve_files
 from modules.executors import *
 
 from modules.clients import Client,DummyClient,GLMClient,ONNXClient
-from .grammar import load_grammar
+from ..grammar import load_grammar
 import threading
 
 class GraphNode:

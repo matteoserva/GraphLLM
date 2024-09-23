@@ -4,7 +4,7 @@ from modules.common import get_input,get_formatter,readfile,build_prompt
 from modules.clients import Client,DummyClient,GLMClient,ONNXClient
 from modules.formatter import Formatter,PromptBuilder
 
-from modules.graph_executor import GraphExecutor
+from modules.graph import GraphExecutor
 import json
 
 client = Client()
