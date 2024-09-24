@@ -145,7 +145,17 @@ class AgentController:
 
     def _parse_response(self,resp):
         comando = resp[resp.find(self.tokens[1]) + len(self.tokens[1]):].split("\n")[0].strip()
-        if comando.find("(") >= 0:  # forma compatta comando(parametri)
+
+        if resp.find("<action_name>") >= 0:
+            s1 = resp.split("<action_parameter>")
+            a1 = s1[0]
+            p1 = s1[1:]
+            a2 = a1[a1.find("<action_name>")+13:a1.find("</action_name>")].strip()
+            p2 = [ el[:el.find("</action_parameter>")].strip() for el in p1]
+            comando = a2
+            parametri = ",".join(p2)
+
+        elif comando.find("(") >= 0:  # forma compatta comando(parametri)
             c1 = comando.split("(")
             comando = c1[0].strip()
             c2 = c1[1].find(")")
