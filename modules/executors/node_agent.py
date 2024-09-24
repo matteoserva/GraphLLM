@@ -153,7 +153,7 @@ class AgentController:
             a2 = a1[a1.find("<action_name>")+13:a1.find("</action_name>")].strip()
             p2 = [ el[:el.find("</action_parameter>")].strip() for el in p1]
             comando = a2
-            parametri = ",".join(p2)
+            parametri = p2
 
         elif comando.find("(") >= 0:  # forma compatta comando(parametri)
             c1 = comando.split("(")

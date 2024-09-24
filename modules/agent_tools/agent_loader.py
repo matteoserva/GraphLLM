@@ -68,6 +68,10 @@ class AgentOps():
 		row = self.tools[fname]
 		tool = row["tool"]
 
+		# se i parametri sono già separati allora li rimetto insieme. soluzione temporanea
+		if isinstance(text_params,list):
+			text_params = ",".join(text_params)
+
 		if "_parse_inputs" in dir(tool):
 			params,kp = tool._parse_inputs(fname,text_params)
 			if len(kp) > 0:
