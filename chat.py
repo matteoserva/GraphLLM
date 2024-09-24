@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 import sys
-from utils.common import get_input,get_formatter,readfile,build_prompt,solve_templates
-from utils.client import Client,GLMClient,GrokClient
-from utils.formatter import Formatter,PromptBuilder
-from utils.executors import StatefulExecutor, StatelessExecutor
+from modules.common import get_input,get_formatter,readfile,build_prompt,solve_templates
+from modules.clients import Client,GLMClient,GrokClient
+from modules.formatter import Formatter,PromptBuilder
+from modules.executors import StatefulExecutor, StatelessExecutor
 
 client = Client()
 client.connect()
