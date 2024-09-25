@@ -47,7 +47,7 @@ class AgentController:
     def _handle_tool_response(self,prompt_args):
 
         new_observation = str(prompt_args)
-        if len(new_observation) > 0:
+        if True or len(new_observation) > 0:
             if len(self.tokens[3]) > 0 and self.tokens[3][0] == "<" and self.tokens[3][-1] == ">":
                 new_observation = self.tokens[3] + new_observation + "</" + self.tokens[3][1:] + "\n" + self.tokens[0]
             else:
@@ -115,10 +115,10 @@ class AgentController:
 
     def _handle_graph_request(self,inputs):
         outputs = [None] * 4
-        true_inputs = len([el for el in inputs if el])
+        true_inputs = len([el for el in inputs if el is not None])
         if(true_inputs != 1):
             throw ("controller: invalid number of inputs")
-        if not inputs[self.enabled_input]:
+        if inputs[self.enabled_input] is None:
             throw("controller: unexpected input")
 
         if self.enabled_input == 0:

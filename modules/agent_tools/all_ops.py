@@ -5,7 +5,7 @@ import random
 import string
 from ast import literal_eval
 from .common import *
-
+from ..common import PythonInterpreter
 
 
 class AgentUtil(GenericAgent):
@@ -18,7 +18,13 @@ class AgentUtil(GenericAgent):
 		return val
 
 	def python_exec(self, python_code):
-		"""Executes the python code passed in the argument."""
+		"""Executes the python code passed in the argument. You must use the print() function to return a result."""
+		interpreter = PythonInterpreter()
+		res = interpreter.execute(python_code,{})
+		if len(res) == 0:
+			res="Exception: no output returned. Did you forget to call print()?"
+		return res
+
 
 class AgentWeb(GenericAgent):
 	def __init__(self):
