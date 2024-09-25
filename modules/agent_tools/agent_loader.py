@@ -57,7 +57,9 @@ class AgentOps():
 			if el["doc"] is not None:
 				row = row  + ": " + el["doc"]
 			params_string = ",".join(el["params"])
-			row = row + " Parameters: " + params_string
+			if row[-1] == ".":
+				row = row[:-1]
+			row = row + ". Parameters: " + params_string
 			textlist.append(row)
 		res = "\n".join(textlist)
 		return res
@@ -69,11 +71,15 @@ class AgentOps():
 		tool = row["tool"]
 
 		# se i parametri sono già separati allora li rimetto insieme. soluzione temporanea
+		orig_params = text_params
 		if isinstance(text_params,list):
 			text_params = ",".join(text_params)
 
 		if "_parse_inputs" in dir(tool):
-			params,kp = tool._parse_inputs(fname,text_params)
+			try:
+				params,kp = tool._parse_inputs(fname,orig_params)
+			except:
+				params, kp = tool._parse_inputs(fname, text_params)
 			if len(kp) > 0:
 				av_params = [el for el in row["params"] if el in kp]
 				data_params = [kp[el] for el in av_params]

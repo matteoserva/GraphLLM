@@ -10,6 +10,8 @@ class GenericAgent():
 		pass
 
 	def _parse_inputs(self,fname, text_params):
+		if isinstance(text_params,list):
+			return text_params,{}
 		val = """def args_to_dict(*args,**kwargs):\n  return args,kwargs\nres = args_to_dict({})\n"""
 		ex = val.format(text_params)
 		l = {}

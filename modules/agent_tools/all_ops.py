@@ -17,6 +17,9 @@ class AgentUtil(GenericAgent):
 		val = eval(expression)
 		return val
 
+	def python_exec(self, python_code):
+		"""Executes the python code passed in the argument."""
+
 class AgentWeb(GenericAgent):
 	def __init__(self):
 		pass
