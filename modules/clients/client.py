@@ -7,7 +7,7 @@ from ..formatter import Formatter
 import time
 import copy
 
-DEFAULT_HOST="minipd"
+DEFAULT_HOST="matteopc"
 
 class ONNXClient(object):
     def __new__(cls, *args,**kwargs):

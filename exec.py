@@ -6,6 +6,7 @@ from modules.formatter import Formatter,PromptBuilder
 
 from modules.graph import GraphExecutor
 import json
+from modules.logging.logger import Logger
 
 client = Client()
 client.connect()
@@ -15,10 +16,9 @@ parameters["repeat_penalty"] = 1.0
 parameters["penalize_nl"] = False
 parameters["seed"] = -1
 
-#test
-#parameters["seed"] = 0
+logger= Logger()
 
-executor_config = {"client":client, "client_parameters":parameters}
+executor_config = {"client":client, "client_parameters":parameters,"logger":logger}
 
 seqExec = GraphExecutor(executor_config)
 

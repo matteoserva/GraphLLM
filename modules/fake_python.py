@@ -6,6 +6,7 @@ import importlib
 import types
 import traceback 
 import sys
+import ast
 
 class fake_method:
     def __init__(self,method_name):
@@ -47,6 +48,16 @@ class fake_module:
             m = getattr(self.mod,funcname)
             return m(*args, **kwargs)
 
+def my_exec(code, globals, locals):
+    a = ast.parse(code)
+    last_expression = None
+    if a.body:
+        if isinstance(a_last := a.body[-1], ast.Expr):
+            last_expression = ast.unparse(a.body.pop())
+    exec(ast.unparse(a), globals, locals)
+    if last_expression:
+        return eval(last_expression, globals, locals)
+
 class PythonInterpreter:
     def __init__(self):
         self.safe_builtins = ["sum", "max", "min", "range", "int", "str", "print","dir","len","next"]
@@ -78,7 +89,7 @@ class PythonInterpreter:
         f = StringIO()
         with redirect_stdout(f):
             try:
-                exec(code, globalsParameter, globalsParameter)
+                alt_s = my_exec(code, globalsParameter, globalsParameter)
             except Exception as e:
                 #traceback.print_exc() 
                 #traceback.print_exception(*sys.exc_info()) 
@@ -87,4 +98,6 @@ class PythonInterpreter:
         for el in globalsParameter:
             context[el] = globalsParameter[el]
         s = f.getvalue()
+        if not s and alt_s:
+            s = str(alt_s)
         return s

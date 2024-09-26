@@ -18,11 +18,11 @@ class AgentUtil(GenericAgent):
 		return val
 
 	def python_exec(self, python_code):
-		"""Executes the python code passed in the argument. You must use the print() function to return a result."""
+		"""Executes python code. The argument is a multiline string containing the code to be executed."""
 		interpreter = PythonInterpreter()
 		res = interpreter.execute(python_code,{})
-		if len(res) == 0:
-			res="Exception: no output returned. Did you forget to call print()?"
+#		if len(res) == 0:
+#			res="Exception: no output returned. Did you forget to call print()?"
 		return res
 
 
@@ -38,7 +38,7 @@ class AgentWeb(GenericAgent):
 	def download(self,url):
 		"""Downloads the webpage at url {url} and saves its html content to a temporary file"""
 		fullargs = ["python3", "../scraper/scrape.py", url]
-		#result = subprocess.run(fullargs, capture_output=True, text=True, input="")
+		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
 		return "Webpage at url " + url + " successfully saved at /tmp/pagina.md"
 
 class AgentLLM(GenericAgent):

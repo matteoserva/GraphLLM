@@ -5,6 +5,7 @@ from modules.executors import *
 from modules.clients import Client,DummyClient,GLMClient,ONNXClient
 from ..grammar import load_grammar
 import threading
+from modules.logging.logger import Logger
 
 class GraphNode:
     def __init__(self,graph,node_config):
@@ -218,6 +219,15 @@ class GraphExecutor:
             executor_config = {"client":executor_config}
 
         client = executor_config["client"]
+        if "logger" in executor_config:
+            self.logger = executor_config["logger"]
+        else:
+            self.logger = Logger()
+        if "path" in executor_config:
+            self.path = executor_config["path"]
+        else:
+            self.path = "/"
+
         if "client_parameters" in executor_config:
             self.client_parameters = executor_config["client_parameters"]
         else:
@@ -280,6 +290,8 @@ class GraphExecutor:
 
         nodes_map = {el["name"]:el for el in graph_nodes}
 
+        node_names = [self.path + el["name"] for el in graph_nodes]
+        self.logger.log("names", node_names)
 
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]
@@ -364,6 +376,7 @@ class GraphExecutor:
                         self.graph_nodes[i].execute()
                 for i in runnable:
                     res = self.graph_nodes[i]["last_output"]
+                    self.logger.log("output", self.path + self.graph_nodes[i]["name"],str(res))
                     #res = self.graph_nodes[i].execute()
                     config = self.node_configs[i]
                     name = config["name"]
