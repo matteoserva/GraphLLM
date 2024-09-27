@@ -14,16 +14,16 @@ class WebLogger:
         #self.d.on('click', self.my_click1)
 
     def _select_node(self,msg):
-        jp.jp_server.stop()
+        #jp.jp_server.stop()
         obj = msg["target"]
         name = obj.p["name"]
         print(name)
-        for el_name in self.nodes:
-            el = self.nodes[el_name]
-            if el["name"] != name:
-                el["box"].show = False
-        obj.p["box"].show = True
-        self._update()
+        #for el_name in self.nodes:
+        #    el = self.nodes[el_name]
+        #    if el["name"] != name:
+        #        el["box"].show = False
+        obj.p["box"].show = not obj.p["box"].show
+        #await obj.p["box"].update()
 
     def _create_node(self,node_name):
         el = node_name
@@ -68,10 +68,13 @@ class WebLogger:
         jp.justpy(self.event_demo1,start_server=False)
         s = jp.get_server()
         s.config.setup_event_loop()
-        with asyncio.Runner() as runner:
-            self.loop = runner.get_loop()
-            return runner.run(s.serve())
-
+        try:
+            with asyncio.Runner() as runner:
+                self.loop = runner.get_loop()
+                runner.run(s.serve())
+        except:
+            pass
+        self.loop = None
     def start(self):
         t1 = threading.Thread(target=self._thread_main,args=())
         t1.daemon = self.detach
@@ -91,8 +94,11 @@ class WebLogger:
         if  obj is None:
             obj = self.wp
         if self.loop :
+            #try:
             res = asyncio.run_coroutine_threadsafe(obj.update(),self.loop)
             _ = res.result()
+            #except:
+            #    self.loop = None
         
     def update(self,val):
         #self.d.text = str(val)
