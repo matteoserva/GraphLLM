@@ -6,6 +6,7 @@ from ..common import get_formatter,build_prompt,merge_params
 from ..formatter import Formatter
 import time
 import copy
+from threading import BoundedSemaphore
 
 DEFAULT_HOST="matteopc"
 
@@ -71,16 +72,22 @@ class Client:
         # a["top_k"] = 5
         self.prompt_metadata= {}
         self.default_params = a
+        self.connected = False
 
 
     def connect(self):
-        props = self.get_server_props()
-        model_path = props["default_generation_settings"]["model"]
-        model_name = model_path.split("/")[-1]
-        self.model_name = model_name
-        self.formatter = Formatter()
-        self.formatter.load_model(model_name)
-        #get_formatter(props)
+        if not self.connected:
+            props = self.get_server_props()
+            self.max_slots = props.get("total_slots",1)
+
+            model_path = props["default_generation_settings"]["model"]
+            model_name = model_path.split("/")[-1]
+            self.model_name = model_name
+            self.formatter = Formatter()
+            self.formatter.load_model(model_name)
+            #get_formatter(props)
+            self.connetion_semaphore = BoundedSemaphore(value = self.max_slots)
+            self.connected = True
 
     def set_parameters(self,parameters):
         client_config_names=["host","port"]
@@ -112,38 +119,40 @@ class Client:
         self.context_size = max_context
         return resp
 
-    def ricevi(self,r1, pass_raw=False):
-        a = 1
-        for line in r1.iter_lines():
-            # filter out keep-alive new lines
-            a = a + 1
-            if line:
-                decoded_line = line.decode('utf-8')
-                json_decoded = json.loads(decoded_line[6:])
-                if ("stop" not in json_decoded) or json_decoded["stop"]:
-                    self.prompt_metadata = json_decoded
+    def _ricevi(self,req_params, pass_raw=False):
+        with self.connetion_semaphore:
+            r1 = requests.post(**req_params)
+            a = 1
+            for line in r1.iter_lines():
+                # filter out keep-alive new lines
+                a = a + 1
+                if line:
+                    decoded_line = line.decode('utf-8')
+                    json_decoded = json.loads(decoded_line[6:])
+                    if ("stop" not in json_decoded) or json_decoded["stop"]:
+                        self.prompt_metadata = json_decoded
 
-                if "truncated" in json_decoded and (json_decoded["truncated"] or False):
-                    del json_decoded["prompt"]
-                    print(json.dumps(json_decoded,indent=4))
-                    
-                    raise Exception("truncated")
-                if "content" not in json_decoded:
-                    print(json_decoded)
-                
-                
-                if pass_raw and len(json_decoded["content"]) > 0:
-                    tmp_res = json_decoded['completion_probabilities']
-                    #print(tmp_res)
-                    if len(tmp_res) == 0:
-                        continue
-                    tmp_res = tmp_res[0]["probs"]
-                    tmp_res = [ (el["tok_str"],el["prob"]) for el in tmp_res ]
-                    tmp_res = str(tmp_res) + "\n"
-                    #
-                else:
-                    tmp_res =json_decoded["content"]
-                yield tmp_res
+                    if "truncated" in json_decoded and (json_decoded["truncated"] or False):
+                        del json_decoded["prompt"]
+                        print(json.dumps(json_decoded,indent=4))
+
+                        raise Exception("truncated")
+                    if "content" not in json_decoded:
+                        print(json_decoded)
+
+
+                    if pass_raw and len(json_decoded["content"]) > 0:
+                        tmp_res = json_decoded['completion_probabilities']
+                        #print(tmp_res)
+                        if len(tmp_res) == 0:
+                            continue
+                        tmp_res = tmp_res[0]["probs"]
+                        tmp_res = [ (el["tok_str"],el["prob"]) for el in tmp_res ]
+                        tmp_res = str(tmp_res) + "\n"
+                        #
+                    else:
+                        tmp_res =json_decoded["content"]
+                    yield tmp_res
 
     def tokenize(self,p):
         url = "http://" + self.host + ":" + str(self.port) + "/tokenize"
@@ -190,9 +199,10 @@ class Client:
         headers = {"Content-Type": "application/json"}
 
         data = js
-        r = requests.post(url,data=data,headers=headers,stream=True)
         pass_raw = "n_probs" in a
-        g = self.ricevi(r,pass_raw)
+
+        req_params = {"url":url,"data":data,"headers":headers,"stream":True}
+        g = self._ricevi(req_params,pass_raw)
         return g
 
     def _send_prompt_builder(self,p,params):

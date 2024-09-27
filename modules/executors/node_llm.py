@@ -2,15 +2,18 @@ from ..formatter import PromptBuilder
 from ..parser import solve_templates
 from .common import send_chat,solve_placeholders
 from ..common import readfile
+from functools import partial
 
 class BaseExecutor:
-    def __init__(self,client):
+    def __init__(self,node_graph_parameters):
         self.print_prompt=True
         self.print_response=True
         self.current_prompt="{}"
         self.client_parameters = None
-        if client is not None:
-           self.set_dependencies({"client":client})
+        if "client" in node_graph_parameters:
+           self.set_dependencies({"client":node_graph_parameters["client"]})
+        self.logger = node_graph_parameters["logger"]
+        self.path = node_graph_parameters["path"]
 
     def set_dependencies(self,d):
         if "client" in d:
@@ -59,7 +62,7 @@ class BaseExecutor:
                 self.print_prompt -= 1
             prompt = builder._build()
             print(prompt,end="")
-        res = send_chat(builder,client,self.client_parameters,self.print_response)
+        res = send_chat(builder,client,self.client_parameters,self.print_response,logger_print=partial(self.logger.log,"print",self.path))
         resp = [res,{"role":"assistant"}]
 
         if "stopped_word" in client.prompt_metadata and client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":

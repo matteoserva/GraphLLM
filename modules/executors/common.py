@@ -1,13 +1,13 @@
 
-def send_chat(builder,client,client_parameters=None,print_response=True):
+def send_chat(builder,client,client_parameters=None,print_response=True, logger_print=print):
     r = client.send_prompt(builder,params=client_parameters)
     ret = ""
     for line in r:
         if print_response:
-             print(line, end="", flush=True)
+            logger_print(line, end="", flush=True)
         ret = ret + line
     if print_response and print_response != "partial":
-        print("")
+        logger_print("")
     return ret
 
 def solve_placeholders(base, confArgs, confVariables={}):

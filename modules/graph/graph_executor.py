@@ -15,12 +15,14 @@ class GraphNode:
 
         self.type = node_config["type"]
         self.name = node_config["name"]
+        self.path = graph.path + node_config["name"]
         node = {}
         el = node_config
+        node_graph_parameters = {"client":graph.client, "path":self.path,"logger":graph.logger}
         if el["type"] == "stateless":
-            self.executor = StatelessExecutor(graph.client)
+            self.executor = StatelessExecutor(node_graph_parameters)
         elif el["type"] == "stateful":
-            self.executor = StatefulExecutor(graph.client)
+            self.executor = StatefulExecutor(node_graph_parameters)
         elif el["type"] == "constant":
             self.executor = ConstantNode()
         elif el["type"] == "agent":
@@ -32,7 +34,7 @@ class GraphNode:
         elif el["type"] == "copy":
             self.executor = CopyNode()
         elif el["type"] == "graph":
-            self.executor = GraphExecutor(graph.client)
+            self.executor = GraphExecutor(node_graph_parameters)
         elif el["type"] == "python":
             self.executor = PythonExecutor()
         elif el["type"] == "llamatool":
@@ -224,7 +226,7 @@ class GraphExecutor:
         else:
             self.logger = Logger()
         if "path" in executor_config:
-            self.path = executor_config["path"]
+            self.path = executor_config["path"] + "/"
         else:
             self.path = "/"
 
@@ -362,7 +364,7 @@ class GraphExecutor:
                 runnable = [i for i,v in enumerate(self.graph_nodes) if v.is_runnable()]
                 if len(runnable) == 0:
                     break
-                parallel_jobs = 1
+                parallel_jobs = 2
                 if len(runnable) > parallel_jobs:
                     runnable = runnable[0:parallel_jobs]
                 if parallel_jobs > 1:
@@ -376,7 +378,7 @@ class GraphExecutor:
                         self.graph_nodes[i].execute()
                 for i in runnable:
                     res = self.graph_nodes[i]["last_output"]
-                    self.logger.log("output", self.path + self.graph_nodes[i]["name"],str(res))
+                    self.logger.log("output", self.path + self.graph_nodes[i]["name"],res)
                     #res = self.graph_nodes[i].execute()
                     config = self.node_configs[i]
                     name = config["name"]
