@@ -6,7 +6,7 @@ import string
 from ast import literal_eval
 from .common import *
 from ..common import PythonInterpreter
-
+import json
 
 class AgentUtil(GenericAgent):
 	def __init__(self):
@@ -41,6 +41,19 @@ class AgentWeb(GenericAgent):
 		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
 		return "Webpage at url " + url + " successfully saved at /tmp/pagina.md"
 
+	def web_search(self,query):
+		"""performs a web search using a search engine."""
+		modified_query = query.replace(" ","+")
+		search_url = "https://lite.duckduckgo.com/lite/?q=" + modified_query + ""
+		self.download(search_url)
+		fullargs = ["python3", "exec.py", "graphs/run_template.txt","templates/extract_search_results.txt","/tmp/pagina.md"]
+		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
+		last_row = result.stdout.strip().split("\n")[-1]
+		v1 = json.loads(last_row)
+		v2 = v1[0]
+
+		return v2
+
 class AgentLLM(GenericAgent):
 	def __init__(self):
 		pass
@@ -69,7 +82,11 @@ class AgentLLM(GenericAgent):
 		val = self._run_graph("graphs/run_template.txt","templates/summarize_full.txt",filename)
 		with open("/tmp/summary.txt","w") as f:
 			f.write(val)
-		return f"Summary of {filename} successfully saved /tmp/summary.txt"
+
+		res = f"Summary of {filename} successfully generated and saved in /tmp/summary.txt"
+		if len(val) < 1024:
+			res = res + "\n\n" + val
+		return res
 
 
 

@@ -30,6 +30,6 @@ try:
     #print(json.dumps(res2, indent=4))
     for el in res:
         print(el)
-    print(res2)
+    print(json.dumps(res2))
 finally:
     logger.stop()

@@ -4,7 +4,7 @@ import threading
 class WebLogger:
     def __init__(self,detach = True):
         self.wp = jp.WebPage(delete_flag=False)
-        self.table = jp.Table(a=self.wp)
+        self.table = jp.Table(a=self.wp,style="")
         self.div_buttons = jp.Div(text="", a=self.wp)
         self.div_boxes = jp.Div(text="", a=self.wp)
         self.nodes = {}
@@ -31,7 +31,7 @@ class WebLogger:
         d = jp.Td(text=el, a=tr)
         d.on('click', self._select_node)
         d2 = jp.Td(text="", a=tr, style="border:1px solid black;")
-        tb = jp.Pre(text="", a=d2, delete_flag=False)
+        tb = jp.Pre(text="", a=d2, delete_flag=False,style="white-space: pre-wrap;")
         tb.add_page(self.wp)
         # tb.on('click', self._select_node)
         tb.show = True
@@ -51,8 +51,8 @@ class WebLogger:
         node = self.nodes[name]
         box = node["box"]
         box.text = box.text + value
-        p =jp.Pre(text="")
-        box.add_component(p,0)
+        #p =jp.Pre(text="")
+        #box.add_component(p,0)
         self._update(box)
 
 
