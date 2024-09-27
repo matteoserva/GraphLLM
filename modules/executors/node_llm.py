@@ -13,7 +13,7 @@ class BaseExecutor:
         if "client" in node_graph_parameters:
            self.set_dependencies({"client":node_graph_parameters["client"]})
         self.logger = node_graph_parameters["logger"]
-        self.path = node_graph_parameters["path"]
+        self.path = node_graph_parameters.get("path","/")
 
     def set_dependencies(self,d):
         if "client" in d:

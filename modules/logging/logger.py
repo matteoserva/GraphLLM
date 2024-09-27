@@ -32,3 +32,5 @@ class Logger:
     def stop(self):
           if self.webLogger:
               self.webLogger.stop()
+              self.webLogger = None
+

@@ -23,17 +23,20 @@ parameters["seed"] = -1
 parameters["temperature"] = 0.7
 #parameters["n_predict"] = 1024*8
 
-executor = StatefulExecutor({"client":client, "logger":logger,"path":"/"})
+executor = StatefulExecutor({"client":client, "logger":logger})
 executor.set_client_parameters(parameters)
 executor.print_prompt = len(sys.argv) > 1
 executor.load_config(sys.argv[1:])
 
-for i in range(10):
-    prompt_len = executor.get_prompt_len()
+try:
+    for i in range(1):
+        prompt_len = executor.get_prompt_len()
 
-    m = [get_input() for _ in range(prompt_len)]
+        m = [get_input() for _ in range(prompt_len)]
 
-    executor(m)
-    executor.print_prompt = False
+        executor(m)
+        executor.print_prompt = False
+except:
+    pass
 
 logger.stop()
