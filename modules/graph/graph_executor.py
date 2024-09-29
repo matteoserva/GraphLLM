@@ -36,7 +36,7 @@ class GraphNode:
         elif el["type"] == "graph":
             self.executor = GraphExecutor(node_graph_parameters)
         elif el["type"] == "python":
-            self.executor = PythonExecutor()
+            self.executor = PythonExecutor(node_graph_parameters)
         elif el["type"] == "llamatool":
             self.executor = LlamaTool()
         elif el["type"] == "client":

@@ -9,6 +9,8 @@ class PythonExecutor:
         self.interpreter = PythonInterpreter()
         self.saved_variables = {}
         self.properties = {}
+        self.logger = args[0]["logger"]
+        self.path = args[0].get("path", "/")
         pass
 
     def load_config(self,args):
@@ -19,6 +21,7 @@ class PythonExecutor:
     def set_parameters(self,params):
         if "free_runs" in params:
             self.properties["free_runs"] = params["free_runs"]
+
 
     def __call__(self,scr, *args):
         self.properties["free_runs"] = 0
@@ -38,7 +41,11 @@ class PythonExecutor:
         del globalsParameter["_C"]
 
         retval = [s,str(globalsParameter)]
+
+        if len(s) > 0:
+            self.logger.log("print",self.path,s+"\n")
         if "_O" in globalsParameter:
+
             retval = globalsParameter["_O"]
             del globalsParameter["_O"]
             retval.append(s)

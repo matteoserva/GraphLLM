@@ -46,7 +46,7 @@ class AgentWeb(GenericAgent):
 		modified_query = query.replace(" ","+")
 		search_url = "https://lite.duckduckgo.com/lite/?q=" + modified_query + ""
 		self.download(search_url)
-		fullargs = ["python3", "exec.py", "graphs/run_template.txt","templates/extract_search_results.txt","/tmp/pagina.md"]
+		fullargs = ["python3", "exec.py", "graphs/run_template.txt","templates/extract_search_results.txt","/tmp/pagina.md","5"]
 		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
 		last_row = result.stdout.strip().split("\n")[-1]
 		v1 = json.loads(last_row)

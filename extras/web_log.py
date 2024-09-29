@@ -66,10 +66,17 @@ class WebLogger:
 
     def _thread_main(self):
         jp.justpy(self.event_demo1,start_server=False)
+
+
         s = jp.get_server()
         s.config.setup_event_loop()
         try:
             with asyncio.Runner() as runner:
+                # hack to remove verbose print:
+                jp.app.router.on_startup.pop()
+                jp.WebPage.loop = runner.get_loop()
+                #end of hack
+
                 self.loop = runner.get_loop()
                 runner.run(s.serve())
         except:

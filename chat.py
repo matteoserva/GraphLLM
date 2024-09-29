@@ -29,7 +29,7 @@ executor.print_prompt = len(sys.argv) > 1
 executor.load_config(sys.argv[1:])
 
 try:
-    for i in range(1):
+    for i in range(100):
         prompt_len = executor.get_prompt_len()
 
         m = [get_input() for _ in range(prompt_len)]

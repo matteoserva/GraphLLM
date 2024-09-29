@@ -71,6 +71,7 @@ class CopyNode:
         self._subtype="copy"
         self.stack = []
         self.cache = None
+        self.repeat_runs = 0
 
     def get_properties(self):
         res = self._properties
@@ -84,7 +85,8 @@ class CopyNode:
             if args["subtype"] == "gate":
                 self._properties["input_rule"] = "XOR"
                 self._properties["input_active"] = 0
-
+            if args["subtype"] == "repeat":
+                self.repeat_runs = args.get("free_runs",0)
         self.parameters = args
 
     def _json_parse(self,text):
@@ -104,9 +106,13 @@ class CopyNode:
         elif self._subtype == "repeat":
             if self.cache is None:
                 self.cache = res
-                self._properties["free_runs"] = 1
+                self._properties["free_runs"] = self.repeat_runs -1
             else:
                 res = self.cache
+                if self._properties["free_runs"] > 0:
+                    self._properties["free_runs"] = self._properties["free_runs"] - 1
+                    if self._properties["free_runs"] == 0:
+                        self.cache = None
             
         elif self._subtype == "gate":
             numInputs = len(res)

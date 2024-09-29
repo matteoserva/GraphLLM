@@ -61,7 +61,7 @@ class Client:
         self.port = 8080
         self.client_parameters = {}
         a = {}
-        a["n_predict"] = 128 * 8
+        a["n_predict"] = 1024*1
         a["stop"] = ["<|eom_id|>","<|eot_id|>","<|end|>", "<|im_end|>", "</s>","<end_of_turn>"]
         #        a["temperature"] = 0.0
         a["seed"] = -1
