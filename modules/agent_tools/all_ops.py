@@ -13,7 +13,7 @@ class AgentUtil(GenericAgent):
 		pass
 
 	def eval(self,expression):
-		"""Evaluates a mathematical expression in python notation and returns the result."""
+		"""Evaluates a python expression and returns the result."""
 		val = eval(expression)
 		return val
 

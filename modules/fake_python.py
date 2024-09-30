@@ -18,6 +18,7 @@ class fake_method:
             return open(fname,mode,*args, **kwargs)
         if fname.startswith("test/"):
             return open(fname,mode,*args, **kwargs)
+        raise Exception("the open() function must be used on files in the /tmp directory")
     
     def _call_method(self,method_name,*args, **kwargs):
         f = getattr(self,method_name)
