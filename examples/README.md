@@ -10,7 +10,7 @@ runs a python node that prints hello world multiple times
 
 Summarize a wikipedia article
 
-`python3 exec.py examples/graph_summarize.txt test/wikipedia_summary.txt`
+`python3 exec.py graphs/summarize_file.txt test/wikipedia_summary.txt`
 
 
 ### ReAct
