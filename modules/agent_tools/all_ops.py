@@ -38,7 +38,7 @@ class AgentWeb(GenericAgent):
 	def download(self,url):
 		"""Downloads the webpage at url {url} and saves its html content to a temporary file"""
 		fullargs = ["python3", "../scraper/scrape.py", url]
-		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
+		#result = subprocess.run(fullargs, capture_output=True, text=True, input="")
 		return "Webpage at url " + url + " successfully saved at /tmp/pagina.md"
 
 	def web_search(self,query):

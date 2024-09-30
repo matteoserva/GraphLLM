@@ -8,7 +8,7 @@ import time
 import copy
 from threading import BoundedSemaphore
 
-DEFAULT_HOST="matteopc"
+DEFAULT_HOST="minipd"
 
 class ONNXClient(object):
     def __new__(cls, *args,**kwargs):

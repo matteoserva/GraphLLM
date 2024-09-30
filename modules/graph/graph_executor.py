@@ -19,32 +19,7 @@ class GraphNode:
         node = {}
         el = node_config
         node_graph_parameters = {"client":graph.client, "path":self.path,"logger":graph.logger}
-        if el["type"] == "stateless":
-            self.executor = StatelessExecutor(node_graph_parameters)
-        elif el["type"] == "stateful":
-            self.executor = StatefulExecutor(node_graph_parameters)
-        elif el["type"] == "constant":
-            self.executor = ConstantNode()
-        elif el["type"] == "agent":
-            self.executor = AgentController()
-        elif el["type"] == "tool":
-            self.executor = ToolExecutor()
-        elif el["type"] == "list":
-            self.executor = ListNode()
-        elif el["type"] == "copy":
-            self.executor = CopyNode()
-        elif el["type"] == "graph":
-            self.executor = GraphExecutor(node_graph_parameters)
-        elif el["type"] == "python":
-            self.executor = PythonExecutor(node_graph_parameters)
-        elif el["type"] == "llamatool":
-            self.executor = LlamaTool()
-        elif el["type"] == "client":
-            self.executor = Client()
-        elif el["type"] == "user":
-            self.executor = UserInputNode()
-        elif el["type"] == "exec":
-            self.executor = ExecNode()
+        self.executor = ExecutorFactory.makeExecutor(el["type"],node_graph_parameters)
 
 
     def _get_input_rule(self):

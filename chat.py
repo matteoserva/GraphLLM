@@ -3,13 +3,10 @@ import sys
 from modules.common import get_input,get_formatter,readfile,build_prompt,solve_templates
 from modules.clients import Client,GLMClient,GrokClient
 from modules.formatter import Formatter,PromptBuilder
-from modules.executors import StatefulExecutor, StatelessExecutor
-from modules.logging.logger import Logger
+from modules.executors import StatefulExecutor, StatelessExecutor, ExecutorFactory
 
 client = Client()
 client.connect()
-
-logger = Logger()
 
 parameters = {}
 #parameters["repeat_penalty"] = 1.0
@@ -23,7 +20,7 @@ parameters["seed"] = -1
 parameters["temperature"] = 0.7
 #parameters["n_predict"] = 1024*8
 
-executor = StatefulExecutor({"client":client, "logger":logger})
+executor = ExecutorFactory.makeExecutor("stateful",{"client":client})
 executor.set_client_parameters(parameters)
 executor.print_prompt = len(sys.argv) > 1
 executor.load_config(sys.argv[1:])
@@ -36,7 +33,5 @@ try:
 
         executor(m)
         executor.print_prompt = False
-except:
+except KeyboardInterrupt:
     pass
-
-logger.stop()
