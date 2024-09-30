@@ -1,0 +1,11 @@
+# chiama tre testimoni e poi esegue
+
+# init args type conf deps exec loop
+# ho incluso C1 da entrambi i lati per dimostrazione
+
+    
+T1:
+    init: templates/summarize_full.txt
+    conf: {"temperature":0.01, "top_k":20,"n_predict":4096}
+    exec: _C[1]
+
