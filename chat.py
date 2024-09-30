@@ -6,7 +6,7 @@ from modules.formatter import Formatter,PromptBuilder
 from modules.executors import StatefulExecutor, StatelessExecutor, ExecutorFactory
 
 client_config = get_client_config()
-client = Client(**client_config)
+client = Client.make_client(client_config)
 client.connect()
 
 

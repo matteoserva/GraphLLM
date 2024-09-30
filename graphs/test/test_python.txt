@@ -8,13 +8,13 @@ T2B:
     type: python
     init: 
        - |
-            #import os
+            import os
 
             #print(os.path.getsize("/tmp/pagina.txt"))
             
             # Get the list of files in /tmp
-            #files = os.listdir('/tmp')
-
+            files = os.listdir('/tmp')
+            print(files)
             # Print the list of files
             #for file in files:
             #    pass#print(file)

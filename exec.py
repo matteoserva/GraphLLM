@@ -9,7 +9,7 @@ import json
 from modules.logging.logger import Logger
 
 client_config = get_client_config()
-client = Client(**client_config)
+client = Client.make_client(client_config)
 client.connect()
 
 parameters = {}

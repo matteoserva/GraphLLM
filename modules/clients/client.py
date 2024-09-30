@@ -55,7 +55,7 @@ class DummyClient:
     def get_model_name(self):
         return ""
 
-class Client:
+class LLamaCppClient:
     def __init__(self,host=DEFAULT_HOST, port=80800):
         self.host = host
         self.port = port
@@ -219,3 +219,18 @@ class Client:
             return self._send_prompt_text(p,params)
         else:
             return self._send_prompt_builder(p,params)
+
+class Client:
+
+    @staticmethod
+    def make_client(client_config):
+        client_name = client_config.get("client_name","dummy")
+        if client_name=="dummy":
+            return DummyClient()
+        elif client_name == "llama_cpp":
+            conf = client_config["llama_cpp"]
+            return LLamaCppClient(**conf)
+        elif client_name == "groq":
+            conf = client_config["groq"]
+            return GrokClient(**conf)
+

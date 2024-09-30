@@ -65,7 +65,7 @@ class BaseExecutor:
         res = send_chat(builder,client,self.client_parameters,self.print_response,logger_print=partial(self.logger.log,"print",self.path))
         resp = [res,{"role":"assistant"}]
 
-        if "stopped_word" in client.prompt_metadata and client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
+        if hasattr(client,"prompt_metadata") and "stopped_word" in client.prompt_metadata and client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
             messages = builder.add_response(str(res),"call")
             resp = [res, {"role":"call"}]
         else:
