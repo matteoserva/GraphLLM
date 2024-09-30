@@ -11,12 +11,13 @@ class Singleton(type):
         return cls._instances[cls]
 
 class WrappedWebLogger(metaclass=Singleton):
-    def __init__(self):
+    def __init__(self,initialize=True):
        self.webLogger = None
        try:
-            webLogger = WebLogger(detach=False)
-            webLogger.start()
-            self.webLogger = webLogger
+            if initialize:
+                webLogger = WebLogger(detach=False)
+                webLogger.start()
+                self.webLogger = webLogger
        except:
             pass
 
@@ -29,11 +30,14 @@ class WrappedWebLogger(metaclass=Singleton):
        else:
           return self.dummy
 
+    def stop(self):
+        #print("wwl clear\n")
+        if self.webLogger:
+            self.webLogger.stop()
+            self.webLogger = None
+
     def __del__(self):
-       #print("wwl clear\n")
-       if self.webLogger:
-           self.webLogger.stop()
-           self.webLogger = None
+        self.stop()
 
 class Logger():
     def __init__(self):
@@ -48,14 +52,13 @@ class Logger():
         if type == "print":
             print(*args[1:],**kwargs)
             self.prints[args[0]] = args[1]
-            if self.webLogger:
-              self.webLogger.set_output(args[0],args[1])
+            self.webLogger.set_output(args[0],args[1])
         if type == "output":
             values = [str(el) for el in args[1] ]
             values = "\n\n" + ",".join(values)
             #print(*args[1:],**kwargs)
 
-            if self.webLogger and args[0] not in self.prints:
+            if args[0] not in self.prints:
                self.webLogger.set_output(args[0],values)
 
     def stop(self):
@@ -63,3 +66,7 @@ class Logger():
     def __del__(self):
           #print("logger exit")
           self.stop()
+
+def stop_logger():
+    #print("closeLogger")
+    WrappedWebLogger(initialize=False).stop()

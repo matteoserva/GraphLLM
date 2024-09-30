@@ -6,7 +6,7 @@ from modules.formatter import Formatter,PromptBuilder
 
 from modules.graph import GraphExecutor
 import json
-from modules.logging.logger import Logger
+from modules.logging.logger import Logger, stop_logger
 
 client_config = get_client_config()
 client = Client.make_client(client_config)
@@ -33,4 +33,4 @@ try:
         print(el)
     print(json.dumps(res2))
 finally:
-    logger.stop()
+    stop_logger()

@@ -4,6 +4,7 @@ from modules.common import get_input,get_formatter,readfile,build_prompt,solve_t
 from modules.clients import Client,GLMClient,GrokClient, get_client_config
 from modules.formatter import Formatter,PromptBuilder
 from modules.executors import StatefulExecutor, StatelessExecutor, ExecutorFactory
+from modules.logging.logger import Logger, stop_logger
 
 client_config = get_client_config()
 client = Client.make_client(client_config)
@@ -37,3 +38,5 @@ try:
         executor.print_prompt = False
 except KeyboardInterrupt:
     pass
+finally:
+    stop_logger()

@@ -73,8 +73,8 @@ class WebLogger:
         try:
             with asyncio.Runner() as runner:
                 # hack to remove verbose print:
-                #jp.app.router.on_startup.pop()
-                #jp.WebPage.loop = runner.get_loop()
+                jp.app.router.on_startup.pop()
+                jp.WebPage.loop = runner.get_loop()
                 #end of hack
 
                 self.loop = runner.get_loop()
