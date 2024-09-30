@@ -1,0 +1,7 @@
+root ::= (thought action inputs observation)+
+thought ::= "The next step" sentencep " Now I" sentencep "\n"
+action  ::= "Action: " sentence "\n"
+inputs  ::= "Inputs: " sentence "\n"
+observation  ::= "Observation: " sentence "\n"
+sentence ::= [^\n]+
+sentencep ::= [^\n.]+ "."
