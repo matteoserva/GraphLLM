@@ -24,7 +24,7 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
   - `-sp` To receive the eom token, this enables llama3.1 tool calling
   
 - launch the example react prompt:
-  `python3 exec.py examples/graph_python_hello_world.txt`
+  `python3 exec.py graphs/react_text.txt test/react_cubesum2.txt`
 
   This launches a react agent that has to perform mathematical operations using the provided tools.
   
