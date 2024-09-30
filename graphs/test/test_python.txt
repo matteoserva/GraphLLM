@@ -1,0 +1,35 @@
+
+P1:
+    type: constant
+    init: ["compute the triple of 10"]
+
+
+T2B:
+    type: python
+    init: 
+       - |
+            #import os
+
+            #print(os.path.getsize("/tmp/pagina.txt"))
+            
+            # Get the list of files in /tmp
+            #files = os.listdir('/tmp')
+
+            # Print the list of files
+            #for file in files:
+            #    pass#print(file)
+            #with open("/tmp/ciao.txt","r") as f:
+            #    fval = f.read()
+            #    print(fval)
+            #print("ciao2")
+
+            even_numbers = [i for i in range(2, 21, 2)]
+            sum_of_evens = sum(even_numbers)
+            cube_of_sum = sum_of_evens ** 3
+            cube_of_sum
+            with open("/tmp/ciao.txt", "w") as f: pass            
+    exec: P1
+    
+T3:
+    type: copy
+    exec: T2B
