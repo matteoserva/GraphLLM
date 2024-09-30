@@ -1,8 +1,11 @@
+###
 
+client_name: dummy
 
-default_client:
+###
+llama_cpp:
     host: "localhost"
     port: 8080
 
-groq_client:
+groq:
     api_key: XXX
