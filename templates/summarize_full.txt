@@ -1,0 +1,7 @@
+Summarize the article below in 10 or more numbered bullet points.
+Use only the information explicitly mentioned in the article, ignoring all your previous knowledge.
+
+Here is the article:
+```markdown
+{}
+```

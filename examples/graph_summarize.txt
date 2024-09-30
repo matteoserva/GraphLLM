@@ -7,5 +7,5 @@
 T1:
     init: templates/summarize_full.txt
     conf: {"temperature":0.01, "top_k":20,"n_predict":4096}
-    exec: _C[2]
+    exec: _C[1]
 
