@@ -56,9 +56,9 @@ class DummyClient:
         return ""
 
 class Client:
-    def __init__(self,host=DEFAULT_HOST):
+    def __init__(self,host=DEFAULT_HOST, port=80800):
         self.host = host
-        self.port = 8080
+        self.port = port
         self.client_parameters = {}
         a = {}
         a["n_predict"] = 1024*1
