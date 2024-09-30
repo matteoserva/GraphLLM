@@ -25,7 +25,7 @@ class WrappedWebLogger(metaclass=Singleton):
 
     def __getattr__(self,item):
        if self.webLogger:
-          return self.webLogger.__getattr__(item)
+          return getattr(self.webLogger,item)
        else:
           return self.dummy
 
