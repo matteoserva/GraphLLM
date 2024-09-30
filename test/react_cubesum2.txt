@@ -1,0 +1,32 @@
+{p:bos}
+
+{p:system}
+{f:templates/react_prompt2.txt}
+- Use at most two operands at a time
+- Simplify complex tasks into simple steps that can be performed with the provided tools
+- Use only the provided tools to perform calculations
+{p:eom}
+
+{p:user}
+Question: What is the cube of 4?{p:eom}
+
+{p:assistant}
+Thought: Do I need to use an action? Yes. The cube of 4 is 4*4*4. I can compute the result in steps using the "mul" tool on two numbers at a time.
+Action: mul
+Inputs: 4,4
+Observation: 16
+Thought: Do I need to use an action? Yes. Now I have to compute the remaining multiplication: 16*4
+Action: mul
+Inputs: 16,4
+Observation: 64
+Thought: Do I need to use an action? I will send the answer to the user
+Action: answer
+Inputs: 64
+Observation: Operation complete
+{p:eom}
+
+{p:user}
+Question: What is the cube of the sum of these three numbers: 16,5,11?{p:eom}
+
+{p:assistant}
+Thought: 

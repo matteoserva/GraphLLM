@@ -1,0 +1,33 @@
+# agent
+
+# type: il tipo
+# deps: dipendenze da altri oggetti
+# conf: configurazione base, dictionary
+# init: template di inizializzazione
+# args:
+# exec: da chi prendere i dati
+# loop:
+
+
+# ho incluso C1 da entrambi i lati per dimostrazione
+
+LLM:
+    type: stateless
+    conf: {"grammar": "grammars/react_text.txt","stop":"Observation","force_system":True,"temperature":0.01, "top_k":20, "n_predict":128}
+    exec: CONTR[1]
+
+CONTR:
+    type: agent
+    deps: {"tool": TOOL}
+    init: {v:c1}
+    exec: _C[0] LLM TOOL
+
+
+TOOL:
+    type: tool
+    conf: {"tools":[Math, Answer] }
+    exec: CONTR[2]
+
+OUTPUT:
+    type: copy
+    exec: CONTR[0]
