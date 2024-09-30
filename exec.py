@@ -1,14 +1,15 @@
 #!/usr/bin/python3
 import sys
 from modules.common import get_input,get_formatter,readfile,build_prompt
-from modules.clients import Client,DummyClient,GLMClient,ONNXClient
+from modules.clients import Client,DummyClient,GLMClient,ONNXClient, get_client_config
 from modules.formatter import Formatter,PromptBuilder
 
 from modules.graph import GraphExecutor
 import json
 from modules.logging.logger import Logger
 
-client = Client()
+client_config = get_client_config()
+client = Client(**client_config)
 client.connect()
 
 parameters = {}
