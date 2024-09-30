@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 import sys
 from modules.common import get_input,get_formatter,readfile,build_prompt,solve_templates
-from modules.clients import Client,GLMClient,GrokClient
+from modules.clients import Client,GLMClient,GrokClient, get_client_config
 from modules.formatter import Formatter,PromptBuilder
 from modules.executors import StatefulExecutor, StatelessExecutor, ExecutorFactory
 
-client = Client()
+client_config = get_client_config()
+client = Client(**client_config)
 client.connect()
+
 
 parameters = {}
 #parameters["repeat_penalty"] = 1.0
