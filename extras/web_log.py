@@ -73,8 +73,8 @@ class WebLogger:
         try:
             with asyncio.Runner() as runner:
                 # hack to remove verbose print:
-                jp.app.router.on_startup.pop()
-                jp.WebPage.loop = runner.get_loop()
+                #jp.app.router.on_startup.pop()
+                #jp.WebPage.loop = runner.get_loop()
                 #end of hack
 
                 self.loop = runner.get_loop()
@@ -106,10 +106,14 @@ class WebLogger:
             _ = res.result()
             #except:
             #    self.loop = None
-        
+
     def update(self,val):
         #self.d.text = str(val)
         self._update()
+
+    def __del__(self):
+        print("weblogger stop")
+
 import asyncio
 import time
 
