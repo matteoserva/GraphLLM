@@ -4,5 +4,5 @@ default_client:
     host: "localhost"
     port: 8080
 
-grok_client:
+groq_client:
     api_key: XXX
