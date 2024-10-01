@@ -329,6 +329,12 @@ class GraphExecutor:
                 node["outputs"][source_port] = None
                 pass
 
+    def node_runner(self,func,sem):
+        try:
+            func()
+        finally:
+            sem.wait()
+
     def __call__(self, input_data):
         res = None
 
@@ -343,11 +349,11 @@ class GraphExecutor:
                 if len(runnable) > parallel_jobs:
                     runnable = runnable[0:parallel_jobs]
                 if parallel_jobs > 1:
-                    tds = [threading.Thread(target=self.graph_nodes[i].execute) for i in runnable]
+                    sem = threading.Barrier(1+len(runnable))
+                    tds = [threading.Thread(target=self.node_runner,args=[self.graph_nodes[i].execute,sem],daemon=True) for i in runnable]
                     for el in tds:
                         el.start()
-                    for el in tds:
-                        el.join()
+                    sem.wait() #this can except
                 else:
                     for i in runnable:
                         self.graph_nodes[i].execute()
