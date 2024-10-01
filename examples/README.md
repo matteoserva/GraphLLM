@@ -28,6 +28,12 @@ Summarize a wikipedia article
 
 `python3 exec.py examples/react_text.txt test/react_cubesum2.txt`
 
+The model has to perform mathematical operations using the provided tools.
+  
+  Gotchas:
+  - There is no direct tool to execute the operation. The model is forced to combine the available tools to complete the request
+  - The model is not allowed to see the partial results. The errors should provide a hint about what to do next
+
 ### ReAct, python pattern
 
 `python3 exec.py examples/react_python.txt test/template_react_python.txt`

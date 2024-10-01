@@ -29,6 +29,7 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
   - `-host 0.0.0.0` if you want to run the server on another machine
   - `--override-kv tokenizer.ggml.add_bos_token=bool:false` to avoid auto inserting a bos token. GraphLLM already adds it
   - `-sp` To receive the eom token, this enables llama3.1 tool calling
+  - `-m {your_model}` selects the model to use. This project works best with llama 3.1 or qwen2.5
 
 - modify `client_config.yml`
 
@@ -38,11 +39,7 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
 - launch the example summarization prompt:
   `python3 exec.py examples/graph_summarize.txt test/wikipedia_summary.txt`
 
-  This launches a react agent that has to perform mathematical operations using the provided tools.
-  
-  Gotchas:
-  - There is no direct tool to execute the operation. The model is forced to combine the available tools to complete the request
-  - The model is not allowed to see the partial results. The errors should provide a hint about what to do next
+  This launches a summarization example.
 
 # launch the examples
 
