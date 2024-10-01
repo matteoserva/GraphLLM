@@ -1,0 +1,32 @@
+
+
+LLM:
+    type: stateless
+    conf: {"stop":"```","force_system":True,"temperature":0.01, "top_k":40, "n_predict":512}
+    init: templates/python_gen.txt
+    exec: _C[1]
+
+
+T1:
+    type: copy
+#    exec: _C[1]
+    exec: LLM
+
+T2:
+    type: python
+    init: ""
+    exec: T1
+
+T2B:
+    type: python
+    init: 
+       - |
+           val0 = [el if el.isdigit() else " " for el in _C[0]]
+           val1 = "".join(val0).split()
+           val2 = val1[-1]
+           print(val2)
+    exec: T2[0]
+    
+T3:
+    type: copy
+    exec: T2B T2

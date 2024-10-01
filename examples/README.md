@@ -20,5 +20,9 @@ Summarize a wikipedia article
 
 `python3 exec.py graphs/majority.txt test/problem_cubesum.txt`
 
+### python, generate and execute
+
+`python3 exec.py graphs/python_gen_exec.txt test/problem_cubesum.txt`
+
 ### ReAct
 `python3 exec.py examples/react_text.txt test/react_cubesum2.txt`
