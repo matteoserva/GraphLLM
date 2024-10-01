@@ -7,7 +7,14 @@ A graph based framework to process data through a LLM or multiple LLMs.
 - cd GraphLLM
 
 ## python dependencies
+### Required
 TBD. When a missing dependency occurs, run `pip3 install {dependency}`
+### optional
+There are optional dependencies for the extra features:
+- pdfminer.six for converting PDF files
+- justpy for the web server
+- selenium for the web scraping tool
+- firefox and its Webdriver, for the web scraping tool
 
 ## hello world
 The example runs a python node that prints `hello world` multiple times.
