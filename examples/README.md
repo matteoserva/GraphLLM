@@ -31,3 +31,7 @@ Summarize a wikipedia article
 ### ReAct, python pattern
 
 `python3 exec.py examples/react_python.txt test/template_react_python.txt`
+
+### ReAct, xml+python pattern
+
+`python3 exec.py examples/react_xml_mixed.txt`
