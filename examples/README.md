@@ -24,5 +24,10 @@ Summarize a wikipedia article
 
 `python3 exec.py graphs/python_gen_exec.txt test/problem_cubesum.txt`
 
-### ReAct
+### ReAct, text based pattern
+
 `python3 exec.py examples/react_text.txt test/react_cubesum2.txt`
+
+### ReAct, python pattern
+
+`python3 exec.py examples/react_python.txt test/template_react_python.txt`

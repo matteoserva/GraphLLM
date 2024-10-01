@@ -1,0 +1,7 @@
+root ::= (thought action observation)+
+thought ::= "The action " sentencep " I just" sentencep " The next step" sentencep " Now I" sentencep "\n"
+actionname ::= "sum" | "mul" | "answer" | "neg"
+action  ::= ">>> " actionname "(" [^\n]+ ")" "\n"
+observation  ::= "Observation: " sentence "\n"
+sentence ::= [^\n]+
+sentencep ::= [^\n.]+ "."
