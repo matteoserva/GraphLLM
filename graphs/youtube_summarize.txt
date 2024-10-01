@@ -1,0 +1,34 @@
+# 
+
+T1:
+    type: list
+    init: 
+        - |-
+            Here is the transcript of a youtube video, with timestamps: 
+            ```
+            {}
+            ```
+
+            Output a list of titles for the transcript, each element of the list should represent a section of the video. Give timestamps for each title.
+        - Now provide a very detailed description for each section of the video. Use a lot of references to specific timestamps.
+    exec: []
+
+T2:
+    type: stateful
+    conf: {"temperature":0.01, "top_k":40, "n_predict": 4096}
+    exec: T1
+
+OUTPUT:
+    type: copy
+    conf: {"subtype": "log", "logfile": "/tmp/graphlog.txt"}
+    exec: T2
+
+o2:
+    type: exec
+    init: tee /tmp/log.txt
+    exec: OUTPUT
+
+o3:
+    type: exec
+    init: tail
+    exec: o2

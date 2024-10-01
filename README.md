@@ -39,5 +39,5 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
 
 # launch the examples
 
-There are more examples in the [examples folder](https://github.com/matteoserva/GraphLLM/blob/main/examples/README.md)
+There are more examples in the [examples folder](https://github.com/matteoserva/GraphLLM/tree/main/examples)
 Have fun.
