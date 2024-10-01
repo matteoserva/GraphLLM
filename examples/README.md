@@ -35,3 +35,7 @@ Summarize a wikipedia article
 ### ReAct, xml+python pattern
 
 `python3 exec.py examples/react_xml_mixed.txt`
+
+### ReAct, pure xml pattern
+
+`python3 exec.py examples/react_xml_pure.txt "What is the cube of the sum of these three numbers: 16,5,11?"`

@@ -1,0 +1,16 @@
+root ::= (thought action observation)+
+thought ::=  planning? sentencen evaluation? "</thinking>\n"
+
+#le parentesi in action per evitare che ce ne siano di innestate
+action  ::= "<action>" actionname actionparam* "</action>\n"
+actionname ::= "<action_name>" sentence "</action_name>" 
+actionparam ::= "<action_parameter>" sentencen "</action_parameter>" 
+
+
+observation  ::= "<result>" sentencen "</result>\n"
+evaluation  ::= "</evaluation>" "\n" "<thinking>" sentencen
+planning  ::= sentencen "</planning>" "\n" "<thinking>" 
+sentence ::= [^\n<]+
+sentencep ::= [^\n.]+ "."
+sentencen ::= ([^<] | "< ")+
+reflection  ::= "<reflection>" sentence "</reflection>\n"
