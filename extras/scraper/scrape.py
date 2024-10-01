@@ -18,6 +18,8 @@ from selenium import webdriver
 import inspect
 import os
 import sys
+from os.path import expanduser
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 sys.path.insert(0,currentdir)
@@ -65,23 +67,29 @@ def load_page(url):
   global driver
   service = Service()
 
-  print("loading url: " + url, file=sys.stderr)
-
+  print("Started processing url: " + url, file=sys.stderr)
 
   options = webdriver.FirefoxOptions()
   #options.add_argument('--safe-mode')
   if not debug_mode:
     options.add_argument('--headless')
 
+  home_dir = expanduser("~")
+  profile_path = home_dir + "/.mozilla/firefox/profile.bot"
+  print("Loading the firefox profile", profile_path, file=sys.stderr)
+
   try:
-      profile=webdriver.FirefoxProfile("/home/matteo/.mozilla/firefox/profile.bot")
+      profile=webdriver.FirefoxProfile(profile_path)
   except:
+      print("profile.bot not found. Using default with degraded performance", file=sys.stderr)
+
       profile=webdriver.FirefoxProfile()
 
   options.profile = profile
 
-  print("launching firefox", file=sys.stderr)
+  print("launching firefox via geckodriver", file=sys.stderr)
 
+  driver = None
   try:
       driver = webdriver.Firefox(options=options, service=service)
   except:
@@ -89,8 +97,8 @@ def load_page(url):
       driver = webdriver.Firefox(options=options, service=service)
 
 
-  start_url = "about:reader?url=" + url
-  print("loading webpage", file=sys.stderr)
+  start_url = "about:reader?url=" + url # not used anymore
+  print("loading webpage", url,file=sys.stderr)
 
   driver.get(url)
 
@@ -128,7 +136,7 @@ def load_page(url):
 
   # cancello i nodi nascosti da ublock
 
-  print("deleting hidden nodes", file=sys.stderr)
+  print("deleting nodes identified by ublock origin.", file=sys.stderr)
   driver.execute_script(script_removeHiddenNodes)
   
 
