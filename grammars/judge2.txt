@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "properties": {
+    "answers": {
+      "type": "object",
+      "properties": {
+        "alice": {
+          "type": "number"
+        },
+        "bob": {
+          "type": "number"
+        },
+        "charlie": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "alice",
+        "bob",
+        "charlie"
+      ]
+    },
+    "reasoning": {
+      "type": "string"
+    },
+    "who is right": {
+      "type": "string"
+    },
+    "answer": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "answers",
+    "reasoning",
+    "who is right",
+    "answer"
+  ]
+}

@@ -1,0 +1,26 @@
+Some users, called Alice, Bob and Charlie, are discussing the solution of a problem.
+
+The problem is: ```{}```
+
+Alice says: ```{}```
+
+Bob says: ```{}```
+
+Charlie says: ```{}```
+
+Use majority voting to decide the answer of the original problem, ignoring math and logic errors.
+Output the answers of the individual users and the output of the problem chosen by majority voting.
+
+Use the following template:
+```json
+{
+  "answers": {
+    "alice": "number",
+    "bob": "number",
+    "charlie": "number"
+  }
+  "reasoning": "string"
+  "who is right": "string"
+  "answer": "number"
+}
+```

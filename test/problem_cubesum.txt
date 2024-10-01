@@ -1,0 +1,1 @@
+Compute the cube of the sum of the first 10 even natural numbers.

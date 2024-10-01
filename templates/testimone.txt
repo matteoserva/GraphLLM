@@ -1,0 +1,4 @@
+Solve the following problem step by step, explaining in detail each step:
+```
+{}
+```

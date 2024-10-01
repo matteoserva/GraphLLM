@@ -1,0 +1,34 @@
+# chiama tre testimoni e poi esegue
+
+# init args type conf deps exec loop
+# ho incluso C1 da entrambi i lati per dimostrazione
+
+T1:
+    init: templates/testimone.txt {}
+    conf: {"temperature":0.01, "top_k":40}
+    exec: []
+
+T2:
+    init: templates/testimone.txt {v:c1}
+    conf: {"temperature":0.05, "top_k":40}
+    exec: []
+
+T3:
+    init: templates/testimone.txt
+    conf: {"temperature":0.1, "top_k":20}
+    exec: _C[1]
+    
+Giudice:
+    init: templates/majority2.txt {v:c1}
+    conf: {"temperature":0.01, "top_k":20, "grammar":"grammars/judge2.txt"}
+    exec: T1 T2 T3
+
+o2:
+    type: exec
+    init: tee /tmp/log.txt
+    exec: T1 T2 T3    
+    
+OUTPUT:
+    type: copy
+    conf: {"subtype": "json", "operation":"extract", "return_attr": "answer"}
+    exec: Giudice[0]

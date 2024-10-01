@@ -16,5 +16,9 @@ Summarize a wikipedia article
 
 `python3 exec.py graphs/youtube_summarize.txt test/yt_recap_2018.txt`
 
+### majority voting, multi node
+
+`python3 exec.py graphs/majority.txt test/problem_cubesum.txt`
+
 ### ReAct
 `python3 exec.py examples/react_text.txt test/react_cubesum2.txt`
