@@ -4,7 +4,7 @@ A graph based framework to process data through a LLM or multiple LLMs.
 
 ## quick setup
 - run `git clone https://github.com/matteoserva/GraphLLM.git`
-- cd GraphLLM
+- `cd GraphLLM`
 
 ## python dependencies
 ### Required
@@ -40,6 +40,26 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
   `python3 exec.py examples/graph_summarize.txt test/wikipedia_summary.txt`
 
   This launches a summarization example.
+
+## setup the extra tools
+
+### web scraper
+- install firefox and selenium
+- open firefox
+- open about:profiles
+- create a profile named "profile.bot"
+- relaunch inside that profile
+- install ublock origin and verify that it's working.
+- close firefox
+- If needed, download the appropriate [geckodriver](https://github.com/mozilla/geckodriver/releases)
+- test the tool with `python3 extras/scraper/scrape.py`
+
+### pdf scraper
+- install pdfminer.six
+- test it by running `python3 extras/parse_pdf.py {your pdf}`
+
+### youtube scraper
+- test it by running `python3 extras/youtube_subs.py`
 
 # launch the examples
 
