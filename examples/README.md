@@ -14,4 +14,4 @@ Summarize a wikipedia article
 
 
 ### ReAct
-`python3 exec.py graphs/react_text.txt test/react_cubesum2.txt`
+`python3 exec.py examples/react_text.txt test/react_cubesum2.txt`
