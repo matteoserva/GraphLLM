@@ -18,7 +18,7 @@ from selenium import webdriver
 import inspect
 import os
 import sys
-from os.path import expanduser
+from os.path import expanduser, exists
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
@@ -77,7 +77,9 @@ def load_page(url):
   home_dir = expanduser("~")
   profile_path = home_dir + "/.mozilla/firefox/profile.bot"
   print("Loading the firefox profile", profile_path, file=sys.stderr)
-
+  if not exists(profile_path):
+      print("WARNING: profile not found. check the documentation.", profile_path, file=sys.stderr)
+  
   try:
       profile=webdriver.FirefoxProfile(profile_path)
   except:
@@ -94,6 +96,9 @@ def load_page(url):
       driver = webdriver.Firefox(options=options, service=service)
   except:
       service.path = currentdir + "/geckodriver"
+      if not exists(service.path):
+         print("WARNING: geckodriver not found. download it and put it here.", service.path, file=sys.stderr)
+      
       driver = webdriver.Firefox(options=options, service=service)
 
 
