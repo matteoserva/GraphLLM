@@ -5,6 +5,7 @@ runs a python node that prints hello world multiple times
 
 `python3 exec.py examples/graph_python_hello_world.txt`
 
+---
 
 ### summarize a file
 
@@ -28,8 +29,7 @@ Summarize a wikipedia article
 
 `python3 exec.py graphs/python_gen_exec.txt test/problem_cubesum.txt`
 
-
-
+---
 
 ### ReAct, text based pattern
 
@@ -53,6 +53,23 @@ The model has to perform mathematical operations using the provided tools.
 
 `python3 exec.py examples/react_xml_pure.txt "What is the cube of the sum of these three numbers: 16,5,11?"`
 
-### Full agent
+---
+
+## Full agent
+
+This example is a full agent using the ReAct + reflexion pattern.
+The agent has access to all implemented tools.
+It is allowed to open webpages and execute python code.
+Only files in /tmp are accessible.
+
+**find, download and summarize an article**
 
 `python3 exec.py graphs/agent_reflexion.txt "give me a summary of the article on the home page of hacker news that is most likely related to language models."`
+
+**ask the current weather**
+
+`python3 exec.py graphs/agent_reflexion.txt "what is today's weather in rome?"`
+
+**finding a recipe**
+
+`python3 exec.py graphs/agent_reflexion.txt "what is the recipe of pasta alla carbonara?"`
