@@ -21,6 +21,11 @@ There are optional dependencies for the extra features:
 - selenium for the web scraping tool
 - firefox and its Webdriver, for the web scraping tool
 
+Install the python dependencies with
+
+`pip3 install selenium readabilipy html2text pdfminer.six justpy`
+
+
 ### hello world
 The example runs a python node that prints `hello world` multiple times.
 
