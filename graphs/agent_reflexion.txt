@@ -1,0 +1,106 @@
+# agent
+
+# type: il tipo
+# deps: dipendenze da altri oggetti
+# conf: configurazione base, dictionary
+# init: template di inizializzazione
+# args:
+# exec: da chi prendere i dati
+# loop:
+
+
+# ho incluso C1 da entrambi i lati per dimostrazione
+
+#CLIENT:
+#    type: client
+#    conf: {"host":"matteopc","port": 8080}
+
+LLM:
+    type: stateless 
+    conf: {"grammar": "grammars/react_xml_pure.txt","stop":"<result>","force_system":True,"temperature":0.001, "top_k":1, "n_predict":1024}
+    exec: CONTR[1]
+
+#<reflection> Find mistakes you made in the thinking step and provide an improved thought on what action to execute next given the available tools </reflection>
+
+REFLEXION:
+    type: stateless
+#    deps: {"client":CLIENT}
+    init: 
+        - templates/agent_xml_reflexion.txt
+        - |-
+            # rules for the agent
+            1. The last action can only use information that has been previously produced in a <result> tag or information given in the user's question. The AI agent is non allowed to use its own knowledge to fill the arguments of the action unless this is the first action.
+            2. The last action must be aligned with the goal. Useless actions are to be considered invalid.
+            3. The model should not attempt to generate a summary if the goal is to extract a URL. Generating a summary removes all metadata ad URL addresses from a web page.
+            4. When using the web_search() tool, the model should not directly ask the search engine for the required information, instead it should ask the search engine what is the address of the resource containing the required information.
+    conf: {"stop":"```","force_system":True,"temperature":0.1, "top_k":40, "n_predict":512,"print_prompt":True}
+    exec: CONTR[3]
+
+CONTR:
+    type: agent
+    deps: {"tool": TOOL}
+    conf: 
+        subtype: reflexion
+        tokens: ["<evaluation>","<action>","","<result>"]
+        hints: |-
+                  - prefer returning the answer via answer_file() instead of answer()
+    init: 
+        - |-
+            {p:bos}
+
+            {p:system}
+            You are a AI task scheduler. Your job is to call the provided tools in the correct sequence to generate the answer for the user question.
+
+            ## Tools
+            {p:tools}
+
+            ## Objective
+            
+            1. First elaborate a detailed plan on how to complete the user request by using the provided tools.
+            Use the following template to describe your plan:
+            ```
+            <planning> A detailed description of your plan </planning>
+            ```
+            
+            2. Then use the following template to process the user request step by step:
+            ```
+            <thinking> Your thoughts about what to do next </thinking>
+            <action> The action to perform and its parameters. The specific format is described later. </action>
+            <result> The result of the action </result>
+            <evaluation> Evaluate if the tool provided all the information you need. Decide if you should call the tool again with a refined input </evaluation>
+            ```
+            
+            format of the action field:
+            - The action field is enclosed between <action> and </action> tags.
+            - The name of the action is inserted between <action_name> and </action_name> tags.
+            - Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.
+            - Only the value of the parameter is specified. The name of the parameter is omitted.
+            - The parameters can be multiline strings
+            - Example: <action><action_name>eval</action_name><action_parameter>2+3</action_parameter></action>
+
+            3. Keep repeating the previous template until you have the answer.
+
+            ## Rules
+            - If a task cannot be directly executed, use the provided tools to execute the task in a indirect way
+            - The input to query_file() should be a very detailed question about what you want from the external agent.
+            - Use only information obtained from executing the provided tools, ignoring all your previous knowledge
+            - Use query_file() as a substitute for a web scraping tool
+            {p:hints}{p:eom}
+
+            {p:user}
+            Question: {}{p:eom}
+
+            {p:assistant}
+            <planning>
+    exec: _C[1] LLM TOOL REFLEXION
+
+
+TOOL:
+    type: tool
+    conf: 
+        tools: [Filesystem, LLM, Util, Web]
+    exec: CONTR[2]
+
+OUTPUT:
+    type: copy
+    exec: CONTR[0]

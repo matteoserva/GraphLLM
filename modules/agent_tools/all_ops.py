@@ -38,7 +38,7 @@ class AgentWeb(GenericAgent):
 	def download(self,url):
 		"""Downloads the webpage at url {url} and saves its html content to a temporary file"""
 		fullargs = ["python3", "extras/scraper/scrape.py", url]
-		#result = subprocess.run(fullargs, capture_output=True, text=True, input="")
+		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
 		return "Webpage at url " + url + " successfully saved at /tmp/pagina.md"
 
 	def web_search(self,query):
@@ -69,7 +69,7 @@ class AgentLLM(GenericAgent):
 
 	def query_file(self,filename, question):
 		"""Uses a external agent to answer a {question} about the file saved in {filename}."""
-		val = self._run_graph("graphs/file_question.txt",filename,question)
+		val = self._run_graph("graphs/query_file.txt",filename,question)
 		return val
 		
 	def _query_information(self, question):

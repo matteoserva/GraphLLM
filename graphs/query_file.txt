@@ -1,0 +1,28 @@
+
+
+    
+T1:
+    type: stateless
+    init:
+         - |-
+             {p:bos}
+
+             {p:system}
+             Your job is to answer the user questions about the file.
+             
+             Here is the content of the file:
+             ```
+             {p:exec1}
+             ```
+             
+             # instructions
+             - be synthetic
+             {p:eom}
+
+             {p:user}
+             {p:exec2}{p:eom}
+
+             {p:assistant}
+             {p:eom}
+    conf: {"temperature":0.01, "top_k":40, "print_prompt":1, "stop":"```"}
+    exec: _C[1] _C[2]
