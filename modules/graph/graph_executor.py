@@ -6,6 +6,7 @@ from modules.clients import Client,DummyClient,GLMClient,ONNXClient
 from ..grammar import load_grammar
 import threading
 from modules.logging.logger import Logger
+import sys
 
 class GraphNode:
     def __init__(self,graph,node_config):
@@ -80,7 +81,11 @@ class GraphNode:
             if el:
                 node["inputs"][i] = None
 
-        res = ex(inputs)
+        try:
+            res = ex(inputs)
+        except Exception as e:
+            print("Exception: ",e,file=sys.stderr)
+            res = []
         if not isinstance(res, list):
             res = [res]
 
