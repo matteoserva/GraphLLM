@@ -62,6 +62,9 @@ The agent has access to all implemented tools.
 It is allowed to open webpages and execute python code.
 Only files in /tmp are accessible.
 
+> [!NOTE]
+> This has been tested with Qwen2.5 32b and the llama_cpp backend. Llama 70b should work. Smaller models might not be smart enough to perform correctly
+
 **find, download and summarize an article**
 
 `python3 exec.py graphs/agent_reflexion.txt "give me a summary of the article on the home page of hacker news that is most likely related to language models."`
