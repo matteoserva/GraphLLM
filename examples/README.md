@@ -1,3 +1,4 @@
+# Examples using GraphLLM
 
 ### hello world
 
@@ -7,6 +8,9 @@ runs a python node that prints hello world multiple times
 
 ---
 
+> [!NOTE]
+> For these examples you need a backend. You should edit client_config.yml to use llama.cpp
+
 ### summarize a file
 
 Summarize a wikipedia article
@@ -15,7 +19,7 @@ Summarize a wikipedia article
 
 ### Query file
 
-`python3 exec.py graphs/query_file.txt test/wikipedia_summary.txt "what is the topic of the article?`
+`python3 exec.py graphs/query_file.txt test/wikipedia_summary.txt "what is the topic of the article?"`
 
 ### summarize youtube video, multistep
 
