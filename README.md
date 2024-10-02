@@ -2,6 +2,10 @@
 
 A graph based framework to process data through a LLM or multiple LLMs.
 
+Several examples are available, including a agent capable of answering questions like
+
+* `"give me a summary of the article on the home page of hacker news that is most likely related to language models."`
+
 ## setup
 
 ### quick setup
