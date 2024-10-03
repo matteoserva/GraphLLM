@@ -1,5 +1,7 @@
 # Examples using GraphLLM
 
+## basic examples
+
 ### hello world
 
 runs a python node that prints hello world multiple times
@@ -7,6 +9,8 @@ runs a python node that prints hello world multiple times
 `python3 exec.py examples/graph_python_hello_world.txt`
 
 ---
+
+## intermediate examples
 
 > [!NOTE]
 > For these examples you need a backend. You should edit client_config.yml to use llama.cpp
@@ -38,6 +42,7 @@ Summarize a wikipedia article
 Two step graph that extracts the entities and then queries the model again for the relations
 
 `python3 exec.py graphs/ner.txt test/ner_podcast.txt`
+
 ---
 
 ### ReAct, text based pattern
