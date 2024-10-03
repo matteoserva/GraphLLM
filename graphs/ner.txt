@@ -1,0 +1,43 @@
+# 
+
+T1:
+    type: list
+    init: 
+        - |-
+            Analyze the text that will be provided. 
+
+            # Instructions:
+            - Find the entities mentioned in the text. An entity can be a person, a location or an organization.
+            - For each identified entity, output it using this format: {"name":"Joe Biden", "type":"PER"}
+
+            # Example:
+            Identified entities:
+            1. {"name":"Joe Biden", "type":"PER"}
+            2. {"name":"USA", "type":"LOC"}
+
+            Here is the text to be analyzed:
+            ```
+            {}
+            ```
+        - |-
+            Now use the previously provided text to find the relations among the identified entities, ignoring all your previous knowledge.
+            
+            # Instructions:
+            - For each identified relation, use this format: {"subject_index": number, "object_index": number, "subject": "Joe Biden", "object": "USA", "predicate": "è presidente di"}
+            - Output only relations among previously identified entities, the relation must have been explicitly mentioned in the provided text.
+            - predicate must me a succint italian phrase, three words or less. Example: "lavora per", "è candidato in"
+            - subject_index and object_index are the indices of the corresponding entities in the list you previously generated.
+            
+            # Example:
+            Identified relations:
+            1. {"subject_index": 1, "object_index": 2, "subject": "Joe Biden", "object": "USA", "predicate": "presidente di"}
+    exec: []
+
+T2:
+    type: stateful
+    conf: {"temperature":0.01, "top_k":40,"sysprompt":"You are an expert and helpful assistant able to identify entitites and their relations from an Italian text"}
+    exec: T1
+
+OUTPUT:
+    type: copy
+    exec: T2
