@@ -64,7 +64,11 @@ The model has to perform mathematical operations using the provided tools.
 
 ---
 
-## Full agent
+## Advanced examples
+
+For these examples you need the extra tools to be properly configured.
+
+### Full agent
 
 This example is a full agent using the ReAct + reflexion pattern.
 The agent has access to all implemented tools.
@@ -85,3 +89,7 @@ Only files in /tmp are accessible.
 **finding a recipe**
 
 `python3 exec.py graphs/agent_reflexion.txt "what is the recipe of pasta alla carbonara?"`
+
+**summarize a wikipedia page**
+
+`python3 exec.py graphs/agent_reflexion.txt "summarize https://en.wikipedia.org/wiki/Language_model"`
