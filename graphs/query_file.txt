@@ -1,5 +1,10 @@
+#
+# This graph is used to ask a question about a file
+# the template is inserted directly in text form
+# This project uses its own templating system
 
-
+# example usage
+# python3 exec.py graphs/query_file.txt test/wikipedia_summary.txt "what is the topic of the article?"
     
 T1:
     type: stateless

@@ -1,8 +1,10 @@
-# chiama tre testimoni e poi esegue
+#
+# This graph sends a query to the inference server (llama.cpp)
+# There is a hidden node called _C that contains the command line arguments
+# The command line argument is used to complete the query.
 
-# init args type conf deps exec loop
-# ho incluso C1 da entrambi i lati per dimostrazione
-
+# example usage
+# python3 exec.py graphs/summarize_file.txt test/wikipedia_summary.txt
     
 T1:
     init: templates/summarize_full.txt
