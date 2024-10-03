@@ -1,12 +1,7 @@
+#
+# This example creates a single node that runs a python script in the sandbox
+#
 
-T2B:
+MY_NODE:
     type: python
-    init: 
-       - |
-          for i in range(10):
-              print("hello world",i)
-    exec: []
-    
-T3:
-    type: copy
-    exec: T2B
+    init: "test/python_hello_world.py"

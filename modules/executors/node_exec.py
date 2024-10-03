@@ -1,6 +1,7 @@
 import copy
 import subprocess
 from ..common import PythonInterpreter
+from ..common import readfile
 
 class PythonExecutor:
     def __init__(self,*args):
@@ -14,6 +15,11 @@ class PythonExecutor:
         pass
 
     def load_config(self,args):
+        for i,el in enumerate(args):
+            try:
+                args[i] = readfile(el)
+            except:
+                pass
         if len(args)> 0:
             self.base_template = args[0]
         #todo: gestire parametri successivi
