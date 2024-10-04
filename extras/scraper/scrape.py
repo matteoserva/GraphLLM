@@ -62,6 +62,7 @@ f = open(currentdir +"/fetchWrapper.js","r")
 fetch_wrapper = f.read()
 f.close()
 
+driver = None
 
 def load_page(url):
   global driver
@@ -91,15 +92,15 @@ def load_page(url):
 
   print("launching firefox via geckodriver", file=sys.stderr)
 
-  driver = None
-  try:
-      driver = webdriver.Firefox(options=options, service=service)
-  except:
-      service.path = currentdir + "/geckodriver"
-      if not exists(service.path):
-         print("WARNING: geckodriver not found. download it and put it here.", service.path, file=sys.stderr)
-      
-      driver = webdriver.Firefox(options=options, service=service)
+  if not driver:
+    try:
+        driver = webdriver.Firefox(options=options, service=service)
+    except:
+        service.path = currentdir + "/geckodriver"
+        if not exists(service.path):
+          print("WARNING: geckodriver not found. download it and put it here.", service.path, file=sys.stderr)
+        
+        driver = webdriver.Firefox(options=options, service=service)
 
 
   start_url = "about:reader?url=" + url # not used anymore
@@ -144,6 +145,10 @@ def load_page(url):
   print("deleting nodes identified by ublock origin.", file=sys.stderr)
   driver.execute_script(script_removeHiddenNodes)
   
+  scr2 = """
+  document.querySelectorAll("form.usertext > div").forEach(el => {p =el.parentNode; p.removeChild(el); p.parentNode.append(el)}); 
+  """
+  driver.execute_script(scr2)
 
   print("readability.js", file=sys.stderr)
   ## readability per estrarre il contenuto
@@ -202,5 +207,9 @@ def scrape(url):
   return markdown_content
 
 if __name__ == "__main__":
-    markdown_content = scrape(url)
+    import getopt
+    opts, args = getopt.getopt(sys.argv[1:], 'd')
+    for (k, v) in opts:
+       if k == "-d": debug_mode = True
+    markdown_content = scrape(args[0])
     print(markdown_content)
