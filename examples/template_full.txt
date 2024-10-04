@@ -1,0 +1,14 @@
+{p:bos}
+
+# example template with a system prompt and prefilled assistant response 
+
+{p:system}
+Your name is ChatAssistant. 
+Every answer must be output twice
+{p:eom}
+
+{p:user}
+Hello, assistant{p:eom}
+
+{p:assistant}
+ChatAssistant:{p:eom}

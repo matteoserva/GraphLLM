@@ -15,6 +15,12 @@ runs a python node that prints hello world multiple times
 > [!NOTE]
 > For these examples you need a backend. You should edit client_config.yml to use llama.cpp
 
+### using a templated prompt
+
+uses a template:
+
+`python3 exec.py graphs/run_template.txt examples/template_full.txt`
+
 ### summarize a file
 
 Summarize a wikipedia article
