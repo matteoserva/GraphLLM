@@ -23,14 +23,23 @@ executor_config = {"client":client, "client_parameters":parameters,"logger":logg
 
 seqExec = GraphExecutor(executor_config)
 
+print_json = False
+
+import getopt
+opts, args = getopt.getopt(sys.argv[1:], 'j')
+for (k, v) in opts:
+       if k == "-j": print_json = True
+
 try:
-    cl_args = seqExec.load_config(sys.argv[1:])
+    cl_args = seqExec.load_config(args)
     res = seqExec(cl_args[1:])
-    print("\n---------------\nResult:")
+    print("--------------- Result:")
     res2 = [str(el) for el in res]
     #print(json.dumps(res2, indent=4))
     for el in res:
         print(el)
-    print(json.dumps(res2))
+    if print_json:
+        print("--------------- Json result:")
+        print(json.dumps(res2))
 finally:
     stop_logger()

@@ -46,7 +46,7 @@ class AgentWeb(GenericAgent):
 		modified_query = query.replace(" ","+")
 		search_url = "https://lite.duckduckgo.com/lite/?q=" + modified_query + ""
 		self.download(search_url)
-		fullargs = ["python3", "exec.py", "graphs/run_template.txt","templates/extract_search_results.txt","/tmp/pagina.md","5"]
+		fullargs = ["python3", "exec.py", "-j", "graphs/run_template.txt","templates/extract_search_results.txt","/tmp/pagina.md","5"]
 		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
 		last_row = result.stdout.strip().split("\n")[-1]
 		v1 = json.loads(last_row)
@@ -59,7 +59,7 @@ class AgentLLM(GenericAgent):
 		pass
 
 	def _run_graph(self,*args):
-		fullargs = ["python3", "exec.py"]
+		fullargs = ["python3", "exec.py","-j"]
 		fullargs.extend(args)
 		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
 		ret = str(result.stdout)
@@ -117,7 +117,7 @@ class AgentFilesystem(GenericAgent):
 		"""Returns a file as answer for the user question. This is the preferred way for returning an answer to the user."""
 		with open(file_name,"r") as f:
 			content = f.read()
-		print ("-------------\n" + content)
+		print ("------------- agent answer from file\n" + content)
 		return "Answer sent to user"
 
 class AgentMath2():
@@ -166,5 +166,5 @@ class AgentMath2():
 
 	def answer(self, computed_answer):
 		"""outputs the answer to the user request."""
-		print ("-------------",computed_answer)
+		print_agent_answer (computed_answer)
 		return computed_answer

@@ -104,3 +104,7 @@ Only files in /tmp are accessible.
 **summarize a wikipedia page**
 
 `python3 exec.py graphs/agent_reflexion.txt "summarize https://en.wikipedia.org/wiki/Language_model"`
+
+**solve a cubic equation**
+
+`python3 exec.py graphs/agent_reflexion.txt "solve this: x^3 - 4x^2 + 6x - 24 = 0"`

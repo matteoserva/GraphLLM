@@ -1,7 +1,11 @@
+
+def print_agent_answer(computed_answer):
+	print("------------- agent answer:\n" + str(computed_answer))
+
 class AgentAnswer():
 	def answer(self, computed_answer):
 		"""outputs the answer to the user request."""
-		print ("-------------",computed_answer)
+		print_agent_answer (computed_answer)
 		return "Operation complete"
 
 
@@ -23,5 +27,5 @@ class GenericAgent():
 
 	def answer(self, computed_answer):
 		"""outputs the answer to the user request."""
-		print ("-------------",computed_answer)
+		print_agent_answer (computed_answer)
 		return computed_answer
