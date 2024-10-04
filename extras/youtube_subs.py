@@ -55,6 +55,16 @@ for el in caps:
     sottotitoli.append(val)
 
 print("saving subtitles: /tmp/yt_transcript.txt", file=sys.stderr)
-with open("/tmp/yt_transcript.txt","w") as f:
+with open("/tmp/w4.txt","w") as f:
     for el in sottotitoli:
         _ = f.write(f"[{el['start']}]\n{el['text']}\n" )
+
+with open("/tmp/w4.txt","r") as f:
+    val = f.read()
+
+# remove fractional seconds from timestamp
+import re
+val=re.sub(r"^\[(\d+)\.\d+\]",r"[\1s]",val,flags=re.M)
+
+with open("/tmp/yt_transcript.txt","w") as f:
+    _ = f.write(val)
