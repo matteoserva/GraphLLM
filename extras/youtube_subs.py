@@ -63,8 +63,16 @@ with open("/tmp/w4.txt","r") as f:
     val = f.read()
 
 # remove fractional seconds from timestamp
+def replace_timestamp(match_obj):
+    if match_obj.group(1) is not None:
+        seconds = int(match_obj.group(1))
+        minutes = seconds //60
+        seconds = seconds % 60
+        res = "[" + str(minutes) + ":" + str(seconds) + "]"
+        return res
+    
 import re
-val=re.sub(r"^\[(\d+)\.\d+\]",r"[\1s]",val,flags=re.M)
+val=re.sub(r"^\[(\d+)\.\d+\]",replace_timestamp,val,flags=re.M)
 
 with open("/tmp/yt_transcript.txt","w") as f:
     _ = f.write(val)
