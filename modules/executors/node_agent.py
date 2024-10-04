@@ -55,8 +55,8 @@ class AgentController:
         self.current_prompt += new_observation
         return self.current_prompt
 
-    def _handle_query(self,prompt_args):
-        ops_string = self.ops_executor.get_formatted_ops()
+    def _handle_query(self,prompt_args,ops_string):
+
         variables = {"tools":ops_string, "hints": self.hints}
         self.current_prompt ,_ = solve_templates(self.base_prompt, [ops_string])
         self.current_prompt = solve_placeholders(self.current_prompt,[],variables)
@@ -75,7 +75,8 @@ class AgentController:
         prompt = yield
         print("sono thread")
         # send query
-        res = self._handle_query(prompt)
+        ops_string = yield(2,{"command":"get_formatted_ops","args":[]})
+        res = self._handle_query(prompt,ops_string)
         llm_response = yield (1,res)
 
         while True:

@@ -120,6 +120,10 @@ class AgentOps():
 
 		if isinstance(fname,dict):
 			fname, text_params = fname["command"], fname["args"]
+
+		if fname == "get_formatted_ops":
+			return self.get_formatted_ops()
+
 		try:
 			res = self.exec(fname,text_params)
 		except Exception as e:
