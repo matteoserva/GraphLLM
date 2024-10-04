@@ -6,6 +6,14 @@ Several examples are available, including a agent capable of answering questions
 
 * `"give me a summary of the article on the home page of hacker news that is most likely related to language models."`
 
+## Features:
+
+Here are the features offered by GraphLLM:
+
+* A graph based framework to process data using LLMs.
+* A powerful agent capable of performing web searches and running python code
+* A set of tools to scrape web pages and reformat data in a LLM friendly format
+
 ## setup
 
 ### quick setup
