@@ -28,7 +28,7 @@ class ExecutorFactory:
         elif type == "constant":
             executor = ConstantNode()
         elif type == "agent":
-            executor = AgentController()
+            executor = AgentController(full_config)
         elif type == "tool":
             executor = ToolExecutor()
         elif type == "list":

@@ -5,7 +5,7 @@ import json
 
 
 class AgentController:
-    def __init__(self, *args):
+    def __init__(self, node_graph_parameters):
         self.current_prompt = ""
         self.base_prompt = ""
         self.tokens=["Thought: ","Action:","Inputs:","Observation: "]
@@ -15,6 +15,8 @@ class AgentController:
         self.hints = ""
         self.subtype="simple"
         self.enabled_input = 0
+        self.logger = node_graph_parameters["logger"]
+        self.path = node_graph_parameters.get("path", "/")
 
     def set_parameters(self,arg):
         if "tokens" in arg:
@@ -52,6 +54,7 @@ class AgentController:
                 new_observation = self.tokens[3] + new_observation + "</" + self.tokens[3][1:] + "\n" + self.tokens[0]
             else:
                 new_observation = self.tokens[3] + new_observation + "\n" + self.tokens[0]
+        self.logger.log("print",self.path,new_observation,end="")
         self.current_prompt += new_observation
         return self.current_prompt
 

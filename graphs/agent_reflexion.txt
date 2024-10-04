@@ -17,7 +17,7 @@
 
 LLM:
     type: stateless 
-    conf: {"grammar": "grammars/react_xml_pure.txt","stop":"<result>","force_system":True,"temperature":0.001, "top_k":1, "n_predict":1024}
+    conf: {"grammar": "grammars/react_xml_pure.txt","stop":"<result>","force_system":True,"temperature":0.001, "top_k":1, "n_predict":1024,"print_prompt":1, "print_response":"partial"}
     exec: CONTR[1]
 
 #<reflection> Find mistakes you made in the thinking step and provide an improved thought on what action to execute next given the available tools </reflection>
@@ -33,7 +33,7 @@ REFLEXION:
             2. The last action must be aligned with the goal. Useless actions are to be considered invalid.
             3. The model should not attempt to generate a summary if the goal is to extract a URL. Generating a summary removes all metadata ad URL addresses from a web page.
             4. When using the web_search() tool, the model should not directly ask the search engine for the required information, instead it should ask the search engine what is the address of the resource containing the required information.
-    conf: {"stop":"```","force_system":True,"temperature":0.1, "top_k":40, "n_predict":512,"print_prompt":True}
+    conf: {"stop":"```","force_system":True,"temperature":0.1, "top_k":40, "n_predict":512,"print_prompt":0, "print_response":"partial"}
     exec: CONTR[3]
 
 CONTR:

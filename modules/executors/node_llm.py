@@ -31,6 +31,8 @@ class BaseExecutor:
             self.builder.set_param(key, value)
         elif key == "print_prompt":
             self.print_prompt = value
+        elif key == "print_response":
+            self.print_response = value
 
     def load_config(self,cl_args=None):
         for i,el in enumerate(cl_args):
