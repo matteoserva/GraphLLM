@@ -4,7 +4,7 @@ from .common import send_chat,solve_placeholders
 from ..common import readfile
 from functools import partial
 
-class BaseExecutor:
+class LlmExecutor:
     def __init__(self,node_graph_parameters):
         self.print_prompt=True
         self.print_response=True
@@ -76,7 +76,7 @@ class BaseExecutor:
 
 
 
-class StatelessExecutor(BaseExecutor):
+class StatelessExecutor(LlmExecutor):
     def __init__(self,client):
         super().__init__(client)
 
@@ -88,7 +88,7 @@ class StatelessExecutor(BaseExecutor):
         res = self.basic_exec(m)
         return res
 
-class StatefulExecutor(BaseExecutor):
+class StatefulExecutor(LlmExecutor):
     def __init__(self,client):
         super().__init__(client)
 
