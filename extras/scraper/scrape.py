@@ -62,6 +62,11 @@ f = open(currentdir +"/fetchWrapper.js","r")
 fetch_wrapper = f.read()
 f.close()
 
+# this is  executed just before appying readability.js
+f = open(currentdir +"/redditFixer.js","r")
+reddit_fixer = f.read()
+f.close()
+
 driver = None
 
 def load_page(url):
@@ -145,10 +150,8 @@ def load_page(url):
   print("deleting nodes identified by ublock origin.", file=sys.stderr)
   driver.execute_script(script_removeHiddenNodes)
   
-  scr2 = """
-  document.querySelectorAll("form.usertext > div").forEach(el => {p =el.parentNode; p.removeChild(el); p.parentNode.append(el)}); 
-  """
-  driver.execute_script(scr2)
+  
+  driver.execute_script(reddit_fixer)
 
   print("readability.js", file=sys.stderr)
   ## readability per estrarre il contenuto
@@ -156,6 +159,7 @@ def load_page(url):
   scraper_utils.write_file("/tmp/pagina1.html",str(pagina_rjs["content"]))
 
   html_content = driver.page_source
+  scraper_utils.write_file("/tmp/pagina0.html",html_content)
   if not debug_mode:
     print("closing firefox", file=sys.stderr)
     driver.quit()
