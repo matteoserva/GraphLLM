@@ -118,14 +118,14 @@ class CopyNode:
             numInputs = len(res)
             outval = [None] * numInputs
             input_active = self._properties["input_active"]
-            outval[input_active] = res[input_active]
+            outval[0] = res[input_active]
             input_active = (input_active + 1) % numInputs
 
             self._properties["input_active"] = input_active
             res = outval
         elif self._subtype == "mux":
             if len(res) == 1: #mux nel tempo
-                if res[0] == "{p:eos}":
+                if res[0] == "{p:eos}" and len(self.stack) > 0:
                     res = [self.stack]
                     self.stack = []
                 else:

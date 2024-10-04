@@ -43,6 +43,10 @@ Summarize a wikipedia article
 
 `python3 exec.py graphs/python_gen_exec.txt test/problem_cubesum.txt`
 
+### rap battle
+
+`python3 exec.py examples/rap_battle.txt python C`
+
 ### named entity recognition
 
 Two step graph that extracts the entities and then queries the model again for the relations

@@ -1,0 +1,73 @@
+# this overly complicated graph creates a battle between two rappers
+
+# how to run:
+# python3 exec.py examples/rap_battle.txt water fire
+
+
+PY1:
+    type: python
+    conf: {"free_runs":1}
+    init: 
+       - |
+           try:
+               saved_context
+           except:
+               saved_context = {"run":0}
+           saved_context["run"] = saved_context["run"] + 1
+           if saved_context["run"] == 1:
+               _O = ["begin"]
+           elif saved_context["run"] < 3:
+               _O = _C
+           elif saved_context["run"] == 3:
+               _O = ["{p:eos}"]
+           else:
+               _O = [None]
+    exec: LLM2 
+
+# first rapper
+# notice that the template is filled from command line
+
+LLM1:
+    type: stateful
+    conf: {"force_system":True,"temperature":0.6, "top_k":40, "n_predict":2048,"print_prompt":0}
+    init: templates/rap_battle.txt {v:c2} {v:c1}
+    exec: PY1
+
+#second rapper
+# same template, same topics in reverse order    
+    
+LLM2:
+    type: stateful
+    conf: { "force_system":True,"temperature":0.6, "top_k":40, "n_predict":2048,"print_prompt":0}
+    init: templates/rap_battle.txt {v:c1} {v:c2}
+    exec: LLM1
+
+# get their response alternatively    
+    
+out1:
+    type: copy
+    conf: {"subtype": "gate"}
+    exec: LLM1 LLM2    
+
+# pack the responses together with a mux node. mux with one input accumulates data until eos
+out2:
+    type: copy
+    conf: {"subtype": "mux"}
+    exec: out1   
+
+# format the response    
+PYO:
+    type: python
+    init: 
+       - |
+           verses = _C[0]
+           formatted = "\n---\n".join(verses)
+           _O = [formatted]
+    exec: out2 
+
+# saves the results to file
+out3:
+    type: exec
+    init: tee /tmp/rap_log.txt
+    exec: PYO
+
