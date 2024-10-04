@@ -83,6 +83,24 @@ The model has to perform mathematical operations using the provided tools.
 
 For these examples you need the extra tools to be properly configured.
 
+### Web tools and scraper
+
+**scrape a web page**
+
+This converts a webpage to markdown and saves the result to /tmp/pagina.md
+
+`python3 extras/scraper/scrape.py https://en.wikipedia.org/wiki/Language_model`
+
+**download youtube subtitles**
+
+Downloads subtitles from a youtube url and saves them to /tmp/yt_transcript.txt:
+
+`python3 extras/youtube_subs.py https://www.youtube.com/watch?v=YbJOTdZBX1g`
+
+**extract data from a pdf**
+
+`python3 extras/parse_pdf.py test/sample.pdf`
+
 ### Full agent
 
 This example is a full agent using the ReAct + reflexion pattern.
