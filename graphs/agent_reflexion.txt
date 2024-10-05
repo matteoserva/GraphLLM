@@ -38,11 +38,6 @@ REFLEXION:
 
 CONTR:
     type: agent
-    conf: 
-        subtype: reflexion
-        tokens: ["<evaluation>","<action>","","<result>"]
-        hints: |-
-                  - prefer returning the answer via answer_file() instead of answer()
     init: 
         - |-
             {p:bos}
@@ -91,6 +86,11 @@ CONTR:
 
             {p:assistant}
             <planning>
+    conf: 
+        subtype: reflexion
+        tokens: ["<evaluation>","<action>","","<result>"]
+        hints: |-
+                  - prefer returning the answer via answer_file() instead of answer()
     exec: _C[1] LLM TOOL REFLEXION
 
 

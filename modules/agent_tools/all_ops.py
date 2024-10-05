@@ -94,11 +94,11 @@ class AgentFilesystem(GenericAgent):
 	def __init__(self):
 		pass
 
-	def ls(self,dirname):
+	def _ls(self,dirname):
 		"""outputs the content of the directory dirname."""
 		return ".\n..\nciao.txt\npagina.md"
 
-	def read(self,file_name):
+	def read_file(self,file_name):
 		"""Reads a file and outputs its content. This function fails if the file is too large."""
 		if not file_name.startswith("/"):
 			return "Error: You need to input a full path for the file_name"
@@ -113,8 +113,18 @@ class AgentFilesystem(GenericAgent):
 			content = f.read()
 		return content
 
+	def write_file(self,file_name,file_content):
+		"""writes a file. files can only be created in /tmp."""
+		if not file_name.startswith("/"):
+			return "Error: You need to input a full path for the file_name"
+		if not file_name.startswith("/tmp"):
+			return "Error: You don't have access to that directory"
+		with open(file_name,"w") as f:
+			f.write(file_content)
+		return "file " + file_name + " created successfilly"
+
 	def answer_file(self, file_name):
-		"""Returns a file as answer for the user question. This is the preferred way for returning an answer to the user."""
+		"""Returns a file as answer for the user question. The file must have been created previously"""
 		with open(file_name,"r") as f:
 			content = f.read()
 		print ("------------- agent answer from file\n" + content)
