@@ -32,7 +32,7 @@ REFLEXION:
             1. The last action can only use information that has been previously produced in a <result> tag or information given in the user's question. The AI agent is non allowed to use its own knowledge to fill the arguments of the action unless this is the first action.
             2. The last action must be aligned with the goal. Useless actions are to be considered invalid.
             3. The model should not attempt to generate a summary if the goal is to extract a URL. Generating a summary removes all metadata ad URL addresses from a web page.
-            4. When using the web_search() tool, the model should not directly ask the search engine for the required information, instead it should ask the search engine what is the address of the resource containing the required information.
+            4. When using the web_search() tool, the returned URL should not depend on updated information from a dynamically generated website.
     conf: {"stop":"```","force_system":True,"temperature":0.1, "top_k":40, "n_predict":512,"print_prompt":0, "print_response":"partial"}
     exec: CONTR[3]
 
