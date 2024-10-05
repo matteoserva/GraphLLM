@@ -5,15 +5,16 @@ from .node_agent import *
 from .node_tools import *
 from .node_inputs import *
 from .node_exec import *
-
 from ..logging.logger import Logger
 
 def default_logger(*args,**kwargs):
     print(*args,**kwargs)
 
 class ExecutorFactory:
+    
     @staticmethod
     def makeExecutor(type="stateless",config={}):
+        from ..graph.graph_executor import GraphExecutor
         full_config = {}
         full_config["name"] = config.get("name","/")
         full_config["logger"] = config.get("logger",Logger())

@@ -13,6 +13,8 @@ Here are the features offered by GraphLLM:
 * A graph based framework to process data using LLMs.
 * A powerful agent capable of performing web searches and running python code
 * A set of tools to scrape web pages and reformat data in a LLM friendly format
+* A list of [examples](https://github.com/matteoserva/GraphLLM/tree/main/examples) to start from
+
 
 ## Limitations:
 

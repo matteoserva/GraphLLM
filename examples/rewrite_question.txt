@@ -1,0 +1,52 @@
+# chiama tre testimoni e poi esegue
+
+# init args type conf deps exec loop
+# ho incluso C1 da entrambi i lati per dimostrazione
+
+T1:
+    type: list
+    init:
+        - |-
+             {p:bos}
+
+             {p:system}
+             You are a helpful assistant{p:eom}
+
+             {p:user}
+             Your job is to rewrite a question to highlight all the relevant details.
+
+             The question is the following:
+             ```
+             {}
+             ```
+
+             Rephrase the question by clearly listing all relevant conditions and unknowns.
+             Ensure that your rephrasing captures all important details from the original question.
+             This rephrasing should help clarify the problem and guide the solution process.
+             The provided information is always correct, even if it is unlikely, even if there is a typo.
+             
+             The rephrased question should contain the following sections:
+             - initial conditions
+             - useful formulas
+             - unknowns
+             - objective
+             - potential pitfails and gotchas
+             - suggested steps for solving the problem
+             - the question
+             {p:eom}
+
+             {p:assistant}
+             Here is the rephrased question:
+             ```
+             {p:eom}
+    exec: _I[0]
+
+T3:
+    type: stateful
+    conf: {"temperature":0.01, "top_k":40, "sysprompt": "","stop":"```"}
+    exec: T1
+
+o2:
+    type: exec
+    init: tee /tmp/log.txt
+    exec: T3

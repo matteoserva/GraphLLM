@@ -1,0 +1,49 @@
+# this is a stateless chat about a pdf file
+# the model doesn't keep the history of previous questions
+
+#python3 exec.py graphs/chat_with_pdf.txt test/sample.pdf
+
+PDF:
+    type: exec
+    init: extras/parse_pdf.py {v:c1}
+
+IN:
+    type: user
+    exec: CONTROL    
+    
+CONTROL:
+    type: copy
+    conf: {"subtype": "mux"}
+    exec: _C T1
+
+PDFR:
+    type: copy
+    conf: {"subtype": "repeat"}
+    exec: PDF 
+    
+T1:
+    type: stateless
+    init:
+         - |-
+             {p:bos}
+
+             {p:system}
+             Your job is to answer the user questions about the provided document.
+             
+             Here is the content of the document:
+             ```
+             {p:exec1}
+             ```
+             
+             # instructions
+             - Your answer must contain at least one reference to the section of the document that was used as source
+             - Explain the reasoning behind your answer
+             {p:eom}
+
+             {p:user}
+             {p:exec2}{p:eom}
+
+             {p:assistant}
+             {p:eom}
+    conf: {"temperature":0.01, "top_k":40, "print_prompt":1, "stop":"```"}
+    exec: PDFR IN

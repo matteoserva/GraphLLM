@@ -59,6 +59,26 @@ For this example you have to make sure that the llama.cpp server is launched wit
 
 `python3 exec.py graphs/llama3.1_native_python.txt "tell me the current date and time"`
 
+**chat with a pdf**
+
+This is a stateless chat about a pdf file.
+The model doesn't keep the history of previous questions.
+
+`python3 exec.py graphs/chat_with_pdf.txt test/sample.pdf`
+
+**rewrite a question and solve it using python code** 
+
+TThis is an example of a hierarchical graph.
+
+Here is the base graph that rewrites a question to make it more understandable:
+
+`python3 exec.py examples/rewrite_question.txt test/problem_cubesum.txt`
+
+But the base graph can also be a node from a higher level graph.
+This uses the rewritten quesition to generate python code and execute it to solve the original problem.
+
+`python3 exec.py examples/rewrite_python.txt test/problem_cubesum.txt`
+
 ---
 
 ### ReAct, text based pattern

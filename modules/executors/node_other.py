@@ -113,7 +113,9 @@ class CopyNode:
                     self._properties["free_runs"] = self._properties["free_runs"] - 1
                     if self._properties["free_runs"] == 0:
                         self.cache = None
-            
+            if self.repeat_runs == 0: #infinite
+                self._properties["free_runs"] = 1
+
         elif self._subtype == "gate":
             numInputs = len(res)
             outval = [None] * numInputs

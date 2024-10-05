@@ -1,0 +1,34 @@
+
+
+T1:
+    type: graph
+    init: examples/rewrite_question.txt
+    exec: _I[0]
+    
+T2:
+    type: stateful
+    init: 
+        - |-
+            {p:user}
+            Write python code that solves the problem.
+            Ignore error checking the validity of the solution.
+            The code should only print the answer in this form: "The answer is: {your answer}".
+            
+            Here is the problem:
+            ```
+            {p:exec1}
+            ```{p:eom}
+            
+            {p:assistant}
+            Here is the python code that solves the problem:
+            
+            ```python
+            {p:eom}
+    conf: {"temperature":0.01, "top_k":1,"stop":"```"}
+    exec: T1   
+
+T3:
+    type: python
+    init: ""
+    exec: T2
+    
