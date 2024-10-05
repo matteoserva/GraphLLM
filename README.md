@@ -14,6 +14,12 @@ Here are the features offered by GraphLLM:
 * A powerful agent capable of performing web searches and running python code
 * A set of tools to scrape web pages and reformat data in a LLM friendly format
 
+## Limitations:
+
+* there is no GUI for designing graphs, yet
+* Tested mainly with llama70b and qwen 32b, using the llama.cpp server as backend
+* Under heavy development, expect breaking changes
+
 ## setup
 
 ### quick setup

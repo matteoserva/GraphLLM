@@ -53,6 +53,12 @@ Two step graph that extracts the entities and then queries the model again for t
 
 `python3 exec.py graphs/ner.txt test/ner_podcast.txt`
 
+### llama 3.1 native tool call.
+
+For this example you have to make sure that the llama.cpp server is launched with `-sp`
+
+`python3 exec.py graphs/llama3.1_native_python.txt "tell me the current date and time"`
+
 ---
 
 ### ReAct, text based pattern

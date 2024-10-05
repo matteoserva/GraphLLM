@@ -1,0 +1,42 @@
+
+
+
+CONTROL:
+    type: copy
+    conf: {"subtype": "mux"}
+    exec: _C PY[0]
+
+IN:
+    type: user
+    init: {v:c*}
+    exec: CONTROL
+
+CONTROL2:
+    type: copy
+    conf: {"subtype": "mux"}
+    exec: IN PY[1]
+    
+T1:
+    type: stateful
+    conf: 
+        "temperature": 0.01
+        "top_k": 40
+        "print_prompt": True
+        "sysprompt": |-
+            Environment: ipython
+            Tools: brave_search, wolfram_alpha
+            
+            Cutting Knowledge Date: December 2023
+            Today Date: {v:current_date}
+            
+            # instructions:
+            - You are a helpful assistant
+            - generate and run a python script to compute the answer every time it's needed
+            - prefer running a python script instead of answering directly
+            
+    exec: CONTROL2
+    
+PY:
+    type: llamatool
+    init: ""
+    exec: T1[0] T1[1]
