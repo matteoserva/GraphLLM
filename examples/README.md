@@ -59,14 +59,23 @@ For this example you have to make sure that the llama.cpp server is launched wit
 
 `python3 exec.py graphs/llama3.1_native_python.txt "tell me the current date and time"`
 
-**chat with a pdf**
+### using a raw prompt
+
+Even a instruct LLM can be used as a non instruct one by passing a raw prompt.
+You need a llama.cpp backend for this feature
+
+`python3 chat.py examples/template_noninstruct.txt`
+
+
+
+### chat with a pdf
 
 This is a stateless chat about a pdf file.
 The model doesn't keep the history of previous questions.
 
 `python3 exec.py graphs/chat_with_pdf.txt test/sample.pdf`
 
-**rewrite a question and solve it using python code** 
+## rewrite a question and solve it using python code
 
 TThis is an example of a hierarchical graph.
 
