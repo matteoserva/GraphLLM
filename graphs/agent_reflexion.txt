@@ -1,6 +1,14 @@
 
 
+INPUT_MUX:
+    type: copy
+    conf: {"subtype": "mux"}
+    exec: _C AGENT
 
+USER_INPUT:
+    type: user
+    init: {v:c*}
+    exec: INPUT_MUX
 
 LLM:
     type: stateless 
@@ -33,7 +41,7 @@ AGENT:
             You are a AI task scheduler. Your job is to call the provided tools in the correct sequence to generate the answer for the user question.
 
             ## Tools
-            {p:tools}
+            {v:tools}
 
             ## Objective
             
@@ -66,7 +74,7 @@ AGENT:
             - The input to query_file() should be a very detailed question about what you want from the external agent.
             - Use only information obtained from executing the provided tools, ignoring all your previous knowledge
             - Use query_file() as a substitute for a web scraping tool
-            {p:hints}{p:eom}
+            {v:hints}{p:eom}
 
             {p:user}
             Question: {}{p:eom}
@@ -78,7 +86,7 @@ AGENT:
         tokens: ["<evaluation>","<action>","","<result>"]
         hints: |-
                   - prefer returning the answer via answer_file() instead of answer()
-    exec: _C[1] LLM TOOL REFLEXION
+    exec: USER_INPUT LLM TOOL REFLEXION
 
 
 TOOL:

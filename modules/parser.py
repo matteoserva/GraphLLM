@@ -121,7 +121,11 @@ def readstring_hierarchical(prompt,variables):
             except:
                 r = variables[r1][str(r2)]
         else:
-            r = variables[fnfull]
+            try:
+                r = variables[fnfull]
+            except:
+                r = foundString
+                searchPos = posA + 1
         prompt = prompt.replace(foundString,str(r))
     elif tag == "r": # fa una sostituzione dei {p:placeholder} con quello del {r:placeholder:nuovo}
         prompt = prompt.replace(foundString, "",1)

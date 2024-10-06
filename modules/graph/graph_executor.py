@@ -238,9 +238,10 @@ class GraphExecutor:
         clean_config = cl_args[0]
         clean_config = graph_utils.get_clean_config(clean_config)
 
-        for i,el in enumerate(cl_args[1:],1):
-            rstr = "{v:c["+ str(i) + "]}"
-            clean_config = clean_config.replace("{}",rstr,1)
+
+        #for i,el in enumerate(cl_args[1:],1):
+        #    rstr = "{v:c["+ str(i) + "]}"
+        #    clean_config = clean_config.replace("{}",rstr,1)
 
         #variable_whitelist = ["current_date"]
         #whitelisted_variables = {name:self.variables[name] for name in variable_whitelist if name in self.variables}

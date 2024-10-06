@@ -61,8 +61,8 @@ class AgentController:
     def _handle_query(self,prompt_args,ops_string):
 
         variables = {"tools":ops_string, "hints": self.hints}
-        self.current_prompt ,_ = solve_templates(self.base_prompt, [ops_string])
-        self.current_prompt = solve_placeholders(self.current_prompt,[],variables)
+        self.current_prompt ,_ = solve_templates(self.base_prompt, [prompt_args],variables)
+        #self.current_prompt = solve_placeholders(self.current_prompt,[prompt_args],variables)
         return self.current_prompt
 
     def _handle_llm_response(self,resp):
