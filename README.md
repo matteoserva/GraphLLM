@@ -14,7 +14,9 @@ Here are the features offered by GraphLLM:
 * A powerful agent capable of performing web searches and running python code
 * A set of tools to scrape web pages and reformat data in a LLM friendly format
 * A list of [examples](https://github.com/matteoserva/GraphLLM/tree/main/examples) to start from
-
+* It's a very low level framework. You get full control over the raw prompt and you see the raw output of the models.
+  The inner working of the library is not hidden by any abstraction
+  
 
 ## Limitations:
 
