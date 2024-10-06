@@ -6,12 +6,8 @@ import json
 
 class AgentController:
     def __init__(self, node_graph_parameters):
-        self.current_prompt = ""
         self.base_prompt = ""
         self.tokens=["Thought: ","Action:","Inputs:","Observation: "]
-        self.state = "INIT"
-        self.current_iteration = 0
-        self.answer = ""
         self.hints = ""
         self.subtype="simple"
         self.enabled_input = 0
@@ -25,28 +21,26 @@ class AgentController:
             self.hints = arg["hints"]
         if "subtype" in arg:
             self.subtype = arg["subtype"]
+        if "multi_turn" in arg:
+            self.multi_turn = arg["multi_turn"]
 
     def get_properties(self):
         res = {"input_rule":"OR"}
         return res
 
-    def _reset_internal_state(self):
-        self.state = "INIT"
-        self.current_prompt = self.base_prompt
-        self.current_iteration = 0
-
     def load_config(self,args):
+
+        # the three parts of the prompt must be passed separately
 
         template_args =  try_solve_files(args)
         self.base_prompt , _ = solve_templates("{}", template_args)
 
-        self._reset_internal_state()
         pass
 
     def set_dependencies(self,args):
         self.ops_executor = args[0]
 
-    def _handle_tool_response(self,prompt_args):
+    def _build_tool_response(self,prompt_args):
 
         new_observation = str(prompt_args)
         if True or len(new_observation) > 0:
@@ -55,43 +49,64 @@ class AgentController:
             else:
                 new_observation = self.tokens[3] + new_observation + "\n" + self.tokens[0]
         self.logger.log("print",self.path,new_observation,end="")
-        self.current_prompt += new_observation
-        return self.current_prompt
 
-    def _handle_query(self,prompt_args,ops_string):
+        return new_observation
 
+    def _build_template(self,ops_string):
         variables = {"tools":ops_string, "hints": self.hints}
-        self.current_prompt ,_ = solve_templates(self.base_prompt, [prompt_args],variables)
-        #self.current_prompt = solve_placeholders(self.current_prompt,[prompt_args],variables)
-        return self.current_prompt
+        new_prompt ,_ = solve_templates(self.base_prompt, [],variables)
+        new_prompt = solve_placeholders(new_prompt,[],variables)
+        return new_prompt
 
-    def _handle_llm_response(self,resp):
+    def _handle_query(self,template,prompt_args):
+        new_prompt, _ = solve_templates(template, [prompt_args], {})
+        return new_prompt
+
+    def _parse_llm_response(self,resp):
 
         resp = self._clean_response(resp)
-        self.current_prompt += resp
+
         respo = self._parse_response(resp)
         respo["raw"] = resp
 
         return respo
 
+    def _prompt_insert_scratchpad(self,clean_prompt,scratchpad):
+        new_prompt = clean_prompt.replace("{}", scratchpad)
+        return new_prompt
+
     def _execute_prompt(self):
+
+        state = "INIT"
+        current_iteration = 0
+
         prompt = yield
         print("sono thread")
         # send query
         ops_string = yield(2,{"command":"get_formatted_ops","args":[]})
-        res = self._handle_query(prompt,ops_string)
-        llm_response = yield (1,res)
+        prompt_template = self._build_template(ops_string)
+        clean_prompt = self._handle_query(prompt_template,prompt)
 
+        if "{}" not in clean_prompt:
+            clean_prompt += "{}"
+        scratchpad = ""
         while True:
+            current_prompt = self._prompt_insert_scratchpad(clean_prompt, scratchpad)
+            llm_response = yield (1, current_prompt)
+
             # call tool
-            self.current_iteration += 1
-            if self.current_iteration >= 10:
-                yield (0, Exception("llm agent overrun"))
-            respo = self._handle_llm_response(llm_response)
+            current_iteration += 1
+            if current_iteration >= 10:
+                final_response = Exception("llm agent overrun")
+                break
+
+            scratchpad += llm_response
+            respo = self._parse_llm_response(llm_response)
 
             skip_tool_call = False
             if self.subtype == "reflexion":
-                s0 = self.current_prompt.split("<planning>")[-1]
+                current_prompt = self._prompt_insert_scratchpad(clean_prompt,scratchpad)
+                s0 = current_prompt.split("<planning>")[-1]
                 s1 = s0[s0.find("<thinking>"):]
                 current_trace = "<question>" + prompt + "</question>\n" + s1
                 reflexion_response = yield(3,current_trace)
@@ -104,18 +119,27 @@ class AgentController:
                 tool_response = yield (2, respo)
 
             if (respo["command"].startswith("answer")) and not isinstance(tool_response, Exception):
-                self.state = "COMPLETE"
-                self.answer = respo["args"]
+                state = "COMPLETE"
 
             # fase 3
-            if isinstance(tool_response, Exception):
-                tool_response = "Exception: " + str(tool_response)
-            if (self.state == "COMPLETE"):
-                self._reset_internal_state()
-                yield (0, tool_response)
-            else:
-                res = self._handle_tool_response(tool_response)
-                llm_response = yield (1, res)
+            if state != "COMPLETE":
+                if isinstance(tool_response, Exception):
+                    tool_response = "Exception: " + str(tool_response)
+                new_observation = self._build_tool_response(tool_response)
+                scratchpad += new_observation
+            if (state == "COMPLETE"):
+                final_response = tool_response
+                break
+
+        if hasattr(self,"multi_turn") and self.multi_turn and "{p:user}" in prompt_template:
+            current_prompt = self._prompt_insert_scratchpad(clean_prompt, scratchpad).strip()
+            if not current_prompt.endswith("{p:eom}"):
+                current_prompt += "{p:eom}"
+            final_template = "\n\n{p:user}" +prompt_template.split("{p:user}")[-1]
+            current_prompt += final_template
+            self.base_prompt = current_prompt
+
+        yield(0, final_response)
 
     def _handle_graph_request(self,inputs):
         outputs = [None] * 4

@@ -2,7 +2,7 @@ You are a robotic AI assistant designed to help the user by using tools to proce
 
 ## Tools
 You have access to the following tools:
-{}
+{p:tools}
 
 ## Output Format
 Use the following template to process the user request step by step:
