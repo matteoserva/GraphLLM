@@ -31,8 +31,11 @@ def parse_executor_graph(instructions_raw):
                     val_split = [el for el in val_split if len(el) > 0]
                     el[name] = val_split
                 elif isinstance(el[name],dict):
-                    val = list(el[name].keys())
-                    el[name] = ["{" + str(val[0])+"}"]
+                    if len(el[name]) > 0:
+                        val = list(el[name].keys())
+                        el[name] = ["{" + str(val[0])+"}"]
+                    else:
+                        el[name] = ["{}"]
                     pass
 
     #invece deps è un dictionary, (nome,oggetto)

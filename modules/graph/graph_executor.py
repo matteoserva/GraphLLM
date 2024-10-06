@@ -226,13 +226,7 @@ class GraphExecutor:
 
     def load_config(self,cl_args=None):
         try_solve_files(cl_args)
-        for i,v in enumerate(cl_args):
-            idx = i
-            stri = "c" + str(idx)
-            self.variables[stri] = v
-            self.variables["c"][str(idx)] = v
-        self.variables["c*"] = cl_args[1:]
-        self.variables["current_date"] = "23 Jul 2024"
+
         instructions_raw = None
 
         clean_config = cl_args[0]
@@ -246,8 +240,34 @@ class GraphExecutor:
         #variable_whitelist = ["current_date"]
         #whitelisted_variables = {name:self.variables[name] for name in variable_whitelist if name in self.variables}
         #clean_config, _ = solve_templates(clean_config, [], whitelisted_variables)
+        self.variables["current_date"] = "23 Jul 2024"
         clean_config = clean_config.replace("{v:current_date}",self.variables["current_date"])
         graph_raw = graph_utils.parse_executor_graph(clean_config)
+
+        # TODO
+        # ora bisogna sostituire almeno i {}. con il cl_args originale, prima del try solve files
+        # oi anche i {v:c qualcosa}
+        # rocessare solo gli elementi dento init  e solo quelli che sono l'unico elemento'
+        # asciare stare i {vqualcosa } o i {} che sono parte di una stringa più grande
+        # prima dovrei usare i {v:c qualcosa
+
+        # poi consumo gli input con i {}
+        for a in graph_raw:
+            for i,v in enumerate(a.get("init",[])):
+                if v == "{}":
+                    a["init"][i] = cl_args[1]
+                    cl_args = cl_args[:1] + cl_args[2:]
+                pass
+
+        # assegno le variabili rimanenti
+        for i, v in enumerate(cl_args):
+            idx = i
+            stri = "c" + str(idx)
+            self.variables[stri] = v
+            self.variables["c"][str(idx)] = v
+        self.variables["c*"] = cl_args[1:]
+
+        
 
         #add output node if there is only one node
         if len(graph_raw) == 1:
