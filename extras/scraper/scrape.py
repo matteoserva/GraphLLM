@@ -67,6 +67,10 @@ f = open(currentdir +"/redditFixer.js","r")
 reddit_fixer = f.read()
 f.close()
 
+f = open(currentdir +"/Readability-readerable.js","r")
+readerable = f.read()
+f.close()
+
 driver = None
 
 def load_page(url):
@@ -149,16 +153,26 @@ def load_page(url):
 
   print("deleting nodes identified by ublock origin.", file=sys.stderr)
   driver.execute_script(script_removeHiddenNodes)
-  
-  
+
+
+  # trying to avoid special cases
   driver.execute_script(reddit_fixer)
 
   print("readability.js", file=sys.stderr)
+
   ## readability per estrarre il contenuto
   pagina_rjs = driver.execute_script(scr + "\n" + "return new Readability(document.cloneNode(true)).parse();")
   scraper_utils.write_file("/tmp/pagina1.html",str(pagina_rjs["content"]))
 
+  ## check
+  should_keep = driver.execute_script(readerable + "\n" + "return isProbablyReaderable(document);")
+  print("reader mode available?", should_keep)
+
   html_content = driver.page_source
+
+  #if not should_keep:
+  #    pagina_rjs["content"] = html_content
+
   scraper_utils.write_file("/tmp/pagina0.html",html_content)
   if not debug_mode:
     print("closing firefox", file=sys.stderr)
