@@ -13,6 +13,7 @@ class AgentController:
         self.enabled_input = 0
         self.logger = node_graph_parameters["logger"]
         self.path = node_graph_parameters.get("path", "/")
+        self.reflexion_history = ""
 
     def set_parameters(self,arg):
         if "tokens" in arg:
@@ -40,14 +41,14 @@ class AgentController:
     def set_dependencies(self,args):
         self.ops_executor = args[0]
 
-    def _build_tool_response(self,prompt_args):
+    def _build_tool_response(self,prompt_args,skip_generation = False):
 
         new_observation = str(prompt_args)
         if True or len(new_observation) > 0:
             if len(self.tokens[3]) > 0 and self.tokens[3][0] == "<" and self.tokens[3][-1] == ">":
-                new_observation = self.tokens[3] + new_observation + "</" + self.tokens[3][1:] + "\n" + self.tokens[0]
+                new_observation = self.tokens[3] + new_observation + "</" + self.tokens[3][1:] + "\n" + ("" if skip_generation else self.tokens[0])
             else:
-                new_observation = self.tokens[3] + new_observation + "\n" + self.tokens[0]
+                new_observation = self.tokens[3] + new_observation + "\n" + ("" if skip_generation else self.tokens[0])
         self.logger.log("print",self.path,new_observation,end="")
 
         return new_observation
@@ -90,6 +91,7 @@ class AgentController:
         if "{}" not in clean_prompt:
             clean_prompt += "{}"
         scratchpad = ""
+        reflexion_scratchpad = self.reflexion_history + "<question>" + prompt + "</question>\n"
         while True:
             current_prompt = self._prompt_insert_scratchpad(clean_prompt, scratchpad)
             llm_response = yield (1, current_prompt)
@@ -106,10 +108,9 @@ class AgentController:
             skip_tool_call = False
             if self.subtype == "reflexion":
                 current_prompt = self._prompt_insert_scratchpad(clean_prompt,scratchpad)
-                s0 = current_prompt.split("<planning>")[-1]
-                s1 = s0[s0.find("<thinking>"):]
-                current_trace = "<question>" + prompt + "</question>\n" + s1
-                reflexion_response = yield(3,current_trace)
+                s0 = llm_response.split("</planning>\n")[-1]
+                reflexion_scratchpad += s0
+                reflexion_response = yield(3,reflexion_scratchpad)
                 parsed_response = json.loads(reflexion_response)
                 if parsed_response["result"] != "success":
                     tool_response = "Exception: " + parsed_response["comment"]
@@ -125,9 +126,11 @@ class AgentController:
             if state != "COMPLETE":
                 if isinstance(tool_response, Exception):
                     tool_response = "Exception: " + str(tool_response)
-                new_observation = self._build_tool_response(tool_response)
-                scratchpad += new_observation
+            new_observation = self._build_tool_response(tool_response,state == "COMPLETE")
+            scratchpad += new_observation
+            reflexion_scratchpad += new_observation
             if (state == "COMPLETE"):
+                reflexion_scratchpad += "<evaluation> The answer has been sent to the user </evaluation>\n"
                 final_response = tool_response
                 break
 
@@ -138,6 +141,7 @@ class AgentController:
             final_template = "\n\n{p:user}" +prompt_template.split("{p:user}")[-1]
             current_prompt += final_template
             self.base_prompt = current_prompt
+            self.reflexion_history = reflexion_scratchpad
 
         yield(0, final_response)
 
