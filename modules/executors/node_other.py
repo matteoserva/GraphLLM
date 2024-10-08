@@ -120,7 +120,7 @@ class CopyNode:
             numInputs = len(res)
             outval = [None] * numInputs
             input_active = self._properties["input_active"]
-            outval[0] = res[input_active]
+            outval[input_active] = res[input_active]
             input_active = (input_active + 1) % numInputs
 
             self._properties["input_active"] = input_active
