@@ -36,6 +36,8 @@ class ExecutorFactory:
             executor = ListNode()
         elif type == "copy":
             executor = CopyNode()
+        elif type == "memory":
+            executor = MemoryNode()
         elif type == "graph":
             executor = GraphExecutor(full_config)
         elif type == "python":

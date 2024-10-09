@@ -11,7 +11,7 @@ T1:
 
             Output a list of titles for the transcript, each element of the list should represent a section of the video. Give timestamps for each title.
         - Now provide a very detailed description for each section of the video. Use a lot of references to specific timestamps.
-    exec: []
+    exec: _C[1]
 
 T2:
     type: stateful

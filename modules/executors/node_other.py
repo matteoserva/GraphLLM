@@ -72,6 +72,8 @@ class CopyNode:
         self.stack = []
         self.cache = None
         self.repeat_runs = 0
+        self._demux_N = 2
+        self._demux_i = 0
 
     def get_properties(self):
         res = self._properties
@@ -97,7 +99,9 @@ class CopyNode:
             val = list(val)
             val = val[0]
         return val
-
+#il mux invia la posizione come secondo elemento
+#il demux riceve la posizione come secondo elemento
+# anche pack e unpack
     def __call__(self,*args):
 
         res = list(*args)
@@ -136,6 +140,17 @@ class CopyNode:
             else: #mux nello spazio
                 l = [el for el in res if el is not None] #TODO: solo uno e mettere da parte gli altri
                 res = l
+        elif self._subtype == "demux":
+            """ if the index is present, then use it, else alternate the outputs """
+            if len(res) > 1:
+                index = int(res[1])
+            else:
+                index = self._demux_i
+            value = res[0]
+            outval = [None] * (index+1)
+            outval[index] = value
+            self._demux_i = (self._demux_i + 1) % self._demux_N
+            res = outval
         elif self._subtype == "log":
             if "logfile" in self.parameters:
               fn = self.parameters["logfile"]
@@ -148,3 +163,35 @@ class CopyNode:
             base = self._json_parse(v)
             res[0] = base[attr_name]
         return res
+
+class MemoryNode:
+    def __init__(self,*args):
+        self.parameters = {}
+        self._properties = {"input_rule":"AND"}
+        self._subtype="append"
+        self._preprocessing="json"
+        self._stack = []
+
+    def get_properties(self):
+        res = self._properties
+        return res
+
+    def set_parameters(self,args):
+        self.parameters = args
+
+    def _json_parse(self,text):
+        val = None
+        try:
+            val = json.loads(text)
+        except:
+            val = json.loads("{" + text + "}")
+        val = json.dumps(val, indent=4).strip()
+        return val
+
+    def __call__(self,*args):
+        res = list(*args)
+        val = self._json_parse(res[0])
+        self._stack.append(val)
+        outval = "\n".join(self._stack)
+        out = [outval]
+        return out
