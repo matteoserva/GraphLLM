@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys, signal, time, os
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
@@ -13,14 +14,22 @@ class ModelHandler():
         self.server.send_response(200)
             #self.send_header('Content-type', 'text/html')
         self.server.end_headers()
-        fullargs = ["python3", "exec.py", "-j", "graphs/run_template.txt","examples/template_full.txt"]
-        result = subprocess.run(fullargs, capture_output=True, text=True, input="")
-        last_row = result.stdout.strip().split("\n")[-1]
-        v1 = json.loads(last_row)
-        v2 = v1[0]
-        print(v2)
+        #fullargs = ["python3", "exec.py", "-j", "graphs/run_template.txt","examples/template_full.txt"]
+        #result = subprocess.run(fullargs, capture_output=True, text=True, input="")
+        #last_row = result.stdout.strip().split("\n")[-1]
+        #v1 = json.loads(last_row)
+        #v2 = v1[0]
+        #print(v2)
+        
+        content_length = int(self.server.headers['Content-Length'])
+        post_data = self.server.rfile.read(content_length)
+        with open("/tmp/grah.json","w") as f:
+             a = json.loads(post_data)
+             f.write(json.dumps(a,indent=4))
+        v2="ciao"
         self.server.wfile.write(v2.encode('utf-8'))
         self.index += 1
+
 
 
 class HttpHandler(BaseHTTPRequestHandler):
@@ -40,35 +49,38 @@ class HttpHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return
         split_path = http_path.split("/",2)
-        
+
         endpoint = split_path[1]
         if endpoint in ["editor"] and len(split_path) < 3:
             self.send_response(301)
             self.send_header('Location','/editor/')
             self.end_headers()
             return
-        remaining = "index.html" if len(split_path[2]) == 0 else split_path[2]
-        
+
         #print(http_path)
         if endpoint in ["graph"]:
             self.model.send_prompt()
-        
-        elif endpoint in ["editor"] and remaining in ["index.html","bridge.js"]:
-            
+
+        elif endpoint in ["editor"] :
+            remaining = "index.html" if len(split_path[2]) == 0 else split_path[2]
             print(remaining)
+            content = None
+
             filename = "extras/web_bridge/" + remaining
-            content = open(filename,"rb").read()
+            if os.path.exists(filename):
+                content = open(filename,"rb").read()
+            filename = "extras/litegraph.js/editor/"  + remaining
+            if content is None and os.path.exists(filename):
+                content = open(filename,"rb").read()
+
             self.send_response(200)
                 #self.send_header('Content-type', 'text/html')
             self.end_headers()
             self.wfile.write(content)
-        elif endpoint in ["editor","src","external","css","js","imgs","style.css","examples"]:
+        elif endpoint in ["src","external","css","js","imgs","style.css","examples"]:
             remaining = "/index.html" if len(split_path) < 3 else "/" + split_path[2]
             
             content = None
-            filename = "extras/litegraph.js/editor"  + remaining
-            if os.path.isfile(filename):
-                content = open(filename,"rb").read()
             filename = "extras/litegraph.js/" + endpoint + remaining
             print(filename)
             if content is None and os.path.isfile(filename):
@@ -100,7 +112,7 @@ if __name__ == '__main__':
     model_handler = ModelHandler()
     http_handler = partial(HttpHandler, model_handler)
     http_server = HTTPServer(('0.0.0.0', 8008), http_handler)
-
+    print("server listening at http://localhost:8008/")
 
 
     def handler(signal_received, frame):
