@@ -217,6 +217,7 @@ class GraphExecutor:
 
         self.client = client
         self.variables={"c": {}, "r":{}}
+        self.force_stop = False
 
     def set_client_parameters(self,p):
         self.client_parameters = p
@@ -361,13 +362,16 @@ class GraphExecutor:
         finally:
             sem.wait()
 
+    def stop(self):
+        self.force_stop = True
+
     def __call__(self, input_data):
         res = None
-
+        self.force_stop = False
         input_node = [el for el in self.graph_nodes if el["name"] == "_I"][0]
         input_node["inputs"] = input_data
         try:
-            while True:
+            while not self.force_stop:
                 runnable = [i for i,v in enumerate(self.graph_nodes) if v.is_runnable()]
                 if len(runnable) == 0:
                     break
@@ -375,6 +379,7 @@ class GraphExecutor:
                 if len(runnable) > parallel_jobs:
                     runnable = runnable[0:parallel_jobs]
                 if parallel_jobs > 1:
+                    self.logger.log("running", [self.graph_nodes[j].path for j in runnable])
                     sem = threading.Barrier(1+len(runnable))
                     tds = [threading.Thread(target=self.node_runner,args=[self.graph_nodes[i].execute,sem],daemon=True) for i in runnable]
                     for el in tds:
@@ -382,6 +387,7 @@ class GraphExecutor:
                     sem.wait() #this can except
                 else:
                     for i in runnable:
+                        self.logger.log("running", [i])
                         self.graph_nodes[i].execute()
                 for i in runnable:
                     res = self.graph_nodes[i]["last_output"]

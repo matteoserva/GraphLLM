@@ -2,9 +2,86 @@
 import sys, signal, time, os
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
+import yaml
 from functools import partial
 import time
 import subprocess
+
+from modules.logging.logger import Logger
+from modules.clients import Client, get_client_config
+from modules.graph import GraphExecutor
+from threading import Thread
+from modules.graph.json_parser import JsonParser
+
+
+class WebExec():
+    def __init__(self,send,stop):
+        self.t = None
+        self.send_chunk = send
+        self.send_stop = stop
+        client_config = get_client_config()
+        client = Client.make_client(client_config)
+        client.connect()
+
+        parameters = {}
+        parameters["repeat_penalty"] = 1.0
+        parameters["penalize_nl"] = False
+        parameters["seed"] = -1
+
+        logger= Logger(verbose=False,web_logger = False)
+        self.executor_config = {"client":client, "client_parameters":parameters,"logger":logger}
+
+
+        self.logger = logger
+        self.keep_running = False
+        self.client = client
+
+    def event(self,t,a,v):
+        print(t,a,v)
+        res = {"type": t, "data":a}
+        resp = json.dumps(res)
+
+        self.send_chunk(resp)
+
+    def _run(self,filename):
+        self.logger.addListener(self)
+        self.logger.log("start")
+        self.executor([])
+        self.logger.log("stop")
+        self.logger.deleteListeners()
+        self.send_stop()
+
+
+    def start(self,filename):
+        args = [filename]
+
+        try:
+            self.executor = GraphExecutor(self.executor_config)
+            self.executor.load_config(args)
+            self.keep_running = True
+            self.t = Thread(target=self._run, args=(filename,))
+            self.t.start()
+        except:
+            pass
+
+    def ask_stop(self):
+        self.keep_running = False
+        try:
+            self.executor.stop()
+        except:
+            pass
+    def stop(self):
+        self.ask_stop()
+        self.t.join()
+        self.t = None
+    def wait(self):
+        if(self.t):
+            self.t.join()
+        self.t = None
+    def run(self,filename):
+        self.start(filename)
+        self.wait()
+
 
 class ModelHandler():
     def __init__(self):
@@ -12,14 +89,7 @@ class ModelHandler():
 
     def send_prompt(self):
         self.server.send_response(200)
-            #self.send_header('Content-type', 'text/html')
         self.server.end_headers()
-        #fullargs = ["python3", "exec.py", "-j", "graphs/run_template.txt","examples/template_full.txt"]
-        #result = subprocess.run(fullargs, capture_output=True, text=True, input="")
-        #last_row = result.stdout.strip().split("\n")[-1]
-        #v1 = json.loads(last_row)
-        #v2 = v1[0]
-        #print(v2)
         
         content_length = int(self.server.headers['Content-Length'])
         post_data = self.server.rfile.read(content_length)
@@ -30,10 +100,66 @@ class ModelHandler():
         self.server.wfile.write(v2.encode('utf-8'))
         self.index += 1
 
+    def save(self,post_data):
+        with open("/tmp/graph.json", "w") as f:
+            a = json.loads(post_data)
+            f.write(json.dumps(a, indent=4))
+        self.server.send_response(200)
+        self.server.end_headers()
+        self.server.wfile.write("ciao".encode())
+        return "ciao"
 
+    def test(self):
+        self.server.close_connection = False
+        self.server.send_response(200)
+        self.server.send_header('Content-type', 'application/json')
+        self.server.send_header('transfer-encoding', 'chunked')
+        self.server.end_headers()
+        for i in range(10):
+            res = {"content": [str(i)]}
+            resp = json.dumps(res)
+            resp = "{}\n\n".format(resp)
+            l = len(resp)
+            encoded = '{:X}\r\n{}\r\n'.format(l, resp).encode('utf-8')
+            res = self.server.wfile.write(encoded)
+            time.sleep(.4)
+        close_chunk = '0\r\n\r\n'
+        self.server.wfile.write(close_chunk.encode(encoding='utf-8'))
+        self.server.wfile.flush()
+        self.server.close_connection = True
+
+    def _send_chunk(self,chunk):
+        resp = "{}\n\n".format(chunk)
+        l = len(resp)
+        encoded = '{:X}\r\n{}\r\n'.format(l, resp).encode('utf-8')
+        res = self.server.wfile.write(encoded)
+
+    def _send_stop(self):
+        close_chunk = '0\r\n\r\n'
+        self.server.wfile.write(close_chunk.encode(encoding='utf-8'))
+        self.server.wfile.flush()
+
+
+    def exec(self,json_graph):
+        self.server.close_connection = False
+        self.server.send_response(200)
+        self.server.send_header('Content-type', 'application/json')
+        self.server.send_header('transfer-encoding', 'chunked')
+        self.server.end_headers()
+        with open("/tmp/graph.json", "w") as f:
+            a = json.loads(json_graph)
+            f.write(json.dumps(a, indent=4))
+        parser = JsonParser()
+        parsed = parser.load("/tmp/graph.json")
+        with open("/tmp/graph.yaml", "w") as f:
+            f.write(yaml.dump(parsed, sort_keys=False))
+        e = WebExec(self._send_chunk, self._send_stop)
+        e.run("/tmp/graph.yaml")
+
+        self.server.close_connection = True
 
 class HttpHandler(BaseHTTPRequestHandler):
-    #protocol_version = 'HTTP/1.1'
+    protocol_version = 'HTTP/1.1'
     def __init__(self, model, *args, **kwargs):
         self.model = model
         self.model.server = self
@@ -41,8 +167,9 @@ class HttpHandler(BaseHTTPRequestHandler):
         super().__init__(*args, **kwargs)
 
     def do_GET(self):
+        self.close_connection = True
         http_path = self.path.split("?",1)[0]
-        
+
         if http_path == "/":
             self.send_response(301)
             self.send_header('Location','/editor/')
@@ -59,7 +186,25 @@ class HttpHandler(BaseHTTPRequestHandler):
 
         #print(http_path)
         if endpoint in ["graph"]:
-            self.model.send_prompt()
+            http_path = self.path.split("?", 1)[0]
+            split_path = http_path.split("/", 2)
+            if len(split_path) < 3 or len(split_path[2]) < 1:
+                self.send_response(404)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                self.wfile.write(b'404 - Not Found')
+
+            operation = split_path[2]
+            if hasattr(self.model, operation):
+                op = getattr(self.model, operation)
+                res = op()
+
+            else:
+                self.send_response(404)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                self.wfile.write(b'404 - Not Found')
+            pass
 
         elif endpoint in ["editor"] :
             remaining = "index.html" if len(split_path[2]) == 0 else split_path[2]
@@ -74,6 +219,7 @@ class HttpHandler(BaseHTTPRequestHandler):
                 content = open(filename,"rb").read()
 
             self.send_response(200)
+            self.send_header('Connection', 'close')
                 #self.send_header('Content-type', 'text/html')
             self.end_headers()
             self.wfile.write(content)
@@ -101,9 +247,23 @@ class HttpHandler(BaseHTTPRequestHandler):
              self.end_headers()
              self.wfile.write(b'404 - Not Found')
     def do_POST(self):
-        print(self.path)
-        self.model.send_prompt()
+        self.close_connection = True
+        http_path = self.path.split("?", 1)[0]
+        split_path = http_path.split("/", 2)
+        operation = split_path[2]
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+        if hasattr(self.model,operation):
 
+            op = getattr(self.model,operation)
+            res = op(post_data)
+
+        else:
+            self.send_response(404)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            self.wfile.write(b'404 - Not Found')
+        pass
 
             
 if __name__ == '__main__':

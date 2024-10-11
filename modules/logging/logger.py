@@ -40,17 +40,23 @@ class WrappedWebLogger(metaclass=Singleton):
         self.stop()
 
 class Logger():
-    def __init__(self):
+    def __init__(self,verbose=True,web_logger = False):
+        self.verbose = verbose
         self.prints = {}
-        self.webLogger = WrappedWebLogger()
+        self.webLogger = WrappedWebLogger(initialize = web_logger)
+        self.listeners = []
 
     def log(self,type,*args,**kwargs):
+        for el in self.listeners:
+            el.event(type,args,kwargs)
+
         #
         if type == "names":
             if self.webLogger:
               pass#self.webLogger.set_nodes(args[0])
         if type == "print":
-            print(*args[1:],**kwargs)
+            if self.verbose:
+                print(*args[1:],**kwargs)
             self.prints[args[0]] = args[1]
             self.webLogger.set_output(args[0],args[1])
         if type == "output":
@@ -63,6 +69,10 @@ class Logger():
 
     def stop(self):
           pass
+    def addListener(self,l):
+        self.listeners.append(l)
+    def deleteListeners(self):
+        self.listeners = []
     def __del__(self):
           #print("logger exit")
           self.stop()
