@@ -37,9 +37,22 @@ class WebBrige {
     this.graph.onStopEvent = this.onStopEvent.bind(this)
     
     //some examples
-  addDemo("rap battle", "/graph/load?file=rap_battle.json");
+    //addDemo("rap battle", "/graph/load?file=rap_battle.json");
+    this.loadList()
   }
 
+  loadList()
+  {
+    var data = JSON.stringify( graph.serialize() );
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/graph/list',false);
+    
+    var response = xhr.send(data);
+    var lines = xhr.responseText.split("\n")
+    lines.forEach((element) => {addDemo(element, "/graph/load?file="+element); });
+    console.log(xhr.responseText)
+  }
+  
   onPlayEvent()
   {
       this.controller = new AbortController();

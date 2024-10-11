@@ -167,7 +167,12 @@ class ModelHandler():
             content = f.read()
         self.server.wfile.write(content.encode())
 
-
+    def list(self):
+        self.server.send_response(200)
+        self.server.end_headers()
+        files = os.listdir("json_graphs/")
+        text = "\n".join(files)
+        self.server.wfile.write(text.encode())
 
 class HttpHandler(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
