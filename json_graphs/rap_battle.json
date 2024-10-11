@@ -1,0 +1,302 @@
+{
+    "last_node_id": 11,
+    "last_link_id": 16,
+    "nodes": [
+        {
+            "id": 1,
+            "type": "llm/graph",
+            "pos": [
+                43,
+                88
+            ],
+            "size": {
+                "0": 210,
+                "1": 108
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 16
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        6
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "    type: python\n    conf: {\"free_runs\":1}\n    init: \n       - |\n           try:\n               saved_context\n           except:\n               saved_context = {\"run\":0}\n           saved_context[\"run\"] = saved_context[\"run\"] + 1\n           if saved_context[\"run\"] == 1:\n               _O = [\"begin\"]\n           elif saved_context[\"run\"] < 3:\n               _O = _C\n           elif saved_context[\"run\"] == 3:\n               _O = [\"{p:eos}\"]\n           else:\n               _O = [None]"
+            }
+        },
+        {
+            "id": 5,
+            "type": "llm/graph",
+            "pos": [
+                32,
+                322
+            ],
+            "size": {
+                "0": 358,
+                "1": 194
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 6
+                },
+                {
+                    "name": "N",
+                    "type": "number",
+                    "link": null,
+                    "slot_index": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        7,
+                        11
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "    type: stateful\n    conf: {\"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt red blue"
+            }
+        },
+        {
+            "id": 9,
+            "type": "llm/graph",
+            "pos": [
+                434,
+                54
+            ],
+            "size": {
+                "0": 292,
+                "1": 215
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 11,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 12
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        14
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "    type: copy\n    conf: {\"subtype\": \"gate\"}"
+            }
+        },
+        {
+            "id": 6,
+            "type": "llm/graph",
+            "pos": [
+                428,
+                356
+            ],
+            "size": {
+                "0": 316,
+                "1": 170
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 7,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "number",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        12,
+                        16
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "    type: stateful\n    conf: { \"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt blue red"
+            }
+        },
+        {
+            "id": 11,
+            "type": "llm/graph",
+            "pos": [
+                800,
+                425
+            ],
+            "size": {
+                "0": 210,
+                "1": 108
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 14,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        15
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "    type: copy\n    conf: {\"subtype\": \"mux\"}\n    exec: out1 "
+            }
+        },
+        {
+            "id": 2,
+            "type": "basic/watch",
+            "pos": [
+                868,
+                71
+            ],
+            "size": {
+                "0": 3328,
+                "1": 240
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": 0,
+                    "link": 15,
+                    "label": "0.000"
+                }
+            ],
+            "properties": {}
+        }
+    ],
+    "links": [
+        [
+            6,
+            1,
+            0,
+            5,
+            0,
+            "string"
+        ],
+        [
+            7,
+            5,
+            0,
+            6,
+            0,
+            "string"
+        ],
+        [
+            11,
+            5,
+            0,
+            9,
+            0,
+            "string"
+        ],
+        [
+            12,
+            6,
+            0,
+            9,
+            1,
+            "string"
+        ],
+        [
+            14,
+            9,
+            0,
+            11,
+            0,
+            "string"
+        ],
+        [
+            15,
+            11,
+            0,
+            2,
+            0,
+            "string"
+        ],
+        [
+            16,
+            6,
+            0,
+            1,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}

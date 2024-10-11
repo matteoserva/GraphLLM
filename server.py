@@ -158,6 +158,17 @@ class ModelHandler():
 
         self.server.close_connection = True
 
+    def load(self):
+        self.server.send_response(200)
+        self.server.end_headers()
+        params = self.server.path.split("/")[-1].split("?",1)[1]
+        filename = params.split("=")[1]
+        with open("json_graphs/" + filename) as f:
+            content = f.read()
+        self.server.wfile.write(content.encode())
+
+
+
 class HttpHandler(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
     def __init__(self, model, *args, **kwargs):

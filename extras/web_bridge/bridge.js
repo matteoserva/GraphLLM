@@ -1,4 +1,17 @@
 
+function addDemo( name, url )
+{
+	var option = document.createElement("option");
+	if(url.constructor === String)
+		option.dataset["url"] = url;
+	else
+		option.callback = url;
+	option.innerHTML = name;
+	select.appendChild( option );
+}
+
+
+
 class WebBrige {
   constructor() {
     this.editor = editor;
@@ -22,6 +35,9 @@ class WebBrige {
     }
     this.graph.onPlayEvent = this.onPlayEvent.bind(this)
     this.graph.onStopEvent = this.onStopEvent.bind(this)
+    
+    //some examples
+  addDemo("rap battle", "/graph/load?file=rap_battle.json");
   }
 
   onPlayEvent()
