@@ -17,7 +17,8 @@ class WebBrige {
     this.editor = editor;
     this.graph = editor.graph;
     this.canvas = this.editor.graphcanvas;
-    this.saveBtn = document.querySelector("div.litegraph button#save")
+    this.saveBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#save")
+    this.nameSelector = document.querySelector("div.litegraph span#LGEditorTopBarSelector select")
   }
 
   connect() {
@@ -25,7 +26,7 @@ class WebBrige {
     let cb_bs = this.graph.onBeforeStep;
     let that = this
     this.graph.onAfterStep = this.onAfterStep.bind(this)
-    this.saveBtn.addEventListener("click",this.save);
+    this.saveBtn.addEventListener("click",this.save.bind(this));
 
     this.graph.onBeforeStep = function()
     {
@@ -116,11 +117,14 @@ class WebBrige {
         var name = obj.data[0].substr(1)
         var values = obj.data[1]
         var n = this.graph.getNodeById(name)
-        if(n && values.length > 0)
+        if(!!n)
         {
-          for(let i = 0; i < values.length; i++)
-            
-            n.setOutputData(i,values[i])
+          if(values.length > 0)
+          {
+            for(let i = 0; i < values.length; i++)
+              
+              n.setOutputData(i,values[i])
+          }
         }
       }
       if(obj.type == "running")
@@ -128,6 +132,7 @@ class WebBrige {
         var values = obj.data[0]
         var names = values.map((el) => el.substr(1));
         var nodes = names.map((el) => this.graph.getNodeById(el));
+        nodes = nodes.filter(function( element ) { return !!element;    });
         this.canvas.selectNodes(nodes)
       }
       if(obj.type != "print")
@@ -162,9 +167,11 @@ class WebBrige {
   }
   
   save() {
+    var e = this.nameSelector
+    var value = e.value;
    var data = JSON.stringify( graph.serialize() );
    let xhr = new XMLHttpRequest();
-   xhr.open('POST', '/graph/save',false);
+   xhr.open('POST', '/graph/save?file=' + value,false);
    xhr.setRequestHeader("Content-Type", "application/json")
    xhr.send(data);
    console.log("save called")
