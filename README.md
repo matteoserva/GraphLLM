@@ -16,11 +16,13 @@ Here are the features offered by GraphLLM:
 * A list of [examples](https://github.com/matteoserva/GraphLLM/tree/main/examples) to start from
 * It's a very low level framework. You get full control over the raw prompt and you see the raw output of the models.
   The inner working of the library is not hidden by any abstraction
-  
+* The GUI is a work in progress but it's there
+
+![image](https://github.com/user-attachments/assets/1e265b4c-f4c9-48f1-8a88-40d8bcf01e0a)
+    
 
 ## Limitations:
 
-* there is no GUI for designing graphs, yet
 * Tested mainly with llama70b and qwen 32b, using the llama.cpp server as backend
 * Under heavy development, expect breaking changes
 
