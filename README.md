@@ -109,3 +109,8 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
 
 There are more examples in the [examples folder](https://github.com/matteoserva/GraphLLM/tree/main/examples)
 Have fun.
+
+# Thanks
+
+* [litegraph](https://github.com/jagenjo/litegraph.js)
+* [llama.cpp](https://github.com/ggerganov/llama.cpp)
