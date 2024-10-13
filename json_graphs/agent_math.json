@@ -56,7 +56,7 @@
         },
         {
             "id": 19,
-            "type": "llm/graph",
+            "type": "llm/generic_node",
             "pos": [
                 497,
                 646
@@ -269,7 +269,7 @@
         },
         {
             "id": 14,
-            "type": "llm/graph",
+            "type": "llm/generic_node",
             "pos": [
                 302,
                 229
@@ -317,7 +317,7 @@
         },
         {
             "id": 16,
-            "type": "llm/graph",
+            "type": "llm/generic_node",
             "pos": [
                 538,
                 176
@@ -425,7 +425,7 @@
         },
         {
             "id": 15,
-            "type": "llm/graph",
+            "type": "llm/generic_node",
             "pos": [
                 190,
                 271

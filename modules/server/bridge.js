@@ -114,6 +114,8 @@ class WebBrige {
         function onChunkedResponseError(err) {
           that.stopGraph()
           console.error(err)
+          var message = "error: " + err
+          alert(message)
         }
   }
   
@@ -141,6 +143,12 @@ class WebBrige {
               n.setOutputData(i,values[i])
           }
         }
+      }
+      if(obj.type == "error")
+      {
+        var message = "error: " + obj.data[0]
+        console.log(message)
+        alert(message)
       }
       if(obj.type == "running")
       {

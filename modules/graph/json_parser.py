@@ -117,7 +117,7 @@ class JsonParser():
 
         new_config = {}
         new_config["type"] = old_config["type"]
-        if old_config["type"] in ["llm/graph"]:
+        if old_config["type"] in ["llm/generic_node"]:
             return self.parse_generic(old_config,links)
         if old_config["type"] in ["llm/input"]:
             return self.parse_input(old_config,links)

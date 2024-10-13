@@ -45,10 +45,14 @@ class WebExec():
 
         self.send_chunk(resp)
 
-    def _run(self,filename):
+    def _run(self,args):
         self.logger.addListener(self)
         self.logger.log("start")
-        self.executor([])
+        try:
+            self.executor.load_config(args)
+            self.executor([])
+        except Exception as e:
+            self.logger.log("error",str(e))
         self.logger.log("stop")
         self.logger.deleteListeners()
         self.send_stop()
@@ -59,11 +63,11 @@ class WebExec():
 
         try:
             self.executor = GraphExecutor(self.executor_config)
-            self.executor.load_config(args)
+
             self.keep_running = True
-            self.t = Thread(target=self._run, args=(filename,))
+            self.t = Thread(target=self._run, args=(args,))
             self.t.start()
-        except:
+        except Exception as e:
             pass
 
     def ask_stop(self):
@@ -164,6 +168,7 @@ class ModelHandler():
             f.write(yaml.dump(parsed, sort_keys=False))
         e = WebExec(self._send_chunk, self._send_stop)
         e.run("/tmp/graph.yaml")
+
 
         self.server.close_connection = True
 
