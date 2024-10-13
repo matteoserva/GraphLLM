@@ -9,11 +9,23 @@ class JsonParser():
         new_config = {}
         new_config["type"] = old_config["type"]
         properties = old_config.get("properties", {})
-        parameters = properties.get("parameters", "")
+        parameters = properties.get("parameters", {})
         parameters = yaml.safe_load(parameters)
+
+        for i, el in enumerate(parameters.get("init",[])):
+            if isinstance(el, dict):
+                if len(el) > 0:
+                    val = list(el.keys())
+                    parameters["init"][i] = "{" + str(val[0]) + "}"
+                else:
+                    parameters["init"][i] = "{}"
+                pass
+
         if parameters:
             for vel in parameters:
                 new_config[vel] = parameters[vel]
+
+
         old_inputs = old_config.get("inputs", [])
         new_inputs = [str(el["link"]) if el["link"] else None for el in old_inputs]
         new_inputs = [links[el] if el else None for el in new_inputs]
