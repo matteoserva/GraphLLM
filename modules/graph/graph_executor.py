@@ -262,7 +262,14 @@ class GraphExecutor:
             self.variables["c"][str(idx)] = v
         self.variables["c*"] = cl_args[1:]
 
-        
+        # connetto i virtual node
+        virtual_sinks = {el["conf"]["name"]: el["name"] for el in graph_raw if el["type"] == "virtual_sink"}
+        virtual_sources = [el for el in graph_raw if el["type"] == "virtual_source"]
+        for el in virtual_sources:
+            ident = el["conf"]["name"]
+            source = virtual_sinks[ident]
+            el["exec"] = [source]
+
 
         #add output node if there is only one node
         executable_nodes = [el for el in graph_raw if el["type"] != "variable"]

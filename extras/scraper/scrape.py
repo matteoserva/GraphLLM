@@ -166,7 +166,7 @@ def load_page(url):
 
   ## check
   should_keep = driver.execute_script(readerable + "\n" + "return isProbablyReaderable(document);")
-  print("reader mode available?", should_keep)
+  print("reader mode available?", should_keep, file=sys.stderr)
 
   html_content = driver.page_source
 

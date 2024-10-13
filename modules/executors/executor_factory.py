@@ -52,4 +52,8 @@ class ExecutorFactory:
             executor = UserInputNode()
         elif type == "exec":
             executor = ExecNode()
+        elif type == "virtual_source":
+            executor = VirtualNode()
+        elif type == "virtual_sink":
+            executor = VirtualNode()
         return executor

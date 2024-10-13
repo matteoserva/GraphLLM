@@ -174,6 +174,17 @@ class VariableNode:
     def __call__(self, *args):
         return []
 
+class VirtualNode:
+    def __init__(self,*args):
+        pass
+
+    def set_parameters(self, args):
+        self.parameters = args
+
+    def __call__(self, *args):
+        return args[0]
+
+
 class MemoryNode:
     def __init__(self,*args):
         self.parameters = {}

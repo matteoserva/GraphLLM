@@ -1,26 +1,31 @@
 {
-    "last_node_id": 11,
-    "last_link_id": 16,
+    "last_node_id": 17,
+    "last_link_id": 27,
     "nodes": [
         {
-            "id": 1,
+            "id": 13,
             "type": "llm/graph",
             "pos": [
-                43,
-                88
+                314,
+                368
             ],
-            "size": {
-                "0": 210,
-                "1": 108
-            },
+            "size": [
+                320.2509002685547,
+                170.5172815322876
+            ],
             "flags": {},
-            "order": 0,
+            "order": 5,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 16
+                    "link": 18
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 19
                 },
                 {
                     "name": "N",
@@ -33,40 +38,44 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        6
-                    ],
-                    "slot_index": 0
+                        23
+                    ]
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
                 }
             ],
             "properties": {
-                "parameters": "    type: python\n    conf: {\"free_runs\":1}\n    init: \n       - |\n           try:\n               saved_context\n           except:\n               saved_context = {\"run\":0}\n           saved_context[\"run\"] = saved_context[\"run\"] + 1\n           if saved_context[\"run\"] == 1:\n               _O = [\"begin\"]\n           elif saved_context[\"run\"] < 3:\n               _O = _C\n           elif saved_context[\"run\"] == 3:\n               _O = [\"{p:eos}\"]\n           else:\n               _O = [None]"
+                "parameters": "    type: copy\n    conf: {\"subtype\": \"mux\"} "
             }
         },
         {
-            "id": 5,
+            "id": 16,
             "type": "llm/graph",
             "pos": [
-                32,
-                322
+                317,
+                601
             ],
             "size": {
-                "0": 358,
-                "1": 194
+                "0": 210,
+                "1": 108
             },
             "flags": {},
-            "order": 2,
+            "order": 7,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 6
+                    "link": 23,
+                    "slot_index": 0
                 },
                 {
                     "name": "N",
-                    "type": "number",
-                    "link": null,
-                    "slot_index": 1
+                    "type": "string",
+                    "link": null
                 }
             ],
             "outputs": [
@@ -74,29 +83,79 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        7,
-                        11
+                        24
                     ],
                     "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
                 }
             ],
             "properties": {
-                "parameters": "    type: stateful\n    conf: {\"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt red blue"
+                "parameters": "    type: copy\n    conf: {\"subtype\": \"mux\"}"
+            }
+        },
+        {
+            "id": 14,
+            "type": "llm/graph",
+            "pos": [
+                650,
+                559
+            ],
+            "size": [
+                439.2509002685547,
+                213.5172815322876
+            ],
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 24,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        27
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "    type: python\n    init: \n       - |\n           verses = _C[0]\n           formatted = \"\\n---\\n\".join(verses)\n           _O = [formatted]"
             }
         },
         {
             "id": 9,
             "type": "llm/graph",
             "pos": [
-                434,
-                54
+                -10,
+                411
             ],
-            "size": {
-                "0": 292,
-                "1": 215
-            },
+            "size": [
+                304.79489892578135,
+                230.25628320312512
+            ],
             "flags": {},
-            "order": 4,
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
@@ -121,10 +180,20 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        14
-                    ]
+                        18
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": [
+                        19
+                    ],
+                    "slot_index": 1
                 }
             ],
+            "title": "merge1",
             "properties": {
                 "parameters": "    type: copy\n    conf: {\"subtype\": \"gate\"}"
             }
@@ -133,15 +202,15 @@
             "id": 6,
             "type": "llm/graph",
             "pos": [
-                428,
-                356
+                1110,
+                6
             ],
             "size": {
-                "0": 316,
-                "1": 170
+                "0": 210,
+                "1": 108
             },
             "flags": {},
-            "order": 3,
+            "order": 2,
             "mode": 0,
             "inputs": [
                 {
@@ -165,32 +234,85 @@
                         16
                     ],
                     "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
                 }
             ],
+            "title": "Rapper 2",
             "properties": {
                 "parameters": "    type: stateful\n    conf: { \"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt blue red"
             }
         },
         {
-            "id": 11,
+            "id": 5,
             "type": "llm/graph",
             "pos": [
-                800,
-                425
+                473,
+                -47
             ],
-            "size": {
-                "0": 210,
-                "1": 108
-            },
+            "size": [
+                431.8568989257815,
+                223.90028320312507
+            ],
             "flags": {},
-            "order": 5,
+            "order": 1,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 14,
+                    "link": 6
+                },
+                {
+                    "name": "N",
+                    "type": "number",
+                    "link": null,
+                    "slot_index": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        7,
+                        11
+                    ],
                     "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Rapper 1",
+            "properties": {
+                "parameters": "    type: stateful\n    conf: {\"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt red blue"
+            }
+        },
+        {
+            "id": 1,
+            "type": "llm/graph",
+            "pos": [
+                -42,
+                -61
+            ],
+            "size": [
+                416.3308989257814,
+                336.0562832031251
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 16
                 },
                 {
                     "name": "N",
@@ -203,35 +325,41 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        15
+                        6
                     ],
                     "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
                 }
             ],
+            "title": "Controller",
             "properties": {
-                "parameters": "    type: copy\n    conf: {\"subtype\": \"mux\"}\n    exec: out1 "
+                "parameters": "    type: python\n    conf: {\"free_runs\":1}\n    init: \n       - |\n           try:\n               saved_context\n           except:\n               saved_context = {\"run\":0}\n           saved_context[\"run\"] = saved_context[\"run\"] + 1\n           if saved_context[\"run\"] == 1:\n               _O = [\"begin\"]\n           elif saved_context[\"run\"] < 3:\n               _O = _C\n           elif saved_context[\"run\"] == 3:\n               _O = [\"{p:eos}\"]\n           else:\n               _O = [None]"
             }
         },
         {
-            "id": 2,
-            "type": "basic/watch",
+            "id": 12,
+            "type": "llm/watch",
             "pos": [
-                868,
-                71
+                1145,
+                215
             ],
             "size": {
-                "0": 3328,
-                "1": 240
+                "0": 437,
+                "1": 453
             },
             "flags": {},
-            "order": 1,
+            "order": 4,
             "mode": 0,
             "inputs": [
                 {
-                    "name": "value",
-                    "type": 0,
-                    "link": 15,
-                    "label": "0.000"
+                    "name": "in",
+                    "type": "string",
+                    "link": 27,
+                    "slot_index": 0
                 }
             ],
             "properties": {}
@@ -271,26 +399,50 @@
             "string"
         ],
         [
-            14,
-            9,
-            0,
-            11,
-            0,
-            "string"
-        ],
-        [
-            15,
-            11,
-            0,
-            2,
-            0,
-            "string"
-        ],
-        [
             16,
             6,
             0,
             1,
+            0,
+            "string"
+        ],
+        [
+            18,
+            9,
+            0,
+            13,
+            0,
+            "string"
+        ],
+        [
+            19,
+            9,
+            1,
+            13,
+            1,
+            "string"
+        ],
+        [
+            23,
+            13,
+            0,
+            16,
+            0,
+            "string"
+        ],
+        [
+            24,
+            16,
+            0,
+            14,
+            0,
+            "string"
+        ],
+        [
+            27,
+            14,
+            0,
+            12,
             0,
             "string"
         ]

@@ -49,11 +49,16 @@ out1:
     conf: {"subtype": "gate"}
     exec: LLM1 LLM2    
 
+out1_5:
+    type: copy
+    conf: {"subtype": "mux"}
+    exec: out1[0] out1[1]
+    
 # pack the responses together with a mux node. mux with one input accumulates data until eos
 out2:
     type: copy
     conf: {"subtype": "mux"}
-    exec: out1   
+    exec: out1_5   
 
 # format the response    
 PYO:
