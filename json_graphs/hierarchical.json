@@ -1,0 +1,122 @@
+{
+    "last_node_id": 17,
+    "last_link_id": 21,
+    "nodes": [
+        {
+            "id": 15,
+            "type": "llm/variable",
+            "pos": [
+                483,
+                72
+            ],
+            "size": {
+                "0": 323.58563232421875,
+                "1": 112
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "properties": {
+                "identifier": "c1",
+                "parameters": "examples/template_full.txt"
+            }
+        },
+        {
+            "id": 17,
+            "type": "llm/variable",
+            "pos": [
+                85,
+                65
+            ],
+            "size": {
+                "0": 323.58563232421875,
+                "1": 112
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "graph_name",
+                "parameters": "graphs/run_template.txt"
+            }
+        },
+        {
+            "id": 16,
+            "type": "llm/watch",
+            "pos": [
+                386,
+                267
+            ],
+            "size": {
+                "0": 419.1184387207031,
+                "1": 126.36959075927734
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 21,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 14,
+            "type": "llm/generic_node",
+            "pos": [
+                108,
+                268
+            ],
+            "size": {
+                "0": 210,
+                "1": 146.01058959960938
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null,
+                    "slot_index": 0
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        21
+                    ]
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "type: graph\ninit: \n    - {v:graph_name}\n    - {v:c1}"
+            }
+        }
+    ],
+    "links": [
+        [
+            21,
+            14,
+            0,
+            16,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
