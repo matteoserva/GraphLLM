@@ -25,7 +25,7 @@
     }
 
     //name to show
-    MyGraphNode.title = "Graph";
+    MyGraphNode.title = "Generic node";
 
     //function to call when the node is executed
     MyGraphNode.prototype.onExecute = function()
@@ -118,7 +118,40 @@
     
     //register in the system
     LiteGraph.registerNodeType("llm/graph", MyGraphNode );
-    
+
+    /* ********************** ******************* */
+    //node constructor class
+    function MyLLMCallNode()
+    {
+    this.addInput("in","string");
+
+    this.addOutput("out","string");
+
+    let tmpl = 'type: python\ninit: "test/python_hello_world.py"'
+
+    this.addWidget("text","Config","", { property: "conf"});
+
+    this.container = new DivContainer(this)
+    this.addCustomWidget( this.container);
+    //this.container.addElement(new CustomTextarea("Parameters","parameters"))
+
+    this.properties = {conf:""  };
+    this.container.addWidget("textarea","template",{ property: "template"})
+    this.setSize( this.computeSize() );
+    }
+
+    //name to show
+    MyLLMCallNode.title = "LLM Call";
+
+
+
+    MyLLMCallNode.prototype.onConnectionsChange = MyGraphNode.prototype.onConnectionsChange
+
+    //register in the system
+    LiteGraph.registerNodeType("llm/llm_call", MyLLMCallNode );
+
+
+
     //node constructor class
     function MyWatchNode()
     {

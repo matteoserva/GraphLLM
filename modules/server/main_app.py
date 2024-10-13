@@ -109,7 +109,7 @@ class ModelHandler():
         with open("/tmp/graph.json", "w") as f:
             a = json.loads(post_data)
             f.write(json.dumps(a, indent=4))
-        if len(filename > 1):
+        if len(filename) > 1:
             with open("json_graphs/" +filename + ".json", "w") as f:
                 a = json.loads(post_data)
                 f.write(json.dumps(a, indent=4))

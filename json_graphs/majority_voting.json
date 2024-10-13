@@ -1,87 +1,7 @@
 {
-    "last_node_id": 12,
-    "last_link_id": 15,
+    "last_node_id": 13,
+    "last_link_id": 18,
     "nodes": [
-        {
-            "id": 4,
-            "type": "llm/watch",
-            "pos": [
-                1494,
-                177
-            ],
-            "size": {
-                "0": 672.013671875,
-                "1": 255.43072509765625
-            },
-            "flags": {},
-            "order": 8,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 8,
-                    "slot_index": 0
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 9,
-            "type": "llm/graph",
-            "pos": [
-                891,
-                520
-            ],
-            "size": {
-                "0": 648.6378173828125,
-                "1": 177.576904296875
-            },
-            "flags": {},
-            "order": 7,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 9
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": 10
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": 11
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        8
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "Judge",
-            "properties": {
-                "parameters": "    type: stateless\n    init: templates/majority2.txt {v:c1}\n    conf: {\"temperature\":0.01, \"top_k\":20, \"grammar\":\"grammars/judge2.txt\"}"
-            }
-        },
         {
             "id": 12,
             "type": "llm/variable",
@@ -89,12 +9,12 @@
                 37,
                 47
             ],
-            "size": [
-                635.3016954589848,
-                112
-            ],
+            "size": {
+                "0": 635.3016967773438,
+                "1": 112
+            },
             "flags": {},
-            "order": 2,
+            "order": 0,
             "mode": 0,
             "properties": {
                 "identifier": "problem",
@@ -102,27 +22,82 @@
             }
         },
         {
-            "id": 11,
-            "type": "llm/virtual_source",
+            "id": 6,
+            "type": "llm/input",
             "pos": [
-                9,
-                510
+                704,
+                56
             ],
             "size": {
                 "0": 210,
-                "1": 58
+                "1": 88
             },
             "flags": {},
-            "order": 0,
+            "order": 1,
             "mode": 0,
             "outputs": [
                 {
                     "name": "out",
                     "type": "string",
                     "links": [
-                        13,
+                        12
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "title": "Problem",
+            "properties": {
+                "parameters": "{v:problem}"
+            }
+        },
+        {
+            "id": 10,
+            "type": "llm/virtual_sink",
+            "pos": [
+                945,
+                56
+            ],
+            "size": {
+                "0": 210,
+                "1": 85.2686538696289
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 12,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "problem"
+            }
+        },
+        {
+            "id": 11,
+            "type": "llm/virtual_source",
+            "pos": [
+                37,
+                367
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
                         14,
-                        15
+                        15,
+                        17
                     ],
                     "slot_index": 0
                 }
@@ -132,24 +107,24 @@
             }
         },
         {
-            "id": 8,
-            "type": "llm/graph",
+            "id": 13,
+            "type": "llm/llm_call",
             "pos": [
-                330,
-                709
+                305,
+                210
             ],
             "size": {
-                "0": 443.0579833984375,
-                "1": 136.4010009765625
+                "0": 310.1499938964844,
+                "1": 132
             },
             "flags": {},
-            "order": 5,
+            "order": 6,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 15
+                    "link": 17
                 },
                 {
                     "name": "N",
@@ -162,7 +137,7 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        11
+                        18
                     ],
                     "slot_index": 0
                 },
@@ -172,17 +147,17 @@
                     "links": null
                 }
             ],
-            "title": "Witness 3",
             "properties": {
-                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.1, \"top_k\":20}"
+                "conf": "{\"temperature\":0.01, \"top_k\":40}",
+                "template": "templates/testimone.txt"
             }
         },
         {
             "id": 7,
             "type": "llm/graph",
             "pos": [
-                338,
-                538
+                307,
+                387
             ],
             "size": {
                 "0": 443.0579833984375,
@@ -224,24 +199,24 @@
             }
         },
         {
-            "id": 5,
+            "id": 8,
             "type": "llm/graph",
             "pos": [
-                396,
-                320
+                308,
+                567
             ],
             "size": {
                 "0": 443.0579833984375,
                 "1": 136.4010009765625
             },
             "flags": {},
-            "order": 3,
+            "order": 5,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 13
+                    "link": 15
                 },
                 {
                     "name": "N",
@@ -254,7 +229,7 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        9
+                        11
                     ],
                     "slot_index": 0
                 },
@@ -264,65 +239,90 @@
                     "links": null
                 }
             ],
-            "title": "Witness 1",
+            "title": "Witness 3",
             "properties": {
-                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.01, \"top_k\":40}"
+                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.1, \"top_k\":20}"
             }
         },
         {
-            "id": 6,
-            "type": "llm/input",
+            "id": 9,
+            "type": "llm/graph",
             "pos": [
-                704,
-                56
+                861,
+                212
             ],
-            "size": [
-                210,
-                88
-            ],
+            "size": {
+                "0": 648.6378173828125,
+                "1": 177.576904296875
+            },
             "flags": {},
-            "order": 1,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        12
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "title": "Problem",
-            "properties": {
-                "parameters": "{v:problem}"
-            }
-        },
-        {
-            "id": 10,
-            "type": "llm/virtual_sink",
-            "pos": [
-                945,
-                56
-            ],
-            "size": [
-                210,
-                85.26865673065186
-            ],
-            "flags": {},
-            "order": 6,
+            "order": 7,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 12,
+                    "link": 18
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 10
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 11
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        8
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Judge",
+            "properties": {
+                "parameters": "    type: stateless\n    init: templates/majority2.txt {v:problem}\n    conf: {\"temperature\":0.01, \"top_k\":20, \"grammar\":\"grammars/judge2.txt\"}"
+            }
+        },
+        {
+            "id": 4,
+            "type": "llm/watch",
+            "pos": [
+                849,
+                442
+            ],
+            "size": [
+                813.6005103515629,
+                247.11969938964864
+            ],
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 8,
                     "slot_index": 0
                 }
             ],
-            "properties": {
-                "identifier": "problem"
-            }
+            "properties": {}
         }
     ],
     "links": [
@@ -331,14 +331,6 @@
             9,
             0,
             4,
-            0,
-            "string"
-        ],
-        [
-            9,
-            5,
-            0,
-            9,
             0,
             "string"
         ],
@@ -367,14 +359,6 @@
             "string"
         ],
         [
-            13,
-            11,
-            0,
-            5,
-            0,
-            "string"
-        ],
-        [
             14,
             11,
             0,
@@ -387,6 +371,22 @@
             11,
             0,
             8,
+            0,
+            "string"
+        ],
+        [
+            17,
+            11,
+            0,
+            13,
+            0,
+            "string"
+        ],
+        [
+            18,
+            13,
+            0,
+            9,
             0,
             "string"
         ]

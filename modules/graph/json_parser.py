@@ -26,6 +26,34 @@ class JsonParser():
         new_config["exec"] = val_exec
         return new_config
 
+    def _calc_exec(self,old_inputs,links):
+
+        new_inputs = [str(el["link"]) if el["link"] else None for el in old_inputs]
+        new_inputs = [links[el] if el else None for el in new_inputs]
+        new_inputs = [str(el[1]) + "[" + str(el[2]) + "]" if el else None for el in new_inputs]
+        val_exec = []
+        for vel in new_inputs:
+            if not vel:
+                break
+            val_exec.append(vel)
+        return val_exec
+
+
+    def parse_llm_call(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "stateless"
+        properties = old_config.get("properties", {})
+        template = properties.get("template", "")
+        conf = properties.get("conf", "")
+        conf = yaml.safe_load(conf)
+        if conf:
+            new_config["conf"] = conf
+        new_config["init"] = [template]
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = self._calc_exec(old_inputs,links)
+        return new_config
+
     def parse_input(self,old_config,links):
         new_config = {}
         new_config["type"] = "constant"
@@ -44,6 +72,7 @@ class JsonParser():
             val_exec.append(vel)
         new_config["exec"] = val_exec
         return new_config
+
 
     def parse_variable(self,old_config,links):
         new_config = {}
@@ -98,6 +127,8 @@ class JsonParser():
             return None
         if old_config["type"].startswith("llm/variable"):
             return self.parse_variable(old_config,links)
+        if old_config["type"].startswith("llm/llm_call"):
+            return self.parse_llm_call(old_config,links)
 
         return None
 
