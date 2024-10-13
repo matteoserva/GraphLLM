@@ -234,23 +234,17 @@ class GraphExecutor:
         clean_config = graph_utils.get_clean_config(clean_config)
 
 
-        #for i,el in enumerate(cl_args[1:],1):
-        #    rstr = "{v:c["+ str(i) + "]}"
-        #    clean_config = clean_config.replace("{}",rstr,1)
-
-        #variable_whitelist = ["current_date"]
-        #whitelisted_variables = {name:self.variables[name] for name in variable_whitelist if name in self.variables}
-        #clean_config, _ = solve_templates(clean_config, [], whitelisted_variables)
         self.variables["current_date"] = "23 Jul 2024"
         clean_config = clean_config.replace("{v:current_date}",self.variables["current_date"])
         graph_raw = graph_utils.parse_executor_graph(clean_config)
 
-        # TODO
-        # ora bisogna sostituire almeno i {}. con il cl_args originale, prima del try solve files
-        # oi anche i {v:c qualcosa}
-        # rocessare solo gli elementi dento init  e solo quelli che sono l'unico elemento'
-        # asciare stare i {vqualcosa } o i {} che sono parte di una stringa più grande
-        # prima dovrei usare i {v:c qualcosa
+        # assegno le variabili
+        for el in graph_raw:
+            if el["type"] == "variable":
+                conf = el.get("conf",{})
+                name = conf.get("name")
+                value = conf.get("value")
+                self.variables[name] = value
 
         # poi consumo gli input con i {}
         for a in graph_raw:
@@ -271,8 +265,9 @@ class GraphExecutor:
         
 
         #add output node if there is only one node
-        if len(graph_raw) == 1:
-            obj = {"name": "_O", "type": "copy","exec":[graph_raw[0]["name"]]}
+        executable_nodes = [el for el in graph_raw if el["type"] != "variable"]
+        if len(executable_nodes) == 1:
+            obj = {"name": "_O", "type": "copy","exec":[executable_nodes[0]["name"]]}
             graph_raw.append(obj)
 
         #add command_line node

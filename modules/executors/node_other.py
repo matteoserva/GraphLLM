@@ -164,6 +164,16 @@ class CopyNode:
             res[0] = base[attr_name]
         return res
 
+class VariableNode:
+    def __init__(self,*args):
+        pass
+
+    def set_parameters(self, args):
+        self.parameters = args
+
+    def __call__(self, *args):
+        return []
+
 class MemoryNode:
     def __init__(self,*args):
         self.parameters = {}
