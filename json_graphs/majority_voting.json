@@ -1,217 +1,44 @@
 {
-    "last_node_id": 11,
+    "last_node_id": 12,
     "last_link_id": 15,
     "nodes": [
         {
-            "id": 6,
-            "type": "llm/input",
+            "id": 4,
+            "type": "llm/watch",
             "pos": [
-                52,
-                41
-            ],
-            "size": [
-                788.6514894897463,
-                88
-            ],
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        12
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "title": "Problem",
-            "properties": {
-                "parameters": "compute the cube of the sum of the first 10 even natural numbers"
-            }
-        },
-        {
-            "id": 11,
-            "type": "llm/virtual_source",
-            "pos": [
-                84,
-                352
+                1494,
+                177
             ],
             "size": {
-                "0": 210,
-                "1": 58
+                "0": 672.013671875,
+                "1": 255.43072509765625
             },
             "flags": {},
-            "order": 1,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        13,
-                        14,
-                        15
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "problem"
-            }
-        },
-        {
-            "id": 5,
-            "type": "llm/graph",
-            "pos": [
-                375,
-                171
-            ],
-            "size": {
-                "0": 443.0579833984375,
-                "1": 136.4010009765625
-            },
-            "flags": {},
-            "order": 3,
+            "order": 8,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 13
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        9
-                    ],
+                    "link": 8,
                     "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
                 }
             ],
-            "title": "Witness 1",
-            "properties": {
-                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.01, \"top_k\":40}"
-            }
-        },
-        {
-            "id": 7,
-            "type": "llm/graph",
-            "pos": [
-                376,
-                356
-            ],
-            "size": {
-                "0": 443.0579833984375,
-                "1": 136.4010009765625
-            },
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 14
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        10
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "Witness 2",
-            "properties": {
-                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.05, \"top_k\":40}"
-            }
-        },
-        {
-            "id": 8,
-            "type": "llm/graph",
-            "pos": [
-                377,
-                537
-            ],
-            "size": {
-                "0": 443.0579833984375,
-                "1": 136.4010009765625
-            },
-            "flags": {},
-            "order": 5,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 15
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        11
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "Witness 3",
-            "properties": {
-                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.1, \"top_k\":20}"
-            }
+            "properties": {}
         },
         {
             "id": 9,
             "type": "llm/graph",
             "pos": [
-                935,
-                341
+                891,
+                520
             ],
             "size": {
-                "0": 210,
-                "1": 148
+                "0": 648.6378173828125,
+                "1": 177.576904296875
             },
             "flags": {},
-            "order": 6,
+            "order": 7,
             "mode": 0,
             "inputs": [
                 {
@@ -256,42 +83,234 @@
             }
         },
         {
-            "id": 4,
-            "type": "llm/watch",
+            "id": 12,
+            "type": "llm/variable",
             "pos": [
-                1185,
-                55
+                37,
+                47
             ],
             "size": [
-                672.0136894897466,
-                255.43073237304696
+                635.3016954589848,
+                112
             ],
             "flags": {},
-            "order": 7,
+            "order": 2,
             "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 8,
-                    "slot_index": 0
-                }
-            ],
-            "properties": {}
+            "properties": {
+                "identifier": "problem",
+                "parameters": "compute the cube of the sum of the first 10 even natural numbers"
+            }
         },
         {
-            "id": 10,
-            "type": "llm/virtual_sink",
+            "id": 11,
+            "type": "llm/virtual_source",
             "pos": [
-                933,
-                41
+                9,
+                510
             ],
             "size": {
                 "0": 210,
                 "1": 58
             },
             "flags": {},
-            "order": 2,
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        13,
+                        14,
+                        15
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "problem"
+            }
+        },
+        {
+            "id": 8,
+            "type": "llm/graph",
+            "pos": [
+                330,
+                709
+            ],
+            "size": {
+                "0": 443.0579833984375,
+                "1": 136.4010009765625
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 15
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        11
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Witness 3",
+            "properties": {
+                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.1, \"top_k\":20}"
+            }
+        },
+        {
+            "id": 7,
+            "type": "llm/graph",
+            "pos": [
+                338,
+                538
+            ],
+            "size": {
+                "0": 443.0579833984375,
+                "1": 136.4010009765625
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 14
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        10
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Witness 2",
+            "properties": {
+                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.05, \"top_k\":40}"
+            }
+        },
+        {
+            "id": 5,
+            "type": "llm/graph",
+            "pos": [
+                396,
+                320
+            ],
+            "size": {
+                "0": 443.0579833984375,
+                "1": 136.4010009765625
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 13
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        9
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Witness 1",
+            "properties": {
+                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.01, \"top_k\":40}"
+            }
+        },
+        {
+            "id": 6,
+            "type": "llm/input",
+            "pos": [
+                704,
+                56
+            ],
+            "size": [
+                210,
+                88
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        12
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "title": "Problem",
+            "properties": {
+                "parameters": "{v:problem}"
+            }
+        },
+        {
+            "id": 10,
+            "type": "llm/virtual_sink",
+            "pos": [
+                945,
+                56
+            ],
+            "size": [
+                210,
+                85.26865673065186
+            ],
+            "flags": {},
+            "order": 6,
             "mode": 0,
             "inputs": [
                 {

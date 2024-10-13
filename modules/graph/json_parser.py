@@ -45,6 +45,26 @@ class JsonParser():
         new_config["exec"] = val_exec
         return new_config
 
+    def parse_variable(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "variable"
+        properties = old_config.get("properties", {})
+        parameters = properties.get("parameters", "")
+
+        new_config["conf"] = {"name":properties["identifier"],"value":properties["parameters"]}
+
+        old_inputs = old_config.get("inputs", [])
+        new_inputs = [str(el["link"]) if el["link"] else None for el in old_inputs]
+        new_inputs = [links[el] if el else None for el in new_inputs]
+        new_inputs = [str(el[1]) + "[" + str(el[2]) + "]" if el else None for el in new_inputs]
+        val_exec = []
+        for vel in new_inputs:
+            if not vel:
+                break
+            val_exec.append(vel)
+        new_config["exec"] = val_exec
+        return new_config
+
     def parse_virtual(self,old_config,links):
         new_config = {}
         new_config["type"] = old_config["type"].split("/")[-1]
@@ -74,6 +94,10 @@ class JsonParser():
             return self.parse_input(old_config,links)
         if old_config["type"].startswith("llm/virtual_"):
             return self.parse_virtual(old_config,links)
+        if old_config["type"].startswith("llm/watch"):
+            return None
+        if old_config["type"].startswith("llm/variable"):
+            return self.parse_variable(old_config,links)
 
         return None
 
