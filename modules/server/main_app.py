@@ -163,6 +163,7 @@ class ModelHandler():
 
     def load(self):
         self.server.send_response(200)
+        self.server.send_header('Content-type', 'application/json')
         self.server.end_headers()
         params = self.server.path.split("/")[-1].split("?",1)[1]
         filename = params.split("=")[1]
@@ -172,6 +173,7 @@ class ModelHandler():
 
     def list(self):
         self.server.send_response(200)
+        self.server.send_header("Content-type","text/plain")
         self.server.end_headers()
         files = os.listdir("json_graphs/")
         files = [el[:-5] for el in files if el.endswith(".json")]
