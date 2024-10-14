@@ -21,22 +21,23 @@ class CustomTextarea {
         
         
         makeElement(node,canvas, parentElement)
-        {         
+        {
                 var dialog = parentElement
                 var div = document.createElement("div");
-                var text = document.createElement("div");
+                var text = document.createElement("div")
+                text.className = "nameText";
                 text.innerText = this.name
                 text.style="position:absolute; top:2px; right:4px; color:DarkGray; user-select: none"
                 div.appendChild(text)
                 div.style="position:relative";
                 var textarea = document.createElement("textarea");
                 div.appendChild(textarea)
-                textarea.class="value"
+                textarea.className="value"
                 textarea.style='resize:none;white-space: nowrap;border:0px;padding:0px' + this.margin + 'px'
                 textarea.style.backgroundColor= "black" 
                 textarea.style.color = "white"
                 textarea.style.width = "100%";
-                
+
 
                 
                 this.textarea = textarea
@@ -48,7 +49,7 @@ class CustomTextarea {
                 var dialog = parentElement
                 dialog.appendChild(this.div);
                 var textarea = this.textarea
-                textarea.addEventListener("focusout", function(event){console.log("focusout"), this.inFocus = false}.bind(this))
+                textarea.addEventListener("focusout", function(event){this.textareaUnfocus(node,textarea)}.bind(this))
                 textarea.addEventListener("focusin", function(event){this.textareaFocus(node,textarea)}.bind(this))
                 textarea.addEventListener("keyup", function(event){this.textChange(node)}.bind(this))
                 this.connected = true
@@ -100,29 +101,15 @@ class CustomTextarea {
             console.log("focusin");
             this.inFocus = true
             this.configureSize(this.H+this.margin)
-            //node.setProperty("parameters","ciao")
-            //textarea.style.height = "1px";
-            //var scrollHeight = textarea.scrollHeight;
-            //textarea.style.height = (15+ textarea.scrollHeight)+"px";
+	    this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="none"
         }
-        
-        /*updateTextarea(node,canvas,y,H)
-        {
 
-            var scale = canvas.ds.scale
-            var posX = node.pos[0] + 15 + canvas.ds.offset[0]
-            var posY = node.pos[1] + this.y + canvas.ds.offset[1]
-            posX *= scale 
-            posY *= scale 
-                this.dialog.style.left = posX + "px";
-            this.dialog.style.top = posY + "px";
-            var availWidth = (node.size[0]-30) + "px";
-            this.dialog.style.transform = "scale(" + canvas.ds.scale + ")"
-            this.dialog.style.transformOrigin = "top left"
-            var textarea = this.dialog.querySelector("textarea")
-            this.configureSize(node,textarea)
-        }*/
-        
+	textareaUnfocus(node,textarea)
+	{
+		console.log("focusout")
+		this.inFocus = false
+		this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="block"
+	}
 
         computeSize(widget_width)
         {

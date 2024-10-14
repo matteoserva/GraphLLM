@@ -159,7 +159,7 @@
     
     this.container = new DivContainer(this)
     this.addCustomWidget( this.container);
-    this.container.addWidget("textarea","Parameters",{ property: "parameters"})
+    this.container.addWidget("textarea","",{ property: "parameters"})
     
     var tmpl = ""
     this.properties = { };
