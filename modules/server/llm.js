@@ -21,7 +21,6 @@
 
     this.properties = {  };
     this.container.addWidget("textarea","Parameters",{ property: "parameters"})
-    this.setSize( this.computeSize() );
     }
 
     //name to show
@@ -137,7 +136,6 @@
 
     this.properties = {conf:""  };
     this.container.addWidget("textarea","template",{ property: "template"})
-    this.setSize( this.computeSize() );
     }
 
     //name to show
@@ -163,7 +161,6 @@
     
     var tmpl = ""
     this.properties = { };
-    this.setSize( this.computeSize() );
     }
 
     //name to show
@@ -186,14 +183,13 @@
     function MyInputNode()
     {
     this.addOutput("out","string");
-    
+
     this.container = new DivContainer(this)
     this.addCustomWidget( this.container);
     this.container.addWidget("textarea","Parameters",{ property: "parameters"})
-    
+
 
     this.properties = {  };
-    this.setSize( this.computeSize() );
     }
 
     //name to show
