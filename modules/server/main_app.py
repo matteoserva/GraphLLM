@@ -49,6 +49,7 @@ class WebExec():
         self.logger.addListener(self)
         self.logger.log("start")
         try:
+            self.executor = GraphExecutor(self.executor_config)
             self.executor.load_config(args)
             self.executor([])
         except Exception as e:
@@ -57,37 +58,8 @@ class WebExec():
         self.logger.deleteListeners()
         self.send_stop()
 
-
-    def start(self,filename):
-        args = [filename]
-
-        try:
-            self.executor = GraphExecutor(self.executor_config)
-
-            self.keep_running = True
-            self.t = Thread(target=self._run, args=(args,))
-            self.t.start()
-        except Exception as e:
-            pass
-
-    def ask_stop(self):
-        self.keep_running = False
-        try:
-            self.executor.stop()
-        except:
-            pass
-    def stop(self):
-        self.ask_stop()
-        self.t.join()
-        self.t = None
-    def wait(self):
-        if(self.t):
-            self.t.join()
-        self.t = None
     def run(self,filename):
-        self.start(filename)
-        self.wait()
-
+        self._run([filename])
 
 class ModelHandler():
     def __init__(self):
@@ -96,7 +68,7 @@ class ModelHandler():
     def send_prompt(self):
         self.server.send_response(200)
         self.server.end_headers()
-        
+
         content_length = int(self.server.headers['Content-Length'])
         post_data = self.server.rfile.read(content_length)
         with open("/tmp/grah.json","w") as f:
@@ -195,7 +167,7 @@ class HttpHandler(BaseHTTPRequestHandler):
     def __init__(self, model, *args, **kwargs):
         self.model = model
         self.model.server = self
-        
+
         super().__init__(*args, **kwargs)
 
     def do_GET(self):

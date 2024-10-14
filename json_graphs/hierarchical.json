@@ -41,40 +41,16 @@
             }
         },
         {
-            "id": 16,
-            "type": "llm/watch",
-            "pos": [
-                386,
-                267
-            ],
-            "size": {
-                "0": 419.1184387207031,
-                "1": 126.36959075927734
-            },
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 21,
-                    "slot_index": 0
-                }
-            ],
-            "properties": {}
-        },
-        {
             "id": 14,
             "type": "llm/generic_node",
             "pos": [
                 108,
                 268
             ],
-            "size": {
-                "0": 210,
-                "1": 146.01058959960938
-            },
+            "size": [
+                452,
+                136
+            ],
             "flags": {},
             "order": 2,
             "mode": 0,
@@ -103,6 +79,30 @@
             "properties": {
                 "parameters": "type: graph\ninit: \n    - {v:graph_name}\n    - {v:c1}"
             }
+        },
+        {
+            "id": 16,
+            "type": "llm/watch",
+            "pos": [
+                668,
+                270
+            ],
+            "size": {
+                "0": 419.1184387207031,
+                "1": 126.36959075927734
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 21,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
         }
     ],
     "links": [
