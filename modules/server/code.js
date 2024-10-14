@@ -40,7 +40,7 @@ var elem = document.createElement("span");
 elem.id = "LGEditorTopBarSelector";
 elem.className = "selector";
 elem.innerHTML = "";
-elem.innerHTML += "Examples: <span><input id='filename' maxlength='25' style='height: 30px'/><select style='height: 30px; width:20px'><option>Empty</option></select></span><button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='download'>Download</button> | ";
+elem.innerHTML += "Graphs: <span><input id='filename' maxlength='25' style='height: 30px'/><select style='height: 30px; width:20px'><option>Empty</option></select></span><button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='delete'>Delete</button><button class='btn' id='download'>Download</button> | ";
 editor.tools.appendChild(elem);
 var textBox = elem.querySelector("selector input#filename");
 

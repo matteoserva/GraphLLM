@@ -78,6 +78,11 @@ class ModelHandler():
         self.server.wfile.write(v2.encode('utf-8'))
         self.index += 1
 
+    def _is_valid_filename(self, filename):
+        if len(filename) > 1 and filename != "Empty" and filename.find("/") < 0:
+             return True
+        return False
+
     def save(self,post_data):
         params = self.server.path.split("/")[-1].split("?", 1)[1]
         filename = params.split("=")[1]
@@ -85,10 +90,22 @@ class ModelHandler():
         with open("/tmp/graph.json", "w") as f:
             a = json.loads(post_data)
             f.write(json.dumps(a, indent=4))
-        if len(filename) > 1:
+        if self._is_valid_filename(filename):
             with open("json_graphs/" +filename + ".json", "w") as f:
                 a = json.loads(post_data)
                 f.write(json.dumps(a, indent=4))
+        self.server.send_response(200)
+        self.server.end_headers()
+        self.server.wfile.write("ciao".encode())
+        return "ciao"
+
+    def delete(self,post_data):
+        params = self.server.path.split("/")[-1].split("?", 1)[1]
+        filename = params.split("=")[1]
+
+        if self._is_valid_filename(filename):
+            full_name = "json_graphs/" +filename + ".json"
+            os.remove(full_name)
         self.server.send_response(200)
         self.server.end_headers()
         self.server.wfile.write("ciao".encode())

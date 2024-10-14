@@ -19,6 +19,7 @@ class WebBrige {
     this.canvas = this.editor.graphcanvas;
     this.saveBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#save")
     this.loadBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#load")
+    this.deleteBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#delete")
     this.nameSelector = document.querySelector("div.litegraph .selector input#filename")
     this.select = document.querySelector("div.litegraph .selector select")
   }
@@ -30,6 +31,7 @@ class WebBrige {
     this.graph.onAfterStep = this.onAfterStep.bind(this)
     this.saveBtn.addEventListener("click",this.save.bind(this));
     this.loadBtn.addEventListener("click",this.load.bind(this));
+    this.deleteBtn.addEventListener("click",this.deleteFile.bind(this));
 
     this.graph.onBeforeStep = function()
     {
@@ -39,7 +41,7 @@ class WebBrige {
     }
     this.graph.onPlayEvent = this.onPlayEvent.bind(this)
     this.graph.onStopEvent = this.onStopEvent.bind(this)
-    
+
     //some examples
     //addDemo("rap battle", "/graph/load?file=rap_battle.json");
     this.loadList()
@@ -198,6 +200,19 @@ class WebBrige {
    xhr.setRequestHeader("Content-Type", "application/json")
    xhr.send(data);
    console.log("save called")
+   this.loadList()
+  }
+
+  deleteFile() {
+   this.graph.clear()
+    var e = this.nameSelector
+    var value = e.value;
+   var data = JSON.stringify( graph.serialize() );
+   let xhr = new XMLHttpRequest();
+   xhr.open('POST', '/graph/delete?file=' + value,false);
+   xhr.setRequestHeader("Content-Type", "application/json")
+   xhr.send(data);
+   console.log("delete called")
    this.loadList()
   }
 
