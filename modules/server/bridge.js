@@ -20,6 +20,7 @@ class WebBrige {
     this.saveBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#save")
     this.loadBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#load")
     this.deleteBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#delete")
+    this.newBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#new")
     this.nameSelector = document.querySelector("div.litegraph .selector input#filename")
     this.select = document.querySelector("div.litegraph .selector select")
   }
@@ -32,6 +33,7 @@ class WebBrige {
     this.saveBtn.addEventListener("click",this.save.bind(this));
     this.loadBtn.addEventListener("click",this.load.bind(this));
     this.deleteBtn.addEventListener("click",this.deleteFile.bind(this));
+    this.newBtn.addEventListener("click",this.newGraph.bind(this));
 
     this.graph.onBeforeStep = function()
     {
@@ -214,6 +216,10 @@ class WebBrige {
    xhr.send(data);
    console.log("delete called")
    this.loadList()
+  }
+
+  newGraph() {
+   this.graph.clear()
   }
 
   load() {
