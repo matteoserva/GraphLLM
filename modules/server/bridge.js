@@ -206,7 +206,7 @@ class WebBrige {
   }
 
   deleteFile() {
-   this.graph.clear()
+   //this.graph.clear()
     var e = this.nameSelector
     var value = e.value;
    var data = JSON.stringify( graph.serialize() );
@@ -216,6 +216,7 @@ class WebBrige {
    xhr.send(data);
    console.log("delete called")
    this.loadList()
+   this.nameSelector.value = ""
   }
 
   newGraph() {

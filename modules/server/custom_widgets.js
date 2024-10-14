@@ -32,8 +32,8 @@ class CustomTextarea {
                 div.style="position:relative";
                 var textarea = document.createElement("textarea");
                 div.appendChild(textarea)
-                textarea.className="value"
-                textarea.style='resize:none;white-space: nowrap;border:0px;padding:0px' + this.margin + 'px'
+                textarea.className="CustomTextarea"
+                textarea.style='resize:none; white-space: pre-wrap;border:0px;padding:0px' + this.margin + 'px'
                 textarea.style.backgroundColor= "black" 
                 textarea.style.color = "white"
                 textarea.style.width = "100%";
