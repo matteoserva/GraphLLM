@@ -80,7 +80,10 @@ class CustomTextarea {
             {
                 desiredHeight = (15+ textarea.scrollHeight)
                 textarea.style.width = "1px";
-                desiredWidth = Math.max(6+currentWidth,25+ textarea.scrollWidth)+ "px"
+                if((textarea.scrollWidth+10) > textarea.parentNode.clientWidth)
+		{
+                	desiredWidth = (10+ textarea.scrollWidth)+ "px"
+		}
             }
             desiredHeight = Math.max(availableSpace,desiredHeight,minSize)
             //this.dialog.style.width = desiredWidth
