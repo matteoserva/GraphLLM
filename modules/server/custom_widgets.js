@@ -153,7 +153,12 @@ class DivContainer {
                             that.setValue(k,val)
 
                     }
-                setTimeout(function(){this.parent.setSize( this.parent.computeSize())}.bind(this) );
+                setTimeout(function(){
+			let newSize = this.parent.computeSize();
+                        newSize[0] = Math.max(newSize[0],this.parent.size[0])
+                        newSize[1] = Math.max(newSize[1],this.parent.size[1])
+			this.parent.setSize( newSize)
+			}.bind(this) );
         }
 
         makeTextarea(node)
