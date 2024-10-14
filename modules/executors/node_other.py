@@ -178,11 +178,16 @@ class FileNode:
     def __init__(self,*args):
         pass
 
-    def set_parameters(self, args):
-        self.parameters = args
+    def load_config(self, args):
+        self.filename = args[0]
 
     def __call__(self, *args):
-        return args[0]
+        if len(args[0]) > 0:
+             with open(self.filename,"w") as f:
+                      f.write(args[0][0])
+        with open(self.filename) as f:
+           val = f.read()
+        return val
 
 
 class MemoryNode:

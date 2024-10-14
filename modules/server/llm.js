@@ -260,5 +260,22 @@
 
     //register in the system
     LiteGraph.registerNodeType("llm/variable", MyVariableNode );
+
+
+        //node constructor class
+    function MyFileNode()
+    {
+    this.addOutput("out","string");
+    this.addInput("in","string");
+
+    this.addWidget("text","filename","", { property: "filename"});
+    this.properties = { filename: "" };
+    }
+
+    //name to show
+    MyFileNode.title = "File";
+
+    //register in the system
+    LiteGraph.registerNodeType("llm/file", MyFileNode );
     
 })(this);

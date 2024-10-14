@@ -66,6 +66,17 @@ class JsonParser():
         new_config["exec"] = self._calc_exec(old_inputs,links)
         return new_config
 
+    def parse_file(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "file"
+        properties = old_config.get("properties", {})
+        template = properties.get("filename", "")
+        new_config["init"] = [template]
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = self._calc_exec(old_inputs,links)
+        return new_config
+
     def parse_input(self,old_config,links):
         new_config = {}
         new_config["type"] = "constant"
@@ -141,6 +152,8 @@ class JsonParser():
             return self.parse_variable(old_config,links)
         if old_config["type"].startswith("llm/llm_call"):
             return self.parse_llm_call(old_config,links)
+        if old_config["type"].startswith("llm/file"):
+            return self.parse_file(old_config,links)
 
         return None
 
