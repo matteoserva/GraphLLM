@@ -1,8 +1,12 @@
 import yaml
 import copy
+from .json_parser import JsonParser
 
 def get_clean_config(instructions_raw):
-    instruction_rows = yaml.safe_load(instructions_raw)
+    try:
+        instruction_rows = JsonParser().load_string(instructions_raw)
+    except:
+        instruction_rows = yaml.safe_load(instructions_raw)
     res = yaml.dump(instruction_rows, sort_keys=False)
     return res
 

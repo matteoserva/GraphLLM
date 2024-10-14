@@ -144,15 +144,12 @@ class JsonParser():
 
         return None
 
-    def load(self,filename):
-        with open(filename) as f:
-            v = f.read()
-
+    def load_string(self,v):
         jval = json.loads(v)
 
         links = {str(el[0]):el for el in jval["links"]}
         nodes = { str(el["id"]):el for el in jval["nodes"] if el["type"].startswith("llm/")}
-        print(jval)
+        #print(jval)
 
         new_nodes = {}
         for el in nodes:
@@ -161,6 +158,11 @@ class JsonParser():
                 if new_config:
                     new_nodes[el] = new_config
         return new_nodes
+
+    def load(self, filename):
+        with open(filename) as f:
+            v = f.read()
+        return self.load_string(v)
 
 if __name__ == "__main__":
     parser = JsonParser()
