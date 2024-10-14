@@ -220,6 +220,7 @@ class WebBrige {
 
   newGraph() {
    this.graph.clear()
+   this.nameSelector.value = ""
   }
 
   load() {
