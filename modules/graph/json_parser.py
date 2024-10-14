@@ -157,6 +157,19 @@ class JsonParser():
                 new_config = self.parse_node(old_config,links)
                 if new_config:
                     new_nodes[el] = new_config
+
+        virtual_sinks =   [new_nodes[el] for el in new_nodes if new_nodes[el]["type"] == "virtual_sink"]
+        virtual_sources = [new_nodes[el] for el in new_nodes if new_nodes[el]["type"] == "virtual_source"]
+        for el in virtual_sources:
+                identifier = el["conf"]["name"]
+                compatible_sinks = [e for e in new_nodes if new_nodes[e]["type"] == "virtual_sink" and new_nodes[e]["conf"]["name"] == identifier]
+                el["type"] = "copy"
+                el["exec"] = [compatible_sinks[0]]
+        
+        for el in virtual_sinks:
+                el["type"] = "copy"
+        
+
         return new_nodes
 
     def load(self, filename):

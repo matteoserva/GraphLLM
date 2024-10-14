@@ -174,7 +174,7 @@ class VariableNode:
     def __call__(self, *args):
         return []
 
-class VirtualNode:
+class FileNode:
     def __init__(self,*args):
         pass
 
