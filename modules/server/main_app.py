@@ -95,6 +95,7 @@ class ModelHandler():
                 a = json.loads(post_data)
                 f.write(json.dumps(a, indent=4))
         self.server.send_response(200)
+        self.server.send_header("Content-type","text/plain")
         self.server.end_headers()
         self.server.wfile.write("ciao".encode())
         return "ciao"
@@ -107,6 +108,7 @@ class ModelHandler():
             full_name = "json_graphs/" +filename + ".json"
             os.remove(full_name)
         self.server.send_response(200)
+        self.server.send_header("Content-type","text/plain")
         self.server.end_headers()
         self.server.wfile.write("ciao".encode())
         return "ciao"
