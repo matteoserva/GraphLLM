@@ -1,11 +1,16 @@
 
+class ClientCallback:
+    def __init__(self, print_response,logger_print):
+        self.print_response = print_response
+        self.logger_print = logger_print
+
+    def __call__(self, line):
+        if self.print_response:
+            self.logger_print(line, end="", flush=True)
+
 def send_chat(builder,client,client_parameters=None,print_response=True, logger_print=print):
-    r = client.send_prompt(builder,params=client_parameters)
-    ret = ""
-    for line in r:
-        if print_response:
-            logger_print(line, end="", flush=True)
-        ret = ret + line
+    callback = ClientCallback(print_response,logger_print)
+    ret = client.send_prompt(builder,params=client_parameters,callback = callback)
     if print_response and print_response != "partial":
         logger_print("")
     return ret

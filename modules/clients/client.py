@@ -119,9 +119,10 @@ class LLamaCppClient:
         self.context_size = max_context
         return resp
 
-    def _ricevi(self,req_params, pass_raw=False,callback):
+    def _ricevi(self,req_params, pass_raw,callback):
+        ret = ""
         with self.connetion_semaphore:
-            r1 = requests.post(**req_params)
+          with requests.post(**req_params) as r1:
             a = 1
             for line in r1.iter_lines():
                 # filter out keep-alive new lines
@@ -154,7 +155,8 @@ class LLamaCppClient:
                         tmp_res =json_decoded["content"]
                     if callback:
                         callback(tmp_res)
-                    yield tmp_res
+                    ret += str(tmp_res)
+        return ret
 
     def tokenize(self,p):
         url = "http://" + self.host + ":" + str(self.port) + "/tokenize"
