@@ -60,7 +60,9 @@
                   let numInputs = this.inputs.length
                   if(slot +1 == numInputs && !!d)
                   {
-                    this.addInput("N","string"); 
+                    var saved_size = this.size
+                    this.addInput("N","string");
+                    this.size[0] = saved_size[0]
                     //this.setSize( this.computeSize() );
                   }
               
@@ -76,8 +78,9 @@
                         }
                     }
                      for (let i = numInputs-1; i > maxInput+1; i--) {
-                      
+                             var saved_size = this.size
                             this.removeInput(i)
+                            this.size[0] = saved_size[0]
                             //this.setSize( this.computeSize() );
                      
                     }
@@ -90,28 +93,33 @@
                   let numElements = this.outputs.length
                   if(slot +1 == numElements && !!d)
                   {
+                    var saved_size = this.size
                     this.addOutput("N","string");
+                    this.size[0] = saved_size[0]
                     //this.setSize( this.computeSize() );
                   }
 
               }
               else
               {
+                setTimeout(function(){ // in case the disconnect is immediately followed by a connect
                     let numElements = this.outputs.length
                     let maxInput = 0;
                     for (let i = 1; i < numElements; i++) {
-                        if(!!this.outputs[i].link)
+                        if((!!this.outputs[i].links) && this.outputs[i].links.length > 0)
                         {
                             maxInput = i
                         }
                     }
                      for (let i = numElements-1; i > maxInput+1; i--) {
-
+                            var saved_size = this.size
                             this.removeOutput(i)
+                            this.size[0] = saved_size[0]
                             //this.setSize( this.computeSize() );
 
                     }
-                }
+               }.bind(this))
+               }
         }
     }
     
