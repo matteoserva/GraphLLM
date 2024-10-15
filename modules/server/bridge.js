@@ -34,6 +34,8 @@ class WebBrige {
     this.loadBtn.addEventListener("click",this.load.bind(this));
     this.deleteBtn.addEventListener("click",this.deleteFile.bind(this));
     this.newBtn.addEventListener("click",this.newGraph.bind(this));
+    document.querySelector("div.tools #playstepnode_button").remove()
+    document.querySelector("div.tools #livemode_button").remove()
 
     this.graph.onBeforeStep = function()
     {
