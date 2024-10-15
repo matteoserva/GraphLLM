@@ -161,7 +161,24 @@ class WebBrige {
         var nodes = names.map((el) => this.graph.getNodeById(el));
         nodes = nodes.filter(function( element ) { return !!element;    });
         this.canvas.selectNodes(nodes)
+        for (let index = 0; index < nodes.length; ++index) {
+		let node = nodes[index]
+                if(node.outputs && node.outputs.length > 0) { node.setOutputData(0,"")}
+	}
       }
+      if(obj.type == "print")
+      {
+         var name = obj.data[0].substr(1)
+         var value = obj.data[1]
+         var n = this.graph.getNodeById(name)
+         if((!!n) && n.outputs && n.outputs.length > 0)
+         {
+             var old = n.getOutputData(0)
+             var newVal = old + value
+             n.setOutputData(0,newVal)
+	 }
+      }
+
       if(obj.type != "print")
       {
         console.log(text, '\n');
