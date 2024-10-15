@@ -119,7 +119,7 @@ class LLamaCppClient:
         self.context_size = max_context
         return resp
 
-    def _ricevi(self,req_params, pass_raw=False):
+    def _ricevi(self,req_params, pass_raw=False,callback):
         with self.connetion_semaphore:
             r1 = requests.post(**req_params)
             a = 1
@@ -152,6 +152,8 @@ class LLamaCppClient:
                         #
                     else:
                         tmp_res =json_decoded["content"]
+                    if callback:
+                        callback(tmp_res)
                     yield tmp_res
 
     def tokenize(self,p):
@@ -182,7 +184,7 @@ class LLamaCppClient:
         #print(r3)
         return r3
     
-    def _send_prompt_text(self, p, params):
+    def _send_prompt_text(self, p, params,callback):
         tokens = self.tokenize(p)
         #detokenized = self.detokenize(tokens)
 
@@ -202,23 +204,23 @@ class LLamaCppClient:
         pass_raw = "n_probs" in a
 
         req_params = {"url":url,"data":data,"headers":headers,"stream":True}
-        g = self._ricevi(req_params,pass_raw)
+        g = self._ricevi(req_params,pass_raw,callback)
         return g
 
-    def _send_prompt_builder(self,p,params):
+    def _send_prompt_builder(self,p,params,callback):
         prompt = p._build()
-        return self._send_prompt_text(prompt,params)
+        return self._send_prompt_text(prompt,params,callback)
 
     def apply_format_templates(self,prompt):
         return self.formatter.apply_format_templates(prompt)
 
-    def send_prompt(self,p,params=None):
+    def send_prompt(self,p,params=None,callback=None):
         if params is None:
             params = self.client_parameters
         if isinstance(p,str):
-            return self._send_prompt_text(p,params)
+            return self._send_prompt_text(p,params,callback)
         else:
-            return self._send_prompt_builder(p,params)
+            return self._send_prompt_builder(p,params,callback)
 
 class Client:
 
