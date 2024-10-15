@@ -251,6 +251,10 @@ class DivContainer {
 
         remove()
         {
-            this.dialog.parentNode.removeChild(this.dialog)
+            if(this.dialog)
+	   {
+		this.dialog.remove()
+	   }
+           // this.dialog.parentNode.removeChild(this.dialog)
         }
 }
