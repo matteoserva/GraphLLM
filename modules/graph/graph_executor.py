@@ -8,6 +8,8 @@ import threading
 from modules.logging.logger import Logger
 import sys
 
+PARALLEL_JOBS=2
+
 class GraphNode:
     def __init__(self,graph,node_config):
         self.graph = graph
@@ -377,10 +379,10 @@ class GraphExecutor:
                 runnable = [i for i,v in enumerate(self.graph_nodes) if v.is_runnable()]
                 if len(runnable) == 0:
                     break
-                parallel_jobs = 2
+                parallel_jobs = PARALLEL_JOBS
                 if len(runnable) > parallel_jobs:
                     runnable = runnable[0:parallel_jobs]
-                if parallel_jobs > 1:
+                if True or parallel_jobs > 1:
                     self.logger.log("running", [self.graph_nodes[j].path for j in runnable])
                     sem = threading.Barrier(1+len(runnable))
                     tds = [threading.Thread(target=self.node_runner,args=[self.graph_nodes[i].execute,sem],daemon=True) for i in runnable]
