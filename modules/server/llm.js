@@ -21,6 +21,8 @@
 
     this.properties = {  };
     this.container.addWidget("textarea","Parameters",{ property: "parameters"})
+
+
     }
 
     //name to show

@@ -119,9 +119,9 @@ class CustomTextarea {
 
         draw(ctx, node, widget_width, y, H)
         {
-            
+
             this.configureSize(H,widget_width)
-            
+
         }
         setValue(k,v)
         {
@@ -153,6 +153,14 @@ class DivContainer {
                             that.setValue(k,val)
 
                     }
+                    var oldCollapse = this.parent.collapse.bind(this.parent)
+		    this.parent.collapse = function()
+		    {
+		     oldCollapse()
+                     this.onCollapse()
+		    }.bind(this)
+
+
                 setTimeout(function(){
 			let newSize = this.parent.computeSize();
                         newSize[0] = Math.max(newSize[0],this.parent.size[0])
@@ -160,6 +168,21 @@ class DivContainer {
 			this.parent.setSize( newSize)
 			}.bind(this) );
         }
+
+        onCollapse()
+	{
+		var collapsed = this.parent.flags.collapsed
+                if(collapsed)
+		{
+			this.dialog.style.display ="none"
+		}
+		else
+		{
+			this.dialog.style.display =""
+
+		}
+		//console.log(this.parent.flags.collapsed)
+	}
 
         makeTextarea(node)
         {
