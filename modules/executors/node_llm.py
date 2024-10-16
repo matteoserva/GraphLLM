@@ -52,7 +52,9 @@ class LlmExecutor(GenericExecutor):
 
     def _set_param(self,key,value):
         if key in ["sysprompt"]:
-            self.builder.set_param(key, value)
+            variables = self.graph_data["graph"].variables
+            new_value, _ = solve_templates(value,[],variables)
+            self.builder.set_param(key, new_value)
         elif key in ["force_system","sysprompt"]:
             self.builder.set_param(key, value)
         elif key == "print_prompt":

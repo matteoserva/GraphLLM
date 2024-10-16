@@ -220,7 +220,7 @@ class GraphExecutor:
 
 
         self.variables["current_date"] = "23 Jul 2024"
-        clean_config = clean_config.replace("{v:current_date}",self.variables["current_date"])
+        #clean_config = clean_config.replace("{v:current_date}",self.variables["current_date"])
         graph_raw = graph_utils.parse_executor_graph(clean_config)
 
         # assegno le variabili
