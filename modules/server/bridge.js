@@ -37,6 +37,7 @@ class WebBrige {
     document.querySelector("div.tools #playstepnode_button").remove()
     document.querySelector("div.tools #livemode_button").remove()
     document.querySelector("div.litegraph > div.header").style.zIndex = 1
+    document.querySelector("div.litegraph div.headerpanel.loadmeter").style.display="none"
     this.graph.onBeforeStep = function()
     {
         if(cb_bs) {cb_bs();}
