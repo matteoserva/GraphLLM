@@ -2,11 +2,11 @@ from ..parser import solve_templates
 
 class GenericExecutor:
     def __init__(self, initial_parameters):
-        """ initialize, conf - deps - init - """
+        """ initialize, set_parameters(conf) - set_dependencies(deps) - set_template(init) - setup_complete - execute"""
         pass
 
-    def initialize(self, *args,**kwargs):
-        pass
+    def initialize(self, node_graph_parameters, *args,**kwargs):
+        self.graph_data = node_graph_parameters
 
     def set_parameters(self, *args, **kwargs):
         pass
@@ -26,6 +26,9 @@ class GenericExecutor:
             init_args[i], _ = solve_templates(init_args[i], [], self.graph.variables)
         if hasattr(self,"load_config"):
             self.load_config(init_args)
+
+    def setup_complete(self, *args, **kwargs):
+        pass
 
 class ClientCallback:
     def __init__(self, print_response,logger_print):

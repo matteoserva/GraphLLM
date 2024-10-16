@@ -44,7 +44,8 @@ class GraphNode:
         return self.input_rule
 
     def setup_complete(self):
-        pass
+        if isinstance(self.executor,GenericExecutor):
+            self.executor.setup_complete()
 
     def execute(self):
         node=self

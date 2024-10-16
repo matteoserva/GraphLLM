@@ -125,14 +125,14 @@ class WebBrige {
           alert(message)
         }
   }
-  
+
   processChunk(chunk)
   {
       var lines = chunk.split("\n")
       lines.forEach((element) => {if (element.length > 0) {this.processMessage(element)}});
-      
+
   }
-  
+
   processMessage(text)
   {
       var obj = JSON.parse(text);
@@ -146,7 +146,7 @@ class WebBrige {
           if(values.length > 0)
           {
             for(let i = 0; i < values.length; i++)
-              
+
               n.setOutputData(i,values[i])
           }
         }
@@ -198,19 +198,19 @@ class WebBrige {
   {
      if(this.cb_as)
         	this.cb_as();
-        let n=this.graph.getNodeById("1")
-        //this.canvas.selectNodes([n])
-        //
-        //
-        //console.log("afterStep chiamato");
   }
-  
+
   stopGraph()
   {
-    if (graph.status != LGraph.STATUS_STOPPED) {
+    var wasRunning = (graph.status != LGraph.STATUS_STOPPED);
+    if (wasRunning) {
       this.editor.onPlayButton();
     }
     this.graph.stop(); // per sicurezza
+    if(wasRunning)
+    {
+	this.graph.runStep();
+    }
   }
   
   save() {
