@@ -24,7 +24,10 @@ class GraphNode:
         node_graph_parameters = {"graph":graph,"client":graph.client, "path":self.path,"logger":graph.logger}
         self.executor = ExecutorFactory.makeExecutor(el["type"],node_graph_parameters)
         if isinstance(self.executor,GenericExecutor):
-            self.executor.initialize(node_graph_parameters)
+            self.executor.graph_data = node_graph_parameters
+            self.executor.parameters = {}
+            self.executor.node = self
+            self.executor.initialize()
 
     def _get_input_rule(self):
         self.input_rule = "AND"
@@ -149,9 +152,7 @@ class GraphNode:
             pass
 
     def set_template(self,init_args):
-        if isinstance(self.executor,GenericExecutor):
-            self.executor.set_template(init_args)
-            return
+
         new_init_args = []
         for i, v in enumerate(init_args):
             if v == "{v:c*}":
@@ -161,7 +162,10 @@ class GraphNode:
         init_args = new_init_args
         for i, v in enumerate(init_args):
             init_args[i], _ = solve_templates(init_args[i], [], self.graph.variables)
-        self.executor.load_config(init_args)
+        if isinstance(self.executor, GenericExecutor):
+            self.executor.set_template(init_args)
+        else:
+            self.executor.load_config(init_args)
 
 
     def __getitem__(self, item):

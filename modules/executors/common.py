@@ -1,12 +1,28 @@
 from ..parser import solve_templates
 
-class GenericExecutor:
+# def metaclass_protect(*protected):
+#     """Returns a metaclass that protects all attributes given as strings"""
+#     class Protect(type):
+#         has_base = False
+#         def __new__(meta, name, bases, attrs):
+#             if meta.has_base:
+#                 for attribute in attrs:
+#                     if attribute in protected:
+#                         raise AttributeError('Overriding of attribute "%s" not allowed.'%attribute)
+#             meta.has_base = True
+#             klass = super().__new__(meta, name, bases, attrs)
+#             return klass
+#     return Protect
+
+#metaclass=metaclass_protect("pre_initialize","set_template")
+
+class GenericExecutor():
     def __init__(self, initial_parameters):
         """ initialize, set_parameters(conf) - set_dependencies(deps) - set_template(init) - setup_complete - execute"""
         pass
 
-    def initialize(self, node_graph_parameters, *args,**kwargs):
-        self.graph_data = node_graph_parameters
+    def initialize(self, *args,**kwargs):
+        pass
 
     def set_parameters(self, *args, **kwargs):
         pass
@@ -15,17 +31,7 @@ class GenericExecutor:
         pass
 
     def set_template(self, init_args, *args,**kwargs):
-        new_init_args = []
-        for i, v in enumerate(init_args):
-            if v == "{v:c*}":
-                new_init_args.extend(self.graph.variables["c*"])
-            else:
-                new_init_args.append(v)
-        init_args = new_init_args
-        for i, v in enumerate(init_args):
-            init_args[i], _ = solve_templates(init_args[i], [], self.graph.variables)
-        if hasattr(self,"load_config"):
-            self.load_config(init_args)
+        pass
 
     def setup_complete(self, *args, **kwargs):
         pass

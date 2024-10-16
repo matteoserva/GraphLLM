@@ -20,7 +20,7 @@ class LlmExecutor(GenericExecutor):
 
     def set_parameters(self,args):
             executor_parameters = self.graph.client_parameters
-            self.set_client_parameters(executor_parameters)
+            self._set_client_parameters(executor_parameters)
             new_obj = {}
             for key in ["stop", "n_predict","temperature","top_k"]:
                 if key in args:
@@ -32,11 +32,11 @@ class LlmExecutor(GenericExecutor):
                 new_obj[grammar["format"]] = grammar["schema"]
 
             executor_parameters = merge_params(executor_parameters, new_obj)
-            self.set_client_parameters(executor_parameters)
+            self._set_client_parameters(executor_parameters)
 
             for key in ["force_system","print_prompt","sysprompt","print_response"]:
                 if key in args:
-                    self.set_param(key,args[key])
+                    self._set_param(key,args[key])
 
 
     def set_dependencies(self,d):
@@ -47,18 +47,20 @@ class LlmExecutor(GenericExecutor):
            self.client = client
            self.builder=builder
 
-    def set_client_parameters(self,p):
+    def _set_client_parameters(self,p):
         self.client_parameters = p
 
-    def set_param(self,key,value):
-        if key in ["force_system","sysprompt"]:
+    def _set_param(self,key,value):
+        if key in ["sysprompt"]:
+            self.builder.set_param(key, value)
+        elif key in ["force_system","sysprompt"]:
             self.builder.set_param(key, value)
         elif key == "print_prompt":
             self.print_prompt = value
         elif key == "print_response":
             self.print_response = value
 
-    def load_config(self,cl_args=None):
+    def set_template(self,cl_args=None):
         for i,el in enumerate(cl_args):
             try:
                 cl_args[i] = readfile(el)
