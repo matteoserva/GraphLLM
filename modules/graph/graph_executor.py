@@ -23,7 +23,8 @@ class GraphNode:
         el = node_config
         node_graph_parameters = {"client":graph.client, "path":self.path,"logger":graph.logger}
         self.executor = ExecutorFactory.makeExecutor(el["type"],node_graph_parameters)
-
+        if isinstance(self.executor,GenericExecutor):
+            self.executor.initialize()
 
     def _get_input_rule(self):
         self.input_rule = "AND"

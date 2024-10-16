@@ -3,8 +3,9 @@ from ..parser import solve_templates
 from .common import send_chat,solve_placeholders
 from ..common import readfile
 from functools import partial
+from .common import GenericExecutor
 
-class LlmExecutor:
+class LlmExecutor(GenericExecutor):
     def __init__(self,node_graph_parameters):
         self.print_prompt=True
         self.print_response=True

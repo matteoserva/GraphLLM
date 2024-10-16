@@ -1,4 +1,11 @@
 
+class GenericExecutor:
+    def __init__(self):
+        pass
+
+    def initialize(self):
+        pass
+
 class ClientCallback:
     def __init__(self, print_response,logger_print):
         self.print_response = print_response
