@@ -1,12 +1,14 @@
 from ..formatter import PromptBuilder
 from ..parser import solve_templates
 from .common import send_chat,solve_placeholders
-from ..common import readfile
+from ..common import readfile, merge_params
 from functools import partial
 from .common import GenericExecutor
+from ..grammar import load_grammar
 
 class LlmExecutor(GenericExecutor):
     def __init__(self,node_graph_parameters):
+        super().__init__(node_graph_parameters)
         self.print_prompt=True
         self.print_response=True
         self.current_prompt="{}"
@@ -15,6 +17,27 @@ class LlmExecutor(GenericExecutor):
            self.set_dependencies({"client":node_graph_parameters["client"]})
         self.logger = node_graph_parameters["logger"]
         self.path = node_graph_parameters.get("path","/")
+
+    def set_parameters(self,args):
+            executor_parameters = self.graph.client_parameters
+            self.set_client_parameters(executor_parameters)
+            new_obj = {}
+            for key in ["stop", "n_predict","temperature","top_k"]:
+                if key in args:
+                    new_obj[key] = args[key]
+
+            if "grammar" in args:
+                grammarfile = args["grammar"]
+                grammar = load_grammar(grammarfile)
+                new_obj[grammar["format"]] = grammar["schema"]
+
+            executor_parameters = merge_params(executor_parameters, new_obj)
+            self.set_client_parameters(executor_parameters)
+
+            for key in ["force_system","print_prompt","sysprompt","print_response"]:
+                if key in args:
+                    self.set_param(key,args[key])
+
 
     def set_dependencies(self,d):
         if "client" in d:

@@ -54,4 +54,6 @@ class ExecutorFactory:
             executor = ExecNode()
         elif type == "file":
             executor = FileNode()
+
+        executor.graph = config.get("graph",None)
         return executor

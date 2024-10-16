@@ -1,9 +1,19 @@
 
 class GenericExecutor:
-    def __init__(self):
+    def __init__(self, initial_parameters):
+        """ initialize, conf - deps - init - """
         pass
 
-    def initialize(self):
+    def initialize(self, *args,**kwargs):
+        pass
+
+    def set_parameters(self, *args, **kwargs):
+        pass
+
+    def set_dependencies(self, *args, **kwargs):
+        pass
+
+    def set_template(self, *args, **kwargs):
         pass
 
 class ClientCallback:

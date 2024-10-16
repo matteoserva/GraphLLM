@@ -21,10 +21,10 @@ class GraphNode:
         self.path = graph.path + node_config["name"]
         node = {}
         el = node_config
-        node_graph_parameters = {"client":graph.client, "path":self.path,"logger":graph.logger}
+        node_graph_parameters = {"graph":graph,"client":graph.client, "path":self.path,"logger":graph.logger}
         self.executor = ExecutorFactory.makeExecutor(el["type"],node_graph_parameters)
         if isinstance(self.executor,GenericExecutor):
-            self.executor.initialize()
+            self.executor.initialize(node_graph_parameters)
 
     def _get_input_rule(self):
         self.input_rule = "AND"
@@ -138,33 +138,8 @@ class GraphNode:
         elif args is None:
             if hasattr(self.executor, "prepare"):
                 pass
-        elif self.type == "stateless" or self.type == "stateful" :
-            executor_parameters = self.graph.client_parameters
-            self.executor.set_client_parameters(executor_parameters)
-            new_obj = {}
-            for key in ["stop", "n_predict","temperature","top_k"]:
-                if key in args:
-                    new_obj[key] = args[key]
-
-            if "grammar" in args:
-                grammarfile = args["grammar"]
-                grammar = load_grammar(grammarfile)
-                new_obj[grammar["format"]] = grammar["schema"]
-
-            executor_parameters = merge_params(executor_parameters, new_obj)
-            self.executor.set_client_parameters(executor_parameters)
-
-            for key in ["force_system","print_prompt","sysprompt","print_response"]:
-                if key in args:
-                    self.executor.set_param(key,args[key])
-        elif self.type == "copy":
-            self.executor.set_parameters(args)
         elif self.type == "tool":
             self.executor.prepare(args)
-        elif self.type == "agent":
-            self.executor.set_parameters(args)
-        elif self.type == "client":
-            self.executor.set_parameters(args)
         elif hasattr(self.executor, "set_parameters"):
             self.executor.set_parameters(args)
         elif isinstance(args,dict):
