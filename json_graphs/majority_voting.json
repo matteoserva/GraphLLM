@@ -3,80 +3,6 @@
     "last_link_id": 18,
     "nodes": [
         {
-            "id": 12,
-            "type": "llm/variable",
-            "pos": [
-                37,
-                47
-            ],
-            "size": {
-                "0": 635.3016967773438,
-                "1": 112
-            },
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "properties": {
-                "identifier": "problem",
-                "parameters": "compute the cube of the sum of the first 10 even natural numbers"
-            }
-        },
-        {
-            "id": 6,
-            "type": "llm/input",
-            "pos": [
-                704,
-                56
-            ],
-            "size": {
-                "0": 210,
-                "1": 88
-            },
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        12
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "title": "Problem",
-            "properties": {
-                "parameters": "{v:problem}"
-            }
-        },
-        {
-            "id": 10,
-            "type": "llm/virtual_sink",
-            "pos": [
-                945,
-                56
-            ],
-            "size": {
-                "0": 210,
-                "1": 85.2686538696289
-            },
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 12,
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "problem"
-            }
-        },
-        {
             "id": 11,
             "type": "llm/virtual_source",
             "pos": [
@@ -245,11 +171,54 @@
             }
         },
         {
+            "id": 12,
+            "type": "llm/variable",
+            "pos": [
+                75,
+                53
+            ],
+            "size": {
+                "0": 635.3016967773438,
+                "1": 112
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "properties": {
+                "identifier": "problem",
+                "parameters": "compute the cube of the sum of the first 10 even natural numbers"
+            }
+        },
+        {
+            "id": 4,
+            "type": "llm/watch",
+            "pos": [
+                782,
+                57
+            ],
+            "size": [
+                869.9137224609381,
+                271.1446062744142
+            ],
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 8,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
             "id": 9,
             "type": "llm/generic_node",
             "pos": [
-                861,
-                212
+                859,
+                382
             ],
             "size": {
                 "0": 648.6378173828125,
@@ -301,28 +270,59 @@
             }
         },
         {
-            "id": 4,
-            "type": "llm/watch",
+            "id": 6,
+            "type": "llm/input",
             "pos": [
-                849,
-                442
+                875,
+                605
             ],
             "size": [
-                813.6005103515629,
-                247.11969938964864
+                210.3070224609378,
+                88
             ],
             "flags": {},
-            "order": 8,
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        12
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "title": "Problem",
+            "properties": {
+                "parameters": "{v:problem}"
+            }
+        },
+        {
+            "id": 10,
+            "type": "llm/virtual_sink",
+            "pos": [
+                1126,
+                606
+            ],
+            "size": [
+                210.132222460938,
+                74.99270627441422
+            ],
+            "flags": {},
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 8,
+                    "link": 12,
                     "slot_index": 0
                 }
             ],
-            "properties": {}
+            "properties": {
+                "identifier": "problem"
+            }
         }
     ],
     "links": [
