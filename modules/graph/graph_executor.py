@@ -125,11 +125,10 @@ class GraphNode:
         return runnable
 
     def set_dependencies(self,deps):
-        r = list(deps.values())
-        #print(r)
-        if self.type=="stateless" or self.type=="stateful":
+        if isinstance(self.executor,GenericExecutor):
             self.executor.set_dependencies(deps)
         else:
+            r = list(deps.values())
             self.executor.set_dependencies(r)
 
     def set_config(self,args):
@@ -149,6 +148,9 @@ class GraphNode:
             pass
 
     def set_template(self,init_args):
+        if isinstance(self.executor,GenericExecutor):
+            self.executor.set_template(init_args)
+            return
         new_init_args = []
         for i, v in enumerate(init_args):
             if v == "{v:c*}":
