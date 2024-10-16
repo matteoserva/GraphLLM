@@ -36,7 +36,7 @@ class WebBrige {
     this.newBtn.addEventListener("click",this.newGraph.bind(this));
     document.querySelector("div.tools #playstepnode_button").remove()
     document.querySelector("div.tools #livemode_button").remove()
-
+    document.querySelector("div.litegraph > div.header").style.zIndex = 1
     this.graph.onBeforeStep = function()
     {
         if(cb_bs) {cb_bs();}

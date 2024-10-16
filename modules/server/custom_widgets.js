@@ -167,6 +167,17 @@ class DivContainer {
                         newSize[1] = Math.max(newSize[1],this.parent.size[1])
 			this.parent.setSize( newSize)
 			}.bind(this) );
+               this.drawCounter = 0;
+               this.parent.onBounding = function(out)
+		{
+                        if(this.drawCounter == 0)
+			{
+				
+				if(this.dialog){this.dialog.style.display="none"}
+			}
+                	this.drawCounter = 0;
+
+		}.bind(this)
         }
 
         onCollapse()
@@ -223,9 +234,9 @@ class DivContainer {
             this.configureSize(node,textarea,H)
             var numChildren = this.children.length
             this.H = numChildren * this.height
-            
+
         }
-        
+
 
         computeSize(widget_width)
         {
@@ -249,6 +260,8 @@ class DivContainer {
             var numChildren = this.children.length
             var childrenSpace = (availableSpace-5)/numChildren
             this.children.forEach(function(v,i,a){v.draw(ctx, node, widget_width, y, childrenSpace)})
+            this.drawCounter=1;
+            this.dialog.style.display=""
         }
         
         addElement(element)
