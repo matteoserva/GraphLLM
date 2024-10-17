@@ -8,21 +8,20 @@ class CustomTextarea {
         this.type = "custom"
         this.options = {multiline:true}
         this.y=0
-        this.div = this.makeElement()
+        this.div = this.makeElement(parent)
         
         this.inFocus = false
         this.margin = 5
         this.property = options.property
-        this.connected = false
         this.parent = parent
         
     }
     
     
     
-    makeElement(node,canvas, parentElement)
+    makeElement(parentNode)
     {
-        var dialog = parentElement
+        var dialog = parentNode
         var div = document.createElement("div");
         var text = document.createElement("div")
         text.className = "nameText";
@@ -30,6 +29,7 @@ class CustomTextarea {
         text.style="position:absolute; top:2px; right:4px; color:DarkGray; user-select: none"
         div.appendChild(text)
         div.style="position:relative";
+        div.style.height = "100%";
         var textarea = document.createElement("textarea");
         div.appendChild(textarea)
         textarea.className="CustomTextarea"
@@ -37,21 +37,19 @@ class CustomTextarea {
         textarea.style.backgroundColor= "black" 
         textarea.style.color = "white"
         textarea.style.width = "100%";
-        
+        textarea.style.height = "100%";
         this.textarea = textarea
-        return div
         
-    }
-    appendElement(parentElement)
-    {         
-        var dialog = parentElement
-        dialog.appendChild(this.div);
-        var textarea = this.textarea
         textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
         textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
-        this.connected = true
+        return div
         
+    }
+    
+    appendElement(dialog)
+    {
+        dialog.appendChild(this.div);
     }
     
     textChange()
@@ -65,12 +63,40 @@ class CustomTextarea {
     
     configureSize(aSpace,hSpace)
     {
-        var availableSpace = aSpace - this.margin
         var textarea = this.textarea
+
+        if (this.inFocus)
+        {
+            textarea.style.width = "1px";
+            textarea.style.height = "1px";
+            textarea.style.minHeight = ""
+            textarea.style.minWidth = ""
+            
+            var minHeight = (textarea.scrollHeight);
+            var minWidth = (textarea.scrollWidth);
+            textarea.style.width = "100%";
+            textarea.style.height = "100%";
+            var currentWidth = textarea.clientWidth
+            var currentHeight = textarea.clientHeight
+            
+            
+            textarea.style.minHeight = (minHeight+10) + "px"
+            textarea.style.minWidth = (minWidth+15)  + "px"
+        }
+        else
+        {
+                    textarea.style.width = "100%";
+            textarea.style.height = "100%";
+            textarea.style.minHeight = ""
+            textarea.style.minWidth = ""
+        }
+        
+        return
+        var availableSpace = aSpace - this.margin
+        
         textarea.style.height = "1px";
-        var scrollHeight = textarea.scrollHeight;
-        var scrollWidth = textarea.scrollWidth;
-        var currentWidth = textarea.clientWidth
+        
+        
         var desiredHeight = 30
         
         var minSize = 30;
@@ -106,6 +132,7 @@ class CustomTextarea {
     {
         console.log("focusout")
         this.inFocus = false
+        this.configureSize()
         this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="block"
     }
     
@@ -117,7 +144,6 @@ class CustomTextarea {
     
     draw(ctx, node, widget_width, y, H)
     {
-        
         this.configureSize(H,widget_width)
         
     }
@@ -125,7 +151,11 @@ class CustomTextarea {
     {
         this.textarea.value=v
     }
-    
+    getMinHeight()
+    {
+       
+        return 50;
+    }
 }
 
 class DivContainer {
@@ -200,7 +230,7 @@ class DivContainer {
 
     }
     
-    attachToCanvas(node)
+    appendElement(node)
     {
         var canvas = node.graph.list_of_graphcanvas[0]
         var dialog = this.dialog
@@ -215,9 +245,9 @@ class DivContainer {
     }
     
     
-    updateTextarea(node,canvas,y,H)
+    updateTextarea(node,canvas,y,availableSpace)
     {
-        this.dialog.style.width = (node.size[0]-30) + "px";
+        //this.dialog.style.width = (node.size[0]-30) + "px";
         var scale = canvas.ds.scale
         var posX = node.pos[0] + 15 + canvas.ds.offset[0]
         var posY = node.pos[1] + this.saved_y + canvas.ds.offset[1]
@@ -228,8 +258,10 @@ class DivContainer {
         this.dialog.style.width = (node.size[0]-30) + "px";
         this.dialog.style.transform = "scale(" + canvas.ds.scale + ")"
         this.dialog.style.transformOrigin = "top left"
+        this.dialog.style.height = (availableSpace-10) + "px"
+        this.dialog.style.display = "inline-block"
         var textarea = this.dialog.querySelector("textarea")
-        this.configureSize(node,textarea,H)
+        this.configureSize(node,textarea,availableSpace)
         var numChildren = this.children.length
         this.H = numChildren * this.height
         
@@ -238,7 +270,21 @@ class DivContainer {
     
     computeSize(widget_width)
     {
-        var res = [widget_width, this.H]
+        var minHeight = 0;
+        for(let i = 0; i < this.children.length; i++)
+        {
+            var childMinHeight = 0
+            if(this.children[i].getMinHeight)
+            {
+                    childMinHeight = this.children[i].getMinHeight()
+            }
+            minHeight += childMinHeight;
+        }
+        if(minHeight<50)
+        {
+                minHeight = 50;
+        }
+        var res = [widget_width, minHeight]
         return res
     }
     
@@ -250,16 +296,26 @@ class DivContainer {
         if (!this.attached)
         {
             //var canvas = node.graph.list_of_graphcanvas[0]
-            this.attachToCanvas(node)
+            this.appendElement(node)
             
         }
-        this.updateTextarea(node,node.graph.list_of_graphcanvas[0],y,this.H)
+        
         var availableSpace = node.size[1] - y
+        this.updateTextarea(node,node.graph.list_of_graphcanvas[0],y,availableSpace)
         var numChildren = this.children.length
-        var childrenSpace = (availableSpace-5)/numChildren
-        this.children.forEach(function(v,i,a){v.draw(ctx, node, widget_width, y, childrenSpace)})
+        var childrenSpace = (availableSpace-5)
+        for(let i = 0; i < numChildren; i++)
+        {
+            var child = this.children[i]
+            var remainingChildren = numChildren-i
+            var childSpace = childrenSpace/remainingChildren
+            child.draw(ctx, node, widget_width, y, childSpace)
+        }
+        
+        
         // not neede this.drawCounter=1;
-        this.dialog.style.display=""
+        this.dialog.style.display="flex"
+        this.dialog.style.flexDirection="column"
     }
     
     addElement(element)
@@ -270,8 +326,16 @@ class DivContainer {
     }
     addWidget(type, name, options)
     {
-        var elem = new CustomTextarea(this, name,options)
-        this.addElement(elem)
+        if(type == "list")
+        {
+            var elem = new CustomList(this, name,options)
+            this.addElement(elem)
+        }
+        else
+        {
+            var elem = new CustomTextarea(this, name,options)
+            this.addElement(elem)
+        }
     }
     
     notifyValue(k,val)
