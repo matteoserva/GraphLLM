@@ -38,25 +38,23 @@ class CustomTextarea {
         textarea.style.color = "white"
         textarea.style.width = "100%";
         
-        
-        
         this.textarea = textarea
         return div
         
     }
-    appendElement(node,canvas, parentElement)
+    appendElement(parentElement)
     {         
         var dialog = parentElement
         dialog.appendChild(this.div);
         var textarea = this.textarea
-        textarea.addEventListener("focusout", function(event){this.textareaUnfocus(node,textarea)}.bind(this))
-        textarea.addEventListener("focusin", function(event){this.textareaFocus(node,textarea)}.bind(this))
-        textarea.addEventListener("keyup", function(event){this.textChange(node)}.bind(this))
+        textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
+        textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
+        textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
         this.connected = true
         
     }
     
-    textChange(node)
+    textChange()
     {
         var value = this.textarea.value
         if(this.property)
@@ -96,7 +94,7 @@ class CustomTextarea {
     }
     
     
-    textareaFocus(node,textarea)
+    textareaFocus(textarea)
     {
         console.log("focusin");
         this.inFocus = true
@@ -104,7 +102,7 @@ class CustomTextarea {
         this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="none"
     }
     
-    textareaUnfocus(node,textarea)
+    textareaUnfocus(textarea)
     {
         console.log("focusout")
         this.inFocus = false
@@ -144,6 +142,7 @@ class DivContainer {
         this.children = []
         this.options = {}
         this.parent = parent
+        this.attached = false
         this.parent.onRemoved = function(){this.remove()}.bind(this)
         var that = this
         this.parent.onPropertyChanged= function( k, val )
@@ -168,19 +167,8 @@ class DivContainer {
             this.parent.setSize( newSize)
         }.bind(this) );
         
-        /*
-         * not needed anymore 
-         *               this.drawCounter = 0;
-         *               this.parent.onBounding = function(out)
-         *                {
-         *                                if(this.drawCounter == 0)
-         *                    {
-         *                        
-         *                        if(this.dialog){this.dialog.style.display="none"}
-    }
-    this.drawCounter = 0;
-    
-    }.bind(this)*/
+        this.makeElement()
+        
     }
     
     onCollapse()
@@ -195,22 +183,29 @@ class DivContainer {
             this.dialog.style.display =""
             
         }
-        //console.log(this.parent.flags.collapsed)
+        
     }
     
-    makeTextarea(node)
+    makeElement()
     {
-        var canvas = node.graph.list_of_graphcanvas[0]           
+                
         var dialog = document.createElement("div");
         dialog.style.position = "absolute";
         dialog.innerHTML = "";
         
         dialog.style.height = this.height + "px";
         dialog.style.backgroundColor= "black" 
-        canvas.canvas.parentNode.appendChild(dialog);
-        this.dialog = dialog
-        this.children.forEach(function(v,i,a){v.appendElement(node,canvas,dialog)})
         
+        this.dialog = dialog
+
+    }
+    
+    attachToCanvas(node)
+    {
+        var canvas = node.graph.list_of_graphcanvas[0]
+        var dialog = this.dialog
+        canvas.canvas.parentNode.appendChild(dialog);
+        this.attached = true
     }
     
     configureSize(node,textarea,H)
@@ -252,10 +247,10 @@ class DivContainer {
         //this.H = 2*H
         this.saved_y = y;
         
-        if (!this.dialog)
+        if (!this.attached)
         {
             //var canvas = node.graph.list_of_graphcanvas[0]
-            this.makeTextarea(node)
+            this.attachToCanvas(node)
             
         }
         this.updateTextarea(node,node.graph.list_of_graphcanvas[0],y,this.H)
@@ -270,6 +265,7 @@ class DivContainer {
     addElement(element)
     {
         this.children.push(element)
+        element.appendElement(this.dialog)
         
     }
     addWidget(type, name, options)
@@ -294,6 +290,5 @@ class DivContainer {
         {
             this.dialog.remove()
         }
-        // this.dialog.parentNode.removeChild(this.dialog)
     }
 }
