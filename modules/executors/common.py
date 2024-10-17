@@ -21,6 +21,9 @@ class GenericExecutor():
         """ initialize, set_parameters(conf) - set_dependencies(deps) - set_template(init) - setup_complete - execute"""
         pass
 
+    def get_properties(self):
+        return self.properties
+
     def initialize(self, *args,**kwargs):
         pass
 

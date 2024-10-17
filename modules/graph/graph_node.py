@@ -2,6 +2,12 @@ from modules.executors import *
 import sys
 
 class GraphNode:
+
+    @staticmethod
+    def make_graph_node(graph, node_config):
+        node = GraphNode(graph, node_config)
+        return node
+
     def __init__(self,graph,node_config):
         self.graph = graph
         self.free_runs = 0
@@ -15,9 +21,10 @@ class GraphNode:
         el = node_config
         node_graph_parameters = {"graph":graph,"client":graph.client, "path":self.path,"logger":graph.logger}
         self.executor = ExecutorFactory.makeExecutor(el["type"],node_graph_parameters)
+        self.executor.graph = graph
         if isinstance(self.executor,GenericExecutor):
             self.executor.graph_data = node_graph_parameters
-            self.executor.parameters = {}
+            self.executor.properties = {"free_runs": 0, "input_rule":"AND", "input_active": []}
             self.executor.node = self
 
     def initialize(self):
@@ -25,12 +32,15 @@ class GraphNode:
             self.executor.initialize()
 
     def _get_input_rule(self):
-        self.input_rule = "AND"
-        props = None
-        if hasattr(self.executor, "get_properties"):
+        if isinstance(self.executor, GenericExecutor):
             props = self.executor.get_properties()
-        elif hasattr(self.executor, "properties"):
-            props = self.executor.properties
+        else:
+            self.input_rule = "AND"
+            props = None
+            if hasattr(self.executor, "get_properties"):
+                props = self.executor.get_properties()
+            elif hasattr(self.executor, "properties"):
+                props = self.executor.properties
 
         if props is not None:
             if "input_rule" in props:
@@ -169,6 +179,3 @@ class GraphNode:
     def __setitem__(self, key, value):
         setattr(self,key,value)
 
-def _make_graph_node(graph,node_config):
-    node = GraphNode(graph, node_config)
-    return node

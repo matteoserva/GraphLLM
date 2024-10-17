@@ -1,71 +1,19 @@
 import json
 from .common import GenericExecutor
 
-class SequenceExecutor:
-    def __init__(self,client):
+class CopyNode(GenericExecutor):
+    """
+    no subtype: copy inputs to output
+    gate: scan inputs and copy one at each iterations
+    mux: if multiple inputs, take any. index is second output
+    mux: in one onput, accumulate untile {p:eos} (second output is number of elements?)
+    demux: take a input and index, fills the output at index
+    repeat: repeats the input N times as specified in free_runs
+    log: save to file (deprecated by filenode)
+    """
 
-        self.execRow = StatelessExecutor(client)
-        self.client_parameters = None
+    node_type = "copy"
 
-    def set_client_parameters(self,p):
-        self.execRow.set_client_parameters(p)
-
-    def load_config(self,cl_args=None):
-        cl_args[0] = try_solve_files([cl_args[0]])[0]
-        for el in cl_args[1:]:
-            cl_args[0] = cl_args[0].replace("{}",el,1)
-        self.instructions_raw = cl_args[0]
-        return cl_args
-
-    def _execute_row(self,inputs,variables={}):
-        for i in range(len(inputs)):
-            try:
-                p=readfile(inputs[i])
-                inputs[i] = p
-            except:
-                pass
-        m,_ = solve_templates(inputs[0],inputs[1:],variables)
-        res = self.execRow([m])
-        return res
-
-    def _execute_list(self,instructions, cl_args):
-        pos = 1
-        variables={}
-        res = None
-        var_c = ["base"]*(1+len(cl_args))
-        var_r = ["base"]*(1+len(instructions))
-        for i,v in enumerate(cl_args):
-            idx = i+1
-            var_c[idx] = v
-            stri = "c" + str(idx)
-            variables[stri] = v
-        variables["c"] = var_c
-        variables["r"] = var_r
-        for instr in instructions:
-            res = self._execute_row(instr,variables)
-            fn = "/tmp/llm_exec_" + str(pos) + ".txt"
-            f = open(fn,"w")
-            f.write(res)
-            f.close()
-            variables[str(pos)] = res
-            var_r[pos] = res
-            var_r[0] = res #pos 0 contiene sempre l'ultima
-            pos = pos + 1
-        return res
-
-    def __call__(self,prompt):
-        # for i,el in enumerate(prompt):
-        #     try:
-        #         prompt[i] = readfile(el)
-        #     except:
-        #         pass
-        lista_istruzioni = self.instructions_raw
-        instructions = [ [ es  for es in el.strip().split(" ") if len(es) > 0] for el in lista_istruzioni.strip().split("\n") if not el.startswith("#")]
-        res = self._execute_list(instructions, prompt)
-        return res
-
-
-class CopyNode:
     def __init__(self,*args):
         self.parameters = {}
         self._properties = {"input_rule":"AND"}
@@ -166,6 +114,8 @@ class CopyNode:
         return res
 
 class VariableNode(GenericExecutor):
+    node_type = "variable"
+
     def __init__(self,*args):
         pass
 
@@ -182,11 +132,12 @@ class VariableNode(GenericExecutor):
     def __call__(self, *args):
         return []
 
-class FileNode:
+class FileNode(GenericExecutor):
+    node_type = "file"
     def __init__(self,*args):
         pass
 
-    def load_config(self, args):
+    def set_template(self, args):
         self.filename = args[0]
 
     def __call__(self, *args):
@@ -198,7 +149,11 @@ class FileNode:
         return val
 
 
-class MemoryNode:
+class MemoryNode(GenericExecutor):
+    node_type = "memory"
+    """
+    outputs the accumulated inputs so far
+    """
     def __init__(self,*args):
         self.parameters = {}
         self._properties = {"input_rule":"AND"}

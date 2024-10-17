@@ -109,6 +109,7 @@ class LlmExecutor(GenericExecutor):
             self.builder.set_param("sysprompt", new_value)
 
 class StatelessExecutor(LlmExecutor):
+    node_type = "stateless"
     def __init__(self,client):
         super().__init__(client)
 
@@ -121,6 +122,7 @@ class StatelessExecutor(LlmExecutor):
         return res
 
 class StatefulExecutor(LlmExecutor):
+    node_type = "stateful"
     def __init__(self,client):
         super().__init__(client)
 

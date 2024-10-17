@@ -2,8 +2,10 @@ import copy
 import subprocess
 from ..common import PythonInterpreter
 from ..common import readfile
+from .common import GenericExecutor
 
-class PythonExecutor:
+class PythonExecutor(GenericExecutor):
+    node_type = "python"
     def __init__(self,*args):
         self.base_subst = "<<<<PYTHONSUBST>>>>"
         self.base_template = self.base_subst
@@ -14,7 +16,7 @@ class PythonExecutor:
         self.path = args[0].get("path", "/")
         pass
 
-    def load_config(self,args):
+    def set_template(self,args):
         for i,el in enumerate(args):
             try:
                 args[i] = readfile(el)
@@ -63,11 +65,12 @@ class PythonExecutor:
 
 
 
-class ExecNode:
+class ExecNode(GenericExecutor):
+    node_type = "exec"
     def __init__(self,*args):
         pass
 
-    def load_config(self,args):
+    def set_template(self,args):
         self.args = args
 
     def __call__(self,*args):

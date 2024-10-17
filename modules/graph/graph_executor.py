@@ -7,7 +7,7 @@ from ..grammar import load_grammar
 import threading
 from modules.logging.logger import Logger
 import sys
-from .graph_node import GraphNode, _make_graph_node
+from .graph_node import GraphNode
 
 
 PARALLEL_JOBS=2
@@ -79,7 +79,7 @@ class GraphExecutor:
 
         graph_nodes = []
         for el in node_configs:
-            node = _make_graph_node(self,el)
+            node = GraphNode.make_graph_node(self,el)
             graph_nodes.append(node)
 
         nodes_map = {el["name"]:el for el in graph_nodes}

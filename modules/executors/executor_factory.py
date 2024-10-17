@@ -6,9 +6,21 @@ from .node_tools import *
 from .node_inputs import *
 from .node_exec import *
 from ..logging.logger import Logger
+import sys, inspect
+from .common import GenericExecutor
 
 def default_logger(*args,**kwargs):
     print(*args,**kwargs)
+
+def _load_executor_classes():
+    res = inspect.getmembers(sys.modules[__name__], inspect.isclass)
+    res = [el[1] for el in res if issubclass(el[1], GenericExecutor)]
+    res = {el.node_type: el for el in res if hasattr(el, "node_type")}
+    return res
+
+_available_executors = _load_executor_classes()
+
+
 
 class ExecutorFactory:
     
@@ -22,10 +34,8 @@ class ExecutorFactory:
         full_config["path"] = config.get("path","/")
 
         executor=None
-        if type == "stateless":
-            executor = StatelessExecutor(full_config)
-        elif type == "stateful":
-            executor = StatefulExecutor(full_config)
+        if type in _available_executors:
+            executor = _available_executors[type](full_config)
         elif type == "constant":
             executor = ConstantNode()
         elif type == "agent":
@@ -34,26 +44,12 @@ class ExecutorFactory:
             executor = ToolExecutor()
         elif type == "list":
             executor = ListNode()
-        elif type == "copy":
-            executor = CopyNode()
-        elif type == "memory":
-            executor = MemoryNode()
-        elif type == "variable":
-            executor = VariableNode()
         elif type == "graph":
             executor = GraphExecutor(full_config)
-        elif type == "python":
-            executor = PythonExecutor(full_config)
         elif type == "llamatool":
             executor = LlamaTool()
         elif type == "client":
             executor = Client()
         elif type == "user":
             executor = UserInputNode()
-        elif type == "exec":
-            executor = ExecNode()
-        elif type == "file":
-            executor = FileNode()
-
-        executor.graph = config.get("graph",None)
         return executor
