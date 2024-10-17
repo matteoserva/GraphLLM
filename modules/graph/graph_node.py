@@ -19,6 +19,9 @@ class GraphNode:
             self.executor.graph_data = node_graph_parameters
             self.executor.parameters = {}
             self.executor.node = self
+
+    def initialize(self):
+        if isinstance(self.executor, GenericExecutor):
             self.executor.initialize()
 
     def _get_input_rule(self):

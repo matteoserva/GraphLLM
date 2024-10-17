@@ -26,16 +26,12 @@ class GraphExecutor:
         self.path = executor_config.get("path","") + "/"
         self.client_parameters = executor_config.get("client_parameters",None)
 
-
         self.client = client
         self.variables={"c": {}, "r":{}}
         self.force_stop = False
 
     def set_client_parameters(self,p):
         self.client_parameters = p
-        #self.execRow.set_client_parameters(p)
-
-
 
     def load_config(self,cl_args=None):
         try_solve_files(cl_args)
@@ -45,18 +41,8 @@ class GraphExecutor:
         clean_config = cl_args[0]
         clean_config = graph_utils.get_clean_config(clean_config)
 
-
         self.variables["current_date"] = "23 Jul 2024"
-        #clean_config = clean_config.replace("{v:current_date}",self.variables["current_date"])
         graph_raw = graph_utils.parse_executor_graph(clean_config)
-
-        # assegno le variabili
-        # for el in graph_raw:
-        #     if el["type"] == "variable":
-        #         conf = el.get("conf",{})
-        #         name = conf.get("name")
-        #         value = conf.get("value")
-        #         self.variables[name] = value
 
         # poi consumo gli input con i {}
         for a in graph_raw:
@@ -73,15 +59,6 @@ class GraphExecutor:
             self.variables[stri] = v
             self.variables["c"][str(idx)] = v
         self.variables["c*"] = cl_args[1:]
-
-        # # connetto i virtual node
-        # virtual_sinks = {el["conf"]["name"]: el["name"] for el in graph_raw if el["type"] == "virtual_sink"}
-        # virtual_sources = [el for el in graph_raw if el["type"] == "virtual_source"]
-        # for el in virtual_sources:
-        #     ident = el["conf"]["name"]
-        #     source = virtual_sinks[ident]
-        #     el["exec"] = [source]
-
 
         #add output node if there is only one node
         executable_nodes = [el for el in graph_raw if el["type"] != "variable"]
@@ -100,7 +77,6 @@ class GraphExecutor:
         node_connections = graph_utils.create_arcs(graph_raw)
         node_configs = graph_raw
 
-
         graph_nodes = []
         for el in node_configs:
             node = _make_graph_node(self,el)
@@ -111,27 +87,33 @@ class GraphExecutor:
         node_names = [self.path + el["name"] for el in graph_nodes]
         self.logger.log("names", node_names)
 
+        # step: initialize
+        for i, node in enumerate(graph_nodes):
+            node.initialize()
+
+        # step: set_parameters
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]
-            if "conf" in config:
-                node.set_config(config["conf"])
-            else:
-                node.set_config(None)
+            node.set_config(config.get("conf",None))
 
+        # step: set dependencies
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]
             if "deps" in config:
                 solved_deps = {el:nodes_map[config["deps"][el]].executor for el in config["deps"]}
                 node.set_dependencies(solved_deps)
 
+        # step: set template
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]
             if "init" in config:
                 node.set_template(config["init"])
 
+        # step: setup complete
         for _,node in enumerate(graph_nodes):
             node.setup_complete()
 
+        # preparing the connections
         for i,el in enumerate(node_connections):
             num_inputs = len(el["deps"])
             num_outputs = len(el["forwards"])
