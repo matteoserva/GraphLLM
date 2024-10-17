@@ -1,4 +1,5 @@
 import json
+from .common import GenericExecutor
 
 class SequenceExecutor:
     def __init__(self,client):
@@ -164,11 +165,18 @@ class CopyNode:
             res[0] = base[attr_name]
         return res
 
-class VariableNode:
+class VariableNode(GenericExecutor):
     def __init__(self,*args):
         pass
 
+    def initialize(self):
+        pass
+
     def set_parameters(self, args):
+        conf = self.node.config["conf"]
+        graph = self.node.graph
+        variables = self.node.graph.variables
+        variables[conf["name"]] = conf["value"]
         self.parameters = args
 
     def __call__(self, *args):
