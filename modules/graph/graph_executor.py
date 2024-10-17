@@ -22,15 +22,10 @@ class GraphExecutor:
             self.logger = executor_config["logger"]
         else:
             self.logger = Logger()
-        if "path" in executor_config:
-            self.path = executor_config["path"] + "/"
-        else:
-            self.path = "/"
 
-        if "client_parameters" in executor_config:
-            self.client_parameters = executor_config["client_parameters"]
-        else:
-            self.client_parameters = None
+        self.path = executor_config.get("path","") + "/"
+        self.client_parameters = executor_config.get("client_parameters",None)
+
 
         self.client = client
         self.variables={"c": {}, "r":{}}
@@ -175,6 +170,31 @@ class GraphExecutor:
                 node["outputs"][source_port] = None
                 pass
 
+    def _execute_nodes(self,runnable):
+        parallel_jobs = PARALLEL_JOBS
+        if len(runnable) > parallel_jobs:
+            runnable = runnable[0:parallel_jobs]
+        if True or parallel_jobs > 1:
+            self.logger.log("running", [self.graph_nodes[j].path for j in runnable])
+            sem = threading.Barrier(1 + len(runnable))
+            tds = [threading.Thread(target=self.node_runner, args=[self.graph_nodes[i].execute, sem], daemon=True) for i in runnable]
+            for el in tds:
+                el.start()
+            sem.wait()  # this can except
+        else:
+            for i in runnable:
+                self.logger.log("running", [i])
+                self.graph_nodes[i].execute()
+        for i in runnable:
+            res = self.graph_nodes[i]["last_output"]
+            self.logger.log("output", self.path + self.graph_nodes[i]["name"], res)
+            # res = self.graph_nodes[i].execute()
+            config = self.node_configs[i]
+            name = config["name"]
+            rname = "r" + name
+            self.variables[rname] = res
+            self.variables["r"][name] = res
+
     def node_runner(self,func,sem):
         try:
             func()
@@ -191,32 +211,10 @@ class GraphExecutor:
         input_node["inputs"] = input_data
         try:
             while not self.force_stop:
-                runnable = [i for i,v in enumerate(self.graph_nodes) if v.is_runnable()]
+                runnable = [i for i, v in enumerate(self.graph_nodes) if v.is_runnable()]
                 if len(runnable) == 0:
-                    break
-                parallel_jobs = PARALLEL_JOBS
-                if len(runnable) > parallel_jobs:
-                    runnable = runnable[0:parallel_jobs]
-                if True or parallel_jobs > 1:
-                    self.logger.log("running", [self.graph_nodes[j].path for j in runnable])
-                    sem = threading.Barrier(1+len(runnable))
-                    tds = [threading.Thread(target=self.node_runner,args=[self.graph_nodes[i].execute,sem],daemon=True) for i in runnable]
-                    for el in tds:
-                        el.start()
-                    sem.wait() #this can except
-                else:
-                    for i in runnable:
-                        self.logger.log("running", [i])
-                        self.graph_nodes[i].execute()
-                for i in runnable:
-                    res = self.graph_nodes[i]["last_output"]
-                    self.logger.log("output", self.path + self.graph_nodes[i]["name"],res)
-                    #res = self.graph_nodes[i].execute()
-                    config = self.node_configs[i]
-                    name = config["name"]
-                    rname = "r" + name
-                    self.variables[rname] = res
-                    self.variables["r"][name] = res
+                    return
+                self._execute_nodes(runnable)
                 self._execute_arcs()
         except KeyboardInterrupt:
             print("")
