@@ -166,7 +166,7 @@ class WebBrige {
         this.canvas.selectNodes(nodes)
         for (let index = 0; index < nodes.length; ++index) {
 		let node = nodes[index]
-                if(node.outputs && node.outputs.length > 0) { node.setOutputData(0,"")}
+                if(node.outputs && node.outputs.length > 0) { node.print_log = ""}
 	}
       }
       if(obj.type == "print")
@@ -176,8 +176,9 @@ class WebBrige {
          var n = this.graph.getNodeById(name)
          if((!!n) && n.outputs && n.outputs.length > 0)
          {
-             var old = n.getOutputData(0)
+             var old = n.print_log || ""
              var newVal = old + value
+             n.print_log = newVal
              n.setOutputData(0,newVal)
 	 }
       }

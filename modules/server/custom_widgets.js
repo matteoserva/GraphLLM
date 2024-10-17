@@ -52,6 +52,11 @@ class CustomTextarea {
         dialog.appendChild(this.div);
     }
     
+    detachElement()
+    {
+        this.div.remove()
+    }
+    
     textChange()
     {
         var value = this.textarea.value
@@ -199,6 +204,17 @@ class DivContainer {
         
         this.makeElement()
         
+        this.drawCounter = 0;
+        this.parent.onBounding = function(out)
+        {
+            if(this.drawCounter == 0)
+            {
+                
+                if(this.dialog){this.dialog.style.display="none"}
+            }
+            this.drawCounter = 0;
+        }.bind(this)
+        
     }
     
     onCollapse()
@@ -264,6 +280,7 @@ class DivContainer {
         this.configureSize(node,textarea,availableSpace)
         var numChildren = this.children.length
         this.H = numChildren * this.height
+        this.drawCounter = 0;
         
     }
     
