@@ -169,14 +169,15 @@ class VariableNode(GenericExecutor):
     def __init__(self,*args):
         pass
 
-    def initialize(self): # The variables must be set before other nodes are configured( llm sysprompt)
+    def initialize(self):
+        pass
+
+    def set_parameters(self, args):
+        self.parameters = args
         conf = self.node.config["conf"]
         graph = self.node.graph
         variables = self.node.graph.variables
         variables[conf["name"]] = conf["value"]
-
-    def set_parameters(self, args):
-        self.parameters = args
 
     def __call__(self, *args):
         return []

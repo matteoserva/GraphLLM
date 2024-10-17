@@ -1,5 +1,5 @@
 {
-    "last_node_id": 17,
+    "last_node_id": 19,
     "last_link_id": 27,
     "nodes": [
         {
@@ -9,12 +9,12 @@
                 314,
                 368
             ],
-            "size": [
-                320.2509002685547,
-                170.5172815322876
-            ],
+            "size": {
+                "0": 320.25091552734375,
+                "1": 170.5172882080078
+            },
             "flags": {},
-            "order": 5,
+            "order": 7,
             "mode": 0,
             "inputs": [
                 {
@@ -63,7 +63,7 @@
                 "1": 108
             },
             "flags": {},
-            "order": 7,
+            "order": 9,
             "mode": 0,
             "inputs": [
                 {
@@ -104,12 +104,12 @@
                 650,
                 559
             ],
-            "size": [
-                439.2509002685547,
-                213.5172815322876
-            ],
+            "size": {
+                "0": 439.25091552734375,
+                "1": 213.5172882080078
+            },
             "flags": {},
-            "order": 6,
+            "order": 8,
             "mode": 0,
             "inputs": [
                 {
@@ -150,12 +150,12 @@
                 -10,
                 411
             ],
-            "size": [
-                304.79489892578135,
-                230.25628320312512
-            ],
+            "size": {
+                "0": 304.7948913574219,
+                "1": 128
+            },
             "flags": {},
-            "order": 3,
+            "order": 5,
             "mode": 0,
             "inputs": [
                 {
@@ -191,49 +191,6 @@
                         19
                     ],
                     "slot_index": 1
-                }
-            ],
-            "title": "merge1",
-            "properties": {
-                "parameters": "    type: copy\n    conf: {\"subtype\": \"gate\"}"
-            }
-        },
-        {
-            "id": 6,
-            "type": "llm/generic_node",
-            "pos": [
-                1110,
-                6
-            ],
-            "size": {
-                "0": 210,
-                "1": 108
-            },
-            "flags": {},
-            "order": 2,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 7,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "number",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        12,
-                        16
-                    ],
-                    "slot_index": 0
                 },
                 {
                     "name": "N",
@@ -241,9 +198,9 @@
                     "links": null
                 }
             ],
-            "title": "Rapper 2",
+            "title": "merge1",
             "properties": {
-                "parameters": "    type: stateful\n    conf: { \"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt blue red"
+                "parameters": "    type: copy\n    conf: {\"subtype\": \"gate\"}"
             }
         },
         {
@@ -253,12 +210,12 @@
                 473,
                 -47
             ],
-            "size": [
-                431.8568989257815,
-                223.90028320312507
-            ],
+            "size": {
+                "0": 431.8569030761719,
+                "1": 223.90028381347656
+            },
             "flags": {},
-            "order": 1,
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
@@ -291,7 +248,7 @@
             ],
             "title": "Rapper 1",
             "properties": {
-                "parameters": "    type: stateful\n    conf: {\"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt red blue"
+                "parameters": "    type: stateful\n    conf: {\"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt {v:topic1} {v:topic2}"
             }
         },
         {
@@ -301,12 +258,12 @@
                 -42,
                 -61
             ],
-            "size": [
-                416.3308989257814,
-                336.0562832031251
-            ],
+            "size": {
+                "0": 416.3309020996094,
+                "1": 336.0562744140625
+            },
             "flags": {},
-            "order": 0,
+            "order": 2,
             "mode": 0,
             "inputs": [
                 {
@@ -352,7 +309,7 @@
                 "1": 453
             },
             "flags": {},
-            "order": 4,
+            "order": 6,
             "mode": 0,
             "inputs": [
                 {
@@ -363,6 +320,92 @@
                 }
             ],
             "properties": {}
+        },
+        {
+            "id": 18,
+            "type": "llm/variable",
+            "pos": [
+                672,
+                249
+            ],
+            "size": {
+                "0": 210,
+                "1": 112
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "properties": {
+                "identifier": "topic1",
+                "parameters": "red"
+            }
+        },
+        {
+            "id": 19,
+            "type": "llm/variable",
+            "pos": [
+                905,
+                330
+            ],
+            "size": {
+                "0": 210,
+                "1": 112
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "topic2",
+                "parameters": "blue"
+            }
+        },
+        {
+            "id": 6,
+            "type": "llm/generic_node",
+            "pos": [
+                1110,
+                6
+            ],
+            "size": [
+                632.6028269287115,
+                139.09126750488286
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 7,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "number",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        12,
+                        16
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Rapper 2",
+            "properties": {
+                "parameters": "    type: stateful\n    conf: { \"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt {v:topic2} {v:topic1}"
+            }
         }
     ],
     "links": [

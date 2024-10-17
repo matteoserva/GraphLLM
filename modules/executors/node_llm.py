@@ -13,6 +13,8 @@ class LlmExecutor(GenericExecutor):
         self.print_response=True
         self.current_prompt="{}"
         self.client_parameters = None
+        self.sysprompt = None
+        self.builder = PromptBuilder()
         if "client" in node_graph_parameters:
            self.set_dependencies({"client":node_graph_parameters["client"]})
         self.logger = node_graph_parameters["logger"]
@@ -42,19 +44,17 @@ class LlmExecutor(GenericExecutor):
     def set_dependencies(self,d):
         if "client" in d:
            client = d["client"]
-           builder = PromptBuilder()
+           builder = self.builder
            builder.load_model(client.get_model_name())
            self.client = client
-           self.builder=builder
+
 
     def _set_client_parameters(self,p):
         self.client_parameters = p
 
     def _set_param(self,key,value):
         if key in ["sysprompt"]:
-            variables = self.graph_data["graph"].variables
-            new_value, _ = solve_templates(value,[],variables)
-            self.builder.set_param(key, new_value)
+            self.sysprompt = value
         elif key in ["force_system","sysprompt"]:
             self.builder.set_param(key, value)
         elif key == "print_prompt":
@@ -102,7 +102,11 @@ class LlmExecutor(GenericExecutor):
             messages = builder.add_response(str(res))
         return resp
 
-
+    def setup_complete(self):
+        if self.sysprompt:
+            variables = self.graph_data["graph"].variables
+            new_value, _ = solve_templates(self.sysprompt, [], variables)
+            self.builder.set_param("sysprompt", new_value)
 
 class StatelessExecutor(LlmExecutor):
     def __init__(self,client):
