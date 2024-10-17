@@ -179,8 +179,11 @@ class MemoryNode(GenericExecutor):
 
     def __call__(self,*args):
         res = list(*args)
-        val = self._json_parse(res[0])
-        self._stack.append(val)
+        try:
+            val = self._json_parse(res[0])
+            self._stack.append(val)
+        except:
+            self._stack.append(res[0])
         outval = "\n".join(self._stack)
         out = [outval]
         return out

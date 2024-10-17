@@ -55,6 +55,9 @@ class JsonParser():
         new_config = {}
         new_config["type"] = "stateless"
         properties = old_config.get("properties", {})
+        subtype = properties.get("subtype", "stateless")
+        if(subtype == "stateful"):
+            new_config["type"] = "stateful"
         template = properties.get("template", "")
         conf = properties.get("conf", "")
         conf = yaml.safe_load(conf)
@@ -72,6 +75,17 @@ class JsonParser():
         properties = old_config.get("properties", {})
         template = properties.get("filename", "")
         new_config["init"] = [template]
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = self._calc_exec(old_inputs,links)
+        return new_config
+
+    def parse_list(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "list"
+        properties = old_config.get("properties", {})
+        template = properties.get("parameters", [])
+        new_config["init"] = template
 
         old_inputs = old_config.get("inputs", [])
         new_config["exec"] = self._calc_exec(old_inputs,links)
@@ -154,6 +168,8 @@ class JsonParser():
             return self.parse_llm_call(old_config,links)
         if old_config["type"].startswith("llm/file"):
             return self.parse_file(old_config,links)
+        if old_config["type"].startswith("llm/list"):
+            return self.parse_list(old_config,links)
 
         return None
 

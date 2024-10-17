@@ -57,7 +57,7 @@ class CustomTextarea {
         var value = this.textarea.value
         if(this.property)
         {
-            this.parent.notifyValue(this.property,value)
+            this.parent.notifyValue(this,this.property,value)
         }
     }
     
@@ -224,7 +224,7 @@ class DivContainer {
         dialog.innerHTML = "";
         
         dialog.style.height = this.height + "px";
-        dialog.style.backgroundColor= "black" 
+        //dialog.style.backgroundColor= "black" 
         
         this.dialog = dialog
 
@@ -316,6 +316,14 @@ class DivContainer {
         // not neede this.drawCounter=1;
         this.dialog.style.display="flex"
         this.dialog.style.flexDirection="column"
+        var mySize = this.computeSize()
+        if(mySize[1] > availableSpace)
+        {
+                var saved_x = this.parent.size[0]
+                this.parent.setSize(this.parent.computeSize())
+            this.parent.size[0] = saved_x
+            this.parent.setDirtyCanvas(true, true);
+        }
     }
     
     addElement(element)
@@ -338,7 +346,7 @@ class DivContainer {
         }
     }
     
-    notifyValue(k,val)
+    notifyValue(me, k,val)
     {
         this.parent.setProperty(k,val)
     }
