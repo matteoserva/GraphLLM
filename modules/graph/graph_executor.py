@@ -194,6 +194,7 @@ class GraphExecutor:
             rname = "r" + name
             self.variables[rname] = res
             self.variables["r"][name] = res
+            self.last_output = res
 
     def node_runner(self,func,sem):
         try:
@@ -205,7 +206,7 @@ class GraphExecutor:
         self.force_stop = True
 
     def __call__(self, input_data):
-        res = None
+        self.last_output = None
         self.force_stop = False
         input_node = [el for el in self.graph_nodes if el["name"] == "_I"][0]
         input_node["inputs"] = input_data
@@ -213,10 +214,10 @@ class GraphExecutor:
             while not self.force_stop:
                 runnable = [i for i, v in enumerate(self.graph_nodes) if v.is_runnable()]
                 if len(runnable) == 0:
-                    return
+                    break
                 self._execute_nodes(runnable)
                 self._execute_arcs()
         except KeyboardInterrupt:
             print("")
             return [None]
-        return res
+        return self.last_output
