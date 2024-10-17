@@ -167,33 +167,36 @@ class DivContainer {
                         newSize[1] = Math.max(newSize[1],this.parent.size[1])
 			this.parent.setSize( newSize)
 			}.bind(this) );
+                
+               /*
+                * not needed anymore 
                this.drawCounter = 0;
                this.parent.onBounding = function(out)
-		{
-                        if(this.drawCounter == 0)
-			{
-				
-				if(this.dialog){this.dialog.style.display="none"}
-			}
-                	this.drawCounter = 0;
+                {
+                                if(this.drawCounter == 0)
+                    {
+                        
+                        if(this.dialog){this.dialog.style.display="none"}
+                    }
+                            this.drawCounter = 0;
 
-		}.bind(this)
+                }.bind(this)*/
         }
 
         onCollapse()
-	{
-		var collapsed = this.parent.flags.collapsed
-                if(collapsed)
-		{
-			this.dialog.style.display ="none"
-		}
-		else
-		{
-			this.dialog.style.display =""
+        {
+            var collapsed = this.parent.flags.collapsed
+                    if(collapsed)
+            {
+                this.dialog.style.display ="none"
+            }
+            else
+            {
+                this.dialog.style.display =""
 
-		}
-		//console.log(this.parent.flags.collapsed)
-	}
+            }
+            //console.log(this.parent.flags.collapsed)
+        }
 
         makeTextarea(node)
         {
@@ -260,7 +263,7 @@ class DivContainer {
             var numChildren = this.children.length
             var childrenSpace = (availableSpace-5)/numChildren
             this.children.forEach(function(v,i,a){v.draw(ctx, node, widget_width, y, childrenSpace)})
-            this.drawCounter=1;
+            // not neede this.drawCounter=1;
             this.dialog.style.display=""
         }
         
