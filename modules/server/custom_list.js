@@ -160,9 +160,7 @@ class CustomList {
     getMinHeight()
     {
         return this.div.offsetHeight;
-        this.div.style.height="1px"
         var rect = this.div.getBoundingClientRect();
-        this.div.style.height="100%"
         return rect.height;
     }
 }
