@@ -43,8 +43,7 @@ class GraphNode:
                 props = self.executor.properties
 
         if props is not None:
-            if "input_rule" in props:
-                self.input_rule = props["input_rule"]
+            self.input_rule = props.get("input_rule","AND")
             if "free_runs" in props:
                 self["free_runs"] = props["free_runs"]
             if "input_active" in props:

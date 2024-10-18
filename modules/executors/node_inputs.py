@@ -2,8 +2,10 @@
 from ..common import get_input
 from ..parser import solve_templates
 from .common import solve_placeholders
+from .common import GenericExecutor
 
-class UserInputNode:
+class UserInputNode(GenericExecutor):
+    node_type = "user"
     def __init__(self,*args):
         self.current_prompt = "{}"
 
@@ -11,7 +13,7 @@ class UserInputNode:
         res = {"input_rule":"OR"}
         return res
 
-    def load_config(self,args):
+    def set_template(self,args):
         cl_args = args
         if len(cl_args) > 0:
             self.current_prompt,_ = solve_templates(cl_args[0],cl_args[1:])
@@ -29,7 +31,8 @@ class UserInputNode:
 
         return new_prompt
     
-class ListNode:
+class ListNode(GenericExecutor):
+    node_type = "list"
     def __init__(self,*args):
         self.free_runs = 0
         self.current_iteration = 0
@@ -38,7 +41,7 @@ class ListNode:
         res = {"free_runs":self.free_runs}
         return res
 
-    def load_config(self,args):
+    def set_template(self,args):
         self.base_retval = args
         if not isinstance(args[0],list):
             self.base_retval = [[el] for el in args]
@@ -68,6 +71,7 @@ class ListNode:
         return ret
     
 class ConstantNode(ListNode):
+    node_type = "constant"
     def __init__(self,*args):
         super().__init__(*args)
 

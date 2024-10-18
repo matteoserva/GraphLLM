@@ -36,20 +36,14 @@ class ExecutorFactory:
         executor=None
         if type in _available_executors:
             executor = _available_executors[type](full_config)
-        elif type == "constant":
-            executor = ConstantNode()
         elif type == "agent":
             executor = AgentController(full_config)
         elif type == "tool":
             executor = ToolExecutor()
-        elif type == "list":
-            executor = ListNode()
         elif type == "graph":
             executor = GraphExecutor(full_config)
         elif type == "llamatool":
             executor = LlamaTool()
         elif type == "client":
             executor = Client()
-        elif type == "user":
-            executor = UserInputNode()
         return executor
