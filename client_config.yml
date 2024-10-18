@@ -1,11 +1,11 @@
 ###
 
-client_name: dummy
+client_name: llama_cpp
 
 ###
 llama_cpp:
     host: "localhost"
     port: 8080
 
-groq:
-    api_key: XXX
+#groq:
+#    api_key: XXX
