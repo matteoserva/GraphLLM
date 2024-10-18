@@ -1,0 +1,240 @@
+{
+    "last_node_id": 25,
+    "last_link_id": 26,
+    "nodes": [
+        {
+            "id": 23,
+            "type": "llm/input",
+            "pos": [
+                24,
+                62
+            ],
+            "size": [
+                700.9758398437501,
+                89.2089797973633
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        24
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "https://en.wikipedia.org/wiki/Language_model"
+            }
+        },
+        {
+            "id": 22,
+            "type": "llm/generic_node",
+            "pos": [
+                763,
+                61
+            ],
+            "size": {
+                "0": 510.62457275390625,
+                "1": 108
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 24
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        25,
+                        26
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "type: exec\ninit: python3 extras/scraper/scrape.py {p:exec1}"
+            }
+        },
+        {
+            "id": 25,
+            "type": "llm/variable",
+            "pos": [
+                38,
+                198
+            ],
+            "size": [
+                614.3633670654298,
+                133.7676417236329
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This example requires that extra tools are properly configured.\nThe graph downloads the article, scrapes the data and summarizes it.\nThe scraped data is shown in the yellow box.\nThe summary is in the blue box"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 20,
+            "type": "llm/llm_call",
+            "pos": [
+                21,
+                383
+            ],
+            "size": [
+                663.1771850585938,
+                282.3903579711914
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 25
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        22
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"temperature\":0.01, \"top_k\":20,\"n_predict\":4096}",
+                "subtype": "stateless",
+                "template": "Summarize the article below in 10 or more numbered bullet points.\nUse only the information explicitly mentioned in the article,\nignoring all your previous knowledge.\n\nHere is the article:\n```markdown\n{}\n```"
+            }
+        },
+        {
+            "id": 16,
+            "type": "llm/watch",
+            "pos": [
+                729,
+                219
+            ],
+            "size": [
+                612.82136706543,
+                429.5456417236329
+            ],
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 22,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "\n"
+            },
+            "color": "#223",
+            "bgcolor": "#335"
+        },
+        {
+            "id": 24,
+            "type": "llm/watch",
+            "pos": [
+                1370,
+                64
+            ],
+            "size": [
+                504.22136706543006,
+                575.2286417236329
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 26,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {},
+            "color": "#432",
+            "bgcolor": "#653"
+        }
+    ],
+    "links": [
+        [
+            22,
+            20,
+            0,
+            16,
+            0,
+            "string"
+        ],
+        [
+            24,
+            23,
+            0,
+            22,
+            0,
+            "string"
+        ],
+        [
+            25,
+            22,
+            0,
+            20,
+            0,
+            "string"
+        ],
+        [
+            26,
+            22,
+            0,
+            24,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
