@@ -1,0 +1,135 @@
+{
+    "last_node_id": 5,
+    "last_link_id": 6,
+    "nodes": [
+        {
+            "id": 5,
+            "type": "llm/variable",
+            "pos": [
+                81,
+                186
+            ],
+            "size": [
+                427,
+                113
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "Demo to show the chat history node.\nWORK IN PROGRESS"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 1,
+            "type": "llm/chat_history",
+            "pos": [
+                91,
+                341
+            ],
+            "size": {
+                "0": 317,
+                "1": 210
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 4
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        5
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": [
+                    "You are a math assistant",
+                    "2+2=?",
+                    "x"
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "type": "llm/llm_call",
+            "pos": [
+                499,
+                342
+            ],
+            "size": {
+                "0": 210,
+                "1": 156
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 5
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        4
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": ""
+            }
+        }
+    ],
+    "links": [
+        [
+            4,
+            4,
+            0,
+            1,
+            0,
+            "string"
+        ],
+        [
+            5,
+            1,
+            0,
+            4,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}

@@ -59,6 +59,7 @@ class JsonParser():
         if(subtype == "stateful"):
             new_config["type"] = "stateful"
         template = properties.get("template", "")
+
         conf = properties.get("conf", "")
         conf = yaml.safe_load(conf)
         if conf:
@@ -89,6 +90,26 @@ class JsonParser():
 
         old_inputs = old_config.get("inputs", [])
         new_config["exec"] = self._calc_exec(old_inputs,links)
+        return new_config
+
+    def parse_history(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "list"
+        properties = old_config.get("properties", {})
+        template = properties.get("parameters", [])
+        t = ""
+        for i,v in enumerate(template):
+            if i == 0:
+                t += "{p:system}\n" + v + "{p:eom}\n\n"
+            elif i % 2:
+                t += "{p:user}\n" + v + "{p:eom}\n\n"
+            else:
+                t += "{p:assistant}\n" + v + "{p:eom}\n\n"
+
+        new_config["init"] = [t]
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = []
         return new_config
 
     def parse_input(self,old_config,links):
@@ -170,7 +191,8 @@ class JsonParser():
             return self.parse_file(old_config,links)
         if old_config["type"].startswith("llm/list"):
             return self.parse_list(old_config,links)
-
+        if old_config["type"].startswith("llm/chat_history"):
+            return self.parse_history(old_config,links)
         return None
 
     def load_string(self,v):

@@ -248,12 +248,31 @@
     }
 
     //name to show
-    MyChatHistoryNode.title = "(NOT WORKING)Chat History";
+    MyChatHistoryNode.title = "Chat History";
 
     //register in the system
     LiteGraph.registerNodeType("llm/chat_history", MyChatHistoryNode );
     
+    MyChatHistoryNode.prototype.onStart = function()
+    {
+        this.saved_history = JSON.parse(JSON.stringify(this.properties["parameters"]))
+        if((this.saved_history.length % 2) != 1)
+        {
+            this.saved_history.push("")   
+        }
+    }
     
+    MyChatHistoryNode.prototype.onExecute = function()
+    {
+        var A = this.getInputData(0);
+        if( A !== undefined )
+        {
+            var new_history = JSON.parse(JSON.stringify(this.saved_history))
+            var message_index = new_history.length-1
+            new_history[message_index] =this.saved_history[message_index] + A
+            this.container.setValue("parameters",new_history)
+        }
+    }
     
 
     /* ----------------- -------------- */

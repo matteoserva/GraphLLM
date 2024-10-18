@@ -69,7 +69,8 @@ class LlmExecutor(GenericExecutor):
             except:
                 pass
         new_prompt, _ = solve_templates(self.current_prompt,cl_args)
-        self.current_prompt = new_prompt
+        if new_prompt != "":
+            self.current_prompt = new_prompt
 
     def get_prompt_len(self):
         return self.current_prompt.count("{}")

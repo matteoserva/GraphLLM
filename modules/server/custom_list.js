@@ -52,7 +52,10 @@ class CustomList {
         var element = new CustomTextarea(this, index,{property:"ciao"})
         element.appendElement(this.div)
         this.children.push(element)
-        this.value.push("")
+        if(this.children.length> this.value.length)
+        {
+            this.value.push("")
+        }
     }
     
     removeTextBox()
