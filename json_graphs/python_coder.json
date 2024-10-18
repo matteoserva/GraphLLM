@@ -3,16 +3,43 @@
     "last_link_id": 6,
     "nodes": [
         {
+            "id": 7,
+            "type": "llm/input",
+            "pos": [
+                171,
+                111
+            ],
+            "size": {
+                "0": 1000.3469848632812,
+                "1": 88
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        6
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "Compute the cube of the sum of the first 10 even natural numbers."
+            }
+        },
+        {
             "id": 5,
             "type": "llm/generic_node",
             "pos": [
                 178,
-                456
+                469
             ],
-            "size": [
-                286.8185050964354,
-                108
-            ],
+            "size": {
+                "0": 286.8185119628906,
+                "1": 108
+            },
             "flags": {},
             "order": 6,
             "mode": 0,
@@ -44,48 +71,67 @@
                     "links": null
                 }
             ],
+            "title": "Python executor",
             "properties": {
                 "parameters": "    type: python\n    init: \"\""
             }
         },
         {
-            "id": 7,
-            "type": "llm/input",
+            "id": 6,
+            "type": "llm/watch",
             "pos": [
-                171,
-                111
+                533,
+                499
             ],
-            "size": [
-                1000.3469915390015,
-                88
-            ],
+            "size": {
+                "0": 634.8662719726562,
+                "1": 88
+            },
             "flags": {},
-            "order": 0,
+            "order": 7,
             "mode": 0,
-            "outputs": [
+            "inputs": [
                 {
-                    "name": "out",
+                    "name": "in",
                     "type": "string",
-                    "links": [
-                        6
-                    ]
+                    "link": 5
                 }
             ],
+            "title": "Result",
+            "properties": {}
+        },
+        {
+            "id": 8,
+            "type": "llm/variable",
+            "pos": [
+                1205,
+                121
+            ],
+            "size": {
+                "0": 292.15087890625,
+                "1": 112
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
             "properties": {
-                "parameters": "Compute the cube of the sum of the first 20 even natural numbers."
-            }
+                "identifier": "",
+                "parameters": "original problem"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
         },
         {
             "id": 9,
             "type": "llm/variable",
             "pos": [
-                1210,
-                281
+                1202,
+                286
             ],
-            "size": [
-                288.4818653564455,
-                112
-            ],
+            "size": {
+                "0": 288.48187255859375,
+                "1": 112
+            },
             "flags": {},
             "order": 1,
             "mode": 0,
@@ -100,40 +146,19 @@
             "id": 10,
             "type": "llm/variable",
             "pos": [
-                1204,
-                456
+                1196,
+                461
             ],
-            "size": [
-                297.14386535644553,
-                112
-            ],
+            "size": {
+                "0": 297.14385986328125,
+                "1": 112
+            },
             "flags": {},
             "order": 2,
             "mode": 0,
             "properties": {
                 "identifier": "",
                 "parameters": "solution"
-            },
-            "color": "#232",
-            "bgcolor": "#353"
-        },
-        {
-            "id": 8,
-            "type": "llm/variable",
-            "pos": [
-                1206,
-                97
-            ],
-            "size": [
-                292.1508653564456,
-                112
-            ],
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "properties": {
-                "identifier": "",
-                "parameters": "original problem"
             },
             "color": "#232",
             "bgcolor": "#353"
@@ -146,8 +171,8 @@
                 252
             ],
             "size": [
-                639.4021961425778,
-                176.38981137695293
+                632.7130449468434,
+                203.89188038219083
             ],
             "flags": {},
             "order": 5,
@@ -159,42 +184,20 @@
                     "link": 3
                 }
             ],
-            "properties": {}
-        },
-        {
-            "id": 6,
-            "type": "llm/watch",
-            "pos": [
-                537,
-                474
-            ],
-            "size": [
-                634.8662961425778,
-                88
-            ],
-            "flags": {},
-            "order": 7,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 5
-                }
-            ],
+            "title": "Generated code",
             "properties": {}
         },
         {
             "id": 3,
             "type": "llm/llm_call",
             "pos": [
-                163,
-                250
+                184,
+                254
             ],
-            "size": [
-                300.7185050964354,
-                156
-            ],
+            "size": {
+                "0": 300.718505859375,
+                "1": 156
+            },
             "flags": {},
             "order": 4,
             "mode": 0,
