@@ -1,5 +1,5 @@
 {
-    "last_node_id": 21,
+    "last_node_id": 22,
     "last_link_id": 23,
     "nodes": [
         {
@@ -11,7 +11,7 @@
             ],
             "size": {
                 "0": 210,
-                "1": 132
+                "1": 156
             },
             "flags": {},
             "order": 0,
@@ -40,6 +40,7 @@
             ],
             "properties": {
                 "conf": "",
+                "subtype": "stateless",
                 "template": "hello"
             }
         },
@@ -55,7 +56,7 @@
                 "1": 258
             },
             "flags": {},
-            "order": 1,
+            "order": 2,
             "mode": 0,
             "inputs": [
                 {
@@ -68,6 +69,27 @@
             "properties": {
                 "parameters": "\n"
             }
+        },
+        {
+            "id": 22,
+            "type": "llm/variable",
+            "pos": [
+                221,
+                358
+            ],
+            "size": [
+                389,
+                112
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "Simple call to a LLM"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
         }
     ],
     "links": [

@@ -1,18 +1,18 @@
 {
-    "last_node_id": 19,
+    "last_node_id": 20,
     "last_link_id": 21,
     "nodes": [
         {
             "id": 14,
             "type": "llm/generic_node",
             "pos": [
-                118,
-                254
+                113,
+                360
             ],
-            "size": {
-                "0": 268,
-                "1": 131
-            },
+            "size": [
+                277.1563273925782,
+                154.11463891601568
+            ],
             "flags": {},
             "order": 0,
             "mode": 0,
@@ -43,11 +43,37 @@
             }
         },
         {
+            "id": 16,
+            "type": "llm/watch",
+            "pos": [
+                452,
+                361
+            ],
+            "size": {
+                "0": 592,
+                "1": 258
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 21,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "\n"
+            }
+        },
+        {
             "id": 17,
             "type": "llm/variable",
             "pos": [
-                146,
-                65
+                114,
+                189
             ],
             "size": {
                 "0": 315,
@@ -65,8 +91,8 @@
             "id": 15,
             "type": "llm/variable",
             "pos": [
-                497,
-                66
+                460,
+                192
             ],
             "size": {
                 "0": 335,
@@ -81,30 +107,25 @@
             }
         },
         {
-            "id": 16,
-            "type": "llm/watch",
+            "id": 20,
+            "type": "llm/variable",
             "pos": [
-                503,
-                256
+                115,
+                34
             ],
-            "size": {
-                "0": 592,
-                "1": 258
-            },
+            "size": [
+                931.3393273925783,
+                112
+            ],
             "flags": {},
             "order": 3,
             "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 21,
-                    "slot_index": 0
-                }
-            ],
             "properties": {
-                "parameters": "\n"
-            }
+                "identifier": "",
+                "parameters": "Other graphs can be used as nodes."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
         }
     ],
     "links": [

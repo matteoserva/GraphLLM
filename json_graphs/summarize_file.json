@@ -1,20 +1,77 @@
 {
-    "last_node_id": 21,
-    "last_link_id": 23,
+    "last_node_id": 23,
+    "last_link_id": 24,
     "nodes": [
+        {
+            "id": 21,
+            "type": "llm/file",
+            "pos": [
+                41,
+                49
+            ],
+            "size": {
+                "0": 651.4708862304688,
+                "1": 58
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        23,
+                        24
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "filename": "test/wikipedia_summary.txt"
+            }
+        },
+        {
+            "id": 23,
+            "type": "llm/variable",
+            "pos": [
+                44,
+                156
+            ],
+            "size": [
+                640.3073273925783,
+                112
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This generates a summary from a downloaded web page.\nThe scraped data is shown in the yellow box.\nThe generated summary is in the blue box"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
         {
             "id": 20,
             "type": "llm/llm_call",
             "pos": [
-                313,
-                128
+                41,
+                319
             ],
             "size": {
-                "0": 757,
-                "1": 201
+                "0": 640.6438598632812,
+                "1": 286.7739562988281
             },
             "flags": {},
-            "order": 1,
+            "order": 2,
             "mode": 0,
             "inputs": [
                 {
@@ -45,22 +102,23 @@
             ],
             "properties": {
                 "conf": "{\"temperature\":0.01, \"top_k\":20,\"n_predict\":4096}",
-                "template": "Summarize the article below in 10 or more numbered bullet points.\nUse only the information explicitly mentioned in the article, ignoring all your previous knowledge.\n\nHere is the article:\n```markdown\n{}\n```"
+                "subtype": "stateless",
+                "template": "Summarize the article below in 10 or more numbered bullet points.\nUse only the information explicitly mentioned in the article,\nignoring all your previous knowledge.\n\nHere is the article:\n```markdown\n{}\n```"
             }
         },
         {
             "id": 16,
             "type": "llm/watch",
             "pos": [
-                1129,
-                114
+                716,
+                51
             ],
-            "size": {
-                "0": 592,
-                "1": 258
-            },
+            "size": [
+                583.2293273925784,
+                545.6366389160157
+            ],
             "flags": {},
-            "order": 2,
+            "order": 4,
             "mode": 0,
             "inputs": [
                 {
@@ -72,42 +130,34 @@
             ],
             "properties": {
                 "parameters": "\n"
-            }
+            },
+            "color": "#223",
+            "bgcolor": "#335"
         },
         {
-            "id": 21,
-            "type": "llm/file",
+            "id": 22,
+            "type": "llm/watch",
             "pos": [
-                66,
-                128
+                1336,
+                48
             ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
+            "size": [
+                427.7483273925784,
+                540.6506389160157
+            ],
             "flags": {},
-            "order": 0,
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": null
+                    "link": 24
                 }
             ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        23
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "filename": "test/wikipedia_summary.txt"
-            }
+            "properties": {},
+            "color": "#432",
+            "bgcolor": "#653"
         }
     ],
     "links": [
@@ -124,6 +174,14 @@
             21,
             0,
             20,
+            0,
+            "string"
+        ],
+        [
+            24,
+            21,
+            0,
+            22,
             0,
             "string"
         ]
