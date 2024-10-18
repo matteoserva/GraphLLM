@@ -131,6 +131,7 @@ class CustomTextarea {
         this.inFocus = true
         this.configureSize(this.H+this.margin)
         this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="none"
+        this.div.parentNode.style.zIndex = 1
     }
     
     textareaUnfocus(textarea)
@@ -139,6 +140,7 @@ class CustomTextarea {
         this.inFocus = false
         this.configureSize()
         this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="block"
+        this.div.parentNode.style.zIndex = ""
     }
     
     computeSize(widget_width)
