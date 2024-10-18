@@ -84,7 +84,8 @@ class CustomTextarea {
             var currentWidth = textarea.clientWidth
             var currentHeight = textarea.clientHeight
             
-            
+            minWidth = Math.min(minWidth,window.innerWidth*0.7)
+            minHeight = Math.min(minHeight,window.innerHeight*0.7)
             textarea.style.minHeight = (minHeight+10) + "px"
             textarea.style.minWidth = (minWidth+15)  + "px"
         }
