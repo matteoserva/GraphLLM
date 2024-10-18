@@ -9,10 +9,10 @@
                 81,
                 186
             ],
-            "size": [
-                427,
-                113
-            ],
+            "size": {
+                "0": 427,
+                "1": 113
+            },
             "flags": {},
             "order": 0,
             "mode": 0,
@@ -58,7 +58,7 @@
                 "parameters": [
                     "You are a math assistant",
                     "2+2=?",
-                    "x"
+                    "The"
                 ]
             }
         },
