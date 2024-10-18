@@ -194,6 +194,7 @@ class WebBrige {
   {
       this.controller.abort("stopGraph");
       console.log("stop")
+      this.canvas.selectNodes([])
   }
   
   onAfterStep()
