@@ -366,4 +366,39 @@
     //register in the system
     LiteGraph.registerNodeType("llm/file", MyFileNode );
     
+    
+    /*
+     * 
+     * 
+     *   AGENT NODE
+     * 
+     * 
+     */
+    //node constructor class
+    function MyAgentNode()
+    {
+    this.addInput("query","string");
+    this.addInput("LLM","string");
+    this.addInput("tools","string");
+    this.addInput("reflexion","string");
+    
+    this.addOutput("out","string");
+
+    let tmpl = 'type: python\ninit: "test/python_hello_world.py"'
+
+    this.container = new DivContainer(this)
+    this.addCustomWidget( this.container);
+    //this.container.addElement(new CustomTextarea("Parameters","parameters"))
+
+    this.properties = {  };
+    this.container.addWidget("textarea","Parameters",{ property: "parameters"})
+    }
+
+    //name to show
+    MyAgentNode.title = "Agent";
+ 
+    //register in the system
+    LiteGraph.registerNodeType("llm/generic_agent", MyAgentNode );
+    
+    
 })(this);

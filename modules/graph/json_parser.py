@@ -50,6 +50,29 @@ class JsonParser():
             val_exec.append(vel)
         return val_exec
 
+    def parse_generic_agent(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "agent"
+        properties = old_config.get("properties", {})
+        parameters = properties.get("parameters", {})
+        parameters = yaml.safe_load(parameters)
+
+        for i, el in enumerate(parameters.get("init",[])):
+            if isinstance(el, dict):
+                if len(el) > 0:
+                    val = list(el.keys())
+                    parameters["init"][i] = "{" + str(val[0]) + "}"
+                else:
+                    parameters["init"][i] = "{}"
+                pass
+
+        if parameters:
+            for vel in parameters:
+                new_config[vel] = parameters[vel]
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = self._calc_exec(old_inputs,links)
+        return new_config
 
     def parse_llm_call(self,old_config,links):
         new_config = {}
@@ -193,6 +216,8 @@ class JsonParser():
             return self.parse_list(old_config,links)
         if old_config["type"].startswith("llm/chat_history"):
             return self.parse_history(old_config,links)
+        if old_config["type"].startswith("llm/generic_agent"):
+            return self.parse_generic_agent(old_config,links)
         return None
 
     def load_string(self,v):
@@ -219,7 +244,20 @@ class JsonParser():
         
         for el in virtual_sinks:
                 el["type"] = "copy"
-        
+
+        agents = [(el, new_nodes[el]) for el in new_nodes if new_nodes[el]["type"] == "agent"]
+        for agent_name ,agent in agents:
+            deps = agent["exec"]
+            LLM = deps[1].split("[")[0]
+            node = new_nodes[LLM]
+            node["exec"] = [agent_name + "[1]"]
+            tools = deps[2].split("[")[0]
+            node = new_nodes[tools]
+            node["exec"] = [agent_name + "[2]"]
+            if len(deps) > 3:
+                reflex = deps[3].split("[")[0]
+                node = new_nodes[reflex]
+                node["exec"] = [agent_name + "[3]"]
 
         return new_nodes
 
