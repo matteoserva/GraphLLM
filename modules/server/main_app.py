@@ -21,16 +21,17 @@ class WebExec():
         self.t = None
         self.send_chunk = send
         self.send_stop = stop
+        logger = Logger(verbose=True, web_logger=False)
         client_config = get_client_config()
         client = Client.make_client(client_config)
-        client.connect()
+
 
         parameters = {}
         parameters["repeat_penalty"] = 1.0
         parameters["penalize_nl"] = False
         parameters["seed"] = -1
 
-        logger= Logger(verbose=True,web_logger = False)
+
         self.executor_config = {"client":client, "client_parameters":parameters,"logger":logger}
 
 
@@ -49,6 +50,7 @@ class WebExec():
         self.logger.addListener(self)
         self.logger.log("start")
         try:
+            self.client.connect()
             self.executor = GraphExecutor(self.executor_config)
             self.executor.load_config(args)
             self.executor([])

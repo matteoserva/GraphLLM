@@ -172,7 +172,7 @@ class WebBrige {
       }
       if(obj.type == "print")
       {
-         var name = obj.data[0].substr(1)
+         var name = obj.data[0].split("/")[1]
          var value = obj.data[1]
          var n = this.graph.getNodeById(name)
          if((!!n) && n.outputs && n.outputs.length > 0)
