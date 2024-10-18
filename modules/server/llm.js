@@ -214,6 +214,7 @@
     function MyListNode()
     {
     this.addOutput("out","string");
+    this.addInput("in","string");
 
     this.container = new DivContainer(this)
     this.addCustomWidget( this.container);
