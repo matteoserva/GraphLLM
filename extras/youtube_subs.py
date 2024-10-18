@@ -76,3 +76,4 @@ val=re.sub(r"^\[(\d+)\.\d+\]",replace_timestamp,val,flags=re.M)
 
 with open("/tmp/yt_transcript.txt","w") as f:
     _ = f.write(val)
+print(val)

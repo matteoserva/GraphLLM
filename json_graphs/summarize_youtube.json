@@ -1,0 +1,288 @@
+{
+    "last_node_id": 37,
+    "last_link_id": 38,
+    "nodes": [
+        {
+            "id": 28,
+            "type": "llm/list",
+            "pos": [
+                52,
+                240
+            ],
+            "size": [
+                524.5069885253906,
+                222.89599609375
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 37
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        33
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "title": "Commands",
+            "properties": {
+                "parameters": [
+                    "Here is the transcript of a youtube video, with timestamps: \n```\n{}\n```\n\nOutput a list of titles for the transcript,\neach element of the list should represent a section of the video.\nGive timestamps for each title.",
+                    "Now provide a very detailed description for each section of the video.\nUse a lot of references to specific timestamps."
+                ]
+            }
+        },
+        {
+            "id": 24,
+            "type": "llm/watch",
+            "pos": [
+                877,
+                -100
+            ],
+            "size": [
+                535.5069923400879,
+                168.89599990844727
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 36,
+                    "slot_index": 0
+                }
+            ],
+            "title": "Transcript",
+            "properties": {}
+        },
+        {
+            "id": 35,
+            "type": "llm/watch",
+            "pos": [
+                854,
+                112
+            ],
+            "size": [
+                623.5069580078125,
+                399.89599609375
+            ],
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 38
+                }
+            ],
+            "title": "Summary",
+            "properties": {},
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 33,
+            "type": "llm/input",
+            "pos": [
+                48,
+                -95
+            ],
+            "size": {
+                "0": 480,
+                "1": 88
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        35
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "title": "Youtube URL",
+            "properties": {
+                "parameters": "https://www.youtube.com/watch?v=YbJOTdZBX1g"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 34,
+            "type": "llm/generic_node",
+            "pos": [
+                609,
+                -96
+            ],
+            "size": {
+                "0": 210,
+                "1": 108
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 35
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        36,
+                        37
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "type: exec\ninit: python3 extras/youtube_subs.py {p:exec1}"
+            }
+        },
+        {
+            "id": 30,
+            "type": "llm/llm_call",
+            "pos": [
+                602,
+                261
+            ],
+            "size": {
+                "0": 210,
+                "1": 156
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 33
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        38
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateful",
+                "template": ""
+            }
+        },
+        {
+            "id": 36,
+            "type": "llm/variable",
+            "pos": [
+                53,
+                51
+            ],
+            "size": [
+                648.5069885253906,
+                128.89599609375
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "title": "Description",
+            "properties": {
+                "identifier": "",
+                "parameters": "This graph shows how to download and summarize a youtube video.\nThe process is in two steps. first it generates a list of chapters,\nthen it summarizes each chapter individually."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        }
+    ],
+    "links": [
+        [
+            33,
+            28,
+            0,
+            30,
+            0,
+            "string"
+        ],
+        [
+            35,
+            33,
+            0,
+            34,
+            0,
+            "string"
+        ],
+        [
+            36,
+            34,
+            0,
+            24,
+            0,
+            "string"
+        ],
+        [
+            37,
+            34,
+            0,
+            28,
+            0,
+            "string"
+        ],
+        [
+            38,
+            30,
+            0,
+            35,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
