@@ -46,10 +46,15 @@ class CustomList {
         return div
     }
     
+    makeCellName(index)
+    {
+            return index;
+    }
+    
     addTextBox()
     {
         var index = this.children.length
-        var element = new CustomTextarea(this, index,{property:"ciao"})
+        var element = new CustomTextarea(this, this.makeCellName(index),{property:"ciao"})
         element.appendElement(this.div)
         this.children.push(element)
         if(this.children.length> this.value.length)
@@ -71,6 +76,21 @@ class CustomList {
             this.parent.notifyValue(this, this.property,this.value)
             
         }
+    }
+    
+    reset()
+    {
+            while(this.children.length > 0)
+            {
+                var child = this.children.pop()
+                child.detachElement()
+                while(this.value.length > this.children.length)
+                {
+                        this.value.pop()
+                }
+            }
+        this.addTextBox()
+        this.addTextBox()
     }
     
     appendElement(dialog)

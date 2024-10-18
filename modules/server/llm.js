@@ -242,7 +242,24 @@
 
     this.container = new DivContainer(this)
     this.addCustomWidget( this.container);
-    this.container.addWidget("list","Parameters",{ property: "parameters"})
+    var listWidget = this.container.addWidget("list","Parameters",{ property: "parameters"})
+    listWidget.makeCellName = function(index)
+    {
+        if(index == 0)
+        {
+                return "system";
+        }
+        else if(index % 2)
+        {
+                return "user";
+        }
+        else
+        {
+                return "assistant"
+        }
+        return index+1
+    }
+    listWidget.reset()
     //this.container.addWidget("textarea","Parameters",{ property: "parameters"})
     this.properties = {  };
     }

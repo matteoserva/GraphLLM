@@ -363,6 +363,7 @@ class DivContainer {
             var elem = new CustomTextarea(this, name,options)
             this.addElement(elem)
         }
+        return elem
     }
     
     notifyValue(me, k,val)
