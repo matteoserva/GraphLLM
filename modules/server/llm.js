@@ -37,13 +37,7 @@
     var B = this.getInputData(1);
     if( B === undefined )
         B = 0;
-        //let xhr = new XMLHttpRequest();
-        //xhr.open('GET', '/graph/exec',false);
-        //xhr.send();
-        //console.log(xhr.response);
-    //this.setOutputData( 0, xhr.response );
-    
-    //
+
     }
     
     MyGraphNode.prototype.onStart = function()
@@ -210,7 +204,13 @@
     LiteGraph.registerNodeType("llm/input", MyInputNode );
 
     
-        //node constructor class
+    /****
+     * 
+     * 
+     * 
+     * LIST NODE
+     * 
+     * */
     function MyListNode()
     {
     this.addOutput("out","string");
@@ -228,6 +228,33 @@
     //register in the system
     LiteGraph.registerNodeType("llm/list", MyListNode );
 
+        /****
+     * 
+     * 
+     * 
+     * LIST NODE
+     * 
+     * */
+    function MyChatHistoryNode()
+    {
+    this.addOutput("out","string");
+    this.addInput("in","string");
+
+    this.container = new DivContainer(this)
+    this.addCustomWidget( this.container);
+    this.container.addWidget("list","Parameters",{ property: "parameters"})
+    //this.container.addWidget("textarea","Parameters",{ property: "parameters"})
+    this.properties = {  };
+    }
+
+    //name to show
+    MyChatHistoryNode.title = "(NOT WORKING)Chat History";
+
+    //register in the system
+    LiteGraph.registerNodeType("llm/chat_history", MyChatHistoryNode );
+    
+    
+    
 
     /* ----------------- -------------- */
     //node constructor class
