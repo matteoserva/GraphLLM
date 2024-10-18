@@ -131,7 +131,9 @@ class CustomTextarea {
         this.inFocus = true
         this.configureSize(this.H+this.margin)
         this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="none"
-        this.div.parentNode.style.zIndex = 1
+        var container = this.div.closest(".div-container")
+        container.style.zIndex = 1
+        this.div.style.zIndex = 1
     }
     
     textareaUnfocus(textarea)
@@ -140,7 +142,9 @@ class CustomTextarea {
         this.inFocus = false
         this.configureSize()
         this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="block"
-        this.div.parentNode.style.zIndex = ""
+        var container = this.div.closest(".div-container")
+        container.style.zIndex = ""
+        this.div.style.zIndex = ""
     }
     
     computeSize(widget_width)
@@ -238,6 +242,7 @@ class DivContainer {
     {
                 
         var dialog = document.createElement("div");
+        dialog.className = "div-container";
         dialog.style.position = "absolute";
         dialog.innerHTML = "";
         
