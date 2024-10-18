@@ -54,11 +54,18 @@ class WebExec():
             self.executor = GraphExecutor(self.executor_config)
             self.executor.load_config(args)
             self.executor([])
+        except BrokenPipeError:
+            print("client disconnected")
         except Exception as e:
             self.logger.log("error",str(e))
-        self.logger.log("stop")
-        self.logger.deleteListeners()
-        self.send_stop()
+
+        try:
+            self.logger.log("stop")
+            self.send_stop()
+        except:
+            pass
+        finally:
+            self.logger.deleteListeners()
 
     def run(self,filename):
         self._run([filename])

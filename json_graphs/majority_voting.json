@@ -1,135 +1,56 @@
 {
-    "last_node_id": 13,
+    "last_node_id": 14,
     "last_link_id": 18,
     "nodes": [
         {
-            "id": 11,
-            "type": "llm/virtual_source",
+            "id": 12,
+            "type": "llm/variable",
             "pos": [
-                37,
-                367
+                75,
+                53
             ],
             "size": {
-                "0": 210,
-                "1": 58
+                "0": 635.3016967773438,
+                "1": 112
             },
             "flags": {},
-            "order": 2,
+            "order": 1,
             "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        14,
-                        15,
-                        17
-                    ],
-                    "slot_index": 0
-                }
-            ],
             "properties": {
-                "identifier": "problem"
+                "identifier": "problem",
+                "parameters": "compute the cube of the sum of the first 10 even natural numbers"
             }
         },
         {
-            "id": 13,
-            "type": "llm/llm_call",
+            "id": 4,
+            "type": "llm/watch",
             "pos": [
-                305,
-                210
+                782,
+                57
             ],
             "size": {
-                "0": 310.1499938964844,
-                "1": 132
+                "0": 869.9136962890625,
+                "1": 271.14459228515625
             },
             "flags": {},
-            "order": 6,
+            "order": 9,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 17
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        18
-                    ],
+                    "link": 8,
                     "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
                 }
             ],
-            "properties": {
-                "conf": "{\"temperature\":0.01, \"top_k\":40}",
-                "template": "templates/testimone.txt"
-            }
-        },
-        {
-            "id": 7,
-            "type": "llm/generic_node",
-            "pos": [
-                307,
-                387
-            ],
-            "size": {
-                "0": 443.0579833984375,
-                "1": 136.4010009765625
-            },
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 14
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        10
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "Witness 2",
-            "properties": {
-                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.05, \"top_k\":40}"
-            }
+            "properties": {}
         },
         {
             "id": 8,
             "type": "llm/generic_node",
             "pos": [
-                308,
-                567
+                377,
+                660
             ],
             "size": {
                 "0": 443.0579833984375,
@@ -171,61 +92,119 @@
             }
         },
         {
-            "id": 12,
-            "type": "llm/variable",
+            "id": 7,
+            "type": "llm/generic_node",
             "pos": [
-                75,
-                53
+                377,
+                458
             ],
             "size": {
-                "0": 635.3016967773438,
-                "1": 112
+                "0": 443.0579833984375,
+                "1": 136.4010009765625
             },
             "flags": {},
-            "order": 0,
-            "mode": 0,
-            "properties": {
-                "identifier": "problem",
-                "parameters": "compute the cube of the sum of the first 10 even natural numbers"
-            }
-        },
-        {
-            "id": 4,
-            "type": "llm/watch",
-            "pos": [
-                782,
-                57
-            ],
-            "size": [
-                869.9137224609381,
-                271.1446062744142
-            ],
-            "flags": {},
-            "order": 8,
+            "order": 4,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 8,
+                    "link": 14
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        10
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Witness 2",
+            "properties": {
+                "parameters": "    type: stateless\n    init: templates/testimone.txt\n    conf: {\"temperature\":0.05, \"top_k\":40}"
+            }
+        },
+        {
+            "id": 10,
+            "type": "llm/virtual_sink",
+            "pos": [
+                1334,
+                684
+            ],
+            "size": {
+                "0": 210.13221740722656,
+                "1": 74.99270629882812
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 12,
                     "slot_index": 0
                 }
             ],
-            "properties": {}
+            "properties": {
+                "identifier": "problem"
+            }
+        },
+        {
+            "id": 6,
+            "type": "llm/input",
+            "pos": [
+                902,
+                684
+            ],
+            "size": {
+                "0": 210.30702209472656,
+                "1": 88
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        12
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "title": "Problem",
+            "properties": {
+                "parameters": "{v:problem}"
+            }
         },
         {
             "id": 9,
             "type": "llm/generic_node",
             "pos": [
-                859,
-                382
+                880,
+                424
             ],
             "size": {
                 "0": 648.6378173828125,
                 "1": 177.576904296875
             },
             "flags": {},
-            "order": 7,
+            "order": 8,
             "mode": 0,
             "inputs": [
                 {
@@ -270,53 +249,96 @@
             }
         },
         {
-            "id": 6,
-            "type": "llm/input",
+            "id": 14,
+            "type": "llm/variable",
             "pos": [
-                875,
-                605
+                77,
+                214
             ],
             "size": [
-                210.3070224609378,
-                88
+                283,
+                224
             ],
             "flags": {},
-            "order": 1,
+            "order": 3,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This makes 3 LLM calls\nA judge decides the correct\nanswer by majority voting.\nThe output of the judge\nis constrained by a grammar."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 13,
+            "type": "llm/llm_call",
+            "pos": [
+                438,
+                254
+            ],
+            "size": {
+                "0": 310.1499938964844,
+                "1": 156
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 17
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        18
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"temperature\":0.01, \"top_k\":40}",
+                "subtype": "stateless",
+                "template": "templates/testimone.txt"
+            }
+        },
+        {
+            "id": 11,
+            "type": "llm/virtual_source",
+            "pos": [
+                120,
+                493
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 0,
             "mode": 0,
             "outputs": [
                 {
                     "name": "out",
                     "type": "string",
                     "links": [
-                        12
+                        14,
+                        15,
+                        17
                     ],
-                    "slot_index": 0
-                }
-            ],
-            "title": "Problem",
-            "properties": {
-                "parameters": "{v:problem}"
-            }
-        },
-        {
-            "id": 10,
-            "type": "llm/virtual_sink",
-            "pos": [
-                1126,
-                606
-            ],
-            "size": [
-                210.132222460938,
-                74.99270627441422
-            ],
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 12,
                     "slot_index": 0
                 }
             ],
