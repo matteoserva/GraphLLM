@@ -169,7 +169,7 @@ class GraphExecutor:
                 self.graph_nodes[i].execute()
         for i in runnable:
             res = self.graph_nodes[i]["last_output"]
-            self.logger.log("output", self.path + self.graph_nodes[i]["name"], res)
+            self.logger.log("output", self.path + self.graph_nodes[i]["name"], [str(el) for el in res])
             # res = self.graph_nodes[i].execute()
             config = self.node_configs[i]
             name = config["name"]
