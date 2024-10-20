@@ -96,6 +96,7 @@ class GraphNode:
             res = ex(inputs)
         except Exception as e:
             print("Exception: ",e,file=sys.stderr)
+            self.graph.logger.log("error", str(e))
             res = []
         if not isinstance(res, list):
             res = [res]

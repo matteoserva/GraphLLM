@@ -357,8 +357,10 @@
     this.addOutput("out","string");
     this.addInput("in","string");
 
+    this.addWidget("text","config","", { property: "config"});
     this.addWidget("text","filename","", { property: "filename"});
-    this.properties = { filename: "" };
+
+    this.properties = { filename: "", config:"" };
     }
 
     //name to show

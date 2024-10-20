@@ -99,7 +99,10 @@ class JsonParser():
         properties = old_config.get("properties", {})
         template = properties.get("filename", "")
         new_config["init"] = [template]
-
+        conf = properties.get("config", "")
+        conf = yaml.safe_load(conf)
+        if conf:
+            new_config["conf"] = conf
         old_inputs = old_config.get("inputs", [])
         new_config["exec"] = self._calc_exec(old_inputs,links)
         return new_config

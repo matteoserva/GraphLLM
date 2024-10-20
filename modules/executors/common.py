@@ -28,7 +28,9 @@ class GenericExecutor():
         pass
 
     def set_parameters(self, *args, **kwargs):
-        pass
+        conf = args[0]
+        for el in conf:
+            self.properties[el] = conf[el]
 
     def set_dependencies(self, *args, **kwargs):
         pass
