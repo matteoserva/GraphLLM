@@ -37,6 +37,16 @@ Here is an example of graph to generate python code and use it to solve a proble
 
 https://github.com/user-attachments/assets/486176d6-5bd7-4953-80fb-dbf7edb9af48
 
+**Another example:**
+<details>
+
+<summary>Expand here to see another sample graph</summary>
+
+### This is a simple graph to iteratively edit a file.
+
+https://github.com/user-attachments/assets/80d5331a-efab-429a-bf51-991feaa64e1d
+
+</details>
 
 ## Limitations:
 
