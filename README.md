@@ -20,6 +20,23 @@ Here are the features offered by GraphLLM:
 
 ![image](https://github.com/user-attachments/assets/1e265b4c-f4c9-48f1-8a88-40d8bcf01e0a)
     
+## The GUI
+
+GraphLLM provides a GUI inspired by ComfyUI. The frontend has a similar look but the backend is completely different, so the nodes are not compatible between the project.
+The reason for this is that I wanted to provide more advanced features and support complex graphs.
+
+Some of the features of GraphLLM's GUI:
+- **loops**: You can have any kind of loop in the graph or even run a graph infinitely
+- **conditionals**: The graph topology can be partially altered by the value going into nodes. This is useful for building state machines
+- **parallel execution** of nodes: More nodes can be executing in parallel, useful for making multiple LLM calls at the same time
+- **streaming of results**: Output of the LLM nodes can be seen in real time while it's produced. Watch nodes can be connected while the graph is running.
+- **Hierarchical graphs**: Graphs can contain other graphs without limits.
+- **extra features**: The graph can call external tools, for example the web scraper, the youtube downloader or the pdf reader
+
+Here is an example of graph to generate python code and use it to solve a problem:
+
+https://github.com/user-attachments/assets/486176d6-5bd7-4953-80fb-dbf7edb9af48
+
 
 ## Limitations:
 
@@ -29,8 +46,22 @@ Here are the features offered by GraphLLM:
 ## setup
 
 ### quick setup
-- run `git clone https://github.com/matteoserva/GraphLLM.git`
+
+Run these commands in a shell to download and start GraphLLM
+
+- `pip3 install selenium readabilipy html2text pdfminer.six justpy`
+- `git clone https://github.com/matteoserva/GraphLLM.git`
 - `cd GraphLLM`
+
+In another terminal, launch the llama.cpp server with Qwen2.5 32b.:
+
+- `GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=0,1 ./llama-server -ngl 99 -t 6 -c 32768 --host 0.0.0.0  -m Qwen2.5-32B-Instruct-Q5_K_M.gguf --override-kv tokenizer.ggml.add_bos_token=bool:false -sp -fa -ctk q8_0 -ctv q8_0`
+
+### detailed setup
+
+<details>
+
+<summary>Expand here to see a more detailed explanation of the setup steps</summary>
 
 ### dependencies
 **Required**
@@ -77,14 +108,6 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
   - replace `client_name: dummy` with `client_name: llama_cpp`
   - if needed, change the host and port for the llama_cpp section
 
-**running the example**
-    
-- launch the example summarization prompt:
-  
-  `python3 exec.py examples/graph_summarize.txt test/wikipedia_summary.txt`
-
-  This launches a summarization example.
-
 ### setup the extra tools
 
 **web scraper**
@@ -105,9 +128,28 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
 **youtube scraper**
 - test it by running `python3 extras/youtube_subs.py`
 
-## launch the examples
+</details>
+
+## running the example
+
+**launching the server**
+
+You can launch the server by running this command in a terminal from inside the GraphLLM folder:
+- `python3 server.py`
+
+Then you can open the browser at http://localhost:8008/
+
+**directly running a graph**    
+
+This will launch the example summarization prompt:
+  
+- `python3 exec.py examples/graph_summarize.txt test/wikipedia_summary.txt`
+
+**all the examples**
 
 There are more examples in the [examples folder](https://github.com/matteoserva/GraphLLM/tree/main/examples)
+You can also open more example from the web gui
+
 Have fun.
 
 # Thanks
