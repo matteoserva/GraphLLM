@@ -160,7 +160,25 @@ This will launch the example summarization prompt:
 There are more examples in the [examples folder](https://github.com/matteoserva/GraphLLM/tree/main/examples)
 You can also open more example from the web gui
 
-Have fun.
+## Backend support
+
+GraphLLM supports some inference engines and many models. The suggested combination is llama.cpp with Qwen2.5.
+
+**inference engines and API**
+
+The llama.cpp server is fully supported. Other engines are available with limited functionality.
+GraphLLM makes extensive use of advanced features like grammars, assistant response prefilling and using raw prompts.
+Some engines and API providers support only a subset of these features.
+
+Available engines:
+- llama.cpp server: complete support
+- groq API: Grammars and raw prompts not available
+- OpenAI API: WIP
+- HF transformers: partial support
+
+**models**
+
+All the popular models are available.
 
 # Thanks
 
