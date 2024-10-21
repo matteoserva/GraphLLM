@@ -227,14 +227,25 @@ class LLamaCppClient:
 class Client:
 
     @staticmethod
-    def make_client(client_config):
-        client_name = client_config.get("client_name","dummy")
+    def make_client_simple(client_name, client_config):
         if client_name=="dummy":
             return DummyClient()
         elif client_name == "llama_cpp":
-            conf = client_config["llama_cpp"]
+            conf = client_config
             return LLamaCppClient(**conf)
         elif client_name == "groq":
-            conf = client_config["groq"]
+            conf = client_config
             return GrokClient(**conf)
 
+    @staticmethod
+    def make_client_list(client_names, client_config):
+        pass
+
+    @staticmethod
+    def make_client(client_config):
+        client_name = client_config.get("client_name","dummy")
+        if isinstance(client_name,list):
+            return Client.make_client_list(client_name, client_config)
+        else:
+            client_config = client_config.get(client_name,{})
+            return Client.make_client_simple(client_name,client_config)
