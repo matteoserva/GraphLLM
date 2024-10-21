@@ -238,8 +238,20 @@ class Client:
             return GrokClient(**conf)
 
     @staticmethod
-    def make_client_list(client_names, client_config):
-        pass
+    def make_client_list(client_names, client_configs):
+        for client_name in client_names:
+            client_config = client_configs[client_name]
+            type = client_config.get("type",client_name)
+            if "type" in client_config:
+                del client_config["type"]
+            try:
+               client = Client.make_client_simple(type,client_config)
+               client.connect()
+               return client
+            except Exception as e:
+               last_exc = e
+        raise last_exc from None
+
 
     @staticmethod
     def make_client(client_config):
