@@ -75,5 +75,5 @@ class ConstantNode(ListNode):
     def __init__(self,*args):
         super().__init__(*args)
 
-    def load_config(self,args):
-        super().load_config([args])
+    def set_template(self,args):
+        super().set_template([args])
