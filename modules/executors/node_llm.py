@@ -21,7 +21,9 @@ class LlmExecutor(GenericExecutor):
         self.path = node_graph_parameters.get("path","/")
 
     def set_parameters(self,args):
-            executor_parameters = self.graph.client_parameters
+            executor_parameters = {}
+            if hasattr(self,"graph"):
+                executor_parameters = self.graph.client_parameters
             self._set_client_parameters(executor_parameters)
             new_obj = {}
             for key in ["stop", "n_predict","temperature","top_k"]:

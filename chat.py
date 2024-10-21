@@ -24,9 +24,9 @@ parameters["temperature"] = 0.7
 #parameters["n_predict"] = 1024*8
 
 executor = ExecutorFactory.makeExecutor("stateful",{"client":client})
-executor.set_client_parameters(parameters)
+executor.set_parameters(parameters)
 executor.print_prompt = len(sys.argv) > 1
-executor.load_config(sys.argv[1:])
+executor.set_template(sys.argv[1:])
 
 try:
     for i in range(100):
