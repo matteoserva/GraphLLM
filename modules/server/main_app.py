@@ -22,8 +22,6 @@ class WebExec():
         self.send_chunk = send
         self.send_stop = stop
         logger = Logger(verbose=True, web_logger=False)
-        client_config = get_client_config()
-        client = Client.make_client(client_config)
 
 
         parameters = {}
@@ -32,12 +30,11 @@ class WebExec():
         parameters["seed"] = -1
 
 
-        self.executor_config = {"client":client, "client_parameters":parameters,"logger":logger}
+        self.executor_config = {"client":None, "client_parameters":parameters,"logger":logger}
 
 
         self.logger = logger
         self.keep_running = False
-        self.client = client
 
     def event(self,t,a,v):
         #print(t,a,v)
@@ -50,7 +47,10 @@ class WebExec():
         self.logger.addListener(self)
         self.logger.log("start")
         try:
-            self.client.connect()
+            client_config = get_client_config()
+            client = Client.make_client(client_config)
+            client.connect()
+            self.executor_config["client"] = client
             self.executor = GraphExecutor(self.executor_config)
             self.executor.load_config(args)
             self.executor([])
