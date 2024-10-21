@@ -1,3 +1,3 @@
-from modules.server import main_app
+from modules.server import web_app
 
-main_app.run()
+web_app.run()
