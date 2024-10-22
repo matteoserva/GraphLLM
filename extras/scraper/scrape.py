@@ -10,6 +10,7 @@
 from selenium import webdriver 
 from selenium.webdriver.chrome.options import Options
 import time
+import tempfile
 
 from selenium.webdriver.firefox.webdriver import Service
 
@@ -162,7 +163,7 @@ def load_page(url):
 
   ## readability per estrarre il contenuto
   pagina_rjs = driver.execute_script(scr + "\n" + "return new Readability(document.cloneNode(true)).parse();")
-  scraper_utils.write_file("/tmp/pagina1.html",str(pagina_rjs["content"]))
+  scraper_utils.write_file(tempfile.gettempdir() + "/pagina1.html",str(pagina_rjs["content"]))
 
   ## check
   should_keep = driver.execute_script(readerable + "\n" + "return isProbablyReaderable(document);")
@@ -173,7 +174,7 @@ def load_page(url):
   #if not should_keep:
   #    pagina_rjs["content"] = html_content
 
-  scraper_utils.write_file("/tmp/pagina0.html",html_content)
+  scraper_utils.write_file(tempfile.gettempdir() + "/pagina0.html",html_content)
   if not debug_mode:
     print("closing firefox", file=sys.stderr)
     driver.quit()
@@ -187,7 +188,7 @@ def apply_static_readability(content):
   article = simple_json_from_html_string(content,use_readability=False)
   article["plain_text"]
 
-  scraper_utils.write_file("/tmp/pagina2.html",article["plain_content"])
+  scraper_utils.write_file(tempfile.gettempdir() + "/pagina2.html",article["plain_content"])
   return article
 
 
@@ -214,7 +215,7 @@ def convert_to_md(title, data):
   converter.ignore_links=False
   converter.ignore_images=True
   markdown_content = "# " + title + "\n\n" + converter.handle(data).strip()
-  scraper_utils.write_file("/tmp/pagina.md",markdown_content)
+  scraper_utils.write_file(tempfile.gettempdir() + "/pagina.md",markdown_content)
   return markdown_content
   
 def scrape(url):

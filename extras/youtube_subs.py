@@ -3,17 +3,18 @@
 import requests
 import xml.etree.ElementTree as ET
 import sys
+import tempfile
 
 videoUrl="https://www.youtube.com/watch?v=Ic-7n8tIpPw"
 if len(sys.argv) > 1:
   videoUrl = sys.argv[1]
 print("opening video " + videoUrl, file=sys.stderr)
 r = requests.get(videoUrl)
-with open("/tmp/w2.txt","w") as f:
+with open(tempfile.gettempdir() + "/w2.txt","w") as f:
     f.write(r.text)
 
 import json
-with open("/tmp/w2.txt") as f:
+with open(tempfile.gettempdir() + "/w2.txt") as f:
     data = f.read()
 
 print("looking for audio/subtitles tracks", file=sys.stderr)
@@ -40,7 +41,7 @@ sottotitolUrl = sottotitolo["baseUrl"]
 print("downloading subtitle:",sottotitolUrl, file=sys.stderr)
 
 r = requests.get(sottotitolUrl)
-with open("/tmp/w3.txt","w") as f:
+with open(tempfile.gettempdir() + "/w3.txt","w") as f:
     f.write(r.text)
 
 tree = ET.fromstring(r.text)
@@ -54,12 +55,12 @@ for el in caps:
     val["text"] = el.text
     sottotitoli.append(val)
 
-print("saving subtitles: /tmp/yt_transcript.txt", file=sys.stderr)
-with open("/tmp/w4.txt","w") as f:
+print("saving subtitles: " + tempfile.gettempdir() + "/yt_transcript.txt", file=sys.stderr)
+with open(tempfile.gettempdir() + "/w4.txt","w") as f:
     for el in sottotitoli:
         _ = f.write(f"[{el['start']}]\n{el['text']}\n" )
 
-with open("/tmp/w4.txt","r") as f:
+with open(tempfile.gettempdir() + "/w4.txt","r") as f:
     val = f.read()
 
 # remove fractional seconds from timestamp
@@ -74,6 +75,6 @@ def replace_timestamp(match_obj):
 import re
 val=re.sub(r"^\[(\d+)\.\d+\]",replace_timestamp,val,flags=re.M)
 
-with open("/tmp/yt_transcript.txt","w") as f:
+with open(tempfile.gettempdir() + "/yt_transcript.txt","w") as f:
     _ = f.write(val)
 print(val)

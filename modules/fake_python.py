@@ -7,6 +7,7 @@ import types
 import traceback 
 import sys
 import ast
+import tempfile
 
 class fake_method:
     def __init__(self,method_name):
@@ -14,11 +15,11 @@ class fake_method:
 
     def open(self,fname, mode,*args, **kwargs):
         #print(args,kwargs)
-        if fname.startswith("/tmp/"):
+        if fname.startswith(tempfile.gettempdir() + "/"):
             return open(fname,mode,*args, **kwargs)
         if fname.startswith("test/"):
             return open(fname,mode,*args, **kwargs)
-        raise Exception("the open() function must be used on files in the /tmp directory")
+        raise Exception("the open() function must be used on files in the " + tempfile.gettempdir() + " directory")
     
     def _call_method(self,method_name,*args, **kwargs):
         f = getattr(self,method_name)

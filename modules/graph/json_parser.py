@@ -1,5 +1,6 @@
 import json
 import yaml
+import tempfile
 
 class JsonParser():
     def __init__(self):
@@ -271,10 +272,10 @@ class JsonParser():
 
 if __name__ == "__main__":
     parser = JsonParser()
-    nodes = parser.load("/tmp/graph.json")
+    nodes = parser.load(tempfile.gettempdir() + "/graph.json")
     print (nodes)
     print("---")
     res = yaml.dump(nodes, sort_keys=False)
     print(res)
-    with open("/tmp/tmp_graph.yaml","w") as f:
+    with open(tempfile.gettempdir() + "/tmp_graph.yaml","w") as f:
         f.write(res)

@@ -6,6 +6,7 @@ import yaml
 from functools import partial
 import time
 import subprocess
+import tempfile
 
 from modules.logging.logger import Logger
 from modules.clients import Client, get_client_config
@@ -80,7 +81,7 @@ class ModelHandler():
 
         content_length = int(self.server.headers['Content-Length'])
         post_data = self.server.rfile.read(content_length)
-        with open("/tmp/grah.json","w") as f:
+        with open(tempfile.gettempdir() +"/grah.json","w") as f:
              a = json.loads(post_data)
              f.write(json.dumps(a,indent=4))
         v2="ciao"
@@ -96,7 +97,7 @@ class ModelHandler():
         params = self.server.path.split("/")[-1].split("?", 1)[1]
         filename = params.split("=")[1]
 
-        with open("/tmp/graph.json", "w") as f:
+        with open(tempfile.gettempdir() + "/graph.json", "w") as f:
             a = json.loads(post_data)
             f.write(json.dumps(a, indent=4))
         if self._is_valid_filename(filename):
@@ -159,15 +160,15 @@ class ModelHandler():
         self.server.send_header('Content-type', 'application/json')
         self.server.send_header('transfer-encoding', 'chunked')
         self.server.end_headers()
-        with open("/tmp/graph.json", "w") as f:
+        with open(tempfile.gettempdir() + "/graph.json", "w") as f:
             a = json.loads(json_graph)
             f.write(json.dumps(a, indent=4))
         parser = JsonParser()
-        parsed = parser.load("/tmp/graph.json")
-        with open("/tmp/graph.yaml", "w") as f:
+        parsed = parser.load(tempfile.gettempdir() + "/graph.json")
+        with open(tempfile.gettempdir() + "/graph.yaml", "w") as f:
             f.write(yaml.dump(parsed, sort_keys=False))
         e = WebExec(self._send_chunk, self._send_stop)
-        e.run("/tmp/graph.yaml")
+        e.run(tempfile.gettempdir() + "/graph.yaml")
 
 
         self.server.close_connection = True
