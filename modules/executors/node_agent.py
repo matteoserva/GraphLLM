@@ -123,10 +123,12 @@ class AgentController:
                 state = "COMPLETE"
 
             # fase 3
+            if isinstance(tool_response, Exception):
+                tool_response = "Exception: " + str(tool_response)
             if state != "COMPLETE":
-                if isinstance(tool_response, Exception):
-                    tool_response = "Exception: " + str(tool_response)
-            new_observation = self._build_tool_response(tool_response,state == "COMPLETE")
+                new_observation = self._build_tool_response(tool_response,False)
+            else:  #complete
+                new_observation = self._build_tool_response("answer sent to user",True)
             scratchpad += new_observation
             reflexion_scratchpad += new_observation
             if (state == "COMPLETE"):
