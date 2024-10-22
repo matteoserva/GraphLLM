@@ -29,5 +29,5 @@ T1:
 
              {p:assistant}
              {p:eom}
-    conf: {"temperature":0.01, "top_k":40, "print_prompt":1, "stop":"```"}
+    conf: {"temperature":0.01, "top_k":40, "print_prompt":false, "stop":"```"}
     exec: _C[1] _C[2]

@@ -46,32 +46,21 @@ class AgentWeb(GenericAgent):
 		modified_query = query.replace(" ","+")
 		search_url = "https://lite.duckduckgo.com/lite/?q=" + modified_query + ""
 		self.download(search_url)
-		fullargs = ["python3", "exec.py", "-j", "graphs/run_template.txt","templates/extract_search_results.txt","/tmp/pagina.md","5"]
-		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
-		last_row = result.stdout.strip().split("\n")[-1]
-		v1 = json.loads(last_row)
-		v2 = v1[0]
-
+		fullargs = ["graphs/run_template.txt","templates/extract_search_results.txt","/tmp/pagina.md","5"]
+		val = self._run_graph(*fullargs)
+		v2 = val[0]
 		return v2
 
 class AgentLLM(GenericAgent):
 	def __init__(self):
 		pass
 
-	def _run_graph(self,*args):
-		fullargs = ["python3", "exec.py","-j"]
-		fullargs.extend(args)
-		result = subprocess.run(fullargs, capture_output=True, text=True, input="")
-		ret = str(result.stdout)
-		val = ret.split("\n")[-2]
-		val = literal_eval(val)[0]
-		return val
-
 	def query_file(self,filename, question):
 		"""Uses a external agent to answer a {question} about the file saved in {filename}."""
 		val = self._run_graph("graphs/query_file.txt",filename,question)
+		val = val[0]
 		return val
-		
+
 	def _query_information(self, question):
 		"""Queries a external agent to obtain information about everything."""
 		val = ""
@@ -80,6 +69,7 @@ class AgentLLM(GenericAgent):
 	def summarize(self,filename):
 		"""Uses a external agent to generate a plain-text summary of the content of a file."""
 		val = self._run_graph("graphs/run_template.txt","templates/summarize_full.txt",filename)
+		val = val[0]
 		with open("/tmp/summary.txt","w") as f:
 			f.write(val)
 

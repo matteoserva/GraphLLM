@@ -39,7 +39,7 @@ class ExecutorFactory:
         elif type == "agent":
             executor = AgentController(full_config)
         elif type == "tool":
-            executor = ToolExecutor()
+            executor = ToolExecutor(full_config)
         elif type == "graph":
             executor = GraphExecutor(full_config)
         elif type == "llamatool":

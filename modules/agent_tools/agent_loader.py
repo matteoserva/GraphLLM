@@ -1,8 +1,12 @@
 from .all_ops import *
+from functools import partial
 
 class AgentOps():
-	def __init__(self,*args):
-		print("inizio")
+	def __init__(self,node_graph_parameters={}, *args):
+		self.path = node_graph_parameters.get("path","/")
+		self.logger = node_graph_parameters.get("logger",None)
+		self.logger_print = partial(self.logger.log,"print",self.path)
+		#self.logger_print("inizio")
 		self.tools = {}
 		self.add_tool(AgentMath2())
 		#self.add_tool(AgentAnswer())
@@ -28,6 +32,7 @@ class AgentOps():
 
 	def add_tool(self, tool):
 		ops = [el for el in dir(tool) if not el.startswith("_") ]
+		tool.logger_print = self.logger_print
 		for op in ops:
 			c = getattr(tool,op)
 			if not c:
