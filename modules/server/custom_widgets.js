@@ -64,14 +64,17 @@ class CustomTextarea {
         {
             this.parent.notifyValue(this,this.property,value)
         }
+        this.configureSizeInFocus()
     }
     
-    configureSize(aSpace,hSpace)
+    configureSizeInFocus()
     {
         var textarea = this.textarea
-
         if (this.inFocus)
         {
+            
+        
+        this.textarea.style.whiteSpace="pre"
             textarea.style.width = "1px";
             textarea.style.height = "1px";
             textarea.style.minHeight = ""
@@ -88,6 +91,18 @@ class CustomTextarea {
             minHeight = Math.min(minHeight,window.innerHeight*0.7)
             textarea.style.minHeight = (minHeight+10) + "px"
             textarea.style.minWidth = (minWidth+15)  + "px"
+            this.textarea.style.whiteSpace="pre-wrap"
+        }
+        
+    }
+    
+    configureSize(aSpace,hSpace)
+    {
+        var textarea = this.textarea
+
+        if (this.inFocus)
+        {
+            
         }
         else
         {
@@ -135,6 +150,7 @@ class CustomTextarea {
         var container = this.div.closest(".div-container")
         container.style.zIndex = 1
         this.div.style.zIndex = 1
+        this.configureSizeInFocus()
     }
     
     textareaUnfocus(textarea)
@@ -146,6 +162,7 @@ class CustomTextarea {
         var container = this.div.closest(".div-container")
         container.style.zIndex = ""
         this.div.style.zIndex = ""
+        this.textarea.style.whiteSpace="pre"
     }
     
     computeSize(widget_width)
@@ -161,7 +178,11 @@ class CustomTextarea {
     }
     setValue(k,v)
     {
+        if(this.textarea.value!=v)
+        {
         this.textarea.value=v
+        this.configureSizeInFocus()
+        }
     }
     getMinHeight()
     {
@@ -288,7 +309,7 @@ class DivContainer {
         this.configureSize(node,textarea,availableSpace)
         var numChildren = this.children.length
         this.H = numChildren * this.height
-        this.drawCounter = 0;
+        this.drawCounter = 1;
         
     }
     
