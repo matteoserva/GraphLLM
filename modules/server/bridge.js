@@ -84,6 +84,7 @@ class WebBrige {
       console.log("play")
       let that = this
       var data = JSON.stringify( graph.serialize() );
+      this.saved_chunk = "";
       fetch('/graph/exec',{ signal:signal, method:"POST", body:data}).then(response => {
                   var text = '';
             var reader = response.body.getReader()
@@ -136,7 +137,16 @@ class WebBrige {
 
   processMessage(text)
   {
-      var obj = JSON.parse(text);
+      this.saved_chunk += text;
+      try {
+        var obj = JSON.parse(this.saved_chunk);
+      }
+      catch (error)
+      {
+          console.log("error " + text);
+          return;
+      }
+      this.saved_chunk = "";
       if(obj.type == "output")
       {
         var name = obj.data[0].substr(1)
