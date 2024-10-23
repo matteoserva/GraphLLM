@@ -62,7 +62,7 @@ def my_exec(code, globals, locals):
 
 class PythonInterpreter:
     def __init__(self):
-        self.safe_builtins = ["sum", "max", "min", "range", "int", "str", "print","dir","len","next"]
+        self.safe_builtins = ["sum", "max", "min", "range", "int", "str", "print","dir","len","next","enumerate"]
         self.safe_imports = ["sympy","numpy","datetime","bs4","requests","webbrowser","json","numpy.polynomial.polynomial","math","scipy.optimize"]
         self.fake_imports = {"os":["listdir","path"]}
         self.fake_subimports = {"os.path":["getsize","isfile"]}
