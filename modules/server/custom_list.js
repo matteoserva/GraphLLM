@@ -63,7 +63,7 @@ class CustomList {
         }
     }
     
-    removeTextBox()
+    removeTextBox(notify=true)
     {
         if(this.children.length > 1)
         {
@@ -73,7 +73,10 @@ class CustomList {
             {
                     this.value.pop()
             }
-            this.parent.notifyValue(this, this.property,this.value)
+            if(notify)
+            {
+                this.parent.notifyValue(this, this.property,this.value)
+            }
             
         }
     }
@@ -152,6 +155,10 @@ class CustomList {
                 this.children[i].setValue(i,v[i])
                 
                 this.value[i] = v[i]
+            }
+            while(this.children.length > v.length && this.children.length > 1)
+            {
+                this.removeTextBox(false)
             }
         }
         //this.textarea.value=v
