@@ -108,10 +108,10 @@
                 52,
                 240
             ],
-            "size": [
-                581,
-                358
-            ],
+            "size": {
+                "0": 581,
+                "1": 358
+            },
             "flags": {},
             "order": 4,
             "mode": 0,
@@ -138,53 +138,6 @@
                     "Here is the transcript of a youtube video, with timestamps: \n```\n{}\n```\n\nOutput a list of titles for the transcript,\neach element of the list should represent a section of the video.\nGive timestamps for each title.",
                     "Now provide a very detailed description for each section of the video.\nUse a lot of references to specific timestamps."
                 ]
-            }
-        },
-        {
-            "id": 30,
-            "type": "llm/llm_call",
-            "pos": [
-                655,
-                262
-            ],
-            "size": {
-                "0": 210,
-                "1": 156
-            },
-            "flags": {},
-            "order": 5,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 33
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        38
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "",
-                "subtype": "stateful",
-                "template": ""
             }
         },
         {
@@ -237,6 +190,53 @@
             ],
             "title": "Transcript",
             "properties": {}
+        },
+        {
+            "id": 30,
+            "type": "llm/llm_call",
+            "pos": [
+                655,
+                262
+            ],
+            "size": {
+                "0": 210,
+                "1": 156
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 33
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        38
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"n_predict\":-1}",
+                "subtype": "stateful",
+                "template": ""
+            }
         }
     ],
     "links": [
