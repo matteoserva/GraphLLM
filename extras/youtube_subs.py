@@ -69,11 +69,20 @@ def replace_timestamp(match_obj):
         seconds = int(match_obj.group(1))
         minutes = seconds //60
         seconds = seconds % 60
-        res = "[" + str(minutes) + ":" + str(seconds) + "]"
+        res = "[{:02d}:{:02d}]".format(minutes,seconds)
         return res
     
 import re
-val=re.sub(r"^\[(\d+)\.\d+\]",replace_timestamp,val,flags=re.M)
+val=re.sub(r"^\[(\d+)(\.\d+)?\]",replace_timestamp,val,flags=re.M)
+
+# add title and author to transcript
+cdata = data[data.find('"videoDetails"')+15:]
+decoder = json.JSONDecoder()
+obj,idx = decoder.raw_decode(cdata)
+
+val = "Title: " + obj["title"] + "\nAuthor: " + obj["author"] + "\n\nTranscription:\n" + val
+
+# save
 
 with open(tempfile.gettempdir() + "/yt_transcript.txt","w") as f:
     _ = f.write(val)
