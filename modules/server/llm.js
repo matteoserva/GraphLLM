@@ -59,6 +59,7 @@
                     var saved_size = this.size
                     this.addInput("N","string");
                     this.size[0] = saved_size[0]
+                    this.size[1] = Math.max(this.size[1],saved_size[1])
                     //this.setSize( this.computeSize() );
                   }
               
@@ -77,6 +78,7 @@
                              var saved_size = this.size
                             this.removeInput(i)
                             this.size[0] = saved_size[0]
+                            this.size[1] = Math.max(this.size[1],saved_size[1])
                             //this.setSize( this.computeSize() );
                      
                     }
@@ -92,6 +94,7 @@
                     var saved_size = this.size
                     this.addOutput("N","string");
                     this.size[0] = saved_size[0]
+                    this.size[1] = Math.max(this.size[1],saved_size[1])
                     //this.setSize( this.computeSize() );
                   }
 
@@ -111,6 +114,7 @@
                             var saved_size = this.size
                             this.removeOutput(i)
                             this.size[0] = saved_size[0]
+                            this.size[1] = Math.max(this.size[1],saved_size[1])
                             //this.setSize( this.computeSize() );
 
                     }
