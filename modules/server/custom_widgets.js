@@ -163,6 +163,7 @@ class CustomTextarea {
         container.style.zIndex = ""
         this.div.style.zIndex = ""
         this.textarea.style.whiteSpace="pre"
+        this.textChange()
     }
     
     computeSize(widget_width)
