@@ -65,7 +65,7 @@ class CustomList {
     
     removeTextBox()
     {
-        if(this.children.length > 2)
+        if(this.children.length > 1)
         {
             var child = this.children.pop()
             child.detachElement()
