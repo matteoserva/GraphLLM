@@ -152,7 +152,7 @@ class CustomList {
                 }
                 
                 
-                this.children[i].setValue(i,v[i])
+                this.children[i].setValue(this.children[i].property,v[i])
                 
                 this.value[i] = v[i]
             }
