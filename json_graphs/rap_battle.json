@@ -160,7 +160,7 @@
         },
         {
             "id": 9,
-            "type": "llm/generic_node",
+            "type": "graph/generic_node",
             "pos": [
                 88,
                 774
@@ -220,7 +220,7 @@
         },
         {
             "id": 13,
-            "type": "llm/generic_node",
+            "type": "graph/generic_node",
             "pos": [
                 434,
                 774
@@ -294,7 +294,7 @@
         },
         {
             "id": 14,
-            "type": "llm/generic_node",
+            "type": "graph/generic_node",
             "pos": [
                 1099,
                 801
@@ -341,7 +341,7 @@
         },
         {
             "id": 16,
-            "type": "llm/generic_node",
+            "type": "graph/generic_node",
             "pos": [
                 786,
                 773
@@ -440,7 +440,7 @@
         },
         {
             "id": 6,
-            "type": "llm/generic_node",
+            "type": "graph/generic_node",
             "pos": [
                 297,
                 582
@@ -512,7 +512,7 @@
         },
         {
             "id": 5,
-            "type": "llm/generic_node",
+            "type": "graph/generic_node",
             "pos": [
                 308,
                 417
@@ -559,7 +559,7 @@
         },
         {
             "id": 1,
-            "type": "llm/generic_node",
+            "type": "graph/generic_node",
             "pos": [
                 54,
                 412

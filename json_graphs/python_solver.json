@@ -222,7 +222,7 @@
         },
         {
             "id": 14,
-            "type": "llm/generic_node",
+            "type": "graph/generic_node",
             "pos": [
                 85,
                 679

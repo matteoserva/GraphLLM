@@ -240,11 +240,11 @@ class JsonParser():
         new_config = {}
         new_config["type"] = old_config["type"]
         type = old_config["type"].split("/")[-1]
-        if old_config["type"] in ["llm/generic_node"]:
+        if type in ["generic_node"]:
             return self.parse_generic(old_config,links)
         if old_config["type"] in ["llm/input"]:
             return self.parse_input(old_config,links)
-        if type.startswith("virtual_"):
+        if type in ["virtual_sink","virtual_source"]:
             return self.parse_virtual(old_config,links)
         if old_config["type"].startswith("llm/watch"):
             return None

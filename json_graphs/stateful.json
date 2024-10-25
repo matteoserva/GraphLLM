@@ -128,7 +128,7 @@
         },
         {
             "id": 28,
-            "type": "llm/generic_node",
+            "type": "graph/generic_node",
             "pos": [
                 386,
                 456

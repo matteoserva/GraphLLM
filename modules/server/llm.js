@@ -126,7 +126,7 @@
     }
     
     //register in the system
-    LiteGraph.registerNodeType("llm/generic_node", MyGraphNode );
+    LiteGraph.registerNodeType("graph/generic_node", MyGraphNode );
 
     /* ********************** ******************* */
     //node constructor class
