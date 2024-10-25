@@ -1,20 +1,236 @@
 {
-    "last_node_id": 19,
-    "last_link_id": 27,
+    "last_node_id": 28,
+    "last_link_id": 36,
     "nodes": [
+        {
+            "id": 18,
+            "type": "llm/variable",
+            "pos": [
+                89,
+                41
+            ],
+            "size": [
+                214.39998779296877,
+                112
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "title": "Topic 1",
+            "properties": {
+                "identifier": "topic1",
+                "parameters": "red"
+            },
+            "color": "#322",
+            "bgcolor": "#533"
+        },
+        {
+            "id": 19,
+            "type": "llm/variable",
+            "pos": [
+                337,
+                47
+            ],
+            "size": {
+                "0": 210,
+                "1": 112
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "title": "Topic 2",
+            "properties": {
+                "identifier": "topic2",
+                "parameters": "blue"
+            },
+            "color": "#223",
+            "bgcolor": "#335"
+        },
+        {
+            "id": 24,
+            "type": "llm/virtual_source",
+            "pos": [
+                581,
+                53
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        34
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "out"
+            }
+        },
+        {
+            "id": 12,
+            "type": "llm/watch",
+            "pos": [
+                818,
+                56
+            ],
+            "size": [
+                752.6999267578126,
+                446.80003318786623
+            ],
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 34,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "In a world where colors intertwine, blue stands tall, it's no lie,  \nCalm like the ocean, or sky so high, it's the hue that makes things fly,  \nRed's just too hot, too intense, too bold, it's a color that's way too loud,  \nBlue's the chill that cools your day, it's the shade that leads the way.\n---\nRed's the fire in the night, the passion that ignites,  \nThe heart that beats, the life that fights, it's the essence of the light.  \nBlue may calm, but red empowers, it's the blood that courses through,  \nFrom the rising sun to the sunset's hue, red's the color that's true.\n---\nRed's got heat, I'll give it that, but blue's the color of the smart,  \nIt's the tech and the truth, the depth from which you chart,  \nWhile red may spark a wild desire, it's blue that holds the mind's eye,  \nIn the spectrum of life, blue's the one that truly flies high.\n---\nRed ignites the mind and soul, fuels the dreams that make us whole,  \nIt's the courage, the love, the will to roll, the fire that makes us bold.  \nWhile blue may calm and soothe the strife, red's the fuel that sets us right,  \nIn the battle of life, red's the spark that ignites the light."
+            },
+            "color": "#2a363b",
+            "bgcolor": "#3f5159"
+        },
+        {
+            "id": 26,
+            "type": "llm/virtual_source",
+            "pos": [
+                -163,
+                738
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        35
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "rap1"
+            }
+        },
+        {
+            "id": 27,
+            "type": "llm/virtual_source",
+            "pos": [
+                -165,
+                846
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        36
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "rap2"
+            }
+        },
+        {
+            "id": 9,
+            "type": "llm/generic_node",
+            "pos": [
+                88,
+                774
+            ],
+            "size": {
+                "0": 304.7948913574219,
+                "1": 128
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 35,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 36
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        18
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": [
+                        19
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "merge1",
+            "properties": {
+                "parameters": "    type: copy\n    conf: {\"subtype\": \"gate\"}"
+            }
+        },
         {
             "id": 13,
             "type": "llm/generic_node",
             "pos": [
-                314,
-                368
+                434,
+                774
             ],
-            "size": {
-                "0": 320.25091552734375,
-                "1": 170.5172882080078
-            },
+            "size": [
+                316.6000091552734,
+                128
+            ],
             "flags": {},
-            "order": 7,
+            "order": 14,
             "mode": 0,
             "inputs": [
                 {
@@ -52,18 +268,90 @@
             }
         },
         {
-            "id": 16,
-            "type": "llm/generic_node",
+            "id": 25,
+            "type": "llm/virtual_sink",
             "pos": [
-                317,
-                601
+                1354,
+                817
             ],
             "size": {
                 "0": 210,
-                "1": 108
+                "1": 58
             },
             "flags": {},
-            "order": 9,
+            "order": 18,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 33
+                }
+            ],
+            "properties": {
+                "identifier": "out"
+            }
+        },
+        {
+            "id": 14,
+            "type": "llm/generic_node",
+            "pos": [
+                1099,
+                801
+            ],
+            "size": [
+                210,
+                108
+            ],
+            "flags": {},
+            "order": 17,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 24,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        33
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Format output",
+            "properties": {
+                "parameters": "    type: python\n    init: \n       - |\n           verses = _C[0]\n           formatted = \"\\n---\\n\".join(verses)\n           _O = [formatted]"
+            }
+        },
+        {
+            "id": 16,
+            "type": "llm/generic_node",
+            "pos": [
+                786,
+                773
+            ],
+            "size": [
+                284.6000091552735,
+                108
+            ],
+            "flags": {},
+            "order": 16,
             "mode": 0,
             "inputs": [
                 {
@@ -98,80 +386,82 @@
             }
         },
         {
-            "id": 14,
-            "type": "llm/generic_node",
+            "id": 21,
+            "type": "llm/virtual_sink",
             "pos": [
-                650,
-                559
+                575,
+                607
             ],
             "size": {
-                "0": 439.25091552734375,
-                "1": 213.5172882080078
+                "0": 210,
+                "1": 58
             },
             "flags": {},
-            "order": 8,
+            "order": 13,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 24,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        27
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
+                    "link": 28
                 }
             ],
             "properties": {
-                "parameters": "    type: python\n    init: \n       - |\n           verses = _C[0]\n           formatted = \"\\n---\\n\".join(verses)\n           _O = [formatted]"
+                "identifier": "rap2"
             }
         },
         {
-            "id": 9,
-            "type": "llm/generic_node",
+            "id": 23,
+            "type": "llm/virtual_source",
             "pos": [
-                -10,
-                411
+                26,
+                588
             ],
             "size": {
-                "0": 304.7948913574219,
-                "1": 128
+                "0": 210,
+                "1": 58
             },
             "flags": {},
-            "order": 5,
+            "order": 3,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        32
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "rap1"
+            }
+        },
+        {
+            "id": 6,
+            "type": "llm/generic_node",
+            "pos": [
+                297,
+                582
+            ],
+            "size": [
+                210,
+                108
+            ],
+            "flags": {},
+            "order": 9,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 11,
+                    "link": 32,
                     "slot_index": 0
                 },
                 {
                     "name": "N",
-                    "type": "string",
-                    "link": 12
-                },
-                {
-                    "name": "N",
-                    "type": "string",
+                    "type": "number",
                     "link": null
                 }
             ],
@@ -180,17 +470,9 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        18
+                        28
                     ],
                     "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": [
-                        19
-                    ],
-                    "slot_index": 1
                 },
                 {
                     "name": "N",
@@ -198,24 +480,49 @@
                     "links": null
                 }
             ],
-            "title": "merge1",
+            "title": "Rapper 2",
             "properties": {
-                "parameters": "    type: copy\n    conf: {\"subtype\": \"gate\"}"
+                "parameters": "    type: stateful\n    conf: { \"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt {v:topic1} {v:topic2}"
+            }
+        },
+        {
+            "id": 20,
+            "type": "llm/virtual_sink",
+            "pos": [
+                575,
+                466
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 15,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 30
+                }
+            ],
+            "properties": {
+                "identifier": "rap1"
             }
         },
         {
             "id": 5,
             "type": "llm/generic_node",
             "pos": [
-                473,
-                -47
+                308,
+                417
             ],
-            "size": {
-                "0": 431.8569030761719,
-                "1": 223.90028381347656
-            },
+            "size": [
+                210,
+                108
+            ],
             "flags": {},
-            "order": 3,
+            "order": 12,
             "mode": 0,
             "inputs": [
                 {
@@ -235,8 +542,7 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        7,
-                        11
+                        30
                     ],
                     "slot_index": 0
                 },
@@ -248,28 +554,28 @@
             ],
             "title": "Rapper 1",
             "properties": {
-                "parameters": "    type: stateful\n    conf: {\"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt {v:topic1} {v:topic2}"
+                "parameters": "    type: stateful\n    conf: {\"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt {v:topic2} {v:topic1}"
             }
         },
         {
             "id": 1,
             "type": "llm/generic_node",
             "pos": [
-                -42,
-                -61
+                54,
+                412
             ],
-            "size": {
-                "0": 416.3309020996094,
-                "1": 336.0562744140625
-            },
+            "size": [
+                210,
+                108
+            ],
             "flags": {},
-            "order": 2,
+            "order": 8,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 16
+                    "link": 31
                 },
                 {
                     "name": "N",
@@ -298,114 +604,53 @@
             }
         },
         {
-            "id": 12,
-            "type": "llm/watch",
+            "id": 22,
+            "type": "llm/virtual_source",
             "pos": [
-                1145,
-                215
-            ],
-            "size": {
-                "0": 437,
-                "1": 453
-            },
-            "flags": {},
-            "order": 6,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 27,
-                    "slot_index": 0
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 18,
-            "type": "llm/variable",
-            "pos": [
-                672,
-                249
+                -217,
+                422
             ],
             "size": {
                 "0": 210,
-                "1": 112
+                "1": 58
             },
             "flags": {},
-            "order": 0,
+            "order": 2,
             "mode": 0,
-            "properties": {
-                "identifier": "topic1",
-                "parameters": "red"
-            }
-        },
-        {
-            "id": 19,
-            "type": "llm/variable",
-            "pos": [
-                905,
-                330
-            ],
-            "size": {
-                "0": 210,
-                "1": 112
-            },
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "properties": {
-                "identifier": "topic2",
-                "parameters": "blue"
-            }
-        },
-        {
-            "id": 6,
-            "type": "llm/generic_node",
-            "pos": [
-                1110,
-                6
-            ],
-            "size": [
-                632.6028269287115,
-                139.09126750488286
-            ],
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 7,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "number",
-                    "link": null
-                }
-            ],
             "outputs": [
                 {
                     "name": "out",
                     "type": "string",
                     "links": [
-                        12,
-                        16
+                        31
                     ],
                     "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
                 }
             ],
-            "title": "Rapper 2",
             "properties": {
-                "parameters": "    type: stateful\n    conf: { \"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt {v:topic2} {v:topic1}"
+                "identifier": "rap2"
             }
+        },
+        {
+            "id": 28,
+            "type": "llm/variable",
+            "pos": [
+                71,
+                199
+            ],
+            "size": [
+                694.5000122070312,
+                144.2999786376953
+            ],
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "Rap battle generator.\nYou can change the red and blue squares to select the topics.\n\nThis graph contains many nodes that have been obsoleted.\nDon't use this as an example when designing your own graphs."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
         }
     ],
     "links": [
@@ -414,38 +659,6 @@
             1,
             0,
             5,
-            0,
-            "string"
-        ],
-        [
-            7,
-            5,
-            0,
-            6,
-            0,
-            "string"
-        ],
-        [
-            11,
-            5,
-            0,
-            9,
-            0,
-            "string"
-        ],
-        [
-            12,
-            6,
-            0,
-            9,
-            1,
-            "string"
-        ],
-        [
-            16,
-            6,
-            0,
-            1,
             0,
             "string"
         ],
@@ -482,11 +695,67 @@
             "string"
         ],
         [
-            27,
+            28,
+            6,
+            0,
+            21,
+            0,
+            "string"
+        ],
+        [
+            30,
+            5,
+            0,
+            20,
+            0,
+            "string"
+        ],
+        [
+            31,
+            22,
+            0,
+            1,
+            0,
+            "string"
+        ],
+        [
+            32,
+            23,
+            0,
+            6,
+            0,
+            "string"
+        ],
+        [
+            33,
             14,
+            0,
+            25,
+            0,
+            "string"
+        ],
+        [
+            34,
+            24,
             0,
             12,
             0,
+            "string"
+        ],
+        [
+            35,
+            26,
+            0,
+            9,
+            0,
+            "string"
+        ],
+        [
+            36,
+            27,
+            0,
+            9,
+            1,
             "string"
         ]
     ],
