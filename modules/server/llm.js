@@ -444,7 +444,11 @@
     function MyScraperNode()
     {
     this.addOutput("out","string");
-    this.addWidget("text","URL","", { property: "address"});
+
+    this.container = new DivContainer(this)
+    this.addCustomWidget( this.container);
+    this.container.addWidget("textarea","URL",{ property: "address"})
+    
     this.properties = { address: "" };
     }
 
@@ -463,7 +467,11 @@
     function MyPDFNode()
     {
     this.addOutput("out","string");
-    this.addWidget("text","file","", { property: "address"});
+
+    this.container = new DivContainer(this)
+    this.addCustomWidget( this.container);
+    this.container.addWidget("textarea","file",{ property: "address"})
+
     this.properties = { address: "" };
     }
 
