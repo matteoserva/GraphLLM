@@ -252,7 +252,7 @@ class JsonParser():
             return self.parse_variable(old_config,links)
         if old_config["type"].startswith("llm/llm_call"):
             return self.parse_llm_call(old_config,links)
-        if old_config["type"].startswith("llm/file"):
+        if type in ["file"]:
             return self.parse_file(old_config,links)
         if old_config["type"].startswith("llm/list"):
             return self.parse_list(old_config,links)

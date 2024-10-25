@@ -373,7 +373,7 @@
     MyFileNode.title = "File";
 
     //register in the system
-    LiteGraph.registerNodeType("llm/file", MyFileNode );
+    LiteGraph.registerNodeType("tools/file", MyFileNode );
     
     
     /*
@@ -429,7 +429,7 @@
         this.addWidget("combo","subtype","input",null, { property: "subtype", values: ["input","output"] } );
     }
     //name to show
-    MyConnectionNode.title = "connection input/output";
+    MyConnectionNode.title = "Connection input/output";
     MyConnectionNode.prototype.onConnectionsChange = MyGraphNode.prototype.onConnectionsChange
     //register in the system
     LiteGraph.registerNodeType("graph/connection", MyConnectionNode );

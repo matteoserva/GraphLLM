@@ -97,7 +97,7 @@
         },
         {
             "id": 9,
-            "type": "llm/file",
+            "type": "tools/file",
             "pos": [
                 96,
                 51
