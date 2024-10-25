@@ -1,0 +1,393 @@
+{
+    "last_node_id": 17,
+    "last_link_id": 17,
+    "nodes": [
+        {
+            "id": 13,
+            "type": "llm/llm_call",
+            "pos": [
+                80,
+                454
+            ],
+            "size": {
+                "0": 412,
+                "1": 181
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 13,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        15,
+                        17
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"temperature\":0.01, \"top_k\":1,\"stop\":\"```\"}",
+                "subtype": "stateless",
+                "template": "{p:user}\nWrite python code that solves the problem.\nIgnore error checking the validity of the solution.\nThe code should only print the answer in this form: \"The answer is: {your answer}\".\n\nHere is the problem:\n```\n{p:exec1}\n```{p:eom}\n\n{p:assistant}\nHere is the python code that solves the problem:\n\n```python\n{p:eom}"
+            }
+        },
+        {
+            "id": 7,
+            "type": "llm/input",
+            "pos": [
+                84,
+                113
+            ],
+            "size": {
+                "0": 1086,
+                "1": 88
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        12
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "Compute the cube of the sum of the first 10 even natural numbers."
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 4,
+            "type": "llm/watch",
+            "pos": [
+                537,
+                252
+            ],
+            "size": {
+                "0": 632.7130737304688,
+                "1": 203.89187622070312
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 11
+                }
+            ],
+            "title": "Rewritten problem\n",
+            "properties": {}
+        },
+        {
+            "id": 12,
+            "type": "llm/llm_call",
+            "pos": [
+                79,
+                251
+            ],
+            "size": {
+                "0": 412,
+                "1": 156
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 12
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        11,
+                        13
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "LLM Call\n",
+            "properties": {
+                "conf": "{\"temperature\":0.01, \"top_k\":40, \"sysprompt\": \"\",\"stop\":\"```\"}",
+                "subtype": "stateless",
+                "template": "{p:bos}\n\n{p:system}\nYou are a helpful assistant{p:eom}\n\n{p:user}\nYour job is to rewrite a question to highlight all the relevant details.\n\nThe question is the following:\n```\n{p:exec1}\n```\n\nRephrase the question by clearly listing all relevant conditions and unknowns.\nEnsure that your rephrasing captures all important details from the original question.\nThis rephrasing should help clarify the problem and guide the solution process.\nThe provided information is always correct, even if it is unlikely, even if there is a typo.\n\nThe rephrased question should contain the following sections:\n- initial conditions\n- useful formulas\n- unknowns\n- objective\n- potential pitfails and gotchas\n- suggested steps for solving the problem\n- the question\n{p:eom}\n\n{p:assistant}\nHere is the rephrased question:\n```\n{p:eom}"
+            }
+        },
+        {
+            "id": 8,
+            "type": "llm/variable",
+            "pos": [
+                1205,
+                121
+            ],
+            "size": {
+                "0": 292.15087890625,
+                "1": 112
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "original problem.\nThe graph will rewrite it\nbefore solving it with code"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 16,
+            "type": "llm/variable",
+            "pos": [
+                1208,
+                307
+            ],
+            "size": {
+                "0": 292.15087890625,
+                "1": 112
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "rewritten problem."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 6,
+            "type": "llm/watch",
+            "pos": [
+                542,
+                511
+            ],
+            "size": {
+                "0": 634.8662719726562,
+                "1": 88
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 17
+                }
+            ],
+            "title": "Python code\n",
+            "properties": {}
+        },
+        {
+            "id": 14,
+            "type": "llm/generic_node",
+            "pos": [
+                85,
+                679
+            ],
+            "size": {
+                "0": 407,
+                "1": 108
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 15,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        16
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Python executor\n",
+            "properties": {
+                "parameters": "    type: python\n    init: \"\""
+            }
+        },
+        {
+            "id": 15,
+            "type": "llm/watch",
+            "pos": [
+                544,
+                657
+            ],
+            "size": {
+                "0": 622,
+                "1": 125
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 16
+                }
+            ],
+            "title": "Output",
+            "properties": {},
+            "color": "#223",
+            "bgcolor": "#335"
+        },
+        {
+            "id": 10,
+            "type": "llm/variable",
+            "pos": [
+                1215,
+                663
+            ],
+            "size": {
+                "0": 297.14385986328125,
+                "1": 112
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "solution"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 9,
+            "type": "llm/variable",
+            "pos": [
+                1214,
+                485
+            ],
+            "size": {
+                "0": 288.48187255859375,
+                "1": 112
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "generated python code"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        }
+    ],
+    "links": [
+        [
+            11,
+            12,
+            0,
+            4,
+            0,
+            "string"
+        ],
+        [
+            12,
+            7,
+            0,
+            12,
+            0,
+            "string"
+        ],
+        [
+            13,
+            12,
+            0,
+            13,
+            0,
+            "string"
+        ],
+        [
+            15,
+            13,
+            0,
+            14,
+            0,
+            "string"
+        ],
+        [
+            16,
+            14,
+            0,
+            15,
+            0,
+            "string"
+        ],
+        [
+            17,
+            13,
+            0,
+            6,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
