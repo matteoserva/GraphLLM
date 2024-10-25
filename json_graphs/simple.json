@@ -72,7 +72,7 @@
         },
         {
             "id": 22,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 221,
                 358

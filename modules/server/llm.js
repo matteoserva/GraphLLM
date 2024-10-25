@@ -354,8 +354,8 @@
     MyVariableNode.title = "Variable";
 
     //register in the system
-    LiteGraph.registerNodeType("llm/variable", MyVariableNode );
-
+    LiteGraph.registerNodeType("graph/variable", MyVariableNode );
+    //LiteGraph.registerNodeType("llm/variable", MyVariableNode );
 
         //node constructor class
     function MyFileNode()

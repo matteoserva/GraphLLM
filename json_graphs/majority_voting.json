@@ -63,7 +63,7 @@
         },
         {
             "id": 12,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 75,
                 53
@@ -85,7 +85,7 @@
         },
         {
             "id": 14,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 77,
                 214

@@ -50,7 +50,7 @@
         },
         {
             "id": 36,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 53,
                 51

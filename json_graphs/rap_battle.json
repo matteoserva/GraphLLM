@@ -4,7 +4,7 @@
     "nodes": [
         {
             "id": 18,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 89,
                 41
@@ -26,7 +26,7 @@
         },
         {
             "id": 19,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 337,
                 47
@@ -633,7 +633,7 @@
         },
         {
             "id": 28,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 71,
                 199

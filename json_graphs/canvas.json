@@ -187,7 +187,7 @@
         },
         {
             "id": 10,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 647,
                 46

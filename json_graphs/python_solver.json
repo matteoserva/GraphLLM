@@ -156,7 +156,7 @@
         },
         {
             "id": 8,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 1205,
                 121
@@ -177,7 +177,7 @@
         },
         {
             "id": 16,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 1208,
                 307
@@ -295,7 +295,7 @@
         },
         {
             "id": 10,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 1215,
                 663
@@ -316,7 +316,7 @@
         },
         {
             "id": 9,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 1214,
                 485

@@ -236,7 +236,7 @@ class JsonParser():
             return self.parse_virtual(old_config,links)
         if old_config["type"].startswith("llm/watch"):
             return None
-        if old_config["type"].startswith("llm/variable"):
+        if type in ["variable"]:
             return self.parse_variable(old_config,links)
         if old_config["type"].startswith("llm/llm_call"):
             return self.parse_llm_call(old_config,links)

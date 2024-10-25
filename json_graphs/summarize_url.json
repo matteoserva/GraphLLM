@@ -135,7 +135,7 @@
         },
         {
             "id": 25,
-            "type": "llm/variable",
+            "type": "graph/variable",
             "pos": [
                 37,
                 222
