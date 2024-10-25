@@ -447,7 +447,7 @@
 
     this.container = new DivContainer(this)
     this.addCustomWidget( this.container);
-    this.container.addWidget("textarea","URL",{ property: "address"})
+    this.container.addWidget("text_input","URL",{ property: "address"})
     
     this.properties = { address: "" };
     }
@@ -470,7 +470,7 @@
 
     this.container = new DivContainer(this)
     this.addCustomWidget( this.container);
-    this.container.addWidget("textarea","file",{ property: "address"})
+    this.container.addWidget("text_input","file",{ property: "address"})
 
     this.properties = { address: "" };
     }

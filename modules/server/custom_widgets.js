@@ -1,3 +1,166 @@
+class CustomTextInput {
+    constructor(parent,name,options)
+    {
+        this.disabled = false
+        this.name=name
+        this.value=""
+        this.H = 15
+        this.type = "custom"
+        this.options = {multiline:false}
+        this.y=0
+        this.div = this.makeElement(parent)
+
+        this.inFocus = false
+        this.margin = 5
+        this.property = options.property
+        this.parent = parent
+    }
+
+    makeElement(parentNode)
+    {
+        var dialog = parentNode
+        var div = document.createElement("div");
+        var text = document.createElement("div")
+        text.className = "nameText";
+        text.innerText = this.name
+        text.style="position:absolute; top:2px; right:4px; color:DarkGray; user-select: none"
+        div.appendChild(text)
+        div.style="position:relative";
+        div.style.height = "25px";
+        var textarea = document.createElement("input");
+        div.appendChild(textarea)
+        textarea.className="CustomTextInput"
+        textarea.style='resize:none; white-space: pre;border:0px;padding:0px' + this.margin + 'px'
+        textarea.style.backgroundColor= "black"
+        textarea.style.color = "white"
+        textarea.style.width = "100%";
+        textarea.style.height = "100%";
+        this.textarea = textarea
+
+        textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
+        textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
+        textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
+        return div
+
+    }
+
+    appendElement(dialog)
+    {
+        dialog.appendChild(this.div);
+    }
+
+    detachElement()
+    {
+        this.div.remove()
+    }
+
+    textChange()
+    {
+        var value = this.textarea.value
+        if(this.property)
+        {
+            this.parent.notifyValue(this,this.property,value)
+        }
+        this.configureSizeInFocus()
+    }
+
+    configureSizeInFocus()
+    {
+        var textarea = this.textarea
+        if (this.inFocus)
+        {
+
+
+        this.textarea.style.whiteSpace="pre"
+            textarea.style.width = "1px";
+            textarea.style.height = "1px";
+            textarea.style.minHeight = ""
+            textarea.style.minWidth = ""
+
+            var minHeight = (textarea.scrollHeight);
+            var minWidth = (textarea.scrollWidth);
+            textarea.style.width = "100%";
+            textarea.style.height = "100%";
+            var currentWidth = textarea.clientWidth
+            var currentHeight = textarea.clientHeight
+
+            minWidth = Math.min(minWidth,window.innerWidth*0.7)
+            minHeight = Math.min(minHeight,window.innerHeight*0.7)
+            textarea.style.minHeight = (minHeight+10) + "px"
+            textarea.style.minWidth = (minWidth+15)  + "px"
+            this.textarea.style.whiteSpace="pre-wrap"
+        }
+
+    }
+
+    configureSize(aSpace,hSpace)
+    {
+        var textarea = this.textarea
+
+        if (this.inFocus)
+        {
+        }
+        else
+        {
+            textarea.style.width = "100%";
+            textarea.style.height = "100%";
+            textarea.style.minHeight = ""
+            textarea.style.minWidth = ""
+        }
+
+    }
+
+
+    textareaFocus(textarea)
+    {
+        console.log("focusin");
+        this.inFocus = true
+        this.configureSize(this.H+this.margin)
+        this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="none"
+        var container = this.div.closest(".div-container")
+        container.style.zIndex = 1
+        this.div.style.zIndex = 1
+        this.configureSizeInFocus()
+    }
+
+    textareaUnfocus(textarea)
+    {
+        console.log("focusout")
+        this.inFocus = false
+        this.configureSize()
+        this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="block"
+        var container = this.div.closest(".div-container")
+        container.style.zIndex = ""
+        this.div.style.zIndex = ""
+        this.textarea.style.whiteSpace="pre"
+        this.textChange()
+    }
+
+    computeSize(widget_width)
+    {
+        var res = [widget_width, this.H]
+        return res
+    }
+
+    draw(ctx, node, widget_width, y, H)
+    {
+        this.configureSize(H,widget_width)
+
+    }
+    setValue(k,v)
+    {
+        if(this.textarea.value!=v)
+        {
+        this.textarea.value=v
+        this.configureSizeInFocus()
+        }
+    }
+    getMinHeight()
+    {
+        return 25;
+    }
+}
+
 class CustomTextarea {
     constructor(parent,name,options)
     {
@@ -299,9 +462,9 @@ class DivContainer {
             }
             minHeight += childMinHeight;
         }
-        if(minHeight<50)
+        if(minHeight<25)
         {
-                minHeight = 50;
+                minHeight = 25;
         }
         var res = [widget_width, minHeight]
         return res
@@ -356,6 +519,11 @@ class DivContainer {
         if(type == "list")
         {
             var elem = new CustomList(this, name,options)
+            this.addElement(elem)
+        }
+        else if(type=="text_input")
+        {
+            var elem = new CustomTextInput(this, name,options)
             this.addElement(elem)
         }
         else
