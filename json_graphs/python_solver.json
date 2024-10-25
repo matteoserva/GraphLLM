@@ -114,7 +114,7 @@
             ],
             "size": {
                 "0": 412,
-                "1": 156
+                "1": 157
             },
             "flags": {},
             "order": 5,
@@ -153,27 +153,6 @@
                 "subtype": "stateless",
                 "template": "{p:bos}\n\n{p:system}\nYou are a helpful assistant{p:eom}\n\n{p:user}\nYour job is to rewrite a question to highlight all the relevant details.\n\nThe question is the following:\n```\n{p:exec1}\n```\n\nRephrase the question by clearly listing all relevant conditions and unknowns.\nEnsure that your rephrasing captures all important details from the original question.\nThis rephrasing should help clarify the problem and guide the solution process.\nThe provided information is always correct, even if it is unlikely, even if there is a typo.\n\nThe rephrased question should contain the following sections:\n- initial conditions\n- useful formulas\n- unknowns\n- objective\n- potential pitfails and gotchas\n- suggested steps for solving the problem\n- the question\n{p:eom}\n\n{p:assistant}\nHere is the rephrased question:\n```\n{p:eom}"
             }
-        },
-        {
-            "id": 8,
-            "type": "graph/variable",
-            "pos": [
-                1205,
-                121
-            ],
-            "size": {
-                "0": 292.15087890625,
-                "1": 112
-            },
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "properties": {
-                "identifier": "",
-                "parameters": "original problem.\nThe graph will rewrite it\nbefore solving it with code"
-            },
-            "color": "#232",
-            "bgcolor": "#353"
         },
         {
             "id": 16,
@@ -331,6 +310,27 @@
             "properties": {
                 "identifier": "",
                 "parameters": "generated python code"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 8,
+            "type": "graph/variable",
+            "pos": [
+                1205,
+                121
+            ],
+            "size": [
+                294.4456420898439,
+                112
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "original problem.\nThe graph will rewrite it\nbefore solving it with code"
             },
             "color": "#232",
             "bgcolor": "#353"
