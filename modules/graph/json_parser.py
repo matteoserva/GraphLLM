@@ -144,6 +144,18 @@ class JsonParser():
         new_config["exec"] = self._calc_exec(old_inputs,links)
         return new_config
 
+    def parse_pdf(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "exec"
+
+        properties = old_config.get("properties", {})
+        address = properties.get("address")
+        new_config["init"] = ["python3", "extras/parse_pdf.py", address]
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = self._calc_exec(old_inputs,links)
+        return new_config
+
     def parse_history(self,old_config,links):
         new_config = {}
         new_config["type"] = "list"
@@ -232,7 +244,7 @@ class JsonParser():
             return self.parse_generic(old_config,links)
         if old_config["type"] in ["llm/input"]:
             return self.parse_input(old_config,links)
-        if old_config["type"].startswith("llm/virtual_"):
+        if type.startswith("virtual_"):
             return self.parse_virtual(old_config,links)
         if old_config["type"].startswith("llm/watch"):
             return None
@@ -252,6 +264,8 @@ class JsonParser():
             return self.parse_connection(old_config,links)
         if type in ["web_scraper"]:
             return self.parse_scraper(old_config,links)
+        if type in ["pdf_parser"]:
+            return self.parse_pdf(old_config,links)
         return None
 
     def load_string(self,v):

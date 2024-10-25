@@ -48,7 +48,7 @@
         },
         {
             "id": 24,
-            "type": "llm/virtual_source",
+            "type": "graph/virtual_source",
             "pos": [
                 581,
                 53
@@ -104,7 +104,7 @@
         },
         {
             "id": 26,
-            "type": "llm/virtual_source",
+            "type": "graph/virtual_source",
             "pos": [
                 -163,
                 738
@@ -132,7 +132,7 @@
         },
         {
             "id": 27,
-            "type": "llm/virtual_source",
+            "type": "graph/virtual_source",
             "pos": [
                 -165,
                 846
@@ -269,7 +269,7 @@
         },
         {
             "id": 25,
-            "type": "llm/virtual_sink",
+            "type": "graph/virtual_sink",
             "pos": [
                 1354,
                 817
@@ -387,7 +387,7 @@
         },
         {
             "id": 21,
-            "type": "llm/virtual_sink",
+            "type": "graph/virtual_sink",
             "pos": [
                 575,
                 607
@@ -412,7 +412,7 @@
         },
         {
             "id": 23,
-            "type": "llm/virtual_source",
+            "type": "graph/virtual_source",
             "pos": [
                 26,
                 588
@@ -487,7 +487,7 @@
         },
         {
             "id": 20,
-            "type": "llm/virtual_sink",
+            "type": "graph/virtual_sink",
             "pos": [
                 575,
                 466
@@ -605,7 +605,7 @@
         },
         {
             "id": 22,
-            "type": "llm/virtual_source",
+            "type": "graph/virtual_source",
             "pos": [
                 -217,
                 422

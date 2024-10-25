@@ -316,7 +316,7 @@
     MyVirtualSourceNode.prototype.onExecute = function(){}
 
     //register in the system
-    LiteGraph.registerNodeType("llm/virtual_source", MyVirtualSourceNode );
+    LiteGraph.registerNodeType("graph/virtual_source", MyVirtualSourceNode );
 
        /* ----------------- -------------- */
     //node constructor class
@@ -335,7 +335,7 @@
     MyVirtualSinkNode.prototype.onExecute = function(){}
 
     //register in the system
-    LiteGraph.registerNodeType("llm/virtual_sink", MyVirtualSinkNode );
+    LiteGraph.registerNodeType("graph/virtual_sink", MyVirtualSinkNode );
 
 
 
@@ -453,5 +453,25 @@
 
     //register in the system
     LiteGraph.registerNodeType("tools/web_scraper", MyScraperNode );
+
+    /*
+
+        PDF parser
+
+    */
+        //node constructor class
+    function MyPDFNode()
+    {
+    this.addOutput("out","string");
+    this.addWidget("text","file","", { property: "address"});
+    this.properties = { address: "" };
+    }
+
+    //name to show
+    MyPDFNode.title = "PDF Parser";
+
+    //register in the system
+    LiteGraph.registerNodeType("tools/pdf_parser", MyPDFNode );
+
 
 })(this);
