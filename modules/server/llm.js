@@ -95,8 +95,10 @@
                     this.addOutput("N","string");
                     this.size[0] = saved_size[0]
                     this.size[1] = Math.max(this.size[1],saved_size[1])
+
                     //this.setSize( this.computeSize() );
                   }
+                  //this.graph.change() //TODO reposition the connection in input/output node when minimized
 
               }
               else
@@ -202,7 +204,7 @@
     }
 
     //name to show
-    MyInputNode.title = "Input";
+    MyInputNode.title = "Text Input";
 
     //register in the system
     LiteGraph.registerNodeType("llm/input", MyInputNode );
@@ -406,6 +408,30 @@
  
     //register in the system
     LiteGraph.registerNodeType("llm/generic_agent", MyAgentNode );
-    
+
+
+    /*
+
+        INPUT/OUTPUT
+
+    ********************** ******************* */
+
+    //node constructor class
+    function MyConnectionNode()
+    {
+        this.addInput("in","string");
+        this.addOutput("out","string");
+
+        this.properties = {conf:"",subtype:"input",template:""  };
+
+
+        this.addProperty("subtype", "input", "enum", { values: ["input","output"]  });
+        this.addWidget("combo","subtype","input",null, { property: "subtype", values: ["input","output"] } );
+    }
+    //name to show
+    MyConnectionNode.title = "connection input/output";
+    MyConnectionNode.prototype.onConnectionsChange = MyGraphNode.prototype.onConnectionsChange
+    //register in the system
+    LiteGraph.registerNodeType("llm/connection", MyConnectionNode );
     
 })(this);

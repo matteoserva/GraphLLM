@@ -119,6 +119,16 @@ class JsonParser():
         new_config["exec"] = self._calc_exec(old_inputs,links)
         return new_config
 
+    def parse_connection(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "copy"
+        properties = old_config.get("properties", {})
+        subtype = properties.get("subtype", [])
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = self._calc_exec(old_inputs,links)
+        return new_config
+
     def parse_history(self,old_config,links):
         new_config = {}
         new_config["type"] = "list"
@@ -222,6 +232,8 @@ class JsonParser():
             return self.parse_history(old_config,links)
         if old_config["type"].startswith("llm/generic_agent"):
             return self.parse_generic_agent(old_config,links)
+        if old_config["type"].startswith("llm/connection"):
+            return self.parse_connection(old_config,links)
         return None
 
     def load_string(self,v):

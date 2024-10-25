@@ -62,9 +62,10 @@ class GraphExecutor:
         input_obj = {"name": "_C", "type": "constant", "init": cl_args}
         graph_raw.insert(0,input_obj)
 
-        #add input node
-        input_obj = {"name": "_I", "type": "copy"}
-        graph_raw.insert(0, input_obj)
+        #add input node if there is none
+        if len([el for el in graph_raw if el["name"] == "_I"]) == 0:
+            input_obj = {"name": "_I", "type": "copy"}
+            graph_raw.insert(0, input_obj)
 
         node_connections = graph_utils.create_arcs(graph_raw)
         node_configs = graph_raw
