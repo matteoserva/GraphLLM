@@ -3,37 +3,6 @@
     "last_link_id": 38,
     "nodes": [
         {
-            "id": 33,
-            "type": "llm/input",
-            "pos": [
-                48,
-                -95
-            ],
-            "size": {
-                "0": 480,
-                "1": 88
-            },
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        35
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "title": "Youtube URL",
-            "properties": {
-                "parameters": "https://www.youtube.com/watch?v=YbJOTdZBX1g"
-            },
-            "color": "#432",
-            "bgcolor": "#653"
-        },
-        {
             "id": 34,
             "type": "llm/generic_node",
             "pos": [
@@ -147,10 +116,10 @@
                 902,
                 121
             ],
-            "size": {
-                "0": 623.5069580078125,
-                "1": 399.89599609375
-            },
+            "size": [
+                620.110180664062,
+                472.27940063476535
+            ],
             "flags": {},
             "order": 6,
             "mode": 0,
@@ -173,10 +142,10 @@
                 910,
                 -101
             ],
-            "size": {
-                "0": 535.5070190429688,
-                "1": 168.89599609375
-            },
+            "size": [
+                604.850180664062,
+                163.08940063476552
+            ],
             "flags": {},
             "order": 3,
             "mode": 0,
@@ -192,11 +161,42 @@
             "properties": {}
         },
         {
+            "id": 33,
+            "type": "llm/input",
+            "pos": [
+                48,
+                -95
+            ],
+            "size": [
+                506.1101806640622,
+                88.11940063476555
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        35
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "title": "Youtube URL",
+            "properties": {
+                "parameters": "https://www.youtube.com/watch?v=YbJOTdZBX1g"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
             "id": 30,
             "type": "llm/llm_call",
             "pos": [
                 655,
-                262
+                249
             ],
             "size": {
                 "0": 210,
