@@ -14,6 +14,7 @@ class CustomTextInput {
         this.margin = 5
         this.property = options.property
         this.parent = parent
+        this.minHeight = 25
     }
 
     makeElement(parentNode)
@@ -26,15 +27,19 @@ class CustomTextInput {
         text.style="position:absolute; top:2px; right:4px; color:DarkGray; user-select: none"
         div.appendChild(text)
         div.style="position:relative";
-        div.style.height = "25px";
+        div.style.height = this.minHeight +"px";
+        div.style.paddingBottom = "4px";
+
         var textarea = document.createElement("input");
         div.appendChild(textarea)
         textarea.className="CustomTextInput"
-        textarea.style='resize:none; white-space: pre;border:0px;padding:0px' + this.margin + 'px'
-        textarea.style.backgroundColor= "black"
+        textarea.style='resize:none; white-space: pre;border:0px solid; border-radius: 10px;' + this.margin + 'px'
+        textarea.style.backgroundColor= "#202020"
         textarea.style.color = "white"
+        textarea.style.paddingLeft = "6px";
+        textarea.style.paddingTop = "0px";
         textarea.style.width = "100%";
-        textarea.style.height = "100%";
+        textarea.style.height = this.minHeight +"px";
         this.textarea = textarea
 
         textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
@@ -73,20 +78,20 @@ class CustomTextInput {
 
         this.textarea.style.whiteSpace="pre"
             textarea.style.width = "1px";
-            textarea.style.height = "1px";
-            textarea.style.minHeight = ""
+
+
             textarea.style.minWidth = ""
 
             var minHeight = (textarea.scrollHeight);
             var minWidth = (textarea.scrollWidth);
             textarea.style.width = "100%";
-            textarea.style.height = "100%";
+            textarea.style.height = this.minHeight + "px"
             var currentWidth = textarea.clientWidth
             var currentHeight = textarea.clientHeight
 
             minWidth = Math.min(minWidth,window.innerWidth*0.7)
             minHeight = Math.min(minHeight,window.innerHeight*0.7)
-            textarea.style.minHeight = (minHeight+10) + "px"
+
             textarea.style.minWidth = (minWidth+15)  + "px"
             this.textarea.style.whiteSpace="pre-wrap"
         }
@@ -103,7 +108,7 @@ class CustomTextInput {
         else
         {
             textarea.style.width = "100%";
-            textarea.style.height = "100%";
+            textarea.style.height = this.minHeight +"px";
             textarea.style.minHeight = ""
             textarea.style.minWidth = ""
         }
@@ -149,7 +154,7 @@ class CustomTextInput {
     }
     setValue(k,v)
     {
-        if(this.textarea.value!=v)
+        if(this.property && this.property == k && this.textarea.value!=v)
         {
         this.textarea.value=v
         this.configureSizeInFocus()
@@ -157,7 +162,7 @@ class CustomTextInput {
     }
     getMinHeight()
     {
-        return 25;
+        return this.minHeight;
     }
 }
 
@@ -315,7 +320,7 @@ class CustomTextarea {
     }
     setValue(k,v)
     {
-        if(this.textarea.value!=v)
+        if(this.property && this.property == k && this.textarea.value!=v)
         {
         this.textarea.value=v
         this.configureSizeInFocus()

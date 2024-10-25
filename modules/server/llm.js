@@ -138,14 +138,14 @@
     this.properties = {conf:"",subtype:"stateless",template:""  };
     let tmpl = 'type: python\ninit: "test/python_hello_world.py"'
 
-    this.addWidget("text","Config","", { property: "conf"});
+
     this.addProperty("subtype", "stateless", "enum", { values: ["stateless","stateful"]  });
     this.addWidget("combo","subtype","stateless",null, { property: "subtype", values: ["stateless","stateful"] } );
     this.container = new DivContainer(this)
     this.addCustomWidget( this.container);
     //this.container.addElement(new CustomTextarea("Parameters","parameters"))
 
-    
+    this.container.addWidget("text_input","Config",{ property: "conf"})
     this.container.addWidget("textarea","template",{ property: "template"})
     }
 
