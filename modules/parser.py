@@ -119,7 +119,11 @@ def readstring_hierarchical(prompt,variables):
             try:
                 r = variables[r1][r2]
             except:
-                r = variables[r1][str(r2)]
+                try:
+                    r = variables[r1][str(r2)]
+                except:
+                    r = foundString
+                    searchPos = posA + 1
         else:
             try:
                 r = variables[fnfull]

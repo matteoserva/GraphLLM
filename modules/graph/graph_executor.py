@@ -27,7 +27,7 @@ class GraphExecutor:
         self.client_parameters = executor_config.get("client_parameters",None)
 
         self.client = client
-        self.variables={"c": {}, "r":{}}
+        self.variables={"c": {}, "r":{}, "_C":{}}
         self.force_stop = False
 
     def set_client_parameters(self,p):
@@ -51,14 +51,6 @@ class GraphExecutor:
                     a["init"][i] = cl_args[1]
                     cl_args = cl_args[:1] + cl_args[2:]
                 pass
-
-        # assegno le variabili rimanenti (command line variables)
-        for i, v in enumerate(cl_args):
-            idx = i
-            stri = "c" + str(idx)
-            self.variables[stri] = v
-            self.variables["c"][str(idx)] = v
-        self.variables["c*"] = cl_args[1:]
 
         #add output node if there is only one node
         executable_nodes = [el for el in graph_raw if el["type"] != "variable"]
@@ -95,6 +87,19 @@ class GraphExecutor:
         for i,node in enumerate(graph_nodes):
             config = node_configs[i]
             node.set_config(config.get("conf",None))
+
+        # now override command line variables
+        # assegno le variabili rimanenti (command line variables)
+        for i, v in enumerate(cl_args):
+            idx = i
+            stri = "c" + str(idx)
+            self.variables[stri] = v
+            self.variables["c"][str(idx)] = v
+            stri = "_C" + str(idx)
+            self.variables[stri] = v
+            self.variables["_C"][str(idx)] = v
+        self.variables["c*"] = cl_args[1:]
+        self.variables["_C*"] = cl_args[1:]
 
         # step: set dependencies
         for i,node in enumerate(graph_nodes):
