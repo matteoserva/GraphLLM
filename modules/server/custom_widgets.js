@@ -1,19 +1,37 @@
-class CustomTextInput {
+class CustomTextCommon{
+    constructor(parent,name,options)
+        {
+            this.disabled = false
+            this.name=name
+            this.value=""
+            this.H = 15
+            this.type = "custom"
+            this.y=0
+            this.div = this.makeElement(parent)
+
+            this.inFocus = false
+            this.margin = 5
+            this.property = options.property
+            this.parent = parent
+        }
+
+    appendElement(dialog)
+    {
+        dialog.appendChild(this.div);
+    }
+
+    detachElement()
+    {
+        this.div.remove()
+    }
+}
+
+
+class CustomTextInput extends CustomTextCommon{
     constructor(parent,name,options)
     {
-        this.disabled = false
-        this.name=name
-        this.value=""
-        this.H = 15
-        this.type = "custom"
+        super(parent,name,options)
         this.options = {multiline:false}
-        this.y=0
-        this.div = this.makeElement(parent)
-
-        this.inFocus = false
-        this.margin = 5
-        this.property = options.property
-        this.parent = parent
         this.minHeight = 25
     }
 
@@ -49,15 +67,7 @@ class CustomTextInput {
 
     }
 
-    appendElement(dialog)
-    {
-        dialog.appendChild(this.div);
-    }
 
-    detachElement()
-    {
-        this.div.remove()
-    }
 
     textChange()
     {
@@ -166,23 +176,12 @@ class CustomTextInput {
     }
 }
 
-class CustomTextarea {
-    constructor(parent,name,options)
+class CustomTextarea extends CustomTextCommon{
+        constructor(parent,name,options)
     {
-        this.disabled = false
-        this.name=name
-        this.value=""
-        this.H = 15
-        this.type = "custom"
-        this.options = {multiline:true}
-        this.y=0
-        this.div = this.makeElement(parent)
-        
-        this.inFocus = false
-        this.margin = 5
-        this.property = options.property
-        this.parent = parent
-        
+        super(parent,name,options)
+        this.options = {multiline:false}
+        this.minHeight = 50
     }
     
     
@@ -213,16 +212,6 @@ class CustomTextarea {
         textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
         return div
         
-    }
-    
-    appendElement(dialog)
-    {
-        dialog.appendChild(this.div);
-    }
-    
-    detachElement()
-    {
-        this.div.remove()
     }
     
     textChange()
