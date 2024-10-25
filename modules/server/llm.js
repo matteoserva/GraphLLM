@@ -429,7 +429,7 @@
         this.addWidget("combo","subtype","input",null, { property: "subtype", values: ["input","output"] } );
     }
     //name to show
-    MyConnectionNode.title = "Connection input/output";
+    MyConnectionNode.title = "Hierarchical connection";
     MyConnectionNode.prototype.onConnectionsChange = MyGraphNode.prototype.onConnectionsChange
     //register in the system
     LiteGraph.registerNodeType("graph/connection", MyConnectionNode );
