@@ -63,9 +63,8 @@ class GraphExecutor:
         graph_raw.insert(0,input_obj)
 
         #add input node if there is none
-        if len([el for el in graph_raw if el["name"] == "_I"]) == 0:
-            input_obj = {"name": "_I", "type": "copy"}
-            graph_raw.insert(0, input_obj)
+        input_obj = {"name": "_I", "type": "copy"}
+        graph_raw.insert(0, input_obj)
 
         node_connections = graph_utils.create_arcs(graph_raw)
         node_configs = graph_raw
@@ -198,6 +197,18 @@ class GraphExecutor:
         self.force_stop = False
         input_node = [el for el in self.graph_nodes if el["name"] == "_I"][0]
         input_node["inputs"] = input_data
+
+        if len(input_data) > 0:
+            input_nodes = []
+            for i,el in enumerate(self.node_configs):
+                if el["type"] == "copy" and el.get("conf",{}).get("subtype","") == "input":
+                    input_nodes.append(i)
+            for i in input_nodes:
+                node = self.graph_nodes[i]
+                node["outputs"] = input_data
+                node.disable_execution = True
+
+
         try:
             while not self.force_stop:
                 runnable = [i for i, v in enumerate(self.graph_nodes) if v.is_runnable()]

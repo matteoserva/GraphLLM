@@ -1,82 +1,7 @@
 {
-    "last_node_id": 25,
-    "last_link_id": 26,
+    "last_node_id": 27,
+    "last_link_id": 29,
     "nodes": [
-        {
-            "id": 23,
-            "type": "llm/input",
-            "pos": [
-                24,
-                62
-            ],
-            "size": {
-                "0": 700.975830078125,
-                "1": 89.20897674560547
-            },
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        24
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": "https://en.wikipedia.org/wiki/Language_model"
-            }
-        },
-        {
-            "id": 20,
-            "type": "llm/llm_call",
-            "pos": [
-                21,
-                383
-            ],
-            "size": {
-                "0": 663.1771850585938,
-                "1": 282.3903503417969
-            },
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 25
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        22
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "{\"temperature\":0.01, \"top_k\":20,\"n_predict\":4096}",
-                "subtype": "stateless",
-                "template": "Summarize the article below in 10 or more numbered bullet points.\nUse only the information explicitly mentioned in the article,\nignoring all your previous knowledge.\n\nHere is the article:\n```markdown\n{}\n```"
-            }
-        },
         {
             "id": 24,
             "type": "llm/watch",
@@ -89,7 +14,7 @@
                 "1": 575.2286376953125
             },
             "flags": {},
-            "order": 4,
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
@@ -122,7 +47,7 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 22,
+                    "link": 29,
                     "slot_index": 0
                 }
             ],
@@ -164,8 +89,8 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        25,
-                        26
+                        26,
+                        28
                     ],
                     "slot_index": 0
                 },
@@ -181,37 +106,103 @@
             }
         },
         {
+            "id": 23,
+            "type": "llm/input",
+            "pos": [
+                24,
+                62
+            ],
+            "size": [
+                663.0000015258789,
+                91.9999938964844
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        24
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "https://en.wikipedia.org/wiki/Language_model"
+            }
+        },
+        {
             "id": 25,
             "type": "llm/variable",
             "pos": [
-                38,
-                198
+                37,
+                222
             ],
-            "size": {
-                "0": 614.3633422851562,
-                "1": 133.76763916015625
-            },
+            "size": [
+                642.4000015258789,
+                238.69999389648444
+            ],
             "flags": {},
             "order": 1,
             "mode": 0,
             "title": "Info",
             "properties": {
                 "identifier": "",
-                "parameters": "This example requires that extra tools are properly configured.\nThe graph downloads the article, scrapes the data and summarizes it.\nThe scraped data is shown in the yellow box.\nThe summary is in the blue box"
+                "parameters": "This is a hierarchical graph. The article is first downloaded, then\nsummarized using another graph.\n\nThis example requires that extra tools are properly configured.\n\nThe scraped data is shown in the yellow box.\nThe summary is in the blue box"
             },
             "color": "#232",
             "bgcolor": "#353"
+        },
+        {
+            "id": 27,
+            "type": "llm/generic_node",
+            "pos": [
+                43,
+                527
+            ],
+            "size": [
+                636.3000015258789,
+                108
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 28,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        29
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "type: graph\ninit: json_graphs/summarize_file.json"
+            }
         }
     ],
     "links": [
-        [
-            22,
-            20,
-            0,
-            16,
-            0,
-            "string"
-        ],
         [
             24,
             23,
@@ -221,18 +212,26 @@
             "string"
         ],
         [
-            25,
-            22,
-            0,
-            20,
-            0,
-            "string"
-        ],
-        [
             26,
             22,
             0,
             24,
+            0,
+            "string"
+        ],
+        [
+            28,
+            22,
+            0,
+            27,
+            0,
+            "string"
+        ],
+        [
+            29,
+            27,
+            0,
+            16,
             0,
             "string"
         ]
