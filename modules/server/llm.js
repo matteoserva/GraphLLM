@@ -432,6 +432,26 @@
     MyConnectionNode.title = "connection input/output";
     MyConnectionNode.prototype.onConnectionsChange = MyGraphNode.prototype.onConnectionsChange
     //register in the system
-    LiteGraph.registerNodeType("llm/connection", MyConnectionNode );
-    
+    LiteGraph.registerNodeType("graph/connection", MyConnectionNode );
+
+
+    /*
+
+        WEB SCRAPER
+
+    */
+        //node constructor class
+    function MyScraperNode()
+    {
+    this.addOutput("out","string");
+    this.addWidget("text","URL","", { property: "address"});
+    this.properties = { address: "" };
+    }
+
+    //name to show
+    MyScraperNode.title = "Web scraper";
+
+    //register in the system
+    LiteGraph.registerNodeType("tools/web_scraper", MyScraperNode );
+
 })(this);

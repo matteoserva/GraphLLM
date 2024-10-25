@@ -132,6 +132,18 @@ class JsonParser():
         new_config["exec"] = self._calc_exec(old_inputs,links)
         return new_config
 
+    def parse_scraper(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "exec"
+
+        properties = old_config.get("properties", {})
+        address = properties.get("address")
+        new_config["init"] = ["python3", "extras/scraper/scrape.py", address]
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = self._calc_exec(old_inputs,links)
+        return new_config
+
     def parse_history(self,old_config,links):
         new_config = {}
         new_config["type"] = "list"
@@ -215,6 +227,7 @@ class JsonParser():
 
         new_config = {}
         new_config["type"] = old_config["type"]
+        type = old_config["type"].split("/")[-1]
         if old_config["type"] in ["llm/generic_node"]:
             return self.parse_generic(old_config,links)
         if old_config["type"] in ["llm/input"]:
@@ -235,15 +248,19 @@ class JsonParser():
             return self.parse_history(old_config,links)
         if old_config["type"].startswith("llm/generic_agent"):
             return self.parse_generic_agent(old_config,links)
-        if old_config["type"].startswith("llm/connection"):
+        if type in ["connection"]:
             return self.parse_connection(old_config,links)
+        if type in ["web_scraper"]:
+            return self.parse_scraper(old_config,links)
         return None
 
     def load_string(self,v):
         jval = json.loads(v)
 
         links = {str(el[0]):el for el in jval["links"]}
-        nodes = { str(el["id"]):el for el in jval["nodes"] if el["type"].startswith("llm/")}
+        valid_sections = ["graph","llm","tools"]
+
+        nodes = { str(el["id"]):el for el in jval["nodes"] if el["type"].split("/")[0] in valid_sections}
         #print(jval)
 
         new_nodes = {}

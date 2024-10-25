@@ -1,6 +1,6 @@
 {
-    "last_node_id": 24,
-    "last_link_id": 26,
+    "last_node_id": 25,
+    "last_link_id": 29,
     "nodes": [
         {
             "id": 21,
@@ -29,7 +29,7 @@
                     "type": "string",
                     "links": [
                         24,
-                        25
+                        28
                     ],
                     "slot_index": 0
                 }
@@ -37,56 +37,6 @@
             "properties": {
                 "filename": "test/wikipedia_summary.txt",
                 "config": ""
-            }
-        },
-        {
-            "id": 24,
-            "type": "llm/connection",
-            "pos": [
-                53,
-                169
-            ],
-            "size": {
-                "0": 210,
-                "1": 78
-            },
-            "flags": {
-                "collapsed": true
-            },
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 25,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        26
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "",
-                "subtype": "input",
-                "template": ""
             }
         },
         {
@@ -107,7 +57,7 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 26
+                    "link": 29
                 },
                 {
                     "name": "N",
@@ -143,10 +93,10 @@
                 50,
                 217
             ],
-            "size": [
-                629.3000015258789,
-                193.29999389648435
-            ],
+            "size": {
+                "0": 629.2999877929688,
+                "1": 193.29998779296875
+            },
             "flags": {},
             "order": 1,
             "mode": 0,
@@ -164,10 +114,10 @@
                 716,
                 51
             ],
-            "size": [
-                594.7000015258789,
-                695.8999938964844
-            ],
+            "size": {
+                "0": 594.7000122070312,
+                "1": 695.9000244140625
+            },
             "flags": {},
             "order": 5,
             "mode": 0,
@@ -192,10 +142,10 @@
                 1336,
                 48
             ],
-            "size": [
-                434.50000152587904,
-                691.1999938964844
-            ],
+            "size": {
+                "0": 434.5,
+                "1": 691.2000122070312
+            },
             "flags": {},
             "order": 2,
             "mode": 0,
@@ -209,6 +159,56 @@
             "properties": {},
             "color": "#432",
             "bgcolor": "#653"
+        },
+        {
+            "id": 25,
+            "type": "graph/connection",
+            "pos": [
+                84,
+                174
+            ],
+            "size": {
+                "0": 210,
+                "1": 78
+            },
+            "flags": {
+                "collapsed": true
+            },
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 28,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        29
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "input",
+                "template": ""
+            }
         }
     ],
     "links": [
@@ -229,16 +229,16 @@
             "string"
         ],
         [
-            25,
+            28,
             21,
             0,
-            24,
+            25,
             0,
             "string"
         ],
         [
-            26,
-            24,
+            29,
+            25,
             0,
             20,
             0,
