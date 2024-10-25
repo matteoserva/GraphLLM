@@ -102,41 +102,14 @@ class CustomTextarea {
 
         if (this.inFocus)
         {
-            
         }
         else
         {
-                    textarea.style.width = "100%";
+            textarea.style.width = "100%";
             textarea.style.height = "100%";
             textarea.style.minHeight = ""
             textarea.style.minWidth = ""
         }
-        
-        return
-        var availableSpace = aSpace - this.margin
-        
-        textarea.style.height = "1px";
-        
-        
-        var desiredHeight = 30
-        
-        var minSize = 30;
-        var desiredWidth = "100%"
-        if (this.inFocus)
-        {
-            desiredHeight = (15+ textarea.scrollHeight)
-            textarea.style.width = "1px";
-            if((textarea.scrollWidth+10) > textarea.parentNode.clientWidth)
-            {
-                desiredWidth = (10+ textarea.scrollWidth)+ "px"
-            }
-        }
-        desiredHeight = Math.max(availableSpace,desiredHeight,minSize)
-        //this.dialog.style.width = desiredWidth
-        textarea.style.width = desiredWidth
-        textarea.style.height = desiredHeight + "px"
-        this.H = desiredHeight;//this.dialog.clientHeight
-        //console.log(desiredHeight)
         
     }
     
@@ -187,7 +160,6 @@ class CustomTextarea {
     }
     getMinHeight()
     {
-       
         return 50;
     }
 }
