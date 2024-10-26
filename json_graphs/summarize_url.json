@@ -1,6 +1,6 @@
 {
-    "last_node_id": 27,
-    "last_link_id": 29,
+    "last_node_id": 28,
+    "last_link_id": 31,
     "nodes": [
         {
             "id": 24,
@@ -14,13 +14,13 @@
                 "1": 575.2286376953125
             },
             "flags": {},
-            "order": 3,
+            "order": 2,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 26,
+                    "link": 30,
                     "slot_index": 0
                 }
             ],
@@ -30,122 +30,18 @@
             "bgcolor": "#653"
         },
         {
-            "id": 16,
-            "type": "llm/watch",
-            "pos": [
-                729,
-                219
-            ],
-            "size": {
-                "0": 612.8213500976562,
-                "1": 429.545654296875
-            },
-            "flags": {},
-            "order": 5,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 29,
-                    "slot_index": 0
-                }
-            ],
-            "title": "Generated summary",
-            "properties": {
-                "parameters": "\n"
-            },
-            "color": "#223",
-            "bgcolor": "#335"
-        },
-        {
-            "id": 22,
-            "type": "graph/generic_node",
-            "pos": [
-                763,
-                61
-            ],
-            "size": {
-                "0": 510.62457275390625,
-                "1": 108
-            },
-            "flags": {},
-            "order": 2,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 24
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        26,
-                        28
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "scraper",
-            "properties": {
-                "parameters": "type: exec\ninit: python3 extras/scraper/scrape.py {p:exec1}"
-            }
-        },
-        {
-            "id": 23,
-            "type": "llm/input",
-            "pos": [
-                24,
-                62
-            ],
-            "size": [
-                663.0000015258789,
-                91.9999938964844
-            ],
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        24
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": "https://en.wikipedia.org/wiki/Language_model"
-            }
-        },
-        {
             "id": 25,
             "type": "graph/variable",
             "pos": [
                 37,
                 222
             ],
-            "size": [
-                642.4000015258789,
-                238.69999389648444
-            ],
+            "size": {
+                "0": 642.4000244140625,
+                "1": 238.6999969482422
+            },
             "flags": {},
-            "order": 1,
+            "order": 0,
             "mode": 0,
             "title": "Info",
             "properties": {
@@ -159,21 +55,21 @@
             "id": 27,
             "type": "graph/generic_node",
             "pos": [
-                43,
-                527
+                50,
+                522
             ],
-            "size": [
-                636.3000015258789,
-                108
-            ],
+            "size": {
+                "0": 636.2999877929688,
+                "1": 108
+            },
             "flags": {},
-            "order": 4,
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 28,
+                    "link": 31,
                     "slot_index": 0
                 },
                 {
@@ -200,38 +96,88 @@
             "properties": {
                 "parameters": "type: graph\ninit: json_graphs/summarize_file.json"
             }
+        },
+        {
+            "id": 28,
+            "type": "tools/web_scraper",
+            "pos": [
+                51,
+                63
+            ],
+            "size": [
+                623.2909949035646,
+                63
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        30,
+                        31
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "address": "https://en.wikipedia.org/wiki/Language_model"
+            }
+        },
+        {
+            "id": 16,
+            "type": "llm/watch",
+            "pos": [
+                733,
+                69
+            ],
+            "size": [
+                601.7469949035647,
+                561.631030029297
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 29,
+                    "slot_index": 0
+                }
+            ],
+            "title": "Generated summary",
+            "properties": {
+                "parameters": "\n"
+            },
+            "color": "#223",
+            "bgcolor": "#335"
         }
     ],
     "links": [
-        [
-            24,
-            23,
-            0,
-            22,
-            0,
-            "string"
-        ],
-        [
-            26,
-            22,
-            0,
-            24,
-            0,
-            "string"
-        ],
-        [
-            28,
-            22,
-            0,
-            27,
-            0,
-            "string"
-        ],
         [
             29,
             27,
             0,
             16,
+            0,
+            "string"
+        ],
+        [
+            30,
+            28,
+            0,
+            24,
+            0,
+            "string"
+        ],
+        [
+            31,
+            28,
+            0,
+            27,
             0,
             "string"
         ]
