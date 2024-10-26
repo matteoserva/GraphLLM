@@ -76,10 +76,15 @@ Run these commands in a shell to download and start GraphLLM
 - `pip3 install selenium readabilipy html2text pdfminer.six justpy`
 - `git clone https://github.com/matteoserva/GraphLLM.git`
 - `cd GraphLLM`
+- `python3 server.py`
 
 In another terminal, launch the llama.cpp server with Qwen2.5 32b.:
 
 - `GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=0,1 ./llama-server -ngl 99 -t 6 -c 32768 --host 0.0.0.0  -m Qwen2.5-32B-Instruct-Q5_K_M.gguf --override-kv tokenizer.ggml.add_bos_token=bool:false -sp -fa -ctk q8_0 -ctv q8_0`
+
+Now you can launch the browser and interact with GraphLLM:
+
+- Open [http://localhost:8008/](http://localhost:8008/) in a web browser
 
 ### detailed setup
 
