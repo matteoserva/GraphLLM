@@ -41,7 +41,7 @@ Some of the features of GraphLLM's GUI:
 
 Here is an example of graph to generate python code and use it to solve a problem:
 
-![Screenshot_20241025_200056](https://github.com/user-attachments/assets/68f4c910-afe5-4c80-b0aa-a31cb4f65e4f)
+https://github.com/user-attachments/assets/486176d6-5bd7-4953-80fb-dbf7edb9af48
 
 **More examples:**
 <details>
