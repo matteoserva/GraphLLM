@@ -163,6 +163,13 @@ def load_page(url):
 
   ## readability per estrarre il contenuto
   pagina_rjs = driver.execute_script(scr + "\n" + "return new Readability(document.cloneNode(true)).parse();")
+  
+  # fallback if readability fails
+  if not pagina_rjs:
+    driver.execute_script(scr + "\n" + "return new Readability(document).parse();")
+    pagina_rjs = {}
+    pagina_rjs["title"] = url
+    pagina_rjs["content"] = driver.page_source
   scraper_utils.write_file(tempfile.gettempdir() + "/pagina1.html",str(pagina_rjs["content"]))
 
   ## check
