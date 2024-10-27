@@ -4,10 +4,11 @@ import copy
 
 class OpenAIClient():
 
-    def __init__(self, dummy=None, api_key="", base_url=""):
+    def __init__(self, dummy=None, **extra_client_args):
         print("openai init")
-        self.api_key = api_key
-        self.base_url = base_url
+
+        self.extra_client_args = extra_client_args
+
         self.client = None
         self.prompt_metadata = {}
         self.model_name = "llama3-70b-8192"
@@ -41,7 +42,7 @@ class OpenAIClient():
 
     def connect(self):
         if not self.client:
-            self.client = OpenAI(api_key="test", base_url=self.base_url)
+            self.client = OpenAI(**self.extra_client_args)
 
     def get_model_name(self):
         return "grok"
