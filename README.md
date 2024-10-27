@@ -104,13 +104,13 @@ TBD. When a missing dependency occurs, run `pip3 install {dependency}`
 
 There are optional dependencies for the extra features:
 - pdfminer.six for converting PDF files
-- justpy for the web server
 - selenium for the web scraping tool
 - firefox and its Webdriver, for the web scraping tool
-
+- openai and groq API
+  
 Install the python dependencies with
 
-`pip3 install selenium readabilipy html2text pdfminer.six justpy`
+`pip3 install selenium readabilipy html2text pdfminer.six openai groq`
 
 ### setup the connection with the llama.cpp server
 Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/llama.cpp)
@@ -131,8 +131,10 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
 
 - modify `client_config.yml`
 
-  - replace `client_name: dummy` with `client_name: llama_cpp`
-  - if needed, change the host and port for the llama_cpp section
+  - You can replace the default client by changing the `client_name` parameter in the config file
+  - If needed, setup groq or openai api config
+  - You can use a list as client_name. In that case if one client fails, the next one will be used.
+    For example you can use this to setup llama.cpp as primary client and a remote API as fallback.
 
 ### setup the extra tools
 
