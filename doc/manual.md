@@ -45,6 +45,16 @@ assistant response{p:end}
 
 The template is **optional**. 
 
+## variables
+
+Nodes can set and read graph variables.
+Variables can be used to fill templates in text based nodes.
+To use a variable, add a placeholder `{v:variablename}`.
+
+Special variables:
+* **{p:execX}**: Input of the node in position X, starting from 1. Example: `{p:exec1}`
+* **{v:_C[X]}**: The command line element in position X when the graph is launched via terminal. Example: `{v:_C[1]}`
+
 ## graph
 Each nodes can accept the following parameters:
 
