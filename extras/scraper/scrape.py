@@ -165,7 +165,7 @@ def load_page(url):
   pagina_rjs = driver.execute_script(scr + "\n" + "return new Readability(document.cloneNode(true)).parse();")
   
   # fallback if readability fails
-  if not pagina_rjs:
+  if (not debug_mode) and not pagina_rjs:
     driver.execute_script(scr + "\n" + "return new Readability(document).parse();")
     pagina_rjs = {}
     pagina_rjs["title"] = url
