@@ -1,0 +1,49 @@
+{
+  "timeStamp": 1730030349640,
+  "version": "1.60.0",
+  "userSettings": {
+    "externalLists": "https://raw.githubusercontent.com/yourduskquibbles/webannoyances/master/ultralist.txt",
+    "importedLists": [
+      "https://raw.githubusercontent.com/yourduskquibbles/webannoyances/master/ultralist.txt"
+    ]
+  },
+  "selectedFilterLists": [
+    "user-filters",
+    "ublock-filters",
+    "ublock-badware",
+    "ublock-privacy",
+    "ublock-quick-fixes",
+    "ublock-unbreak",
+    "easylist",
+    "easyprivacy",
+    "urlhaus-1",
+    "plowe-0",
+    "fanboy-cookiemonster",
+    "ublock-cookies-easylist",
+    "adguard-cookies",
+    "ublock-cookies-adguard",
+    "fanboy-social",
+    "adguard-social",
+    "fanboy-thirdparty_social",
+    "easylist-chat",
+    "easylist-newsletters",
+    "easylist-notifications",
+    "easylist-annoyances",
+    "adguard-mobile-app-banners",
+    "adguard-other-annoyances",
+    "adguard-popup-overlays",
+    "adguard-widgets",
+    "ublock-annoyances",
+    "ITA-0",
+    "https://raw.githubusercontent.com/yourduskquibbles/webannoyances/master/ultralist.txt"
+  ],
+  "hiddenSettings": {},
+  "whitelist": [
+    "chrome-extension-scheme",
+    "moz-extension-scheme"
+  ],
+  "dynamicFilteringString": "behind-the-scene * * noop\nbehind-the-scene * inline-script noop\nbehind-the-scene * 1p-script noop\nbehind-the-scene * 3p-script noop\nbehind-the-scene * 3p-frame noop\nbehind-the-scene * image noop\nbehind-the-scene * 3p noop",
+  "urlFilteringString": "",
+  "hostnameSwitchesString": "no-large-media: behind-the-scene false\nno-csp-reports: * true",
+  "userFilters": "! 2024-04-27 https://www.ilpost.it\nwww.ilpost.it##.jwplayer\n\n! 2024-04-27 https://arstechnica.com\narstechnica.com##div.xrail\n\n! 2024-10-03 https://old.reddit.com\nold.reddit.com##.side\nold.reddit.com##.footer-parent\nold.reddit.com###header\n\n! 26 ott 2024 https://www.reddit.com\n!www.reddit.com##.right-sidebar\n!www.reddit.com##.masthead\n!www.reddit.com##.left-sidebar"
+}
