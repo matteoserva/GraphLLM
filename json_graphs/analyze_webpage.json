@@ -1,0 +1,294 @@
+{
+    "last_node_id": 33,
+    "last_link_id": 42,
+    "nodes": [
+        {
+            "id": 30,
+            "type": "graph/generic_node",
+            "pos": [
+                435,
+                239
+            ],
+            "size": {
+                "0": 240.91099548339844,
+                "1": 108
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 41
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        31
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "type: copy\nconf: {subtype: repeat}"
+            }
+        },
+        {
+            "id": 28,
+            "type": "llm/list",
+            "pos": [
+                51,
+                51
+            ],
+            "size": {
+                "0": 625,
+                "1": 139
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        27
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": [
+                    "Tell me the articles that are most likely related to language models.",
+                    "For each article found, output the title and its URL address"
+                ]
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 33,
+            "type": "tools/web_scraper",
+            "pos": [
+                51,
+                260
+            ],
+            "size": {
+                "0": 292,
+                "1": 63
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        41,
+                        42
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "address": "https://news.ycombinator.com/"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 20,
+            "type": "llm/llm_call",
+            "pos": [
+                41,
+                394
+            ],
+            "size": {
+                "0": 639.7319946289062,
+                "1": 447.302001953125
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 27
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 31
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        39
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"temperature\":0.01, \"top_k\":40,\"n_predict\":4096}",
+                "subtype": "stateful",
+                "template": "{p:bos}\n\n{p:system}\nYour job is to answer the user questions about the file.\n\nHere is the content of the file:\n```\n{p:exec2}\n```\n{p:eom}\n\n{p:user}\n{p:exec1}{p:eom}\n\n{p:assistant}\n{p:eom}"
+            }
+        },
+        {
+            "id": 16,
+            "type": "llm/watch",
+            "pos": [
+                711,
+                258
+            ],
+            "size": {
+                "0": 658.7000122070312,
+                "1": 577.0999755859375
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 39,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": ""
+            },
+            "color": "#223",
+            "bgcolor": "#335"
+        },
+        {
+            "id": 31,
+            "type": "llm/watch",
+            "pos": [
+                1408,
+                253
+            ],
+            "size": {
+                "0": 435.79998779296875,
+                "1": 586.5
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 42
+                }
+            ],
+            "properties": {
+                "parameters": ""
+            }
+        },
+        {
+            "id": 23,
+            "type": "graph/variable",
+            "pos": [
+                711,
+                58
+            ],
+            "size": {
+                "0": 1131.699951171875,
+                "1": 134.6999969482422
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This is an complex graph that showcases some advanced nodes.\nThe LLM Call is stateful, meaning that the history is not discarded between successive calls, a initial template is provided.\nThe template is filled by the list node and the web scraper.\nThe List node contains two messages that are sent to the llm in sequence to build the final output.\n"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        }
+    ],
+    "links": [
+        [
+            27,
+            28,
+            0,
+            20,
+            0,
+            "string"
+        ],
+        [
+            31,
+            30,
+            0,
+            20,
+            1,
+            "string"
+        ],
+        [
+            39,
+            20,
+            0,
+            16,
+            0,
+            "string"
+        ],
+        [
+            41,
+            33,
+            0,
+            30,
+            0,
+            "string"
+        ],
+        [
+            42,
+            33,
+            0,
+            31,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
