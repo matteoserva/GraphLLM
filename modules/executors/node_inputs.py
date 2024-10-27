@@ -1,5 +1,5 @@
 
-from ..common import get_input
+from ..common import get_input,try_solve_files
 from ..parser import solve_templates
 from .common import solve_placeholders
 from .common import GenericExecutor
@@ -76,4 +76,6 @@ class ConstantNode(ListNode):
         super().__init__(*args)
 
     def set_template(self,args):
-        super().set_template([args])
+        solved_args = try_solve_files(args)
+        packed_args = [solved_args]
+        super().set_template(packed_args)
