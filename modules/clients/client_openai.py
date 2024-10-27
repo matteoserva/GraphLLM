@@ -41,7 +41,7 @@ class OpenAIClient():
 
     def connect(self):
         if not self.client:
-            self.client = OpenAI(api_key="test", base_url="http://localhost:8080/v1")
+            self.client = OpenAI(api_key="test", base_url=self.base_url)
 
     def get_model_name(self):
         return "grok"

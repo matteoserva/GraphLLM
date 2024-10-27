@@ -239,6 +239,8 @@ class Client:
 
     @staticmethod
     def make_client_simple(client_name, client_config):
+        if "type" in client_config:
+            del client_config["type"]
         if client_name=="dummy":
             return DummyClient()
         elif client_name == "llama_cpp":
