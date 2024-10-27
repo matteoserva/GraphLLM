@@ -4,22 +4,36 @@ work in progress
 
 ## architecture
 
-**graph**
+### **graph**
+
 The core of the framework is executing a graph.
 A graph is composed by nodes connected via directed arcs.
 Each node processes information and sends the result along the outgoing arcs.
 
-**executors**
-Each node of the graph, the executor, executes a processing step.
-The executor accepts an array of elements as input and produces an array of elements as its output.
+### **nodes**
 
-Example executor: llm. It receives a prompt and produces the inference result
-another executor: tool. It receives a tool name and parameters, it produces the result of a tool call
+Nodes are the processing elements in a graph.
+A node receives data from incoming arcs, processes it with an executor and outputs the results.
+Data is a array of elements. No constraint is imposed on the type of elements.
+
+Nodes contain additional metadata that define how they behave inside the graph.
+For example they can specify that they can be called only once, or specify that
+the node should be called even if only some of the inputs are available.
+
+### **executors**
+
+The executor is a function or class that actually executes the computation.
+Usually each node contains exactly one executor with the exception of the graph node.
 
 ## template
-The input of a llm node is templatized. The base format is the following.
+The input of a llm node is optionally templatized.
 
-"""
+The base format is the following.
+* **{p:bos}** to mark the begin of a templatized input
+* **{p:user}** or **{p:assistant}** to mark the begin of a message. Notice that there is a newline after the tag
+* **{p:end}** to mark the end of a message. There is no newline before the tag
+
+```
 {p:bos}
 
 {p:user}
@@ -27,7 +41,9 @@ user query{p:end}
 
 {p:assistant}
 assistant response{p:end}
-"""
+```
+
+The template is **optional**. 
 
 ## graph
 Each nodes can accept the following parameters:
