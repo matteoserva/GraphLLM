@@ -86,6 +86,9 @@ Now you can launch the browser and interact with GraphLLM:
 
 - Open [http://localhost:8008/](http://localhost:8008/) in a web browser
 
+Some tools require further configuration steps, namely the web scraper.
+Open the detailed setup page below to view the configuration steps.
+
 ### detailed setup
 
 <details>
@@ -108,12 +111,6 @@ There are optional dependencies for the extra features:
 Install the python dependencies with
 
 `pip3 install selenium readabilipy html2text pdfminer.six justpy`
-
-
-### hello world
-The example runs a python node that prints `hello world` multiple times.
-
-run `python3 exec.py examples/graph_python_hello_world.txt`
 
 ### setup the connection with the llama.cpp server
 Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/llama.cpp)
@@ -146,6 +143,7 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
 - create a profile named "profile.bot"
 - relaunch inside that profile
 - install ublock origin and verify that it's working.
+- import the ublock filter list I uploaded [here](https://github.com/matteoserva/GraphLLM/blob/main/doc/ublock-backup.txt)
 - close firefox
 - If needed, download the appropriate [geckodriver](https://github.com/mozilla/geckodriver/releases)
 - test the tool with `python3 extras/scraper/scrape.py`
