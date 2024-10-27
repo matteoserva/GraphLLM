@@ -198,6 +198,7 @@ class MemoryNode(GenericExecutor):
             self._stack.append(val)
         except:
             self._stack.append(res[0])
-        outval = "\n".join(self._stack)
+        separator = self.parameters.get("separator","\n")
+        outval = separator.join(self._stack)
         out = [outval]
         return out
