@@ -1,11 +1,18 @@
 ###
 
-client_name: llama_cpp
+client_name: [llama_cpp]
 
 ###
 llama_cpp:
+    type: llama_cpp
     host: "localhost"
     port: 8080
 
-#groq:
-#    api_key: XXX
+groq:
+    type: groq
+    api_key: XXX
+
+openai:
+    type: openai
+    api_key: XXX
+    base_url: http://localhost:8080/v1
