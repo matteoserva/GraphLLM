@@ -52,7 +52,11 @@ class CopyNode(GenericExecutor):
 #il demux riceve la posizione come secondo elemento
 # anche pack e unpack
     def __call__(self,*args):
-
+        if "max_runs" in self.parameters:
+            if self.parameters["max_runs"] > 0:
+                self.parameters["max_runs"] = self.parameters["max_runs"] -1
+            else:
+                return [None]
         res = list(*args)
         if self._subtype  == "cast":
             res[0] = str(res[0])
