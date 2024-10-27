@@ -43,6 +43,17 @@ class GrokClient(object):
         retval.__init__(*args,**kwargs)
         return retval
 
+class OpenAIClientWrapper(object):
+    def __new__(cls, *args,**kwargs):
+        print("loading openai compatible client")
+        try:
+           retval = object.__new__(OpenAIClient,*args,**kwargs)
+        except:
+           from .client_openai import OpenAIClient
+           retval = object.__new__(OpenAIClient,*args,**kwargs)
+        retval.__init__(*args,**kwargs)
+        return retval
+
 class DummyClient:
 
     def send_prompt(self,p,params=None):
@@ -236,6 +247,9 @@ class Client:
         elif client_name == "groq":
             conf = client_config
             return GrokClient(**conf)
+        elif client_name.lower() == "openai":
+            conf = client_config
+            return OpenAIClientWrapper(**conf)
 
     @staticmethod
     def make_client_list(client_names, client_configs):
