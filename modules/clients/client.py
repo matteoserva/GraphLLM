@@ -38,7 +38,7 @@ class GrokClient(object):
         try:
            retval = object.__new__(GrokClientInner,*args,**kwargs)
         except:
-           from .grokclient import GrokClient as GrokClientInner
+           from .client_groq import GrokClient as GrokClientInner
            retval = object.__new__(GrokClientInner,*args,**kwargs)
         retval.__init__(*args,**kwargs)
         return retval
