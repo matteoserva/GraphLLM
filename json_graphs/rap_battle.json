@@ -1,35 +1,168 @@
 {
-    "last_node_id": 28,
-    "last_link_id": 36,
+    "last_node_id": 38,
+    "last_link_id": 59,
     "nodes": [
         {
-            "id": 18,
+            "id": 12,
+            "type": "llm/watch",
+            "pos": [
+                818,
+                56
+            ],
+            "size": {
+                "0": 752.699951171875,
+                "1": 446.8000183105469
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 59,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "In a world where colors intertwine, blue stands tall, it's no lie,  \nCalm like the ocean, or sky so high, it's the hue that makes things fly,  \nRed's just too hot, too intense, too bold, it's a color that's way too loud,  \nBlue's the chill that cools your day, it's the shade that leads the way.\n---\nRed's the fire in the night, the passion that ignites,  \nThe heart that beats, the life that fights, it's the essence of the light.  \nBlue may calm, but red empowers, it's the blood that courses through,  \nFrom the rising sun to the sunset's hue, red's the color that's true.\n---\nRed's got heat, I'll give it that, but blue's the color of the smart,  \nIt's the tech and the truth, the depth from which you chart,  \nWhile red may spark a wild desire, it's blue that holds the mind's eye,  \nIn the spectrum of life, blue's the one that truly flies high.\n---\nRed ignites the mind and soul, fuels the dreams that make us whole,  \nIt's the courage, the love, the will to roll, the fire that makes us bold.  \nWhile blue may calm and soothe the strife, red's the fuel that sets us right,  \nIn the battle of life, red's the spark that ignites the light."
+            },
+            "color": "#2a363b",
+            "bgcolor": "#3f5159"
+        },
+        {
+            "id": 35,
+            "type": "graph/virtual_sink",
+            "pos": [
+                1357,
+                570
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 12,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 51
+                }
+            ],
+            "properties": {
+                "identifier": "out2"
+            }
+        },
+        {
+            "id": 34,
+            "type": "graph/virtual_sink",
+            "pos": [
+                1351,
+                796
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 13,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 50
+                }
+            ],
+            "properties": {
+                "identifier": "out1"
+            }
+        },
+        {
+            "id": 28,
             "type": "graph/variable",
             "pos": [
-                89,
-                41
+                -63,
+                214
             ],
             "size": [
-                214.39998779296877,
-                112
+                814.3668841796875,
+                144.23546937500004
             ],
             "flags": {},
-            "order": 0,
+            "order": 2,
             "mode": 0,
-            "title": "Topic 1",
             "properties": {
-                "identifier": "topic1",
-                "parameters": "red"
+                "identifier": "",
+                "parameters": "Rap battle generator.\nYou can change the red and blue squares to select the topics.\n\nThe demux node sends the last message alternatively to the two rappers.\nThe memory node collects the messages and formats them."
             },
-            "color": "#322",
-            "bgcolor": "#533"
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 37,
+            "type": "graph/virtual_source",
+            "pos": [
+                -412,
+                733
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        56
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "out2"
+            }
+        },
+        {
+            "id": 36,
+            "type": "graph/virtual_source",
+            "pos": [
+                -409,
+                592
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        55
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "out1"
+            }
         },
         {
             "id": 19,
             "type": "graph/variable",
             "pos": [
-                337,
-                47
+                340,
+                41
             ],
             "size": {
                 "0": 210,
@@ -47,379 +180,15 @@
             "bgcolor": "#335"
         },
         {
-            "id": 24,
-            "type": "graph/virtual_source",
+            "id": 30,
+            "type": "llm/input",
             "pos": [
-                581,
-                53
+                -409,
+                444
             ],
             "size": {
                 "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        34
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "out"
-            }
-        },
-        {
-            "id": 12,
-            "type": "llm/watch",
-            "pos": [
-                818,
-                56
-            ],
-            "size": [
-                752.6999267578126,
-                446.80003318786623
-            ],
-            "flags": {},
-            "order": 10,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 34,
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": "In a world where colors intertwine, blue stands tall, it's no lie,  \nCalm like the ocean, or sky so high, it's the hue that makes things fly,  \nRed's just too hot, too intense, too bold, it's a color that's way too loud,  \nBlue's the chill that cools your day, it's the shade that leads the way.\n---\nRed's the fire in the night, the passion that ignites,  \nThe heart that beats, the life that fights, it's the essence of the light.  \nBlue may calm, but red empowers, it's the blood that courses through,  \nFrom the rising sun to the sunset's hue, red's the color that's true.\n---\nRed's got heat, I'll give it that, but blue's the color of the smart,  \nIt's the tech and the truth, the depth from which you chart,  \nWhile red may spark a wild desire, it's blue that holds the mind's eye,  \nIn the spectrum of life, blue's the one that truly flies high.\n---\nRed ignites the mind and soul, fuels the dreams that make us whole,  \nIt's the courage, the love, the will to roll, the fire that makes us bold.  \nWhile blue may calm and soothe the strife, red's the fuel that sets us right,  \nIn the battle of life, red's the spark that ignites the light."
-            },
-            "color": "#2a363b",
-            "bgcolor": "#3f5159"
-        },
-        {
-            "id": 26,
-            "type": "graph/virtual_source",
-            "pos": [
-                -163,
-                738
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 5,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        35
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "rap1"
-            }
-        },
-        {
-            "id": 27,
-            "type": "graph/virtual_source",
-            "pos": [
-                -165,
-                846
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 6,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        36
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "rap2"
-            }
-        },
-        {
-            "id": 9,
-            "type": "graph/generic_node",
-            "pos": [
-                88,
-                774
-            ],
-            "size": {
-                "0": 304.7948913574219,
-                "1": 128
-            },
-            "flags": {},
-            "order": 11,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 35,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": 36
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        18
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": [
-                        19
-                    ],
-                    "slot_index": 1
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "merge1",
-            "properties": {
-                "parameters": "    type: copy\n    conf: {\"subtype\": \"gate\"}"
-            }
-        },
-        {
-            "id": 13,
-            "type": "graph/generic_node",
-            "pos": [
-                434,
-                774
-            ],
-            "size": [
-                316.6000091552734,
-                128
-            ],
-            "flags": {},
-            "order": 14,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 18
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": 19
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        23
-                    ]
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "parameters": "    type: copy\n    conf: {\"subtype\": \"mux\"} "
-            }
-        },
-        {
-            "id": 25,
-            "type": "graph/virtual_sink",
-            "pos": [
-                1354,
-                817
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 18,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 33
-                }
-            ],
-            "properties": {
-                "identifier": "out"
-            }
-        },
-        {
-            "id": 14,
-            "type": "graph/generic_node",
-            "pos": [
-                1099,
-                801
-            ],
-            "size": [
-                210,
-                108
-            ],
-            "flags": {},
-            "order": 17,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 24,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        33
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "Format output",
-            "properties": {
-                "parameters": "    type: python\n    init: \n       - |\n           verses = _C[0]\n           formatted = \"\\n---\\n\".join(verses)\n           _O = [formatted]"
-            }
-        },
-        {
-            "id": 16,
-            "type": "graph/generic_node",
-            "pos": [
-                786,
-                773
-            ],
-            "size": [
-                284.6000091552735,
-                108
-            ],
-            "flags": {},
-            "order": 16,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 23,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        24
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "parameters": "    type: copy\n    conf: {\"subtype\": \"mux\"}"
-            }
-        },
-        {
-            "id": 21,
-            "type": "graph/virtual_sink",
-            "pos": [
-                575,
-                607
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 13,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 28
-                }
-            ],
-            "properties": {
-                "identifier": "rap2"
-            }
-        },
-        {
-            "id": 23,
-            "type": "graph/virtual_source",
-            "pos": [
-                26,
-                588
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
+                "1": 88
             },
             "flags": {},
             "order": 3,
@@ -429,143 +198,24 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        32
+                        54
                     ],
                     "slot_index": 0
                 }
             ],
             "properties": {
-                "identifier": "rap1"
+                "parameters": "begin!"
             }
         },
         {
-            "id": 6,
+            "id": 38,
             "type": "graph/generic_node",
             "pos": [
-                297,
-                582
+                467,
+                409
             ],
             "size": [
-                210,
-                108
-            ],
-            "flags": {},
-            "order": 9,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 32,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "number",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        28
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "Rapper 2",
-            "properties": {
-                "parameters": "    type: stateful\n    conf: { \"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt {v:topic1} {v:topic2}"
-            }
-        },
-        {
-            "id": 20,
-            "type": "graph/virtual_sink",
-            "pos": [
-                575,
-                466
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 15,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 30
-                }
-            ],
-            "properties": {
-                "identifier": "rap1"
-            }
-        },
-        {
-            "id": 5,
-            "type": "graph/generic_node",
-            "pos": [
-                308,
-                417
-            ],
-            "size": [
-                210,
-                108
-            ],
-            "flags": {},
-            "order": 12,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 6
-                },
-                {
-                    "name": "N",
-                    "type": "number",
-                    "link": null,
-                    "slot_index": 1
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        30
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "Rapper 1",
-            "properties": {
-                "parameters": "    type: stateful\n    conf: {\"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}\n    init: templates/rap_battle.txt {v:topic2} {v:topic1}"
-            }
-        },
-        {
-            "id": 1,
-            "type": "graph/generic_node",
-            "pos": [
-                54,
-                412
-            ],
-            "size": [
-                210,
+                281.50286865234375,
                 108
             ],
             "flags": {},
@@ -575,7 +225,7 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 31
+                    "link": 57
                 },
                 {
                     "name": "N",
@@ -588,7 +238,7 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        6
+                        59
                     ],
                     "slot_index": 0
                 },
@@ -598,164 +248,325 @@
                     "links": null
                 }
             ],
-            "title": "Controller",
             "properties": {
-                "parameters": "    type: python\n    conf: {\"free_runs\":1}\n    init: \n       - |\n           try:\n               saved_context\n           except:\n               saved_context = {\"run\":0}\n           saved_context[\"run\"] = saved_context[\"run\"] + 1\n           if saved_context[\"run\"] == 1:\n               _O = [\"begin\"]\n           elif saved_context[\"run\"] < 3:\n               _O = _C\n           elif saved_context[\"run\"] == 3:\n               _O = [\"{p:eos}\"]\n           else:\n               _O = [None]"
+                "parameters": "type: memory\nconf: {separator: \"\\n--\\n\"}"
             }
         },
         {
-            "id": 22,
-            "type": "graph/virtual_source",
+            "id": 18,
+            "type": "graph/variable",
             "pos": [
-                -217,
-                422
+                90,
+                41
             ],
             "size": {
-                "0": 210,
-                "1": 58
+                "0": 214.39999389648438,
+                "1": 112
             },
             "flags": {},
-            "order": 2,
+            "order": 0,
             "mode": 0,
+            "title": "Topic 1",
+            "properties": {
+                "identifier": "topic1",
+                "parameters": "red"
+            },
+            "color": "#322",
+            "bgcolor": "#533"
+        },
+        {
+            "id": 29,
+            "type": "llm/llm_call",
+            "pos": [
+                467,
+                569
+            ],
+            "size": [
+                748.077430527344,
+                157
+            ],
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 43
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
             "outputs": [
                 {
                     "name": "out",
                     "type": "string",
                     "links": [
-                        31
+                        51
                     ],
                     "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
                 }
             ],
+            "title": "Rapper1",
             "properties": {
-                "identifier": "rap2"
+                "conf": "{\"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}",
+                "subtype": "stateful",
+                "template": "{p:bos}\n\n{p:system}\nYou are a rapper engaged in a rap battle against me, a fanatic of {v:topic2}. You have to defend your point of view, which is that {v:topic1} is superior.\nEach of your answers must be a 4 line paragraph, in rhyme.{p:eom}\n\n{p:user}\n{}{p:eom}\n\n{p:assistant}"
             }
         },
         {
-            "id": 28,
-            "type": "graph/variable",
+            "id": 31,
+            "type": "llm/llm_call",
             "pos": [
-                71,
-                199
+                462,
+                784
             ],
             "size": [
-                694.5000122070312,
-                144.2999786376953
+                733.4143705273436,
+                157
+            ],
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 44
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        50
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Rapper2",
+            "properties": {
+                "conf": "{\"force_system\":True,\"temperature\":0.6, \"top_k\":40, \"n_predict\":2048,\"print_prompt\":0}",
+                "subtype": "stateful",
+                "template": "{p:bos}\n\n{p:system}\nYou are a rapper engaged in a rap battle against me, a fanatic of {v:topic1}. You have to defend your point of view, which is that {v:topic2} is superior.\nEach of your answers must be a 4 line paragraph, in rhyme.{p:eom}\n\n{p:user}\n{}{p:eom}\n\n{p:assistant}"
+            }
+        },
+        {
+            "id": 32,
+            "type": "graph/generic_node",
+            "pos": [
+                102,
+                637
+            ],
+            "size": [
+                320.9288635253903,
+                128
             ],
             "flags": {},
             "order": 7,
             "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 49
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        43
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": [
+                        44
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "demux",
             "properties": {
-                "identifier": "",
-                "parameters": "Rap battle generator.\nYou can change the red and blue squares to select the topics.\n\nThis graph contains many nodes that have been obsoleted.\nDon't use this as an example when designing your own graphs."
+                "parameters": "type: copy\nconf: {subtype: demux, max_runs: 4}"
+            }
+        },
+        {
+            "id": 33,
+            "type": "graph/generic_node",
+            "pos": [
+                -146,
+                577
+            ],
+            "size": {
+                "0": 210,
+                "1": 148
             },
-            "color": "#232",
-            "bgcolor": "#353"
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 54
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 55
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 56
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        49,
+                        57
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": [],
+                    "slot_index": 1
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Mux",
+            "properties": {
+                "parameters": "type: copy\nconf: {subtype: mux}"
+            }
         }
     ],
     "links": [
         [
-            6,
-            1,
-            0,
-            5,
-            0,
-            "string"
-        ],
-        [
-            18,
-            9,
-            0,
-            13,
-            0,
-            "string"
-        ],
-        [
-            19,
-            9,
-            1,
-            13,
-            1,
-            "string"
-        ],
-        [
-            23,
-            13,
-            0,
-            16,
-            0,
-            "string"
-        ],
-        [
-            24,
-            16,
-            0,
-            14,
-            0,
-            "string"
-        ],
-        [
-            28,
-            6,
-            0,
-            21,
-            0,
-            "string"
-        ],
-        [
-            30,
-            5,
-            0,
-            20,
-            0,
-            "string"
-        ],
-        [
-            31,
-            22,
-            0,
-            1,
-            0,
-            "string"
-        ],
-        [
+            43,
             32,
-            23,
             0,
-            6,
+            29,
             0,
             "string"
         ],
         [
+            44,
+            32,
+            1,
+            31,
+            0,
+            "string"
+        ],
+        [
+            49,
             33,
-            14,
             0,
-            25,
+            32,
             0,
             "string"
         ],
         [
+            50,
+            31,
+            0,
             34,
-            24,
+            0,
+            "string"
+        ],
+        [
+            51,
+            29,
+            0,
+            35,
+            0,
+            "string"
+        ],
+        [
+            54,
+            30,
+            0,
+            33,
+            0,
+            "string"
+        ],
+        [
+            55,
+            36,
+            0,
+            33,
+            1,
+            "string"
+        ],
+        [
+            56,
+            37,
+            0,
+            33,
+            2,
+            "string"
+        ],
+        [
+            57,
+            33,
+            0,
+            38,
+            0,
+            "string"
+        ],
+        [
+            59,
+            38,
             0,
             12,
             0,
-            "string"
-        ],
-        [
-            35,
-            26,
-            0,
-            9,
-            0,
-            "string"
-        ],
-        [
-            36,
-            27,
-            0,
-            9,
-            1,
             "string"
         ]
     ],
