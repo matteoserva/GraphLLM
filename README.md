@@ -190,7 +190,7 @@ Some engines and API providers support only a subset of these features.
 Available engines:
 - **llama.cpp** server: complete support
 - **groq** API: Grammars and raw prompts not available
-- **OpenAI** API: WIP
+- **OpenAI** API: Grammars and raw prompts not available
 - HF **transformers**: partial support
 
 **models**
