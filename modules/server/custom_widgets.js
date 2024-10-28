@@ -201,6 +201,8 @@ class CustomTextarea extends CustomTextCommon{
         div.appendChild(text)
         div.style="position:relative";
         div.style.height = "100%";
+        div.style.paddingBottom = "4px";
+
         var textarea = document.createElement("textarea");
         div.appendChild(textarea)
         textarea.className="CustomTextarea"
