@@ -23,6 +23,8 @@ class GrokClient():
             params["stop"] = user_params.get("stop",params["stop"])
             params["temperature"] = user_params.get("temperature",params["temperature"])
             params["max_tokens"] = user_params.get("n_predict",params["max_tokens"])
+        if "max_tokens" in params and params["max_tokens"] <= 0:
+            del params["max_tokens"]
         model_name = self.model_name
         completion = self.client.chat.completions.create( model=self.model_name, messages=messages,**params)
         return self.ricevi(completion,callback)
