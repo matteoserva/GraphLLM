@@ -130,6 +130,7 @@ class GraphNode:
             self.graph.logger.log("output", self.path, [str(el) for el in res])
         except Exception as e:
             self.disable_execution = True
+            self.graph.force_stop = True
             return
         finally:
             self.tid = None

@@ -13,7 +13,7 @@ from modules.clients import Client, get_client_config
 from modules.graph import GraphExecutor
 from threading import Thread
 from modules.graph.json_parser import JsonParser
-
+import traceback
 
 SOURCES_PATH="modules/server"
 LITEGRAPH_PATH = "extras/litegraph.js"
@@ -64,6 +64,7 @@ class WebExec():
 
         try:
             if last_error:
+                traceback.print_tb(last_error.__traceback__)
                 self.logger.log("error",str(last_error))
             
             self.logger.log("stop")

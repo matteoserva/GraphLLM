@@ -214,6 +214,7 @@ class GraphExecutor:
         try:
             while not self.force_stop:
                 runnable = [i for i, v in enumerate(self.graph_nodes) if v.is_runnable() and i not in running]
+                
                 if len(runnable) == 0 and len(running) == 0:
                     break
                 if len(running) < max_parallel_jobs:
@@ -223,8 +224,11 @@ class GraphExecutor:
                 if len(running) > 0:
                     completed = self._get_completions()
                     running = [i for i in running if i not in completed]
-                self.logger.log("running", running)
+                #self.logger.log("running", running)
                 self._execute_arcs(running)
+            while len(running) > 0:
+                completed = self._get_completions()
+                running = [i for i in running if i not in completed]
         except KeyboardInterrupt:
             print("")
             return [None]
