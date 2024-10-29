@@ -10,7 +10,7 @@ import tempfile
 
 from modules.logging.logger import Logger
 from modules.clients import Client, get_client_config
-from modules.graph import GraphExecutor
+from modules.graph import GraphExecutor, GraphException
 from threading import Thread
 from modules.graph.json_parser import JsonParser
 import traceback
@@ -57,6 +57,8 @@ class WebExec():
             self.executor = GraphExecutor(self.executor_config)
             self.executor.load_config(args)
             self.executor([])
+        except GraphException:
+            pass
         except BrokenPipeError:
             print("client disconnected")
         except Exception as e:

@@ -10,8 +10,11 @@ import sys
 from .graph_node import GraphNode
 import queue
 from functools import partial
+from .common import GraphException
 
 PARALLEL_JOBS=2
+
+
 
 class GraphExecutor:
     def __init__(self,executor_config):
@@ -163,8 +166,8 @@ class GraphExecutor:
                 node["outputs"][source_port] = None
                 pass
 
-    def _notify_stop(self,index):
-        self.stopped_queue.put(index)
+    def _notify_stop(self,index, extra=None):
+        self.stopped_queue.put(extra if extra else index)
 
     def _launch_nodes(self,runnable):
         _ = [self.graph_nodes[i].start(partial(self._notify_stop,i)) for i in runnable ]
@@ -172,9 +175,13 @@ class GraphExecutor:
 
     def _get_completions(self):
         completed = [self.stopped_queue.get()]
+
         while not self.stopped_queue.empty():
             completed += [self.stopped_queue.get()]
-            
+
+        for i in completed:
+            if isinstance(i,Exception):
+                raise i from None
         for i in completed:
             res = self.graph_nodes[i]["last_output"]
             
@@ -226,6 +233,8 @@ class GraphExecutor:
                     running = [i for i in running if i not in completed]
                 self.logger.log("running", running)
                 self._execute_arcs(running)
+            if self.force_stop:
+                raise GraphException("graph force stopped")
         except KeyboardInterrupt as e:
             print("")
             raise e from None

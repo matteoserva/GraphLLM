@@ -1,6 +1,7 @@
 from modules.executors import *
 import sys
 import threading
+from .common import GraphException
 
 class GraphNode:
 
@@ -105,10 +106,12 @@ class GraphNode:
 
         try:
             res = ex(inputs)
+        except GraphException as e:
+            raise e from None
         except Exception as e:
             print("Exception in node: ", self.path,str(e),file=sys.stderr)
-            self.graph.logger.log("error", str(e))
-            
+            #self.graph.logger.log("error", str(e))
+            raise e from None
             res = []
         if not isinstance(res, list):
             res = [res]
@@ -123,6 +126,7 @@ class GraphNode:
         return res
 
     def execute(self,stop_cb):
+        last_exception = None
         try:
             self.graph.logger.log("starting",self.path)
             res = self._execute()
@@ -130,11 +134,11 @@ class GraphNode:
             self.graph.logger.log("output", self.path, [str(el) for el in res])
         except Exception as e:
             self.disable_execution = True
-            self.graph.force_stop = True
+            last_exception =  e
             return
         finally:
             self.tid = None
-            stop_cb()
+            stop_cb(last_exception)
         return res
 
     def start(self,stop_cb):

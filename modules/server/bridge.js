@@ -124,7 +124,7 @@ class WebBrige {
           that.stopGraph()
 		  
 		  console.error(err)
-		  if (err != "stopGraph")
+		  if (err.name != "stopGraph" && err.name != "AbortError")
 		  {
           var message = "error: " + err
           alert(message)
@@ -226,7 +226,7 @@ class WebBrige {
   
   onStopEvent()
   {
-      this.controller.abort("stopGraph");
+      this.controller.abort({name:"stopGraph"});
       console.log("stop")
       this.canvas.selectNodes([])
   }
