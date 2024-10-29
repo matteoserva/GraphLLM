@@ -145,14 +145,18 @@ class GraphExecutor:
 
     def _execute_arcs(self):
         for node_index,node in enumerate(self.graph_nodes):
+            if node.is_running():
+                continue
             source_outputs = node.get_outputs()
-            forwards = self.node_connections[node_index]["forwards"]
-            for source_port,forwards in enumerate(forwards):
+            forwards_list = self.node_connections[node_index]["forwards"]
+            for source_port,forwards in enumerate(forwards_list):
                 current_output = source_outputs[source_port]
+                destinations_busy = len([True for i,p in forwards if self.graph_nodes[i].is_running()]) > 0
+                
                 destination_inputs = [self.graph_nodes[i]["inputs"][p] for i,p in forwards]
                 destination_ready = len([el for el in destination_inputs if el is not None]) == 0
                 source_ready = current_output is not None
-                if (not source_ready) or (not destination_ready):
+                if destinations_busy or (not source_ready) or (not destination_ready):
                     continue
                 for di,dp in forwards:
                     self.graph_nodes[di]["inputs"][dp] = current_output

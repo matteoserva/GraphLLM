@@ -127,8 +127,8 @@ class GraphNode:
             self.graph.logger.log("stopping",self.path)
             self.graph.logger.log("output", self.path, [str(el) for el in res])
         finally:
-            stop_cb()
             self.tid = None
+            stop_cb()
         return res
 
     def start(self,stop_cb):
@@ -138,6 +138,8 @@ class GraphNode:
         self.tid = threading.Thread(target=self.execute, args=[stop_cb], daemon=True)
         self.tid.start()
     
+    def is_running(self):
+        return self.tid is not None
 
     def is_runnable(self):
         if self.tid:
