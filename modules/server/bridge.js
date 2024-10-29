@@ -122,9 +122,13 @@ class WebBrige {
 
         function onChunkedResponseError(err) {
           that.stopGraph()
-          console.error(err)
+		  
+		  console.error(err)
+		  if (err != "stopGraph")
+		  {
           var message = "error: " + err
           alert(message)
+		  }
         }
   }
 

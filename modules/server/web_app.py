@@ -39,6 +39,7 @@ class WebExec():
 
     def event(self,t,a,v):
         #print(t,a,v)
+
         res = {"type": t, "data":a}
         resp = json.dumps(res)
 
@@ -47,6 +48,7 @@ class WebExec():
     def _run(self,args):
         self.logger.addListener(self)
         self.logger.log("start")
+        last_error = None
         try:
             client_config = get_client_config()
             client = Client.make_client(client_config)
@@ -58,9 +60,12 @@ class WebExec():
         except BrokenPipeError:
             print("client disconnected")
         except Exception as e:
-            self.logger.log("error",str(e))
+            last_error = e
 
         try:
+            if last_error:
+                self.logger.log("error",str(e))
+            
             self.logger.log("stop")
             self.send_stop()
         except:
