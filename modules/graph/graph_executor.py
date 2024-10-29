@@ -214,19 +214,16 @@ class GraphExecutor:
         try:
             while not self.force_stop:
                 runnable = [i for i, v in enumerate(self.graph_nodes) if v.is_runnable() and i not in running]
-                #print("a runnable",runnable,"  running",running)
                 if len(runnable) == 0 and len(running) == 0:
                     break
-                #print("0 runnable",runnable,"  running",running)
                 if len(running) < max_parallel_jobs:
                     max_num_launched = max_parallel_jobs - len(running)
                     runnable = runnable[:max_num_launched]
                     running += self._launch_nodes(runnable)
-                #print("1 runnable",runnable,"  running",running)
                 if len(running) > 0:
                     completed = self._get_completions()
                     running = [i for i in running if i not in completed]
-                #print("2 runnable",runnable,"  running",running)
+                self.logger.log("running", running)
                 self._execute_arcs(running)
         except KeyboardInterrupt:
             print("")
