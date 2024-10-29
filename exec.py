@@ -41,5 +41,7 @@ try:
     if print_json:
         print("--------------- Json result:")
         print(json.dumps(res2))
+except KeyboardInterrupt as e:
+    pass
 finally:
     stop_logger()

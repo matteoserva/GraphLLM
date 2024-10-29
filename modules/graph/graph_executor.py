@@ -226,7 +226,7 @@ class GraphExecutor:
                     running = [i for i in running if i not in completed]
                 self.logger.log("running", running)
                 self._execute_arcs(running)
-        except KeyboardInterrupt:
+        except KeyboardInterrupt as e:
             print("")
-            return [None]
+            raise e from None
         return self.last_output
