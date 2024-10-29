@@ -128,6 +128,7 @@ class GraphNode:
             self.graph.logger.log("output", self.path, [str(el) for el in res])
         finally:
             stop_cb()
+            self.tid = None
         return res
 
     def start(self,stop_cb):
