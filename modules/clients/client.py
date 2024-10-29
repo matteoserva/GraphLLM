@@ -237,8 +237,17 @@ class LLamaCppClient:
 
 class Client:
 
+    client_configs = None
     @staticmethod
-    def make_client_simple(client_name, client_config):
+    def get_client(client_name):
+        
+        client_config = Client.client_configs[client_name]
+        client =  Client._make_client_simple(client_name,client_config)
+        client.connect()
+        return client
+
+    @staticmethod
+    def _make_client_simple(client_name, client_config):
         if "type" in client_config:
             del client_config["type"]
         if client_name=="dummy":
@@ -254,14 +263,14 @@ class Client:
             return OpenAIClientWrapper(**conf)
 
     @staticmethod
-    def make_client_list(client_names, client_configs):
+    def _make_client_list(client_names, client_configs):
         for client_name in client_names:
             client_config = client_configs[client_name]
             type = client_config.get("type",client_name)
             if "type" in client_config:
                 del client_config["type"]
             try:
-               client = Client.make_client_simple(type,client_config)
+               client = Client._make_client_simple(type,client_config)
                client.connect()
                return client
             except Exception as e:
@@ -271,9 +280,10 @@ class Client:
 
     @staticmethod
     def make_client(client_config):
+        Client.client_configs = client_config
         client_name = client_config.get("client_name","dummy")
         if isinstance(client_name,list):
-            return Client.make_client_list(client_name, client_config)
+            return Client._make_client_list(client_name, client_config)
         else:
             client_config = client_config.get(client_name,{})
-            return Client.make_client_simple(client_name,client_config)
+            return Client._make_client_simple(client_name,client_config)

@@ -5,6 +5,7 @@ from ..common import readfile, merge_params
 from functools import partial
 from .common import GenericExecutor
 from ..grammar import load_grammar
+from ..clients.client import Client 
 
 class LlmExecutor(GenericExecutor):
     def __init__(self,node_graph_parameters):
@@ -41,11 +42,18 @@ class LlmExecutor(GenericExecutor):
             for key in ["force_system","print_prompt","sysprompt","print_response"]:
                 if key in args:
                     self._set_param(key,args[key])
+                    
+            for key in ["client"]:
+                if key in args:
+                    p = {key: args[key]}
+                    self.set_dependencies(p)
 
 
     def set_dependencies(self,d):
         if "client" in d:
            client = d["client"]
+           if isinstance(client,str):
+               client = Client.get_client(client)
            builder = self.builder
            builder.load_model(client.get_model_name())
            self.client = client
