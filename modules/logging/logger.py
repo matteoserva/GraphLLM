@@ -45,8 +45,14 @@ class Logger():
         self.prints = {}
         self.webLogger = WrappedWebLogger(initialize = web_logger)
         self.listeners = []
+        self.poisoned = False
 
+    def poison(self):
+        self.poisoned = True
+    
     def log(self,type,*args,**kwargs):
+        if self.poisoned:
+            raise Exception("logger poisoned")
         for el in self.listeners:
             el.event(type,args,kwargs)
 

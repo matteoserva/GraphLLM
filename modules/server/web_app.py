@@ -73,6 +73,7 @@ class WebExec():
             print("stop exception:",e)
             pass
         finally:
+            self.logger.poison()
             self.logger.deleteListeners()
 
     def run(self,filename):
