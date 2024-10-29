@@ -28,6 +28,7 @@ class GraphNode:
             self.executor.properties = {"free_runs": 0, "input_rule":"AND", "input_active": []}
             self.executor.node = self
         self.tid = None
+        self["last_output"] = [None]
 
     def initialize(self):
         if isinstance(self.executor, GenericExecutor):
@@ -127,7 +128,8 @@ class GraphNode:
             res = self._execute()
             self.graph.logger.log("stopping",self.path)
             self.graph.logger.log("output", self.path, [str(el) for el in res])
-        except:
+        except Exception as e:
+            self.disable_execution = True
             return
         finally:
             self.tid = None
