@@ -168,7 +168,7 @@ class WebBrige {
         console.log(message)
         alert(message)
       }
-      if(obj.type == "running")
+      /*if(obj.type == "running")
       {
         var values = obj.data[0]
         var names = values.map((el) => el.substr(1));
@@ -176,9 +176,28 @@ class WebBrige {
         nodes = nodes.filter(function( element ) { return !!element;    });
         this.canvas.selectNodes(nodes)
         for (let index = 0; index < nodes.length; ++index) {
-		let node = nodes[index]
-                if(node.outputs && node.outputs.length > 0) { node.print_log = ""}
-	}
+			let node = nodes[index]
+					if(node.outputs && node.outputs.length > 0) { node.print_log = ""}
+		}
+      }*/
+	  if(obj.type == "starting")
+      {
+		  var name = obj.data[0].substr(1)
+		  var node = this.graph.getNodeById(name)
+		  if (node)
+		  {
+			 this.canvas.selectNode(node,true);
+		  }
+          
+      }
+	  if(obj.type == "stopping")
+      {
+        var name = obj.data[0].substr(1)
+		  var node = this.graph.getNodeById(name)
+		  if (node)
+		  {
+			 this.canvas.deselectNode(node);
+		  }
       }
       if(obj.type == "print")
       {

@@ -121,9 +121,9 @@ class GraphNode:
         return res
 
     def execute(self):
-        self.graph.logger.log("starting",self.name)
+        self.graph.logger.log("starting",self.path)
         res = self._execute()
-        self.graph.logger.log("stopping",self.name)
+        self.graph.logger.log("stopping",self.path)
         return res
 
     def start(self):
