@@ -64,11 +64,12 @@ class WebExec():
 
         try:
             if last_error:
-                self.logger.log("error",str(e))
+                self.logger.log("error",str(last_error))
             
             self.logger.log("stop")
             self.send_stop()
-        except:
+        except Exception as e:
+            print("stop exception:",e)
             pass
         finally:
             self.logger.deleteListeners()
