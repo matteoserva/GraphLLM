@@ -4,7 +4,7 @@ from ..common import readfile,merge_params,try_solve_files
 
 from modules.clients import Client,DummyClient,GLMClient,ONNXClient
 from ..grammar import load_grammar
-import threading
+
 from modules.logging.logger import Logger
 import sys
 from .graph_node import GraphNode
@@ -137,13 +137,12 @@ class GraphExecutor:
         missing_inputs = len([el for el in node["inputs"] if el is None])
         blocked_outputs = len([el for el in node["outputs"] if not el is None])
 
-
         runnable = (missing_inputs + blocked_outputs) == 0
         return runnable
 
     def _execute_arcs(self):
         for node_index,node in enumerate(self.graph_nodes):
-            source_outputs = node["outputs"]
+            source_outputs = node.get_outputs()
             forwards = self.node_connections[node_index]["forwards"]
             for source_port,forwards in enumerate(forwards):
                 current_output = source_outputs[source_port]
@@ -161,17 +160,12 @@ class GraphExecutor:
         parallel_jobs = PARALLEL_JOBS
         if len(runnable) > parallel_jobs:
             runnable = runnable[0:parallel_jobs]
-        if True or parallel_jobs > 1:
+        try:
             self.logger.log("running", [self.graph_nodes[j].path for j in runnable])
-            sem = threading.Barrier(1 + len(runnable))
-            tds = [threading.Thread(target=self.node_runner, args=[self.graph_nodes[i].execute, sem], daemon=True) for i in runnable]
-            for el in tds:
-                el.start()
-            sem.wait()  # this can except
-        else:
-            for i in runnable:
-                self.logger.log("running", [i])
-                self.graph_nodes[i].execute()
+            running_nodes = [self.graph_nodes[i].start() for i in runnable ]
+        finally:
+            stopped_nodes = [self.graph_nodes[i].join() for i in runnable ]
+
         for i in runnable:
             res = self.graph_nodes[i]["last_output"]
             self.logger.log("output", self.path + self.graph_nodes[i]["name"], [str(el) for el in res])
@@ -183,11 +177,6 @@ class GraphExecutor:
             self.variables["r"][name] = res
             self.last_output = res
 
-    def node_runner(self,func,sem):
-        try:
-            func()
-        finally:
-            sem.wait()
 
     def stop(self):
         self.force_stop = True

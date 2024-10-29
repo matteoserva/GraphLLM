@@ -1,5 +1,6 @@
 from modules.executors import *
 import sys
+import threading
 
 class GraphNode:
 
@@ -26,6 +27,7 @@ class GraphNode:
             self.executor.graph_data = node_graph_parameters
             self.executor.properties = {"free_runs": 0, "input_rule":"AND", "input_active": []}
             self.executor.node = self
+        self.tid = None
 
     def initialize(self):
         if isinstance(self.executor, GenericExecutor):
@@ -54,9 +56,17 @@ class GraphNode:
         if isinstance(self.executor,GenericExecutor):
             self.executor.setup_complete()
 
-    def execute(self):
+    def get_inputs(self):
+        inputs = [el for el in self["inputs"]]
+        return inputs
+
+    def get_outputs(self):
+        outputs = [el for el in self["outputs"]]
+        return outputs
+
+    def _execute(self):
         node=self
-        inputs = [el for el in node["inputs"]]
+        inputs = self.get_inputs()
 
         #        m,_ = solve_templates(inputs[0],inputs[1:],self.variables)
         ex = node["executor"]
@@ -110,7 +120,26 @@ class GraphNode:
 
         return res
 
+    def execute(self):
+        self.graph.logger.log("starting",self.name)
+        res = self._execute()
+        self.graph.logger.log("stopping",self.name)
+        return res
+
+    def start(self):
+        if self.tid:
+            return None
+        self.tid = threading.Thread(target=self.execute, args=[], daemon=True)
+        self.tid.start()
+    
+    def join(self):
+        if self.tid:
+            self.tid.join()
+            self.tid = None
+
     def is_runnable(self):
+        if self.tid:
+            return None
         node = self
         input_rule = self._get_input_rule()
 
