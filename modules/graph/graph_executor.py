@@ -143,15 +143,15 @@ class GraphExecutor:
         runnable = (missing_inputs + blocked_outputs) == 0
         return runnable
 
-    def _execute_arcs(self):
+    def _execute_arcs(self,running):
         for node_index,node in enumerate(self.graph_nodes):
-            if node.is_running():
+            if node_index in running:
                 continue
             source_outputs = node.get_outputs()
             forwards_list = self.node_connections[node_index]["forwards"]
             for source_port,forwards in enumerate(forwards_list):
                 current_output = source_outputs[source_port]
-                destinations_busy = len([True for i,p in forwards if self.graph_nodes[i].is_running()]) > 0
+                destinations_busy = len([i for i,p in forwards if i in running]) > 0
                 
                 destination_inputs = [self.graph_nodes[i]["inputs"][p] for i,p in forwards]
                 destination_ready = len([el for el in destination_inputs if el is not None]) == 0
@@ -166,16 +166,16 @@ class GraphExecutor:
     def _notify_stop(self,index):
         self.stopped_queue.put(index)
 
-    def _execute_nodes(self,runnable):
-        parallel_jobs = PARALLEL_JOBS
-        if len(runnable) > parallel_jobs:
-            runnable = runnable[0:parallel_jobs]
-        try:
-            running_nodes = [self.graph_nodes[i].start(partial(self._notify_stop,i)) for i in runnable ]
-        finally:
-            stopped_nodes = [self.stopped_queue.get() for i in runnable ]
+    def _launch_nodes(self,runnable):
+        _ = [self.graph_nodes[i].start(partial(self._notify_stop,i)) for i in runnable ]
+        return runnable
 
-        for i in runnable:
+    def _get_completions(self):
+        completed = [self.stopped_queue.get()]
+        while not self.stopped_queue.empty():
+            completed += [self.stopped_queue.get()]
+            
+        for i in completed:
             res = self.graph_nodes[i]["last_output"]
             
             # res = self.graph_nodes[i].execute()
@@ -185,6 +185,9 @@ class GraphExecutor:
             self.variables[rname] = res
             self.variables["r"][name] = res
             self.last_output = res
+            
+        return completed
+        
 
 
     def stop(self):
@@ -206,14 +209,25 @@ class GraphExecutor:
                 node["outputs"] = input_data
                 node.disable_execution = True
 
-
+        running = []
+        max_parallel_jobs = PARALLEL_JOBS
         try:
             while not self.force_stop:
-                runnable = [i for i, v in enumerate(self.graph_nodes) if v.is_runnable()]
-                if len(runnable) == 0:
+                runnable = [i for i, v in enumerate(self.graph_nodes) if v.is_runnable() and i not in running]
+                #print("a runnable",runnable,"  running",running)
+                if len(runnable) == 0 and len(running) == 0:
                     break
-                self._execute_nodes(runnable)
-                self._execute_arcs()
+                #print("0 runnable",runnable,"  running",running)
+                if len(running) < max_parallel_jobs:
+                    max_num_launched = max_parallel_jobs - len(running)
+                    runnable = runnable[:max_num_launched]
+                    running += self._launch_nodes(runnable)
+                #print("1 runnable",runnable,"  running",running)
+                if len(running) > 0:
+                    completed = self._get_completions()
+                    running = [i for i in running if i not in completed]
+                #print("2 runnable",runnable,"  running",running)
+                self._execute_arcs(running)
         except KeyboardInterrupt:
             print("")
             return [None]
