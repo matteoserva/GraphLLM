@@ -187,6 +187,7 @@ class WebBrige {
 		  if (node)
 		  {
 			 this.canvas.selectNode(node,true);
+			 if(node.outputs && node.outputs.length > 0) { node.print_log = ""}
 		  }
           
       }

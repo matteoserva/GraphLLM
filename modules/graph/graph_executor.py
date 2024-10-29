@@ -8,7 +8,8 @@ from ..grammar import load_grammar
 from modules.logging.logger import Logger
 import sys
 from .graph_node import GraphNode
-
+import queue
+from functools import partial
 
 PARALLEL_JOBS=2
 
@@ -17,6 +18,8 @@ class GraphExecutor:
         if not isinstance(executor_config, dict):
             executor_config = {"client":executor_config}
 
+        self.stopped_queue = queue.Queue()
+        
         client = executor_config["client"]
         if "logger" in executor_config:
             self.logger = executor_config["logger"]
@@ -156,19 +159,21 @@ class GraphExecutor:
                 node["outputs"][source_port] = None
                 pass
 
+    def _notify_stop(self,index):
+        self.stopped_queue.put(index)
+
     def _execute_nodes(self,runnable):
         parallel_jobs = PARALLEL_JOBS
         if len(runnable) > parallel_jobs:
             runnable = runnable[0:parallel_jobs]
         try:
-            self.logger.log("running", [self.graph_nodes[j].path for j in runnable])
-            running_nodes = [self.graph_nodes[i].start() for i in runnable ]
+            running_nodes = [self.graph_nodes[i].start(partial(self._notify_stop,i)) for i in runnable ]
         finally:
-            stopped_nodes = [self.graph_nodes[i].join() for i in runnable ]
+            stopped_nodes = [self.stopped_queue.get() for i in runnable ]
 
         for i in runnable:
             res = self.graph_nodes[i]["last_output"]
-            self.logger.log("output", self.path + self.graph_nodes[i]["name"], [str(el) for el in res])
+            
             # res = self.graph_nodes[i].execute()
             config = self.node_configs[i]
             name = config["name"]

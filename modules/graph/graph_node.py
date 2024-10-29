@@ -120,22 +120,23 @@ class GraphNode:
 
         return res
 
-    def execute(self):
-        self.graph.logger.log("starting",self.path)
-        res = self._execute()
-        self.graph.logger.log("stopping",self.path)
+    def execute(self,stop_cb):
+        try:
+            self.graph.logger.log("starting",self.path)
+            res = self._execute()
+            self.graph.logger.log("stopping",self.path)
+            self.graph.logger.log("output", self.path, [str(el) for el in res])
+        finally:
+            stop_cb()
         return res
 
-    def start(self):
+    def start(self,stop_cb):
         if self.tid:
+            stop_cb()
             return None
-        self.tid = threading.Thread(target=self.execute, args=[], daemon=True)
+        self.tid = threading.Thread(target=self.execute, args=[stop_cb], daemon=True)
         self.tid.start()
     
-    def join(self):
-        if self.tid:
-            self.tid.join()
-            self.tid = None
 
     def is_runnable(self):
         if self.tid:
