@@ -75,8 +75,10 @@ class CustomTextCommon{
     {
         if(this.property && this.property == k && this.textarea.value!=v)
         {
-        this.textarea.value=v
-        this.configureSizeInFocus()
+            var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size
+            this.textarea.value=v
+            this.configureSizeInFocus()
+            this.textarea.scrollTop = scrollTop
         }
     }
     getMinHeight()
