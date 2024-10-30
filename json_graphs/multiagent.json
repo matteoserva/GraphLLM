@@ -1,53 +1,7 @@
 {
-    "last_node_id": 39,
-    "last_link_id": 48,
+    "last_node_id": 40,
+    "last_link_id": 50,
     "nodes": [
-        {
-            "id": 28,
-            "type": "graph/generic_node",
-            "pos": [
-                742,
-                341
-            ],
-            "size": {
-                "0": 392.66998291015625,
-                "1": 294.2099609375
-            },
-            "flags": {},
-            "order": 7,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 27
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        31
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "Extract decision",
-            "properties": {
-                "parameters": "type: python\ninit: \n - |\n    type_text = _C[0].strip().lower()\n    if \"math\" in type_text:\n        type = \"math\"\n    else:\n        type = \"text\"\n    index = [\"text\",\"math\"].index(type)\n    _O = [index]"
-            }
-        },
         {
             "id": 36,
             "type": "graph/virtual_source",
@@ -77,54 +31,6 @@
             }
         },
         {
-            "id": 21,
-            "type": "llm/llm_call",
-            "pos": [
-                39,
-                340
-            ],
-            "size": {
-                "0": 648.8699951171875,
-                "1": 290.47998046875
-            },
-            "flags": {},
-            "order": 5,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 41
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        27,
-                        46
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "",
-                "subtype": "stateless",
-                "template": "Determine if the following problem is a text problem or a math problem.\n\nThe problem is:\n```\n{}\n```\n\nYour answer must be a singe word: \"text\" or \"math\"."
-            }
-        },
-        {
             "id": 37,
             "type": "graph/virtual_source",
             "pos": [
@@ -150,31 +56,6 @@
             ],
             "properties": {
                 "identifier": "problem"
-            }
-        },
-        {
-            "id": 39,
-            "type": "output/watch",
-            "pos": [
-                743,
-                206
-            ],
-            "size": {
-                "0": 210,
-                "1": 88
-            },
-            "flags": {},
-            "order": 8,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 46
-                }
-            ],
-            "properties": {
-                "parameters": "write hello"
             }
         },
         {
@@ -248,7 +129,7 @@
                 {
                     "name": "N",
                     "type": "string",
-                    "link": 31
+                    "link": 50
                 },
                 {
                     "name": "N",
@@ -283,104 +164,6 @@
             "properties": {
                 "parameters": "type: copy\nconf: {subtype: demux}"
             }
-        },
-        {
-            "id": 32,
-            "type": "llm/llm_call",
-            "pos": [
-                1493,
-                275
-            ],
-            "size": {
-                "0": 210,
-                "1": 157
-            },
-            "flags": {},
-            "order": 10,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 38
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        39
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "",
-                "subtype": "stateless",
-                "template": ""
-            },
-            "color": "#322",
-            "bgcolor": "#533"
-        },
-        {
-            "id": 23,
-            "type": "llm/llm_call",
-            "pos": [
-                1493,
-                474
-            ],
-            "size": {
-                "0": 210,
-                "1": 157
-            },
-            "flags": {},
-            "order": 11,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 37
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        36
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "{client: openai}",
-                "subtype": "stateless",
-                "template": ""
-            },
-            "color": "#223",
-            "bgcolor": "#335"
         },
         {
             "id": 31,
@@ -433,34 +216,6 @@
             }
         },
         {
-            "id": 38,
-            "type": "llm/input",
-            "pos": [
-                36,
-                177
-            ],
-            "size": {
-                "0": 347.33001708984375,
-                "1": 88
-            },
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": "Solve this: 2+2"
-            },
-            "color": "#432",
-            "bgcolor": "#653"
-        },
-        {
             "id": 33,
             "type": "llm/input",
             "pos": [
@@ -472,7 +227,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 4,
+            "order": 3,
             "mode": 0,
             "outputs": [
                 {
@@ -489,25 +244,257 @@
             },
             "color": "#432",
             "bgcolor": "#653"
+        },
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                39,
+                340
+            ],
+            "size": {
+                "0": 648.8699951171875,
+                "1": 290.47998046875
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 41
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        46,
+                        49
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": "Determine if the following problem is a text problem or a math problem.\n\nThe problem is:\n```\n{}\n```\n\nYour answer must be a singe word: \"text\" or \"math\"."
+            }
+        },
+        {
+            "id": 40,
+            "type": "tools/python",
+            "pos": [
+                746,
+                348
+            ],
+            "size": {
+                "0": 429,
+                "1": 276
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 49
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        50
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Extract decision",
+            "properties": {
+                "parameters": "type_text = _C[0].strip().lower()\nif \"math\" in type_text:\n    type = \"math\"\nelse:\n    type = \"text\"\nindex = [\"text\",\"math\"].index(type)\n_O = [index]"
+            }
+        },
+        {
+            "id": 38,
+            "type": "llm/input",
+            "pos": [
+                42,
+                177
+            ],
+            "size": {
+                "0": 347.33001708984375,
+                "1": 88
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "Solve this: 2+2"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 32,
+            "type": "llm/llm_call",
+            "pos": [
+                1493,
+                275
+            ],
+            "size": {
+                "0": 210,
+                "1": 157
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 38
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        39
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Simple LLM",
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": ""
+            },
+            "color": "#322",
+            "bgcolor": "#533"
+        },
+        {
+            "id": 23,
+            "type": "llm/llm_call",
+            "pos": [
+                1493,
+                474
+            ],
+            "size": {
+                "0": 210,
+                "1": 157
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 37
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        36
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Math expert",
+            "properties": {
+                "conf": "{client: openai}",
+                "subtype": "stateless",
+                "template": ""
+            },
+            "color": "#223",
+            "bgcolor": "#335"
+        },
+        {
+            "id": 39,
+            "type": "output/watch",
+            "pos": [
+                743,
+                206
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 46
+                }
+            ],
+            "title": "Decision text",
+            "properties": {
+                "parameters": ""
+            }
         }
     ],
     "links": [
-        [
-            27,
-            21,
-            0,
-            28,
-            0,
-            "string"
-        ],
-        [
-            31,
-            28,
-            0,
-            29,
-            1,
-            "string"
-        ],
         [
             36,
             23,
@@ -570,6 +557,22 @@
             0,
             35,
             0,
+            "string"
+        ],
+        [
+            49,
+            21,
+            0,
+            40,
+            0,
+            "string"
+        ],
+        [
+            50,
+            40,
+            0,
+            29,
+            1,
             "string"
         ]
     ],

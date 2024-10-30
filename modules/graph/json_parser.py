@@ -203,6 +203,16 @@ class JsonParser():
         new_config["exec"] = val_exec
         return new_config
 
+    def parse_python(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "python"
+        properties = old_config.get("properties", {})
+        parameters = properties.get("parameters", "")
+        new_config["init"] = [parameters]
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = self._calc_exec(old_inputs, links)
+        return new_config
 
     def parse_variable(self,old_config,links):
         new_config = {}
@@ -276,6 +286,8 @@ class JsonParser():
             return self.parse_pdf(old_config,links)
         if type in ["watch"]:
             return self.parse_watch(old_config,links)
+        if type in ["python"]:
+            return self.parse_python(old_config,links)
         return None
 
     def load_string(self,v):

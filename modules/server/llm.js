@@ -128,6 +128,35 @@
     //register in the system
     LiteGraph.registerNodeType("graph/generic_node", MyGraphNode );
 
+    /*
+     *
+     *  Python node
+     *
+     */
+
+    function MyPythonNode()
+    {
+    this.addInput("in","string");
+    this.addOutput("out","string");
+
+    this.container = new DivContainer(this)
+    this.addCustomWidget( this.container);
+
+    this.properties = {  };
+    this.container.addWidget("textarea","Parameters",{ property: "parameters"})
+
+    }
+
+    //name to show
+    MyPythonNode.title = "Python";
+
+    MyPythonNode.prototype.onConnectionsChange = MyGraphNode.prototype.onConnectionsChange
+
+    //register in the system
+    LiteGraph.registerNodeType("tools/python", MyPythonNode );
+
+
+
     /* ********************** ******************* */
     //node constructor class
     function MyLLMCallNode()
