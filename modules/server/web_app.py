@@ -202,7 +202,7 @@ class ModelHandler():
         self.server.end_headers()
         files = os.listdir("json_graphs/")
         files = [el[:-5] for el in files if el.endswith(".json")]
-
+        files = sorted(files)
         text = "\n".join(files)
         self.server.wfile.write(text.encode())
 
