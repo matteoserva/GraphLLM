@@ -132,6 +132,14 @@ class JsonParser():
         new_config["exec"] = self._calc_exec(old_inputs,links)
         return new_config
 
+    def parse_watch(self,old_config,links):
+        new_config = {}
+        new_config["type"] = "copy"
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = self._calc_exec(old_inputs,links)
+        return new_config
+
     def parse_scraper(self,old_config,links):
         new_config = {}
         new_config["type"] = "exec"
@@ -266,6 +274,8 @@ class JsonParser():
             return self.parse_scraper(old_config,links)
         if type in ["pdf_parser"]:
             return self.parse_pdf(old_config,links)
+        if type in ["watch"]:
+            return self.parse_watch(old_config,links)
         return None
 
     def load_string(self,v):
