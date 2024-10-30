@@ -57,8 +57,11 @@ class WebExec():
             self.executor = GraphExecutor(self.executor_config)
             self.executor.load_config(args)
             self.executor([])
-        except GraphException:
-            pass
+        except GraphException as e:
+            if isinstance(e.saved_i,BrokenPipeError):
+                print("client disconnected")
+            else:
+                last_error = e.saved_i
         except BrokenPipeError:
             print("client disconnected")
         except Exception as e:
@@ -66,7 +69,7 @@ class WebExec():
 
         try:
             if last_error:
-                traceback.print_tb(last_error.__traceback__)
+                traceback.print_exception(last_error)
                 self.logger.log("error",str(last_error))
             
             self.logger.log("stop")

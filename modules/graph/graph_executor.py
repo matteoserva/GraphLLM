@@ -181,7 +181,7 @@ class GraphExecutor:
 
         for i in completed:
             if isinstance(i,Exception):
-                raise i from None
+                raise GraphException(i)
         for i in completed:
             res = self.graph_nodes[i]["last_output"]
             
