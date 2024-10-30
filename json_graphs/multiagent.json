@@ -1,0 +1,580 @@
+{
+    "last_node_id": 39,
+    "last_link_id": 48,
+    "nodes": [
+        {
+            "id": 28,
+            "type": "graph/generic_node",
+            "pos": [
+                742,
+                341
+            ],
+            "size": {
+                "0": 392.66998291015625,
+                "1": 294.2099609375
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 27
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        31
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Extract decision",
+            "properties": {
+                "parameters": "type: python\ninit: \n - |\n    type_text = _C[0].strip().lower()\n    if \"math\" in type_text:\n        type = \"math\"\n    else:\n        type = \"text\"\n    index = [\"text\",\"math\"].index(type)\n    _O = [index]"
+            }
+        },
+        {
+            "id": 36,
+            "type": "graph/virtual_source",
+            "pos": [
+                -238,
+                340
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        41
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "problem"
+            }
+        },
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                39,
+                340
+            ],
+            "size": {
+                "0": 648.8699951171875,
+                "1": 290.47998046875
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 41
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        27,
+                        46
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": "Determine if the following problem is a text problem or a math problem.\n\nThe problem is:\n```\n{}\n```\n\nYour answer must be a singe word: \"text\" or \"math\"."
+            }
+        },
+        {
+            "id": 37,
+            "type": "graph/virtual_source",
+            "pos": [
+                970,
+                238
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        43
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "problem"
+            }
+        },
+        {
+            "id": 39,
+            "type": "output/watch",
+            "pos": [
+                743,
+                206
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 46
+                }
+            ],
+            "properties": {
+                "parameters": "write hello"
+            }
+        },
+        {
+            "id": 22,
+            "type": "graph/variable",
+            "pos": [
+                753,
+                46
+            ],
+            "size": {
+                "0": 1040.5301513671875,
+                "1": 112
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This graph shows how to call a different models depending on the submitted problem.\nReconnect the tex input on the left to submit a math problem instead of the word problem and see the result.\nOpen the multiclient example for an explanation on how different models are configured."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 35,
+            "type": "graph/virtual_sink",
+            "pos": [
+                486,
+                113
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 48
+                }
+            ],
+            "properties": {
+                "identifier": "problem"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 29,
+            "type": "graph/generic_node",
+            "pos": [
+                1226,
+                341
+            ],
+            "size": {
+                "0": 210,
+                "1": 128
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 43
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 31
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        38
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": [
+                        37
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Demux",
+            "properties": {
+                "parameters": "type: copy\nconf: {subtype: demux}"
+            }
+        },
+        {
+            "id": 32,
+            "type": "llm/llm_call",
+            "pos": [
+                1493,
+                275
+            ],
+            "size": {
+                "0": 210,
+                "1": 157
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 38
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        39
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": ""
+            },
+            "color": "#322",
+            "bgcolor": "#533"
+        },
+        {
+            "id": 23,
+            "type": "llm/llm_call",
+            "pos": [
+                1493,
+                474
+            ],
+            "size": {
+                "0": 210,
+                "1": 157
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 37
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        36
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{client: openai}",
+                "subtype": "stateless",
+                "template": ""
+            },
+            "color": "#223",
+            "bgcolor": "#335"
+        },
+        {
+            "id": 31,
+            "type": "output/watch",
+            "pos": [
+                1745,
+                473
+            ],
+            "size": {
+                "0": 454.2798767089844,
+                "1": 125.83998107910156
+            },
+            "flags": {},
+            "order": 13,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 36
+                }
+            ],
+            "properties": {
+                "parameters": ""
+            }
+        },
+        {
+            "id": 26,
+            "type": "output/watch",
+            "pos": [
+                1752,
+                276
+            ],
+            "size": {
+                "0": 453.43988037109375,
+                "1": 88
+            },
+            "flags": {},
+            "order": 12,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 39
+                }
+            ],
+            "properties": {
+                "parameters": ""
+            }
+        },
+        {
+            "id": 38,
+            "type": "llm/input",
+            "pos": [
+                36,
+                177
+            ],
+            "size": {
+                "0": 347.33001708984375,
+                "1": 88
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "Solve this: 2+2"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 33,
+            "type": "llm/input",
+            "pos": [
+                41,
+                44
+            ],
+            "size": {
+                "0": 347.33001708984375,
+                "1": 88
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        48
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "Write: \"hello\""
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        }
+    ],
+    "links": [
+        [
+            27,
+            21,
+            0,
+            28,
+            0,
+            "string"
+        ],
+        [
+            31,
+            28,
+            0,
+            29,
+            1,
+            "string"
+        ],
+        [
+            36,
+            23,
+            0,
+            31,
+            0,
+            "string"
+        ],
+        [
+            37,
+            29,
+            1,
+            23,
+            0,
+            "string"
+        ],
+        [
+            38,
+            29,
+            0,
+            32,
+            0,
+            "string"
+        ],
+        [
+            39,
+            32,
+            0,
+            26,
+            0,
+            "string"
+        ],
+        [
+            41,
+            36,
+            0,
+            21,
+            0,
+            "string"
+        ],
+        [
+            43,
+            37,
+            0,
+            29,
+            0,
+            "string"
+        ],
+        [
+            46,
+            21,
+            0,
+            39,
+            0,
+            "string"
+        ],
+        [
+            48,
+            33,
+            0,
+            35,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
