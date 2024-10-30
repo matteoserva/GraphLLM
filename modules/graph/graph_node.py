@@ -104,15 +104,8 @@ class GraphNode:
             if el:
                 node["inputs"][i] = None
 
-        try:
-            res = ex(inputs)
-        except GraphException as e:
-            raise e from None
-        except Exception as e:
-            print("Exception in node: ", self.path,str(e),file=sys.stderr)
-            #self.graph.logger.log("error", str(e))
-            raise e from None
-            res = []
+        res = ex(inputs)
+
         if not isinstance(res, list):
             res = [res]
 
