@@ -291,7 +291,23 @@ class WebBrige {
    xhr.send();
    var data = xhr.responseText
    if(data)
-		graph.configure( JSON.parse( data ) );
+        var parsed = JSON.parse( data )
+        if(parsed && parsed.nodes)
+        {
+            var registered_types = LiteGraph.registered_node_types
+            var registered_basetypes = {}
+            for (var key in registered_types)
+            {
+                var baseName = key.split("/").reverse()[0]
+                registered_basetypes[baseName] = key
+            }
+            var nodes = parsed.nodes
+            var missing_nodes = nodes.filter(function( element ) { return !(element.type in registered_types)});
+            missing_nodes.map(function( element ) {element.type = registered_basetypes[element.type.split("/").reverse()[0]] })
+
+        }
+        graph.configure( parsed );
+
    console.log("load called")
   }
 }

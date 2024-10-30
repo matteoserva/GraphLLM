@@ -272,9 +272,9 @@ class JsonParser():
         jval = json.loads(v)
 
         links = {str(el[0]):el for el in jval["links"]}
-        valid_sections = ["graph","llm","tools"]
+        #valid_sections = ["graph","llm","tools"]
 
-        nodes = { str(el["id"]):el for el in jval["nodes"] if el["type"].split("/")[0] in valid_sections}
+        nodes = { str(el["id"]):el for el in jval["nodes"] if el["type"].split("/")[0]}
         #print(jval)
 
         new_nodes = {}

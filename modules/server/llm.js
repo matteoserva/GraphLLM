@@ -185,7 +185,7 @@
     }
 
     //register in the system
-    LiteGraph.registerNodeType("llm/watch", MyWatchNode );
+    LiteGraph.registerNodeType("output/watch", MyWatchNode );
 
 
 
