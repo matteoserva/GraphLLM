@@ -1,20 +1,154 @@
 {
-    "last_node_id": 24,
-    "last_link_id": 24,
+    "last_node_id": 26,
+    "last_link_id": 25,
     "nodes": [
+        {
+            "id": 26,
+            "type": "output/watch",
+            "pos": [
+                1196,
+                296
+            ],
+            "size": {
+                "0": 636,
+                "1": 515
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 25
+                }
+            ],
+            "properties": {
+                "parameters": ""
+            }
+        },
+        {
+            "id": 25,
+            "type": "tools/file",
+            "pos": [
+                1201,
+                167
+            ],
+            "size": {
+                "0": 210,
+                "1": 82
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        25
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "filename": "client_config.yml",
+                "config": ""
+            }
+        },
+        {
+            "id": 24,
+            "type": "output/watch",
+            "pos": [
+                562,
+                563
+            ],
+            "size": {
+                "0": 595,
+                "1": 208
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 24,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "\n"
+            }
+        },
+        {
+            "id": 22,
+            "type": "graph/variable",
+            "pos": [
+                263,
+                43
+            ],
+            "size": {
+                "0": 814,
+                "1": 179
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This example shows how to use multiple models in the same graph.\nThe client must have been configured in client_config.yml (preview shown on the right).\nThe red box uses the default client.\nThe blue box uses the client configured as \"openai\".\nNotice, by default the openai client uses the openai endpoint in llama.cpp server."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 16,
+            "type": "output/watch",
+            "pos": [
+                563,
+                300
+            ],
+            "size": {
+                "0": 590,
+                "1": 189
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 23,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": ""
+            }
+        },
         {
             "id": 21,
             "type": "llm/llm_call",
             "pos": [
-                267,
-                264
+                282,
+                301
             ],
             "size": {
                 "0": 210,
                 "1": 157
             },
             "flags": {},
-            "order": 0,
+            "order": 2,
             "mode": 0,
             "inputs": [
                 {
@@ -47,70 +181,18 @@
             "bgcolor": "#533"
         },
         {
-            "id": 16,
-            "type": "output/watch",
-            "pos": [
-                563,
-                262
-            ],
-            "size": {
-                "0": 592,
-                "1": 258
-            },
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 23,
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": "It seems like you've sent an empty message. How can I assist you today?<|im_end|>"
-            }
-        },
-        {
-            "id": 24,
-            "type": "output/watch",
-            "pos": [
-                562,
-                563
-            ],
-            "size": {
-                "0": 592,
-                "1": 258
-            },
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 24,
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": "\n"
-            }
-        },
-        {
             "id": 23,
             "type": "llm/llm_call",
             "pos": [
-                266,
-                562
+                270,
+                561
             ],
             "size": {
                 "0": 210,
                 "1": 157
             },
             "flags": {},
-            "order": 2,
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
@@ -141,27 +223,6 @@
             },
             "color": "#223",
             "bgcolor": "#335"
-        },
-        {
-            "id": 22,
-            "type": "graph/variable",
-            "pos": [
-                263,
-                60
-            ],
-            "size": [
-                792,
-                148
-            ],
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "properties": {
-                "identifier": "",
-                "parameters": "This example shows how to use multiple models in the same graph.\nThe client must have been configured in client_config.yml.\nThe red box uses the default client.\nThe blue box uses the client configured as \"openai\".\nNotice, by default the openai client uses the openai endpoint in llama.cpp server."
-            },
-            "color": "#232",
-            "bgcolor": "#353"
         }
     ],
     "links": [
@@ -178,6 +239,14 @@
             23,
             0,
             24,
+            0,
+            "string"
+        ],
+        [
+            25,
+            25,
+            0,
+            26,
             0,
             "string"
         ]
