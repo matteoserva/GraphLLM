@@ -102,12 +102,12 @@ class ModelHandler():
         self.index += 1
 
     def _is_valid_filename(self, filename):
-        if len(filename) > 1 and filename != "Empty" and filename.find("/") < 0:
+        if len(filename) > 1 and filename != "Empty" and filename.find("/") < 0 and filename.find(".") < 0:
              return True
         return False
 
     def save(self,post_data):
-        params = self.server.path.split("/")[-1].split("?", 1)[1]
+        params = self.server.path.split("?", 1)[-1]
         filename = params.split("=")[1]
 
         with open(tempfile.gettempdir() + "/graph.json", "w") as f:
@@ -124,7 +124,7 @@ class ModelHandler():
         return "ciao"
 
     def delete(self,post_data):
-        params = self.server.path.split("/")[-1].split("?", 1)[1]
+        params = self.server.path.split("?", 1)[-1]
         filename = params.split("=")[1]
 
         if self._is_valid_filename(filename):
@@ -190,17 +190,28 @@ class ModelHandler():
         self.server.send_response(200)
         self.server.send_header('Content-type', 'application/json')
         self.server.end_headers()
-        params = self.server.path.split("/")[-1].split("?",1)[1]
+        params = self.server.path.split("?",1)[1]
         filename = params.split("=")[1]
         with open("json_graphs/" + filename+".json") as f:
             content = f.read()
         self.server.wfile.write(content.encode())
 
+    def _list_files_recursive(self, outval, base_path, current_path=''):
+        path = os.path.join(base_path ,current_path)
+        for entry in os.listdir(path):
+            entry_path = os.path.join(current_path, entry)
+            full_path = os.path.join(base_path,entry_path)
+            if os.path.isdir(full_path):
+                self._list_files_recursive(outval, base_path, entry_path)
+            else:
+                outval.append(entry_path)
+
     def list(self):
         self.server.send_response(200)
         self.server.send_header("Content-type","text/plain")
         self.server.end_headers()
-        files = os.listdir("json_graphs/")
+        files = []
+        self._list_files_recursive(files, "json_graphs/")
         files = [el[:-5] for el in files if el.endswith(".json")]
         files = sorted(files)
         text = "\n".join(files)
