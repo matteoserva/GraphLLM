@@ -16,6 +16,7 @@ from modules.graph.json_parser import JsonParser
 import traceback
 
 SOURCES_PATH="modules/server"
+NODES_PATH="modules/gui_nodes"
 LITEGRAPH_PATH = "extras/litegraph.js"
 class WebExec():
     def __init__(self,send,stop):
@@ -265,17 +266,43 @@ class HttpHandler(BaseHTTPRequestHandler):
                 self.wfile.write(b'404 - Not Found')
             pass
 
+        elif endpoint in ["editor"] and len(split_path[2]) == 0: #index
+            filename = SOURCES_PATH + "/" + "index.html"
+
+            node_files = os.listdir(NODES_PATH)
+            node_files = [el for el in node_files if el.endswith(".js")]
+            node_files = sorted(node_files)
+
+            replaced_node_files = ['<script type="text/javascript" src="nodes/' + el + '"></script>' for el in node_files]
+            replaced_text = "\n".join(replaced_node_files)
+
+            content = open(filename, "rb").read()
+            content = content.replace(b"<!-- NODE_LIST_PLACEHOLDER -->",replaced_text.encode())
+
+            self.send_response(200)
+            self.send_header('Connection', 'close')
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            self.wfile.write(content)
+
         elif endpoint in ["editor"] :
             remaining = "index.html" if len(split_path[2]) == 0 else split_path[2]
             print(remaining)
             content = None
 
-            filename = SOURCES_PATH + "/" + remaining
-            if os.path.exists(filename):
-                content = open(filename,"rb").read()
-            filename = "extras/litegraph.js/editor/"  + remaining
-            if content is None and os.path.exists(filename):
-                content = open(filename,"rb").read()
+            if remaining.startswith("nodes/"):
+                filename = NODES_PATH + "/" + split_path[2].split("/")[-1]
+                content = open(filename, "rb").read()
+
+            if not content:
+                filename = SOURCES_PATH + "/" + remaining
+                if os.path.exists(filename):
+                    content = open(filename,"rb").read()
+
+            if not content:
+                filename = "extras/litegraph.js/editor/"  + remaining
+                if content is None and os.path.exists(filename):
+                    content = open(filename,"rb").read()
 
             self.send_response(200)
             self.send_header('Connection', 'close')
@@ -323,7 +350,6 @@ class HttpHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(b'404 - Not Found')
         pass
-
 
 def run():
     model_handler = ModelHandler()
