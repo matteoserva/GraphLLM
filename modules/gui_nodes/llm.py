@@ -281,7 +281,7 @@ class GuiNodeParser:
             return self.parse_pdf(old_config ,links)
         if type in ["watch"]:
             return self.parse_watch(old_config ,links)
-        if type in ["python"]:
+        if type in ["python_sandbox"]:
             return self.parse_python(old_config ,links)
         return None
 

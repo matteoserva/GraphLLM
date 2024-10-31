@@ -295,7 +295,7 @@
         },
         {
             "id": 40,
-            "type": "tools/python",
+            "type": "tools/python_sandbox",
             "pos": [
                 746,
                 348

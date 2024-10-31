@@ -153,7 +153,7 @@
     MyPythonNode.prototype.onConnectionsChange = MyGraphNode.prototype.onConnectionsChange
 
     //register in the system
-    LiteGraph.registerNodeType("tools/python", MyPythonNode );
+    LiteGraph.registerNodeType("tools/python_sandbox", MyPythonNode );
 
 
 
