@@ -1,5 +1,5 @@
 
-function addDemo( name, url )
+function addDemo( select, name, url )
 {
 	var option = document.createElement("option");
 	/*if(url.constructor === String)
@@ -17,18 +17,25 @@ class WebBrige {
     this.editor = editor;
     this.graph = editor.graph;
     this.canvas = this.editor.graphcanvas;
+    this.topBar = document.querySelector("span#LGEditorTopBarSelector")
+    this.topBar.innerHTML ="Graphs: <span><input id='filename' maxlength='50' style='height: 30px; min-width:400px'/><select style='height: 30px; width:20px'><option>Empty</option></select></span><button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='delete'>Delete</button><button class='btn' id='new'>New</button><button class='btn' id='download'>Download</button> | ";
+
     this.saveBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#save")
     this.loadBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#load")
     this.deleteBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#delete")
     this.newBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#new")
     this.nameSelector = document.querySelector("div.litegraph .selector input#filename")
     this.select = document.querySelector("div.litegraph .selector select")
+
   }
 
   connect() {
     this.cb_as = this.graph.onAfterStep;
     let cb_bs = this.graph.onBeforeStep;
     let that = this
+
+
+
     this.graph.onAfterStep = this.onAfterStep.bind(this)
     this.saveBtn.addEventListener("click",this.save.bind(this));
     this.loadBtn.addEventListener("click",this.load.bind(this));
@@ -72,7 +79,7 @@ class WebBrige {
     this.select.innerHTML = "<option>--select--</option>"
     var response = xhr.send(data);
     var lines = xhr.responseText.split("\n")
-    lines.forEach((element) => {addDemo(element, "/graph/load?file="+element); });
+    lines.forEach((element) => {addDemo(this.select, element, "/graph/load?file="+element); });
     console.log(xhr.responseText)
     this.select.selectedIndex = 0
   }
