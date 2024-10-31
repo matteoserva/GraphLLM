@@ -42,9 +42,9 @@ class WebExec():
         #print(t,a,v)
 
         res = {"type": t, "data":a}
-        resp = json.dumps(res)
-
-        self.send_chunk(resp)
+        resp = json.dumps(res) + "\n"
+        encoded = resp.encode('utf-8')
+        self.send_chunk(encoded)
 
     def _run(self,args):
         self.logger.addListener(self)
@@ -157,9 +157,9 @@ class ModelHandler():
         self.server.close_connection = True
 
     def _send_chunk(self,chunk):
-        resp = "{}\n\n".format(chunk)
+        resp = chunk
         l = len(resp)
-        encoded = '{:X}\r\n{}\r\n'.format(l, resp).encode('utf-8')
+        encoded = "{:X}\r\n".format(l).encode() + resp + b"\r\n"
         res = self.server.wfile.write(encoded)
 
     def _send_stop(self):
