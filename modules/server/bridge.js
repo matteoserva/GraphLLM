@@ -91,36 +91,38 @@ class WebBrige {
       console.log("play")
       let that = this
       var data = JSON.stringify( graph.serialize() );
-      this.saved_chunk = "";
-      fetch('/graph/exec',{ signal:signal, method:"POST", body:data}).then(response => {
-                  var text = '';
-            var reader = response.body.getReader()
-            var decoder = new TextDecoder();
-            var t = that
-            
-            return readChunk();
 
-            function readChunk() {
-              return reader.read().then(appendChunks);
-            }
+      fetch('/graph/exec',{ signal:signal, method:"POST", body:data}).then(response =>
+            {
+                    var text = '';
+                    var buffer = {text: ""}
+                    var reader = response.body.getReader()
+                    var decoder = new TextDecoder();
+                    var t = that
 
-            function appendChunks(result) {
-              var chunk = decoder.decode(result.value || new Uint8Array, {stream: !result.done});
-              //console.log('got chunk of', chunk.length, 'bytes')
-              //text += chunk;
-              
-              t.processChunk(chunk);
-              if (result.done) {
-                
-                //console.log('returning')
-                return text;
-              } else {
-                
-                //console.log('recursing')
-                return readChunk();
-              }
+                    return readChunk();
+
+                    function readChunk() {
+                        return reader.read().then(appendChunks);
+                    }
+
+                    function appendChunks(result) {
+                          var chunk = decoder.decode(result.value || new Uint8Array, {stream: !result.done});
+                          //console.log('got chunk of', chunk.length, 'bytes')
+                          //text += chunk;
+
+                          t.processChunk(buffer, chunk);
+                          if (result.done) {
+
+                                //console.log('returning')
+                                return text;
+                          } else {
+
+                                //console.log('recursing')
+                                return readChunk();
+                          }
+                    }
             }
-      }
       ).then(onChunkedResponseComplete)  .catch(onChunkedResponseError);
             function onChunkedResponseComplete(result) {
           console.log('all done!', result)
@@ -139,25 +141,19 @@ class WebBrige {
         }
   }
 
-  processChunk(chunk)
+  processChunk(buffer, chunk)
   {
-      var lines = chunk.split("\n")
+      buffer.text += chunk
+      var lines = buffer.text.split("\n")
+      buffer.text = lines.pop()
       lines.forEach((element) => {if (element.length > 0) {this.processMessage(element)}});
 
   }
 
   processMessage(text)
   {
-      this.saved_chunk += text;
-      try {
-        var obj = JSON.parse(this.saved_chunk);
-      }
-      catch (error)
-      {
-          console.log("error " + text);
-          return;
-      }
-      this.saved_chunk = "";
+      var obj = JSON.parse(text);
+
       if(obj.type == "output")
       {
         var name = obj.data[0].substr(1)
