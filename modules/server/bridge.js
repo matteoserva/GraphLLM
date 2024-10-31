@@ -96,8 +96,23 @@ class WebBrige {
       console.log("play")
       let that = this
       var data = JSON.stringify( graph.serialize() );
-        //const socket = new WebSocket("ws://" + window.location.host + "/graph/exec");
-      fetch('/graph/exec',{ signal:signal, method:"POST", body:data}).then(response =>
+      this.socket = new WebSocket("ws://" + window.location.host + "/graph/exec");
+      var socket = this.socket
+      socket.addEventListener("open", (event) => {
+          socket.send(data);
+        });
+      socket.addEventListener("message", (event) => {
+          this.processMessage(event.data)
+        });
+      socket.addEventListener("close", (event) => {
+          window.setTimeout(this.stopGraph,200)
+        });
+      socket.addEventListener("error", (event) => {
+          this.stopGraph()
+		  console.error(event.data)
+        });
+
+      /*fetch('/graph/exec',{ signal:signal, method:"POST", body:data}).then(response =>
             {
                     var text = '';
                     var buffer = {text: ""}
@@ -136,16 +151,17 @@ class WebBrige {
 
         function onChunkedResponseError(err) {
           that.stopGraph()
-		  
+
 		  console.error(err)
 		  if (err.name != "stopGraph" && err.name != "AbortError")
 		  {
           var message = "error: " + err
           alert(message)
 		  }
-        }
+        }*/
   }
 
+  /*
   processChunk(buffer, chunk)
   {
       buffer.text += chunk
@@ -153,7 +169,7 @@ class WebBrige {
       buffer.text = lines.pop()
       lines.forEach((element) => {if (element.length > 0) {this.processMessage(element)}});
 
-  }
+  }*/
 
   processMessage(text)
   {
@@ -234,6 +250,7 @@ class WebBrige {
   
   onStopEvent()
   {
+      this.socket.close()
       this.controller.abort({name:"stopGraph"});
       console.log("stop")
       this.canvas.selectNodes([])

@@ -7,6 +7,8 @@ from functools import partial
 import time
 import subprocess
 import tempfile
+import queue
+import select
 
 from modules.logging.logger import Logger
 from modules.clients import Client, get_client_config
@@ -15,6 +17,7 @@ from threading import Thread
 from modules.graph.json_parser import JsonParser
 import traceback
 from websockets.server import ServerProtocol
+from websockets.frames import Opcode
 
 SOURCES_PATH="modules/server"
 NODES_PATH="modules/gui_nodes"
@@ -43,7 +46,7 @@ class WebExec():
 
         res = {"type": t, "data":a}
         resp = json.dumps(res) + "\n"
-        encoded = resp.encode('utf-8')
+        encoded = resp
         self.send_chunk(encoded)
 
     def _run(self,args):
@@ -89,20 +92,94 @@ class WebExec():
 class ExecHandler():
     def __init__(self,server):
         self.server = server
+        self.protocol = ServerProtocol()
+        self.socket = server.request
+        self.alive = False
+        self.received_events = queue.Queue()
 
-    def exec(self):
-        protocol = ServerProtocol()
+
+    def _receive(self, blocking = False):
+        if not self.alive:
+            return
+        if not blocking:
+            socket_list = [self.socket]
+            read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [],0)
+            if len(read_sockets) == 0:
+                return
+
+        try:
+            data = self.server.request.recv(65536)
+        except OSError:  # socket closed
+            data = b""
+        if data:
+            self.protocol.receive_data(data)
+        else:
+            self.protocol.receive_eof()
+        events = self.protocol.events_received()
+
+        for el in events:
+            self.received_events.put(el)
+            if el.opcode == Opcode.CLOSE:
+                self.alive= False
+        return events
+
+    def _send_queued_data(self):
+        if not self.alive:
+            return
+        try:
+            for el in self.protocol.data_to_send():
+                self.server.wfile.write(el)
+        except:
+            self.alive = False
+            raise
+
+    def _send_close(self):
+        self._receive()
+        if self.alive:
+            self.protocol.send_close()
+            self._send_queued_data()
+            self.alive = False
+
+    def _send_text(self,text):
+        self._receive()
+        if self.alive:
+            self.protocol.send_text(text.encode())
+            self._send_queued_data()
+        if not self.alive:
+            raise BrokenPipeError("connection closed")
+
+    def _handshake(self):
         headers = self.server.headers.items()
-        headers = [i + ": " + v for i,v in headers]
+        headers = [i + ": " + v for i, v in headers]
         headers = "\r\n".join(headers) + "\r\n\r\n"
         request = self.server.requestline + "\r\n" + str(headers)
-        protocol.receive_data(request.encode())
-        request = protocol.events_received()[0]
-        response = protocol.accept(request)
-        protocol.send_response(response)
 
-        for el in protocol.data_to_send():
-            self.server.request.sendall(el)
+        self.protocol.receive_data(request.encode())
+        request = self.protocol.events_received()[0]
+        response = self.protocol.accept(request)
+        self.protocol.send_response(response)
+        self.alive = True
+        self._send_queued_data()
+
+    def exec(self):
+        self.state = 1
+        self._handshake()
+        self._receive(blocking = True)
+        event = self.received_events.get()
+        json_graph = event.data.decode()
+
+        with open(tempfile.gettempdir() + "/graph.json", "w") as f:
+            a = json.loads(json_graph)
+            f.write(json.dumps(a, indent=4))
+        parser = JsonParser()
+        parsed = parser.load(tempfile.gettempdir() + "/graph.json")
+        with open(tempfile.gettempdir() + "/graph.yaml", "w") as f:
+            f.write(yaml.dump(parsed, sort_keys=False))
+        e = WebExec(self._send_text)
+        e.run(tempfile.gettempdir() + "/graph.yaml")
+
+        self._send_close()
+        self.server.close_connection = True
         pass
 
 
@@ -178,7 +255,7 @@ class ModelHandler():
         self.server.close_connection = True
 
     def _send_chunk(self,chunk):
-        resp = chunk
+        resp = chunk.encode()
         l = len(resp)
         encoded = "{:X}\r\n".format(l).encode() + resp + b"\r\n"
         res = self.server.wfile.write(encoded)
