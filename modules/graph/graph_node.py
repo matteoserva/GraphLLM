@@ -1,4 +1,6 @@
-from modules.executors import *
+from .executor_factory import ExecutorFactory
+from modules.executors.common import GenericExecutor
+from ..parser import solve_templates
 import sys
 import threading
 from .common import GraphException

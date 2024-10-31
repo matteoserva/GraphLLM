@@ -3,7 +3,7 @@ import sys
 from modules.common import get_input,get_formatter,readfile,build_prompt,solve_templates
 from modules.clients import Client,GLMClient,GrokClient, get_client_config
 from modules.formatter import Formatter,PromptBuilder
-from modules.executors import StatefulExecutor, StatelessExecutor, ExecutorFactory
+from modules.graph.executor_factory import ExecutorFactory
 from modules.logging.logger import Logger, stop_logger
 
 client_config = get_client_config()

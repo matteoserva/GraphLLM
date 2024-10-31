@@ -1,13 +1,9 @@
 #
-from .node_other import *
-from .node_llm import *
-from .node_agent import *
-from .node_tools import *
-from .node_inputs import *
-from .node_exec import *
-from ..logging.logger import Logger
+from modules.executors import *
+from modules.executors.node_exec import *
+from modules.logging.logger import Logger
 import sys, inspect
-from .common import GenericExecutor
+from modules.executors.common import GenericExecutor
 
 def default_logger(*args,**kwargs):
     print(*args,**kwargs)
