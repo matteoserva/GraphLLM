@@ -14,15 +14,15 @@ from modules.graph import GraphExecutor, GraphException
 from threading import Thread
 from modules.graph.json_parser import JsonParser
 import traceback
+from websockets.server import ServerProtocol
 
 SOURCES_PATH="modules/server"
 NODES_PATH="modules/gui_nodes"
 LITEGRAPH_PATH = "extras/litegraph.js"
 class WebExec():
-    def __init__(self,send,stop):
+    def __init__(self,send):
         self.t = None
         self.send_chunk = send
-        self.send_stop = stop
         logger = Logger(verbose=True, web_logger=False)
 
 
@@ -74,7 +74,7 @@ class WebExec():
                 self.logger.log("error",str(last_error))
             
             self.logger.log("stop")
-            self.send_stop()
+
         except Exception as e:
             print("stop exception:",e)
             pass
@@ -84,6 +84,27 @@ class WebExec():
 
     def run(self,filename):
         self._run([filename])
+
+
+class ExecHandler():
+    def __init__(self,server):
+        self.server = server
+
+    def exec(self):
+        protocol = ServerProtocol()
+        headers = self.server.headers.items()
+        headers = [i + ": " + v for i,v in headers]
+        headers = "\r\n".join(headers) + "\r\n\r\n"
+        request = self.server.requestline + "\r\n" + str(headers)
+        protocol.receive_data(request.encode())
+        request = protocol.events_received()[0]
+        response = protocol.accept(request)
+        protocol.send_response(response)
+
+        for el in protocol.data_to_send():
+            self.server.request.sendall(el)
+        pass
+
 
 class ModelHandler():
     def __init__(self):
@@ -181,9 +202,12 @@ class ModelHandler():
         parsed = parser.load(tempfile.gettempdir() + "/graph.json")
         with open(tempfile.gettempdir() + "/graph.yaml", "w") as f:
             f.write(yaml.dump(parsed, sort_keys=False))
-        e = WebExec(self._send_chunk, self._send_stop)
+        e = WebExec(self._send_chunk)
         e.run(tempfile.gettempdir() + "/graph.yaml")
-
+        try:
+            self._send_stop()
+        except:
+            pass
 
         self.server.close_connection = True
 
@@ -255,7 +279,11 @@ class HttpHandler(BaseHTTPRequestHandler):
                 self.wfile.write(b'404 - Not Found')
 
             operation = split_path[2]
-            if hasattr(self.model, operation):
+            if self.headers.get("Upgrade", None) == "websocket":
+                wsExec = ExecHandler(self)
+                op = getattr(wsExec,operation)
+                res = op()
+            elif hasattr(self.model, operation):
                 op = getattr(self.model, operation)
                 res = op()
 

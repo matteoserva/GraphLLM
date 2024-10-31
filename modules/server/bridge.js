@@ -96,7 +96,7 @@ class WebBrige {
       console.log("play")
       let that = this
       var data = JSON.stringify( graph.serialize() );
-
+        //const socket = new WebSocket("ws://" + window.location.host + "/graph/exec");
       fetch('/graph/exec',{ signal:signal, method:"POST", body:data}).then(response =>
             {
                     var text = '';
