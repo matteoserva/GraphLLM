@@ -68,6 +68,11 @@ class WebBrige {
             }
 
         }.bind(this));
+    document.addEventListener('keydown', (event) => {
+        if(event.ctrlKey && event.key == "Enter") {
+            this.startGraph()
+        }
+    });
   }
 
   loadList()
@@ -238,6 +243,15 @@ class WebBrige {
   {
      if(this.cb_as)
         	this.cb_as();
+  }
+
+  startGraph()
+  {
+    var isStopped = (graph.status == LGraph.STATUS_STOPPED)
+    if(isStopped)
+    {
+        this.editor.onPlayButton();
+    }
   }
 
   stopGraph()
