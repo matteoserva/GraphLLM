@@ -2,6 +2,11 @@
 # CHANGELOG for GraphLLM
 #
 
+NEXT:
+MAJOR:
+- websockets
+- tts
+
 01/11/2024:
 MAJOR:
 - Dynamic scheduling of new nodes

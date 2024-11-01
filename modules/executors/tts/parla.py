@@ -6,6 +6,7 @@ from piper import PiperVoice
 from piper.download import ensure_voice_exists, find_voice, get_voices
 import logging
 import os
+import wave
 
 #python3 -m modules.executors.tts.parla |aplay -r 16000 -f S16_LE -t raw -
 
@@ -29,25 +30,41 @@ class EngineTTS:
         return selected_voice
 
     def read_line(self, text):
-        synthesize_args = {'speaker_id': None, 'length_scale': None, 'noise_scale': None, 'noise_w': None, 'sentence_silence': 0.0}
+        synthesize_args = {'speaker_id': None, 'length_scale': None, 'noise_scale': None, 'noise_w': None, 'sentence_silence': 0.7}
         audio_stream = self.synthesizer.synthesize_stream_raw(line, **synthesize_args)
         
         return audio_stream
+    
+    def read_text(self,text,sentence_silence=0.8):
+        sentence_phonemes = self.synthesizer.phonemize(text)
+        num_silence_samples = int(sentence_silence * self.synthesizer.config.sample_rate)
+        silence_bytes = bytes(num_silence_samples * 2)
+        synthesize_args = {'speaker_id': None, 'length_scale': None, 'noise_scale': None, 'noise_w': None}
+        for phonemes in sentence_phonemes:
+            print("processing: ", "".join(phonemes), file=sys.stderr)
+            phoneme_ids = self.synthesizer.phonemes_to_ids(phonemes)
+            yield self.synthesizer.synthesize_ids_to_raw(phoneme_ids,**synthesize_args) + silence_bytes
         
 engine = EngineTTS()
 selected_voice = engine.load_voice("it_IT-riccardo-x_low")
 
 lines = [
-    "Da decenni il Libano fa i conti con una situazione politica, economica e sociale molto precaria, e al momento il paese non avrebbe i soldi né le risorse necessarie per rispondere a un’emergenza di questa portata.",
-    "La situazione è diventata ancora più instabile in seguito all’uccisione da parte di Israele di Hassan Nasrallah, il leader del gruppo militare e politico libanese Hezbollah, avvenuta venerdì scorso con un bombardamento sulla capitale Beirut."
+    "Da decenni il Libano fa i conti con una situazione politica, economica e sociale molto precaria, e al momento il paese non avrebbe i soldi né le risorse necessarie per rispondere a un’emergenza di questa portata. La situazione è diventata ancora più instabile in seguito all’uccisione da parte di Israele di Hassan Nasrallah, il leader del gruppo militare e politico libanese Hezbollah, avvenuta venerdì scorso con un bombardamento sulla capitale Beirut. "
     ]
 
+line = "Innaffiare le piante è un elemento cruciale per la loro crescita e sopravvivenza, poiché l'acqua è essenziale per tutte le funzioni vitali delle piante. L'acqua permette alle piante di trasportare i nutrienti dal suolo fino alle loro parti superiori, facilitando il processo di fotosintesi. Inoltre, aiuta a mantenere la struttura flessibile e rigida della pianta, permettendole di rimanere eretta. Senza una idratazione adeguata, le piante possono soffrire di stress idrico, che può portare a foglie secche e ammaccate, crescita rallentata, e in casi estremi, alla morte della pianta. Pertanto, è importante capire e rispettare i bisogni idrici specifici di ogni tipo di pianta per garantire la loro salute e la loro fioritura."
+
 #lines = ["Hello! How can I assist you today?"]
-for line in lines:
-    audio_stream = engine.read_line(line)
+with wave.open("/tmp/audio.wav", "w") as f:
+    f.setnchannels(1)
+    # 2 bytes per sample.
+    f.setsampwidth(2)
+    f.setframerate(16000)
+    
+   
+    audio_stream = engine.read_text(line)
     for audio_bytes in audio_stream:
         sys.stdout.buffer.write(audio_bytes)
         sys.stdout.buffer.flush()
-    zeros = np.zeros(12000).astype(np.int16)
-    sys.stdout.buffer.write(zeros)
+        f.writeframes(audio_bytes)
     sys.stdout.buffer.flush()
