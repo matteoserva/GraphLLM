@@ -27,6 +27,7 @@ class WebBrige {
     this.nameSelector = document.querySelector("div.litegraph .selector input#filename")
     this.select = document.querySelector("div.litegraph .selector select")
 
+    this.useWebSockets = true
   }
 
   connect() {
@@ -88,31 +89,13 @@ class WebBrige {
     console.log(xhr.responseText)
     this.select.selectedIndex = 0
   }
-  
-  onPlayEvent()
-  {
-      this.controller = new AbortController();
-      const signal = this.controller.signal;
-      console.log("play")
-      let that = this
-      var data = JSON.stringify( graph.serialize() );
-      this.socket = new WebSocket("ws://" + window.location.host + "/graph/exec");
-      var socket = this.socket
-      socket.addEventListener("open", (event) => {
-          socket.send(data);
-        });
-      socket.addEventListener("message", (event) => {
-          this.processMessage(event.data)
-        });
-      socket.addEventListener("close", (event) => {
-          window.setTimeout(this.stopGraph,200)
-        });
-      socket.addEventListener("error", (event) => {
-          this.stopGraph()
-		  console.error(event.data)
-        });
 
-      /*fetch('/graph/exec',{ signal:signal, method:"POST", body:data}).then(response =>
+  startSocket(data)
+  {
+        let that = this
+        this.controller = new AbortController();
+        const signal = this.controller.signal;
+        fetch('/graph/exec',{ signal:signal, method:"POST", body:data}).then(response =>
             {
                     var text = '';
                     var buffer = {text: ""}
@@ -158,10 +141,57 @@ class WebBrige {
           var message = "error: " + err
           alert(message)
 		  }
-        }*/
+        }
+
   }
 
-  /*
+  startWebSocket(data)
+  {
+      this.socket = new WebSocket("ws://" + window.location.host + "/graph/exec");
+      var socket = this.socket
+      socket.addEventListener("open", (event) => {
+          socket.send(data);
+        });
+      socket.addEventListener("message", (event) => {
+          this.processMessage(event.data)
+        });
+      socket.addEventListener("close", (event) => {
+          window.setTimeout(this.stopGraph,200)
+        });
+      socket.addEventListener("error", (event) => {
+          this.stopGraph()
+		  console.error(event.data)
+        });
+  }
+
+  stopSocket()
+  {
+    this.controller.abort({name:"stopGraph"});
+  }
+
+  stopWebSocket()
+  {
+    this.socket.close()
+  }
+
+
+  onPlayEvent()
+  {
+
+      console.log("play")
+
+      var data = JSON.stringify( graph.serialize() );
+      if (this.useWebSockets)
+      {
+        this.startWebSocket(data)
+      }
+      else
+      {
+         this.startSocket(data)
+      }
+  }
+
+
   processChunk(buffer, chunk)
   {
       buffer.text += chunk
@@ -169,7 +199,7 @@ class WebBrige {
       buffer.text = lines.pop()
       lines.forEach((element) => {if (element.length > 0) {this.processMessage(element)}});
 
-  }*/
+  }
 
   processMessage(text)
   {
@@ -250,8 +280,14 @@ class WebBrige {
   
   onStopEvent()
   {
-      this.socket.close()
-      this.controller.abort({name:"stopGraph"});
+      if (this.useWebSockets)
+      {
+         this.stopWebSocket()
+      }
+      else
+      {
+        this.stopSocket()
+      }
       console.log("stop")
       this.canvas.selectNodes([])
   }
