@@ -80,6 +80,7 @@ class ModelHandler():
         self.server.close_connection = True
 
     def _send_chunk(self,chunk):
+        chunk += "\n"
         resp = chunk.encode()
         l = len(resp)
         encoded = "{:X}\r\n".format(l).encode() + resp + b"\r\n"

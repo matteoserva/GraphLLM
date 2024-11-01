@@ -37,7 +37,7 @@ class WebExec():
         #print(t,a,v)
 
         res = {"type": t, "data":a}
-        resp = json.dumps(res) + "\n"
+        resp = json.dumps(res)
         encoded = resp
         self.send_chunk(encoded)
 
