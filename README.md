@@ -38,6 +38,7 @@ Some of the features of GraphLLM's GUI:
 - **streaming of results**: Output of the LLM nodes can be seen in real time while it's produced. Watch nodes can be connected while the graph is running.
 - **Hierarchical graphs**: Graphs can contain other graphs without limits.
 - **extra features**: The graph can call external tools, for example the web scraper, the youtube downloader or the pdf reader
+- **dynamic scheduling** of nodes when they are runnable
 
 Here is an example of graph to generate python code and use it to solve a problem:
 
@@ -73,14 +74,14 @@ This screenshot show a Hierarchical graph. The file is downloaded, then summariz
 
 Run these commands in a shell to download and start GraphLLM
 
-- `pip3 install selenium readabilipy html2text pdfminer.six justpy`
+- `pip3 install selenium readabilipy html2text pdfminer.six websockets piper-tts`
 - `git clone https://github.com/matteoserva/GraphLLM.git`
 - `cd GraphLLM`
 - `python3 server.py`
 
 In another terminal, launch the llama.cpp server with Qwen2.5 32b.:
 
-- `GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 CUDA_VISIBLE_DEVICES=0,1 ./llama-server -ngl 99 -t 6 -c 32768 --host 0.0.0.0  -m Qwen2.5-32B-Instruct-Q5_K_M.gguf --override-kv tokenizer.ggml.add_bos_token=bool:false -sp -fa -ctk q8_0 -ctv q8_0`
+- `GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 ./llama-server -ngl 99 -t 6 -c 32768 --host 0.0.0.0 --override-kv tokenizer.ggml.add_bos_token=bool:false -sp -fa -ctk q8_0 -ctv q8_0 -m Qwen2.5-32B-Instruct-Q5_K_M.gguf`
 
 Now you can launch the browser and interact with GraphLLM:
 
@@ -110,7 +111,7 @@ There are optional dependencies for the extra features:
   
 Install the python dependencies with
 
-`pip3 install selenium readabilipy html2text pdfminer.six openai groq`
+`pip3 install selenium readabilipy html2text pdfminer.six openai groq websockets piper-tts`
 
 ### setup the connection with the llama.cpp server
 Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/llama.cpp)
