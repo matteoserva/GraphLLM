@@ -310,7 +310,7 @@ class WebBrige {
 
         }
         graph.configure( parsed );
-
+        window.setTimeout(graph.change.bind(graph))
    console.log("load called")
   }
 }
