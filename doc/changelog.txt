@@ -1,0 +1,14 @@
+#
+# CHANGELOG for GraphLLM
+#
+
+01/11/2024:
+MAJOR:
+- Dynamic scheduling of new nodes
+- Multi client/api support
+- python node
+
+MINOR:
+- Better error handling in gui
+- Graphical fixes
+- auto update node type
