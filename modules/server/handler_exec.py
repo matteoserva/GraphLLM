@@ -15,7 +15,8 @@ from websockets.server import ServerProtocol
 
 
 class WebExec():
-    def __init__(self,send):
+    def __init__(self,send,blob):
+        self.blob = blob
         self.t = None
         self.send_chunk = send
         logger = Logger(verbose=True, web_logger=False)
@@ -38,7 +39,11 @@ class WebExec():
 
         res = {"type": t, "data":a}
         if t == "audio":
-            resp = json.dumps("a")
+            binary_data = a[-1]
+            text_data = a[:-1]
+            data_index = self.blob.add_binary_data(binary_data)
+            res = {"type": t, "data": text_data, "address":data_index}
+            resp = json.dumps(res)
         else:
             resp = json.dumps(res)
         encoded = resp
@@ -172,7 +177,7 @@ class ExecHandler():
         parsed = parser.load(tempfile.gettempdir() + "/graph.json")
         with open(tempfile.gettempdir() + "/graph.yaml", "w") as f:
             f.write(yaml.dump(parsed, sort_keys=False))
-        e = WebExec(self._send_text)
+        e = WebExec(self._send_text,self.blob)
         e.run(tempfile.gettempdir() + "/graph.yaml")
 
         self._send_close()

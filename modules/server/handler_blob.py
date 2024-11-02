@@ -8,7 +8,9 @@ class BlobHandler():
 
     def add_binary_data(self,data):
         self.cache_data[self.cache_head] = data
+        saved_head = str(self.cache_head)
         self.cache_head = (self.cache_head + 1) % 10
+        return saved_head
 
     def do_GET(self, server):
         server.close_connection = True

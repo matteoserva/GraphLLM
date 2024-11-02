@@ -15,6 +15,7 @@ class TTSNode(GenericExecutor):
         pass
 
     def __call__(self, *args):
-        for el in self.engine.read_text_to_buffers(args[0][0]):
+        text = args[0][0]
+        for el in self.engine.read_text_to_buffers(text):
             self.node.log("audio", {}, el)
         return []
