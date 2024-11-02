@@ -28,6 +28,7 @@ class WebBrige {
     this.select = document.querySelector("div.litegraph .selector select")
 
     this.useWebSockets = true
+    this.audio = new Audio();
   }
 
   connect() {
@@ -35,7 +36,7 @@ class WebBrige {
     let cb_bs = this.graph.onBeforeStep;
     let that = this
 
-
+    this.topBar.appendChild(this.audio)
 
     this.graph.onAfterStep = this.onAfterStep.bind(this)
     this.saveBtn.addEventListener("click",this.save.bind(this));
@@ -231,9 +232,21 @@ class WebBrige {
         var ref = obj.address
         ref = "/blob/" + ref
         console.log(ref)
-        var audio = new Audio(ref);
-        audio.play();
-        this.socket.send(JSON.stringify({type: "audio"}))
+        this.audio.src = ref
+        this.audio.load();
+        var socket = this.socket
+        this.audio.onended = function() {
+            console.log("play ended");
+            socket.send( JSON.stringify({type: "audio"}))
+        };
+        this.audio.onerror = function() {
+            console.log("play error");
+            socket.send( JSON.stringify({type: "audio"}))
+        };
+        this.audio.play().then(_ => {console.log("play started")}).catch((error) => {
+              console.error(error);
+            });;
+
       }
 
       /*if(obj.type == "running")
@@ -297,7 +310,9 @@ class WebBrige {
       else
       {
         this.stopSocket()
+
       }
+      this.audio.pause()
       console.log("stop")
       this.canvas.selectNodes([])
   }

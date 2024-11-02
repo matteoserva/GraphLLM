@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import sys, signal, os
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer,ThreadingHTTPServer, BaseHTTPRequestHandler
 from functools import partial
 
 from modules.server.handler_exec import ExecHandler
@@ -104,7 +104,7 @@ class HttpServerWrapper(BaseHTTPRequestHandler):
 def run():
     http_dispatcher = HttpDispatcher()
     http_wrapper = partial(HttpServerWrapper, http_dispatcher)
-    http_server = HTTPServer(('0.0.0.0', 8008), http_wrapper)
+    http_server = ThreadingHTTPServer(('0.0.0.0', 8008), http_wrapper)
     print("server listening at http://localhost:8008/")
 
     def handler(signal_received, frame):

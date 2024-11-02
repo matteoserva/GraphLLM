@@ -44,10 +44,13 @@ class WebExec():
             data_index = self.blob.add_binary_data(binary_data)
             res = {"type": t, "data": text_data, "address":data_index}
             resp = json.dumps(res)
+            encoded = resp
+            el = self.send_chunk(encoded,True)
+            pass
         else:
             resp = json.dumps(res)
-        encoded = resp
-        self.send_chunk(encoded)
+            encoded = resp
+            self.send_chunk(encoded)
 
     def _run(self,args):
         self.logger.addListener(self)
@@ -132,8 +135,12 @@ class ExecHandler():
         if not self.alive:
             return
         try:
-            for el in self.protocol.data_to_send():
-                self.server.wfile.write(el)
+            for data in self.protocol.data_to_send():
+                if data:
+                    self.server.wfile.write(data)
+                else:
+                    self.socket.shutdown(socket.SHUT_WR)
+                    break
         except:
             self.alive = False
             raise
@@ -145,13 +152,19 @@ class ExecHandler():
             self._send_queued_data()
             self.alive = False
 
-    def _send_text(self,text):
+    def _send_text(self,text, synchronous = False):
         self._receive()
         if self.alive:
             self.protocol.send_text(text.encode())
             self._send_queued_data()
         if not self.alive:
             raise BrokenPipeError("connection closed")
+        if synchronous:
+            while self.received_events.empty() and self.alive:
+                self._receive(True)
+            if not self.alive:
+                raise BrokenPipeError("connection closed")
+            return self.received_events.get()
 
     def _handshake(self):
         headers = self.server.headers.items()
