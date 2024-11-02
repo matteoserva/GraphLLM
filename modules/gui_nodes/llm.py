@@ -213,8 +213,8 @@ class GuiNodeParser:
         new_config = {}
         new_config["type"] = "tts"
         properties = old_config.get("properties", {})
-        parameters = properties.get("parameters", "")
-
+        language = properties.get("language", "it")
+        new_config["conf"] = {"lang": language}
 
         old_inputs = old_config.get("inputs", [])
         new_config["exec"] = self._calc_exec(old_inputs, links)

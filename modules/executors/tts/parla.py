@@ -55,7 +55,7 @@ class EngineTTS:
                 f.setnchannels(1)
                 # 2 bytes per sample.
                 f.setsampwidth(2)
-                f.setframerate(16000)
+                f.setframerate(self.synthesizer.config.sample_rate)
                 f.writeframes(audio_bytes)
                 val = dest.getvalue()
             yield val

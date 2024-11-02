@@ -12,10 +12,13 @@ class TTSNode(GenericExecutor):
         selected_voice = self.engine.load_voice("it_IT-riccardo-x_low")
 
     def set_parameters(self, args):
-        pass
+        language = args.get("lang")
+        self.engine.load_voice(language)
 
     def __call__(self, *args):
         text = args[0][0]
+        self.node.log("call", "display", text)
         for el in self.engine.read_text_to_buffers(text):
+
             self.node.log("audio", {}, el)
         return []

@@ -205,6 +205,18 @@ class WebBrige {
 		  }
           
       }
+      if(obj.type == "call")
+      {
+		  var name = obj.data[0].substr(1)
+		  var node = this.graph.getNodeById(name)
+		  if (node)
+		  {
+			 var func = obj.data[1]
+			 var val = obj.data[2]
+			 node[func](val)
+		  }
+
+      }
 	  if(obj.type == "stopping")
       {
         var name = obj.data[0].substr(1)
