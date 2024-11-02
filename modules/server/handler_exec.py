@@ -85,7 +85,8 @@ class WebExec():
 
 
 class ExecHandler():
-    def __init__(self,server):
+    def __init__(self,server,blob = None):
+        self.blob = blob
         self.server = server
         self.protocol = ServerProtocol()
         self.socket = server.request

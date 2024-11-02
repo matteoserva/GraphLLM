@@ -6,12 +6,14 @@ from functools import partial
 from modules.server.handler_exec import ExecHandler
 from modules.server.handler_model import ModelHandler
 from modules.server.handler_editor import EditorHandler
+from modules.server.handler_blob import BlobHandler
 
 class HttpDispatcher:
 
     def __init__(self, *args, **kwargs):
         self.model = ModelHandler()
         self.editor = EditorHandler()
+        self.blob = BlobHandler()
 
     def do_GET(self,server):
         self.model.server = server
@@ -38,7 +40,7 @@ class HttpDispatcher:
 
             operation = split_path[2]
             if server.headers.get("Upgrade", None) == "websocket":
-                wsExec = ExecHandler(server)
+                wsExec = ExecHandler(server,self.blob)
                 op = getattr(wsExec,operation)
                 res = op()
             elif hasattr(self.model, operation):
@@ -55,11 +57,14 @@ class HttpDispatcher:
         elif endpoint in ["editor","src","external","css","js","imgs","style.css","examples"]:
             handler = self.editor
             return handler.do_GET(server)
+        elif endpoint in ["blob"] and len(split_path) >= 3 and len(split_path[2]) > 0:
+            return self.blob.do_GET(server)
         else:
              server.send_response(404)
              server.send_header('Content-type', 'text/html')
              server.end_headers()
              server.wfile.write(b'404 - Not Found')
+
     def do_POST(self,server):
         self.model.server = server
         server.close_connection = True
