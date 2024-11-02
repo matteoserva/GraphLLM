@@ -218,6 +218,36 @@
 
 
 
+    /*
+     *
+     *   TTS
+     *
+     *
+     */
+
+    //node constructor class
+    function MyTtsNode()
+    {
+    this.addInput("in","string");
+
+    this.container = new DivContainer(this)
+    this.addCustomWidget( this.container);
+
+
+    var tmpl = ""
+    this.properties = { };
+    }
+
+    //name to show
+    MyTtsNode.title = "TTS";
+
+    //register in the system
+    LiteGraph.registerNodeType("tools/tts", MyTtsNode );
+
+    //
+    //
+    //  END TTS
+    //
 
     //node constructor class
     function MyInputNode()

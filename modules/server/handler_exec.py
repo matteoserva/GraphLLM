@@ -37,7 +37,10 @@ class WebExec():
         #print(t,a,v)
 
         res = {"type": t, "data":a}
-        resp = json.dumps(res)
+        if t == "audio":
+            resp = json.dumps("a")
+        else:
+            resp = json.dumps(res)
         encoded = resp
         self.send_chunk(encoded)
 

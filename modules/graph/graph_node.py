@@ -33,6 +33,9 @@ class GraphNode:
         self.tid = None
         self["last_output"] = [None]
 
+    def log(self,type, *args,**kwargs):
+        self.graph.logger.log(type,self.path,*args,**kwargs)
+
     def initialize(self):
         if isinstance(self.executor, GenericExecutor):
             self.executor.initialize()
