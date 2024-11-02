@@ -101,35 +101,47 @@ class ExecHandler():
         self.alive = False
         self.received_events = queue.Queue()
 
-
-    def _receive(self, blocking = False):
-        if not self.alive:
-            return
-        if not blocking:
-            socket_list = [self.socket]
-            read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [],0)
-            if len(read_sockets) == 0:
-                return
-
+    def _receive_step(self):
         try:
             data = self.server.request.recv(65536)
         except OSError:  # socket closed
             data = b""
+            self.alive = False
+
         if data:
             self.protocol.receive_data(data)
         else:
             self.protocol.receive_eof()
+
         events = self.protocol.events_received()
 
         for el in events:
             if el.opcode == Opcode.CLOSE:
                 self.socket.shutdown(socket.SHUT_WR)
-                self.alive= False
-            elif el.opcode == Opcode.TEXT:
+                self.alive = False
+            else:
                 self.received_events.put(el)
 
+    def _receive_nonblocking(self):
+        while self.alive:
+            socket_list = [self.socket]
+            read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [], 0)
+            if len(read_sockets) == 0:
+                break
+            self._receive_step()
 
-        return events
+    def _receive_blocking(self):
+        self._receive_nonblocking()
+        while self.alive and self.received_events.empty():
+            self._receive_step()
+
+    def _receive(self, blocking = False):
+        if blocking:
+            self._receive_blocking()
+        else:
+            self._receive_nonblocking()
+
+        return
 
     def _send_queued_data(self):
         if not self.alive:
