@@ -20,8 +20,11 @@ class EngineTTS:
         self.synthesizer = None
 
     def load_voice(self, language):
-        
-        all_voices = get_voices(self.download_dir,False)
+
+        if os.path.exists(PIPER_DIR + "/voices.json"):
+            all_voices = get_voices(self.download_dir,False)
+        else:
+            all_voices = get_voices(self.download_dir, True)
         filtered_voices = [el for el in all_voices if el.startswith(language)]
         selected_voice = filtered_voices[0]
         ensure_voice_exists(selected_voice,[self.download_dir],self.download_dir,all_voices)
