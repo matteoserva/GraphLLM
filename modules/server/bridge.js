@@ -27,7 +27,6 @@ class WebBrige {
     this.nameSelector = document.querySelector("div.litegraph .selector input#filename")
     this.select = document.querySelector("div.litegraph .selector select")
 
-    this.useWebSockets = true
     this.audio = new Audio();
   }
 
@@ -91,61 +90,6 @@ class WebBrige {
     this.select.selectedIndex = 0
   }
 
-  startSocket(data)
-  {
-        let that = this
-        this.controller = new AbortController();
-        const signal = this.controller.signal;
-        fetch('/graph/exec',{ signal:signal, method:"POST", body:data}).then(response =>
-            {
-                    var text = '';
-                    var buffer = {text: ""}
-                    var reader = response.body.getReader()
-                    var decoder = new TextDecoder();
-                    var t = that
-
-                    return readChunk();
-
-                    function readChunk() {
-                        return reader.read().then(appendChunks);
-                    }
-
-                    function appendChunks(result) {
-                          var chunk = decoder.decode(result.value || new Uint8Array, {stream: !result.done});
-                          //console.log('got chunk of', chunk.length, 'bytes')
-                          //text += chunk;
-
-                          t.processChunk(buffer, chunk);
-                          if (result.done) {
-
-                                //console.log('returning')
-                                return text;
-                          } else {
-
-                                //console.log('recursing')
-                                return readChunk();
-                          }
-                    }
-            }
-      ).then(onChunkedResponseComplete)  .catch(onChunkedResponseError);
-            function onChunkedResponseComplete(result) {
-          console.log('all done!', result)
-          window.setTimeout(that.stopGraph,200)
-        }
-
-        function onChunkedResponseError(err) {
-          that.stopGraph()
-
-		  console.error(err)
-		  if (err.name != "stopGraph" && err.name != "AbortError")
-		  {
-          var message = "error: " + err
-          alert(message)
-		  }
-        }
-
-  }
-
   startWebSocket(data)
   {
       this.socket = new WebSocket("ws://" + window.location.host + "/graph/exec");
@@ -165,11 +109,6 @@ class WebBrige {
         });
   }
 
-  stopSocket()
-  {
-    this.controller.abort({name:"stopGraph"});
-  }
-
   stopWebSocket()
   {
     this.socket.close()
@@ -182,14 +121,8 @@ class WebBrige {
       console.log("play")
 
       var data = JSON.stringify( graph.serialize() );
-      if (this.useWebSockets)
-      {
-        this.startWebSocket(data)
-      }
-      else
-      {
-         this.startSocket(data)
-      }
+      this.startWebSocket(data)
+
   }
 
 
@@ -249,9 +182,9 @@ class WebBrige {
 
       }
 
-      /*if(obj.type == "running")
+      if(obj.type == "running")
       {
-        var values = obj.data[0]
+        /*var values = obj.data[0]
         var names = values.map((el) => el.substr(1));
         var nodes = names.map((el) => this.graph.getNodeById(el));
         nodes = nodes.filter(function( element ) { return !!element;    });
@@ -259,8 +192,8 @@ class WebBrige {
         for (let index = 0; index < nodes.length; ++index) {
 			let node = nodes[index]
 					if(node.outputs && node.outputs.length > 0) { node.print_log = ""}
-		}
-      }*/
+		}*/
+      }
 	  if(obj.type == "starting")
       {
 		  var name = obj.data[0].substr(1)
@@ -303,15 +236,8 @@ class WebBrige {
   
   onStopEvent()
   {
-      if (this.useWebSockets)
-      {
-         this.stopWebSocket()
-      }
-      else
-      {
-        this.stopSocket()
+      this.stopWebSocket()
 
-      }
       this.audio.pause()
       console.log("stop")
       this.canvas.selectNodes([])

@@ -93,28 +93,6 @@ class ModelHandler():
         self.server.wfile.flush()
 
 
-    def exec(self,json_graph):
-        self.server.close_connection = False
-        self.server.send_response(200)
-        self.server.send_header('Content-type', 'application/json')
-        self.server.send_header('transfer-encoding', 'chunked')
-        self.server.end_headers()
-        with open(tempfile.gettempdir() + "/graph.json", "w") as f:
-            a = json.loads(json_graph)
-            f.write(json.dumps(a, indent=4))
-        parser = JsonParser()
-        parsed = parser.load(tempfile.gettempdir() + "/graph.json")
-        with open(tempfile.gettempdir() + "/graph.yaml", "w") as f:
-            f.write(yaml.dump(parsed, sort_keys=False))
-        e = WebExec(self._send_chunk,self.blob)
-        e.run(tempfile.gettempdir() + "/graph.yaml")
-        try:
-            self._send_stop()
-        except:
-            pass
-
-        self.server.close_connection = True
-
     def load(self):
         self.server.send_response(200)
         self.server.send_header('Content-type', 'application/json')
