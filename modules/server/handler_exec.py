@@ -119,10 +119,13 @@ class ExecHandler():
         events = self.protocol.events_received()
 
         for el in events:
-            self.received_events.put(el)
             if el.opcode == Opcode.CLOSE:
                 self.socket.shutdown(socket.SHUT_WR)
                 self.alive= False
+            elif el.opcode == Opcode.TEXT:
+                self.received_events.put(el)
+
+
         return events
 
     def _send_queued_data(self):

@@ -9,8 +9,9 @@ from modules.server.handler_exec import WebExec
 
 
 class ModelHandler():
-    def __init__(self):
+    def __init__(self,blob):
         self.index = 1
+        self.blob = blob
 
     def send_prompt(self):
         self.server.send_response(200)
@@ -105,7 +106,7 @@ class ModelHandler():
         parsed = parser.load(tempfile.gettempdir() + "/graph.json")
         with open(tempfile.gettempdir() + "/graph.yaml", "w") as f:
             f.write(yaml.dump(parsed, sort_keys=False))
-        e = WebExec(self._send_chunk)
+        e = WebExec(self._send_chunk,self.blob)
         e.run(tempfile.gettempdir() + "/graph.yaml")
         try:
             self._send_stop()

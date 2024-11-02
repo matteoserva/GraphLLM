@@ -11,9 +11,10 @@ from modules.server.handler_blob import BlobHandler
 class HttpDispatcher:
 
     def __init__(self, *args, **kwargs):
-        self.model = ModelHandler()
+
         self.editor = EditorHandler()
         self.blob = BlobHandler()
+        self.model = ModelHandler(self.blob)
 
     def do_GET(self,server):
         self.model.server = server

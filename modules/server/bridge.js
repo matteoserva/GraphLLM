@@ -226,6 +226,16 @@ class WebBrige {
         console.log(message)
         alert(message)
       }
+      if(obj.type == "audio")
+      {
+        var ref = obj.address
+        ref = "/blob/" + ref
+        console.log(ref)
+        var audio = new Audio(ref);
+        audio.play();
+        this.socket.send(JSON.stringify({type: "audio"}))
+      }
+
       /*if(obj.type == "running")
       {
         var values = obj.data[0]
