@@ -1,7 +1,9 @@
 import os
+from glob import glob
 
 SOURCES_PATH="modules/server"
 NODES_PATH="modules/gui_nodes"
+EXECUTORS_PATH="modules/executors"
 LITEGRAPH_PATH = "extras/litegraph.js"
 
 class EditorHandler():
@@ -20,9 +22,8 @@ class EditorHandler():
         if endpoint in ["editor"] and len(split_path[2]) == 0:  # index
             filename = SOURCES_PATH + "/" + "index.html"
 
-            node_files = os.listdir(NODES_PATH)
-            node_files = [el for el in node_files if el.endswith(".js")]
-            node_files = sorted(node_files)
+            node_files = glob("*.js",root_dir=EXECUTORS_PATH )
+            node_files.extend(glob("*/*.js",root_dir=EXECUTORS_PATH ))
 
             replaced_node_files = ['<script type="text/javascript" src="nodes/' + el + '"></script>' for el in node_files]
             replaced_text = "\n".join(replaced_node_files)
@@ -42,7 +43,7 @@ class EditorHandler():
             content = None
 
             if remaining.startswith("nodes/"):
-                filename = NODES_PATH + "/" + split_path[2].split("/")[-1]
+                filename = EXECUTORS_PATH + "/" + split_path[2].split("/",1)[-1]
                 content = open(filename, "rb").read()
 
             if not content:
