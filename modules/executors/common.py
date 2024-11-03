@@ -67,3 +67,12 @@ def solve_placeholders(base, confArgs, confVariables={}):
             val = confVariables[el]
             base = base.replace(name, val)
         return base
+
+
+class BaseGuiParser:
+    node_types = []
+    def parse_node(self,old_config ,links):
+        return None
+
+    def postprocess_nodes(self,new_nodes):
+        pass
