@@ -1,8 +1,8 @@
 import copy
 import subprocess
-from ..common import PythonInterpreter
-from ..common import readfile
-from .common import GenericExecutor
+from modules.common import PythonInterpreter
+from modules.common import readfile
+from modules.executors.common import GenericExecutor
 
 class PythonExecutor(GenericExecutor):
     node_type = "python"

@@ -1,8 +1,8 @@
 
-from ..common import get_input,try_solve_files
-from ..parser import solve_templates
-from .common import solve_placeholders
-from .common import GenericExecutor
+from modules.common import get_input,try_solve_files
+from modules.parser import solve_templates
+from modules.executors.common import solve_placeholders
+from modules.executors.common import GenericExecutor
 
 class UserInputNode(GenericExecutor):
     node_type = "user"

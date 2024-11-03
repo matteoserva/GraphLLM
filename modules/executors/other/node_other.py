@@ -1,5 +1,5 @@
 import json
-from .common import GenericExecutor
+from modules.executors.common import GenericExecutor
 
 class CopyNode(GenericExecutor):
     """

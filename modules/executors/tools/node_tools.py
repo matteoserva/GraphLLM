@@ -1,5 +1,5 @@
-from ..agent_tools import AgentOps
-from ..common import PythonInterpreter
+from modules.agent_tools import AgentOps
+from modules.common import PythonInterpreter
 
 class ToolExecutor(AgentOps):
     pass

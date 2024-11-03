@@ -1,11 +1,11 @@
-from ..formatter import PromptBuilder
-from ..parser import solve_templates
-from .common import send_chat,solve_placeholders
-from ..common import readfile, merge_params
+from modules.formatter import PromptBuilder
+from modules.parser import solve_templates
+from modules.executors.common import send_chat,solve_placeholders
+from modules.common import readfile, merge_params
 from functools import partial
-from .common import GenericExecutor
-from ..grammar import load_grammar
-from ..clients.client import Client 
+from modules.executors.common import GenericExecutor
+from modules.grammar import load_grammar
+from modules.clients.client import Client
 
 class LlmExecutor(GenericExecutor):
     def __init__(self,node_graph_parameters):

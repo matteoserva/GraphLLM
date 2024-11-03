@@ -1,6 +1,6 @@
-from ..parser import solve_templates
-from .common import solve_placeholders
-from ..common import try_solve_files
+from modules.parser import solve_templates
+from modules.executors.common import solve_placeholders
+from modules.common import try_solve_files
 import json
 
 

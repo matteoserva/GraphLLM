@@ -2,6 +2,8 @@
 from modules.logging.logger import Logger
 import sys, inspect
 from modules.executors.common import GenericExecutor
+from modules.executors.agent.node_agent import AgentController
+from modules.executors.tools.node_tools import ToolExecutor, LlamaTool
 
 def default_logger(*args,**kwargs):
     print(*args,**kwargs)
@@ -22,6 +24,7 @@ def find_submodules(modules, python_name = "modules.executors"):
     return found_executors
 
 def _load_executor_classes():
+    from ..graph.graph_executor import GraphExecutor
     found_executors = []
     executors = import_module("modules.executors")
     toplevel_modules = [el for el in iter_modules(executors.__path__)]
@@ -34,15 +37,22 @@ def _load_executor_classes():
         found_executors.extend(find_submodules(subdirs, python_name))
 
     executors_map = {el.node_type:el for el in found_executors}
+
+    executors_map["agent"] = AgentController
+    executors_map["tool"] = ToolExecutor
+    executors_map["graph"] = GraphExecutor
+    executors_map["llamatool"] = LlamaTool
     return executors_map
 
-_available_executors = _load_executor_classes()
+_available_executors = None
 
 class ExecutorFactory:
     
     @staticmethod
     def makeExecutor(type="stateless",config={}):
-        from ..graph.graph_executor import GraphExecutor
+        global _available_executors
+        if not _available_executors:
+            _available_executors = _load_executor_classes()
         full_config = {}
         full_config["name"] = config.get("name","/")
         full_config["logger"] = config.get("logger",Logger())
@@ -52,14 +62,5 @@ class ExecutorFactory:
         executor=None
         if type in _available_executors:
             executor = _available_executors[type](full_config)
-        elif type == "agent":
-            executor = AgentController(full_config)
-        elif type == "tool":
-            executor = ToolExecutor(full_config)
-        elif type == "graph":
-            executor = GraphExecutor(full_config)
-        elif type == "llamatool":
-            executor = LlamaTool()
-        elif type == "client":
-            executor = Client()
+
         return executor
