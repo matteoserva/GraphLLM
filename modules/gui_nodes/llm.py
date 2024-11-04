@@ -263,20 +263,20 @@ class GuiNodeParser:
 
         new_config = {}
         new_config["type"] = old_config["type"]
-        type = old_config["type"].split("/")[-1]
-        if type in ["generic_node"]:
+        node_type = old_config["type"].split("/")[-1]
+        if node_type in ["generic_node"]:
             return self.parse_generic(old_config ,links)
         if old_config["type"] in ["llm/input"]:
             return self.parse_input(old_config ,links)
-        if type in ["virtual_sink" ,"virtual_source"]:
+        if node_type in ["virtual_sink" ,"virtual_source"]:
             return self.parse_virtual(old_config ,links)
         if old_config["type"].startswith("llm/watch"):
             return None
-        if type in ["variable"]:
+        if node_type in ["variable"]:
             return self.parse_variable(old_config ,links)
         if old_config["type"].startswith("llm/llm_call"):
             return self.parse_llm_call(old_config ,links)
-        if type in ["file"]:
+        if node_type in ["file"]:
             return self.parse_file(old_config ,links)
         if old_config["type"].startswith("llm/list"):
             return self.parse_list(old_config ,links)
@@ -284,17 +284,17 @@ class GuiNodeParser:
             return self.parse_history(old_config ,links)
         if old_config["type"].startswith("llm/generic_agent"):
             return self.parse_generic_agent(old_config ,links)
-        if type in ["connection"]:
+        if node_type in ["connection"]:
             return self.parse_connection(old_config ,links)
-        if type in ["web_scraper"]:
+        if node_type in ["web_scraper"]:
             return self.parse_scraper(old_config ,links)
-        if type in ["pdf_parser"]:
+        if node_type in ["pdf_parser"]:
             return self.parse_pdf(old_config ,links)
-        if type in ["watch"]:
+        if node_type in ["watch"]:
             return self.parse_watch(old_config ,links)
-        if type in ["python_sandbox"]:
+        if node_type in ["python_sandbox"]:
             return self.parse_python(old_config ,links)
-        if type in ["tts"]:
+        if node_type in ["tts"]:
             return self.parse_tts(old_config ,links)
         return None
 
