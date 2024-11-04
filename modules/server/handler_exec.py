@@ -4,6 +4,7 @@ import select
 import socket
 import tempfile
 import traceback
+from threading import Thread
 
 import yaml
 from modules.clients import get_client_config, Client
@@ -91,7 +92,7 @@ class WebExec():
     def run(self,filename):
         self._run([filename])
 
-
+_queue_sentinel = object()
 class ExecHandler():
     def __init__(self,server,blob = None):
         self.blob = blob
@@ -101,47 +102,37 @@ class ExecHandler():
         self.alive = False
         self.received_events = queue.Queue()
 
-    def _receive_step(self):
-        try:
-            data = self.server.request.recv(65536)
-        except OSError:  # socket closed
-            data = b""
-            self.alive = False
+    def _receive_thread(self):
+        keep_running = True
+        while keep_running:
+            try:
+                data = self.server.request.recv(65536)
+            except OSError:  # socket closed
+                data = b""
+                
 
-        if data:
-            self.protocol.receive_data(data)
-        else:
-            self.protocol.receive_eof()
-
-        events = self.protocol.events_received()
-
-        for el in events:
-            if el.opcode == Opcode.CLOSE:
-                self.socket.shutdown(socket.SHUT_WR)
-                self.alive = False
+            if data:
+                self.protocol.receive_data(data)
             else:
-                self.received_events.put(el)
-
-    def _receive_nonblocking(self):
-        while self.alive:
-            socket_list = [self.socket]
-            read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [], 0)
-            if len(read_sockets) == 0:
-                break
-            self._receive_step()
-
-    def _receive_blocking(self):
-        self._receive_nonblocking()
-        while self.alive and self.received_events.empty():
-            self._receive_step()
-
-    def _receive(self, blocking = False):
-        if blocking:
-            self._receive_blocking()
-        else:
-            self._receive_nonblocking()
-
-        return
+                self.protocol.receive_eof()
+                self.alive = False
+                keep_running = False
+            
+            for el in self.protocol.events_received():
+                if el.opcode == Opcode.CLOSE:
+                    self.socket.shutdown(socket.SHUT_WR)
+                    self.alive = False
+                    keep_running = False
+                else:
+                    self.received_events.put(el)
+        self.received_events.put(_queue_sentinel)
+    
+    def _get_next_event(self):
+        event = self.received_events.get()
+        if event is _queue_sentinel:
+            self.received_events.put(event)
+            raise BrokenPipeError("connection closed in RX")
+        return event
 
     def _send_queued_data(self):
         if not self.alive:
@@ -158,25 +149,21 @@ class ExecHandler():
             raise
 
     def _send_close(self):
-        self._receive()
+
         if self.alive:
             self.protocol.send_close()
             self._send_queued_data()
             self.alive = False
 
     def _send_text(self,text, synchronous = False):
-        self._receive()
+        
         if self.alive:
             self.protocol.send_text(text.encode())
             self._send_queued_data()
         if not self.alive:
             raise BrokenPipeError("connection closed")
         if synchronous:
-            while self.received_events.empty() and self.alive:
-                self._receive(True)
-            if not self.alive:
-                raise BrokenPipeError("connection closed")
-            return self.received_events.get()
+            return self._get_next_event()
 
     def _handshake(self):
         headers = self.server.headers.items()
@@ -194,20 +181,29 @@ class ExecHandler():
     def exec(self):
         self.state = 1
         self._handshake()
-        self._receive(blocking = True)
-        event = self.received_events.get()
-        json_graph = event.data.decode()
-
-        with open(tempfile.gettempdir() + "/graph.json", "w") as f:
-            a = json.loads(json_graph)
-            f.write(json.dumps(a, indent=4))
-        parser = JsonParser()
-        parsed = parser.load(tempfile.gettempdir() + "/graph.json")
-        with open(tempfile.gettempdir() + "/graph.yaml", "w") as f:
-            f.write(yaml.dump(parsed, sort_keys=False))
-        e = WebExec(self._send_text,self.blob)
-        e.run(tempfile.gettempdir() + "/graph.yaml")
-
-        self._send_close()
-        self.server.close_connection = True
+        
+        try:
+            rx_thread = Thread(target = self._receive_thread)
+            rx_thread.start()
+            event = self._get_next_event()
+            json_graph = event.data.decode()
+           
+            with open(tempfile.gettempdir() + "/graph.json", "w") as f:
+                a = json.loads(json_graph)
+                f.write(json.dumps(a, indent=4))
+            parser = JsonParser()
+            parsed = parser.load(tempfile.gettempdir() + "/graph.json")
+            with open(tempfile.gettempdir() + "/graph.yaml", "w") as f:
+                f.write(yaml.dump(parsed, sort_keys=False))
+            e = WebExec(self._send_text,self.blob)
+            e.run(tempfile.gettempdir() + "/graph.yaml")
+            self._send_close()
+        finally:
+            try:
+                self.socket.shutdown(socket.SHUT_RD)
+            except:
+                pass
+            rx_thread.join()
+            
+            self.server.close_connection = True
         pass
