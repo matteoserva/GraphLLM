@@ -1,11 +1,28 @@
 from modules.formatter import PromptBuilder
 from modules.parser import solve_templates
-from modules.executors.common import send_chat,solve_placeholders
+from modules.executors.common import solve_placeholders
 from modules.common import readfile, merge_params
 from functools import partial
 from modules.executors.common import GenericExecutor
 from modules.grammar import load_grammar
 from modules.clients.client import Client
+
+
+class ClientCallback:
+    def __init__(self, print_response,logger_print):
+        self.print_response = print_response
+        self.logger_print = logger_print
+
+    def __call__(self, line):
+        if self.print_response:
+            self.logger_print(line, end="", flush=True)
+
+def send_chat(builder,client,client_parameters=None,print_response=True, logger_print=print):
+    callback = ClientCallback(print_response,logger_print)
+    ret = client.send_prompt(builder,params=client_parameters,callback = callback)
+    if print_response and print_response != "partial":
+        logger_print("")
+    return ret
 
 class LlmExecutor(GenericExecutor):
     def __init__(self,node_graph_parameters):
