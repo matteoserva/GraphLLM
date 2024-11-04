@@ -7,6 +7,10 @@ MAJOR:
 - websockets
 - tts
 
+engine:
+- refactoring node structure
+- communication between frontend and backend
+
 01/11/2024:
 MAJOR:
 - Dynamic scheduling of new nodes
@@ -17,3 +21,4 @@ MINOR:
 - Better error handling in gui
 - Graphical fixes
 - auto update node type
+-ctrl enter to start graph

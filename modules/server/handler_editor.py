@@ -22,9 +22,9 @@ class EditorHandler():
         if endpoint in ["editor"] and len(split_path[2]) == 0:  # index
             filename = SOURCES_PATH + "/" + "index.html"
 
-            node_files = glob("*.js",root_dir=EXECUTORS_PATH )
-            node_files.extend(glob("*/*.js",root_dir=EXECUTORS_PATH ))
-
+            node_files = glob(EXECUTORS_PATH + "/*.js")
+            node_files.extend(glob(EXECUTORS_PATH + "/*/*.js" ))
+            node_files = [el[len(EXECUTORS_PATH)+1:] for el in node_files]
             replaced_node_files = ['<script type="text/javascript" src="nodes/' + el + '"></script>' for el in node_files]
             replaced_text = "\n".join(replaced_node_files)
 

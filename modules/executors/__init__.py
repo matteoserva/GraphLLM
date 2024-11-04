@@ -8,10 +8,11 @@ from importlib import import_module
 from modules.executors.common import GenericExecutor, BaseGuiParser
 
 def _get_all_submodules(node_class=GenericExecutor):
-    modules = [el[:-3] for el in glob("*.py", root_dir="modules/executors") if not el.startswith("_")]
+    sub_path = "modules/executors"
+    modules = [el[len(sub_path) + 1:-3] for el in glob(sub_path + "/*.py") if not el.startswith("_")]
 
     for sub_name, sub_path in [(f.name, f.path) for f in os.scandir("modules/executors") if f.is_dir()]:
-        sub_modules = [el[:-3] for el in glob("*.py", root_dir=sub_path) if not el.startswith("_")]
+        sub_modules = [el[len(sub_path) + 1:-3] for el in glob(sub_path + "/*.py") if not el.startswith("_")]
         sub_modules = [sub_name + "." + el for el in sub_modules]
         modules.extend(sub_modules)
     modules = ["modules.executors." + el for el in modules]
