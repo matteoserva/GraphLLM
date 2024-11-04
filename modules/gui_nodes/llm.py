@@ -5,6 +5,7 @@ class GuiNodeParser:
 
     def __init__(self):
         self.parsers_list = get_gui_parsers()
+        self.parsers_list = [el() for el in self.parsers_list]
         parsers_map = {}
         for el in self.parsers_list:
             for t in el.node_types:
@@ -265,7 +266,7 @@ class GuiNodeParser:
             new_inputs = [links[el] if el else None for el in new_inputs]
             old_config["inputs"] = new_inputs
             
-            res = self.parsers_map[node_type]().parse_node(old_config)
+            res = self.parsers_map[node_type].parse_node(old_config)
             
             return res
         if node_type in ["generic_node"]:

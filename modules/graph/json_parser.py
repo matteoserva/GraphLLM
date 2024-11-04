@@ -18,14 +18,15 @@ class JsonParser():
         nodes = { str(el["id"]):el for el in jval["nodes"] if el["type"].split("/")[0]}
         #print(jval)
 
+        gui_node_parser = GuiNodeParser()
         new_nodes = {}
         for el in nodes:
                 old_config = nodes[el]
-                new_config = GuiNodeParser().parse_node(old_config,links)
+                new_config = gui_node_parser.parse_node(old_config,links)
                 if new_config:
                     new_nodes[el] = new_config
 
-        GuiNodeParser().postprocess_nodes(new_nodes)
+        gui_node_parser.postprocess_nodes(new_nodes)
 
         return new_nodes
 
