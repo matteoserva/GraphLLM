@@ -71,8 +71,11 @@ def solve_placeholders(base, confArgs, confVariables={}):
 
 class BaseGuiParser:
     node_types = []
-    def parse_node(self,old_config ,links):
+    def parse_node(self,old_config):
         return None
 
     def postprocess_nodes(self,new_nodes):
         pass
+
+
+        

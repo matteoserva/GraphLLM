@@ -47,3 +47,10 @@ def get_executors():
     executors_map["graph"] = GraphExecutor
     executors_map["llamatool"] = LlamaTool
     return executors_map
+    
+def get_gui_parsers():
+    found_parsers = _get_all_submodules(BaseGuiParser)
+    found_parsers = [el for el in found_parsers if hasattr(el,"node_types")]
+    return found_parsers
+    
+    

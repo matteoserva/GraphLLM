@@ -1,6 +1,17 @@
 import yaml
+from modules.executors import get_gui_parsers
 
 class GuiNodeParser:
+
+    def __init__(self):
+        self.parsers_list = get_gui_parsers()
+        parsers_map = {}
+        for el in self.parsers_list:
+            for t in el.node_types:
+                parsers_map[t] = el
+        self.parsers_map = parsers_map
+        
+
     def parse_generic(self ,old_config ,links):
         new_config = {}
         new_config["type"] = old_config["type"]
@@ -70,24 +81,7 @@ class GuiNodeParser:
         new_config["exec"] = self._calc_exec(old_inputs ,links)
         return new_config
 
-    def parse_llm_call(self ,old_config ,links):
-        new_config = {}
-        new_config["type"] = "stateless"
-        properties = old_config.get("properties", {})
-        subtype = properties.get("subtype", "stateless")
-        if(subtype == "stateful"):
-            new_config["type"] = "stateful"
-        template = properties.get("template", "")
 
-        conf = properties.get("conf", "")
-        conf = yaml.safe_load(conf)
-        if conf:
-            new_config["conf"] = conf
-        new_config["init"] = [template]
-
-        old_inputs = old_config.get("inputs", [])
-        new_config["exec"] = self._calc_exec(old_inputs ,links)
-        return new_config
 
     def parse_file(self ,old_config ,links):
         new_config = {}
@@ -264,6 +258,16 @@ class GuiNodeParser:
         new_config = {}
         new_config["type"] = old_config["type"]
         node_type = old_config["type"].split("/")[-1]
+        
+        if node_type in self.parsers_map:
+            old_inputs = old_config.get("inputs", [])
+            new_inputs = [str(el["link"]) if el["link"] else None for el in old_inputs]
+            new_inputs = [links[el] if el else None for el in new_inputs]
+            old_config["inputs"] = new_inputs
+            
+            res = self.parsers_map[node_type]().parse_node(old_config)
+            
+            return res
         if node_type in ["generic_node"]:
             return self.parse_generic(old_config ,links)
         if old_config["type"] in ["llm/input"]:
@@ -274,8 +278,7 @@ class GuiNodeParser:
             return None
         if node_type in ["variable"]:
             return self.parse_variable(old_config ,links)
-        if old_config["type"].startswith("llm/llm_call"):
-            return self.parse_llm_call(old_config ,links)
+
         if node_type in ["file"]:
             return self.parse_file(old_config ,links)
         if old_config["type"].startswith("llm/list"):
