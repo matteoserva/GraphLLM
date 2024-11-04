@@ -120,7 +120,7 @@ class ExecHandler():
             
             for el in self.protocol.events_received():
                 if el.opcode == Opcode.CLOSE:
-                    self.socket.shutdown(socket.SHUT_WR)
+
                     self.alive = False
                     keep_running = False
                 else:
@@ -135,14 +135,14 @@ class ExecHandler():
         return event
 
     def _send_queued_data(self):
-        if not self.alive:
-            return
+
         try:
             for data in self.protocol.data_to_send():
                 if data:
                     self.server.wfile.write(data)
                 else:
-                    self.socket.shutdown(socket.SHUT_WR)
+
+                    self.alive = False
                     break
         except:
             self.alive = False
@@ -152,8 +152,8 @@ class ExecHandler():
 
         if self.alive:
             self.protocol.send_close()
-            self._send_queued_data()
-            self.alive = False
+        self._send_queued_data()
+        self.alive = False
 
     def _send_text(self,text, synchronous = False):
         
@@ -201,6 +201,7 @@ class ExecHandler():
         finally:
             try:
                 self.socket.shutdown(socket.SHUT_RD)
+                self.socket.shutdown(socket.SHUT_WR)
             except:
                 pass
             rx_thread.join()
