@@ -1,5 +1,6 @@
 import os
 from glob import glob
+import uuid
 
 SOURCES_PATH="modules/server"
 NODES_PATH="modules/gui_nodes"
@@ -22,20 +23,33 @@ class EditorHandler():
         if endpoint in ["editor"] and len(split_path[2]) == 0:  # index
             filename = SOURCES_PATH + "/" + "index.html"
 
-            node_files = glob(EXECUTORS_PATH + "/*.js")
-            node_files.extend(glob(EXECUTORS_PATH + "/*/*.js" ))
-            node_files = [el[len(EXECUTORS_PATH)+1:] for el in node_files]
-            replaced_node_files = ['<script type="text/javascript" src="nodes/' + el + '"></script>' for el in node_files]
-            replaced_text = "\n".join(replaced_node_files)
-
+            myuuid = str(uuid.uuid4())
+            text_replacement = '<script type="text/javascript" src="/editor/nodes.js?uuid=' + myuuid + '"></script>'
             content = open(filename, "rb").read()
-            content = content.replace(b"<!-- NODE_LIST_PLACEHOLDER -->", replaced_text.encode())
+            content = content.replace(b"<!-- NODE_LIST_PLACEHOLDER -->", text_replacement.encode())
 
             server.send_response(200)
             server.send_header('Connection', 'close')
             server.send_header('Content-type', 'text/html')
             server.end_headers()
             server.wfile.write(content)
+
+        elif endpoint in ["editor"] and split_path[2] == "nodes.js":
+            server.send_response(200)
+            server.send_header('Connection', 'close')
+            server.send_header('Content-type', 'text/javascript')
+            server.end_headers()
+
+            res = b""
+            node_files = glob(EXECUTORS_PATH + "/*.js")
+            node_files.extend(glob(EXECUTORS_PATH + "/*/*.js"))
+            for el in node_files:
+                with open(el,"rb") as f:
+                    res += f.read()
+                    res += b"\n\n"
+
+
+            server.wfile.write(res)
 
         elif endpoint in ["editor"]:
             remaining = "index.html" if len(split_path[2]) == 0 else split_path[2]
