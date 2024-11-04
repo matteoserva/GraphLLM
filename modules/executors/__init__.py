@@ -50,7 +50,7 @@ def get_executors():
     
 def get_gui_parsers():
     found_parsers = _get_all_submodules(BaseGuiParser)
-    found_parsers = [el for el in found_parsers if hasattr(el,"node_types")]
+    found_parsers = [el for el in found_parsers if hasattr(el,"node_types") and len(el.node_types) > 0]
     return found_parsers
     
     

@@ -102,6 +102,10 @@ class WebBrige {
         });
       socket.addEventListener("close", (event) => {
           window.setTimeout(this.stopGraph,200)
+          if(!event.wasClean)
+          {
+            alert("connection lost")
+          }
         });
       socket.addEventListener("error", (event) => {
           this.stopGraph()
