@@ -58,30 +58,6 @@ class GuiNodeParser:
             val_exec.append(vel)
         return val_exec
 
-    def parse_generic_agent(self ,old_config ,links):
-        new_config = {}
-        new_config["type"] = "agent"
-        properties = old_config.get("properties", {})
-        parameters = properties.get("parameters", {})
-        parameters = yaml.safe_load(parameters)
-
-        for i, el in enumerate(parameters.get("init" ,[])):
-            if isinstance(el, dict):
-                if len(el) > 0:
-                    val = list(el.keys())
-                    parameters["init"][i] = "{" + str(val[0]) + "}"
-                else:
-                    parameters["init"][i] = "{}"
-                pass
-
-        if parameters:
-            for vel in parameters:
-                new_config[vel] = parameters[vel]
-
-        old_inputs = old_config.get("inputs", [])
-        new_config["exec"] = self._calc_exec(old_inputs ,links)
-        return new_config
-
 
 
     def parse_file(self ,old_config ,links):
@@ -235,25 +211,6 @@ class GuiNodeParser:
         new_config["exec"] = val_exec
         return new_config
 
-    def parse_virtual(self ,old_config ,links):
-        new_config = {}
-        new_config["type"] = old_config["type"].split("/")[-1]
-        properties = old_config.get("properties", {})
-        parameters = properties.get("identifier", "")
-        new_config["conf"] = {"name" :parameters}
-
-        old_inputs = old_config.get("inputs", [])
-        new_inputs = [str(el["link"]) if el["link"] else None for el in old_inputs]
-        new_inputs = [links[el] if el else None for el in new_inputs]
-        new_inputs = [str(el[1]) + "[" + str(el[2]) + "]" if el else None for el in new_inputs]
-        val_exec = []
-        for vel in new_inputs:
-            if not vel:
-                break
-            val_exec.append(vel)
-        new_config["exec"] = val_exec
-        return new_config
-
     def parse_node(self ,old_config ,links):
 
         new_config = {}
@@ -277,8 +234,6 @@ class GuiNodeParser:
             return self.parse_virtual(old_config ,links)
         if old_config["type"].startswith("llm/watch"):
             return None
-        if node_type in ["variable"]:
-            return self.parse_variable(old_config ,links)
 
         if node_type in ["file"]:
             return self.parse_file(old_config ,links)
@@ -286,8 +241,7 @@ class GuiNodeParser:
             return self.parse_list(old_config ,links)
         if old_config["type"].startswith("llm/chat_history"):
             return self.parse_history(old_config ,links)
-        if old_config["type"].startswith("llm/generic_agent"):
-            return self.parse_generic_agent(old_config ,links)
+
         if node_type in ["connection"]:
             return self.parse_connection(old_config ,links)
         if node_type in ["web_scraper"]:
@@ -303,27 +257,8 @@ class GuiNodeParser:
         return None
 
     def postprocess_nodes(self,new_nodes):
-        virtual_sinks = [new_nodes[el] for el in new_nodes if new_nodes[el]["type"] == "virtual_sink"]
-        virtual_sources = [new_nodes[el] for el in new_nodes if new_nodes[el]["type"] == "virtual_source"]
-        for el in virtual_sources:
-            identifier = el["conf"]["name"]
-            compatible_sinks = [e for e in new_nodes if new_nodes[e]["type"] == "virtual_sink" and new_nodes[e]["conf"]["name"] == identifier]
-            el["type"] = "copy"
-            el["exec"] = [compatible_sinks[0]]
 
-        for el in virtual_sinks:
-            el["type"] = "copy"
+        for el in self.parsers_list:
+            el.postprocess_nodes(new_nodes)
 
-        agents = [(el, new_nodes[el]) for el in new_nodes if new_nodes[el]["type"] == "agent"]
-        for agent_name, agent in agents:
-            deps = agent["exec"]
-            LLM = deps[1].split("[")[0]
-            node = new_nodes[LLM]
-            node["exec"] = [agent_name + "[1]"]
-            tools = deps[2].split("[")[0]
-            node = new_nodes[tools]
-            node["exec"] = [agent_name + "[2]"]
-            if len(deps) > 3:
-                reflex = deps[3].split("[")[0]
-                node = new_nodes[reflex]
-                node["exec"] = [agent_name + "[3]"]
+
