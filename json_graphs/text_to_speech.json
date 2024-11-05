@@ -1,0 +1,71 @@
+{
+    "last_node_id": 2,
+    "last_link_id": 1,
+    "nodes": [
+        {
+            "id": 1,
+            "type": "tools/tts",
+            "pos": [
+                726,
+                273
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 1,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 2,
+            "type": "llm/input",
+            "pos": [
+                407,
+                261
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        1
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "ciao"
+            }
+        }
+    ],
+    "links": [
+        [
+            1,
+            2,
+            0,
+            1,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
