@@ -201,7 +201,7 @@ class ExecHandler():
         finally:
             try:
                 self.socket.shutdown(socket.SHUT_RD)
-                self.socket.shutdown(socket.SHUT_WR)
+                #self.socket.shutdown(socket.SHUT_WR)
             except:
                 pass
             rx_thread.join()
