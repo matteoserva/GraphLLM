@@ -4,7 +4,7 @@ import select
 import socket
 import tempfile
 import traceback
-from threading import Thread
+from threading import Thread, Lock
 
 import yaml
 from modules.clients import get_client_config, Client
@@ -101,6 +101,7 @@ class ExecHandler():
         self.socket = server.request
         self.alive = False
         self.received_events = queue.Queue()
+        self.send_lock = Lock()
 
     def _receive_thread(self):
         keep_running = True
@@ -118,13 +119,17 @@ class ExecHandler():
                 self.alive = False
                 keep_running = False
             
-            for el in self.protocol.events_received():
+            protocol_events = self.protocol.events_received()
+            self._send_queued_data()
+            
+            for el in protocol_events:
                 if el.opcode == Opcode.CLOSE:
 
                     self.alive = False
                     keep_running = False
                 else:
                     self.received_events.put(el)
+            
         self.received_events.put(_queue_sentinel)
     
     def _get_next_event(self):
@@ -135,18 +140,18 @@ class ExecHandler():
         return event
 
     def _send_queued_data(self):
+        with self.send_lock:
+            try:
+                for data in self.protocol.data_to_send():
+                    if data:
+                        self.server.wfile.write(data)
+                    else:
 
-        try:
-            for data in self.protocol.data_to_send():
-                if data:
-                    self.server.wfile.write(data)
-                else:
-
-                    self.alive = False
-                    break
-        except:
-            self.alive = False
-            raise
+                        self.alive = False
+                        break
+            except:
+                self.alive = False
+                raise
 
     def _send_close(self):
 
@@ -199,12 +204,13 @@ class ExecHandler():
             e.run(tempfile.gettempdir() + "/graph.yaml")
             self._send_close()
         finally:
-            try:
-                self.socket.shutdown(socket.SHUT_RD)
-                #self.socket.shutdown(socket.SHUT_WR)
-            except:
-                pass
-            rx_thread.join()
+            rx_thread.join(timeout=2)
+            if rx_thread.is_alive():
+                try:
+                    self.socket.shutdown(socket.SHUT_RD)
+                except:
+                    pass
+                rx_thread.join()
             
             self.server.close_connection = True
         pass
