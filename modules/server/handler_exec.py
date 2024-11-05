@@ -92,7 +92,33 @@ class WebExec():
     def run(self,filename):
         self._run([filename])
 
-_queue_sentinel = object()
+class ClientAPI:
+    _queue_sentinel = object()
+    def __init__(self, send_handler):
+        self.received_events = queue.Queue()
+        self.send_handler = send_handler
+
+    def _get_next_event(self):
+        event = self.received_events.get()
+        if event is ClientAPI._queue_sentinel:
+            self.received_events.put(event)
+            raise BrokenPipeError("connection closed in RX")
+        return event 
+
+    def _send_text(self,text, synchronous = False):
+        
+        self.send_handler._send_text(text)
+        if synchronous:
+            return self._get_next_event()
+            
+    def put_event(self,event):
+        self.received_events.put(event)
+
+    def put_close(self):
+        self.received_events.put(ClientAPI._queue_sentinel)
+        
+       
+
 class ExecHandler():
     def __init__(self,server,blob = None):
         self.blob = blob
@@ -100,8 +126,8 @@ class ExecHandler():
         self.protocol = ServerProtocol()
         self.socket = server.request
         self.alive = False
-        self.received_events = queue.Queue()
         self.send_lock = Lock()
+        self.client_api = ClientAPI(self)
 
     def _receive_thread(self):
         keep_running = True
@@ -128,16 +154,10 @@ class ExecHandler():
                     self.alive = False
                     keep_running = False
                 else:
-                    self.received_events.put(el)
+                    self.client_api.put_event(el)
             
-        self.received_events.put(_queue_sentinel)
-    
-    def _get_next_event(self):
-        event = self.received_events.get()
-        if event is _queue_sentinel:
-            self.received_events.put(event)
-            raise BrokenPipeError("connection closed in RX")
-        return event
+        self.client_api.put_close()
+   
 
     def _send_queued_data(self):
         with self.send_lock:
@@ -160,15 +180,13 @@ class ExecHandler():
         self._send_queued_data()
         self.alive = False
 
-    def _send_text(self,text, synchronous = False):
+    def _send_text(self,text):
         
         if self.alive:
             self.protocol.send_text(text.encode())
             self._send_queued_data()
         if not self.alive:
             raise BrokenPipeError("connection closed")
-        if synchronous:
-            return self._get_next_event()
 
     def _handshake(self):
         headers = self.server.headers.items()
@@ -190,7 +208,7 @@ class ExecHandler():
         try:
             rx_thread = Thread(target = self._receive_thread)
             rx_thread.start()
-            event = self._get_next_event()
+            event = self.client_api._get_next_event()
             json_graph = event.data.decode()
            
             with open(tempfile.gettempdir() + "/graph.json", "w") as f:
@@ -200,7 +218,7 @@ class ExecHandler():
             parsed = parser.load(tempfile.gettempdir() + "/graph.json")
             with open(tempfile.gettempdir() + "/graph.yaml", "w") as f:
                 f.write(yaml.dump(parsed, sort_keys=False))
-            e = WebExec(self._send_text,self.blob)
+            e = WebExec(self.client_api._send_text,self.blob)
             e.run(tempfile.gettempdir() + "/graph.yaml")
             self._send_close()
         finally:
