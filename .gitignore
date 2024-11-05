@@ -1,3 +1,7 @@
 __pycache__
 *.py[cod]
 .idea
+json_graphs/test*
+modules/executors/tts/*.json
+modules/executors/tts/*.onnx
+*.swp
