@@ -99,6 +99,9 @@ class HttpServerWrapper(BaseHTTPRequestHandler):
     def do_POST(self):
         return self.dispatcher.do_POST(self)
 
+    def log_message(self,format_string,*args):
+        #print("log_message",args)
+        pass
 
 
 def run():

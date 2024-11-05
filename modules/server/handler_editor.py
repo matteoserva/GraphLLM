@@ -53,7 +53,7 @@ class EditorHandler():
 
         elif endpoint in ["editor"]:
             remaining = "index.html" if len(split_path[2]) == 0 else split_path[2]
-            print(remaining)
+            #print(remaining)
             content = None
 
             if remaining.startswith("nodes/"):
@@ -80,7 +80,7 @@ class EditorHandler():
 
             content = None
             filename = LITEGRAPH_PATH + "/" + endpoint + remaining
-            print(filename)
+            #print(filename)
             if content is None and os.path.isfile(filename):
                 content = open(filename, "rb").read()
             if content:
