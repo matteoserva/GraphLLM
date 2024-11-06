@@ -1,0 +1,73 @@
+{
+    "last_node_id": 4,
+    "last_link_id": 2,
+    "nodes": [
+        {
+            "id": 3,
+            "type": "output/watch",
+            "pos": [
+                798,
+                194
+            ],
+            "size": {
+                "0": 879,
+                "1": 615
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 2
+                }
+            ],
+            "properties": {
+                "parameters": "Sample PDF\nThis is a simple PDF \ufb01le. Fun fun fun.\n\nLorem ipsum dolor  sit amet,  consectetuer  adipiscing elit.  Phasellus  facilisis odio  sed mi. \nCurabitur suscipit. Nullam vel nisi. Etiam semper ipsum ut lectus. Proin  aliquam, erat eget \npharetra  commodo,  eros  mi  condimentum   quam,  sed  commodo  justo  quam  ut  velit. \nInteger  a  erat.  Cras  laoreet  ligula  cursus  enim.  Aenean  scelerisque  velit  et  tellus. \nVestibulum  dictum aliquet sem.  Nulla  facilisi.  Vestibulum  accumsan  ante  vitae  elit.  Nulla \nerat  dolor,  blandit  in,  rutrum  quis,  semper  pulvinar,  enim.  Nullam   varius  congue  risus. \nVivamus  sollicitudin,  metus  ut  interdum   eleifend,  nisi  tellus  pellentesque  elit,  tristique \naccumsan  eros  quam   et  risus.  Suspendisse  libero  odio,  mattis  sit  amet,  aliquet  eget, \nhendrerit vel,  nulla. Sed vitae  augue. Aliquam  erat volutpat. Aliquam feugiat vulputate nisl. \nSuspendisse quis nulla pretium ante pretium mollis. Proin  velit ligula, sagittis at, egestas a, \npulvinar quis, nisl.\n\nPellentesque  sit  amet  lectus.  Praesent  pulvinar,  nunc  quis  iaculis  sagittis,  justo  quam \nlobortis  tortor,  sed  vestibulum dui  metus  venenatis  est.  Nunc  cursus ligula.  Nulla facilisi. \nPhasellus ullamcorper consectetuer ante. Duis tincidunt, urna id condimentum luctus, nibh \nante  vulputate  sapien,  id  sagittis  massa  orci  ut  enim.  Pellentesque  vestibulum convallis \nsem.  Nulla consequat  quam ut  nisl.  Nullam est.  Curabitur  tincidunt  dapibus  lorem.  Proin \nvelit  turpis,  scelerisque  sit  amet,  iaculis  nec,  rhoncus  ac,  ipsum.  Phasellus  lorem  arcu, \nfeugiat  eu,  gravida  eu,  consequat  molestie,  ipsum.  Nullam  vel  est  ut  ipsum  volutpat \nfeugiat. Aenean pellentesque.\n\nIn  mauris.  Pellentesque  dui  nisi,  iaculis eu,  rhoncus in,  venenatis ac,  ante.  Ut odio justo, \nscelerisque vel,  facilisis  non,  commodo  a,  pede.  Cras nec  massa sit amet tortor volutpat \nvarius.  Donec  lacinia, neque  a luctus aliquet, pede  massa imperdiet ante,  at varius lorem \npede  sed  sapien.  Fusce  erat nibh,  aliquet in,  eleifend  eget,  commodo  eget,  erat.  Fusce \nconsectetuer.  Cras risus tortor,  porttitor  nec,  tristique  sed,  convallis  semper,  eros.  Fusce \nvulputate  ipsum a mauris.  Phasellus mollis.  Curabitur  sed  urna.  Aliquam nec  sapien  non \nnibh  pulvinar  convallis.  Vivamus  facilisis  augue  quis  quam.  Proin  cursus  aliquet  metus. \nSuspendisse  lacinia.  Nulla  at tellus ac turpis eleifend scelerisque.  Maecenas a pede vitae \nenim commodo interdum. Donec odio. Sed sollicitudin dui vitae justo.\n\nMorbi  elit nunc, facilisis a, mollis a, molestie at,  lectus.  Suspendisse eget mauris eu  tellus \nmolestie  cursus.  Duis  ut  magna  at  justo  dignissim  condimentum.  Cum   sociis  natoque \npenatibus et magnis dis parturient montes,  nascetur ridiculus mus.  Vivamus varius. Ut sit \namet  diam suscipit mauris  ornare  aliquam.  Sed  varius.  Duis arcu.  Etiam tristique  massa \neget dui.  Phasellus congue. Aenean  est erat, tincidunt eget, venenatis quis,  commodo at, \nquam.\n\n\f"
+            }
+        },
+        {
+            "id": 4,
+            "type": "tools/pdf_parser",
+            "pos": [
+                310,
+                203
+            ],
+            "size": {
+                "0": 210,
+                "1": 63
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        2
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "address": "test/sample.pdf"
+            }
+        }
+    ],
+    "links": [
+        [
+            2,
+            4,
+            0,
+            3,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
