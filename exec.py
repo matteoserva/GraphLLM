@@ -3,6 +3,7 @@ import sys
 from modules.common import get_input,get_formatter,readfile,build_prompt
 from modules.clients import Client,DummyClient,GLMClient,ONNXClient, get_client_config
 from modules.formatter import Formatter,PromptBuilder
+from modules.client_api import TextClientAPI
 
 from modules.graph import GraphExecutor
 import json
@@ -19,7 +20,7 @@ parameters["seed"] = -1
 
 logger= Logger()
 
-executor_config = {"client":client, "client_parameters":parameters,"logger":logger}
+executor_config = {"client":client, "client_parameters":parameters,"logger":logger, "client_api": TextClientAPI()}
 
 seqExec = GraphExecutor(executor_config)
 

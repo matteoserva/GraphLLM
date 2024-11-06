@@ -13,7 +13,7 @@ from modules.graph.json_parser import JsonParser
 from modules.logging.logger import Logger
 from websockets.frames import Opcode
 from websockets.server import ServerProtocol
-
+from modules.client_api import GuiClientAPI
 
 class WebExec():
     def __init__(self,send,blob):
@@ -92,30 +92,7 @@ class WebExec():
     def run(self,filename):
         self._run([filename])
 
-class ClientAPI:
-    _queue_sentinel = object()
-    def __init__(self, send_handler):
-        self.received_events = queue.Queue()
-        self.send_handler = send_handler
 
-    def _get_next_event(self):
-        event = self.received_events.get()
-        if event is ClientAPI._queue_sentinel:
-            self.received_events.put(event)
-            raise BrokenPipeError("connection closed in RX")
-        return event 
-
-    def _send_text(self,text, synchronous = False):
-        
-        self.send_handler._send_text(text)
-        if synchronous:
-            return self._get_next_event()
-            
-    def put_event(self,event):
-        self.received_events.put(event)
-
-    def put_close(self):
-        self.received_events.put(ClientAPI._queue_sentinel)
         
        
 
@@ -127,7 +104,7 @@ class ExecHandler():
         self.socket = server.request
         self.alive = False
         self.send_lock = Lock()
-        self.client_api = ClientAPI(self)
+        self.client_api = GuiClientAPI(self)
 
     def _receive_thread(self):
         keep_running = True
@@ -154,9 +131,9 @@ class ExecHandler():
                     self.alive = False
                     keep_running = False
                 else:
-                    self.client_api.put_event(el)
+                    self.client_api.notify_client_event(el)
             
-        self.client_api.put_close()
+        self.client_api.notify_client_close()
    
 
     def _send_queued_data(self):
