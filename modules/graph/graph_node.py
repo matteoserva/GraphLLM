@@ -23,10 +23,11 @@ class GraphNode:
         self.config = node_config
         node = {}
         el = node_config
-        node_graph_parameters = {"graph":graph,"client":graph.client, "path":self.path,"logger":graph.logger}
+        self.api = graph.executor_config["client_api"]
+        node_graph_parameters = {"graph":graph,"client":graph.client, "path":self.path,"logger":graph.logger,"client_api":self.api}
         self.executor = ExecutorFactory.makeExecutor(el["type"],node_graph_parameters)
         self.executor.graph = graph
-        self.api = graph.executor_config["client_api"]
+
         if isinstance(self.executor,GenericExecutor):
             self.executor.graph_data = node_graph_parameters
             self.executor.properties = {"free_runs": 0, "input_rule":"AND", "input_active": []}

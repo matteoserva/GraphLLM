@@ -21,7 +21,7 @@ class ExecutorFactory:
         full_config["logger"] = config.get("logger", Logger())
         full_config["client"] = config.get("client", None)
         full_config["path"] = config.get("path", "/")
-
+        full_config["client_api"] = config.get("client_api")
         executor = None
         if type in _available_executors:
             executor = _available_executors[type](full_config)
