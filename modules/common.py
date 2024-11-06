@@ -35,41 +35,7 @@ def merge_params(base,update):
                 res[el] = update[el]
         return res
 
-def get_input_simple(inprompt = "> "):
-  prompt = input(inprompt)
-  prompt_full = ""
-  if len(prompt) > 0 and prompt[-1] == "\\":
-    while len(prompt) > 0 and prompt[-1] == "\\":
-      prompt = prompt[0:len(prompt)-1] +  "\n"
-      prompt_full = prompt_full + prompt
-      prompt = input(". ")
-    prompt_full = prompt_full + prompt
-  elif len(prompt) == 3 and prompt == "'''":
-    prompt = input(". ")
-    while len(prompt) != 3 or prompt != "'''":
-      prompt_full = prompt_full + "\n" + prompt
-      prompt = input(". ")
-    prompt_full=prompt_full[1:]
-  else:
-    prompt_full = prompt_full + prompt
-    
-  return prompt_full
 
-# tries to solve templates from the args stack. then it asks the user
-def get_input(prompt_full="{}",args_stack=[]):
-  inprompt = "> "
-  if(prompt_full != "{}"):
-      inprompt = "! "
-  while True:
-      prompt_full, need_more = solve_templates(prompt_full,args_stack)
-      args_stack = []
-      if not need_more:
-          break
-      prompt = get_input_simple(inprompt)
-      inprompt = "! "
-      prompt_full = prompt_full.replace("{}", prompt, 1)
-
-  return prompt_full
 
 def get_formatter(props):
   print(props["default_generation_settings"]["model"])

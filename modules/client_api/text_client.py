@@ -1,3 +1,5 @@
 
 class TextClientAPI:
-    pass
+
+    def get_user_input(self, inprompt="> "):
+        return input(inprompt)

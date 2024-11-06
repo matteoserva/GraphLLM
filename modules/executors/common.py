@@ -41,6 +41,9 @@ class GenericExecutor():
     def setup_complete(self, *args, **kwargs):
         pass
 
+    def __getattr__(self,name):
+        return getattr(self.node,name)
+
 
 class BaseGuiParser:
     node_types = []

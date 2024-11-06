@@ -20,14 +20,11 @@ class GraphExecutor:
     def __init__(self,executor_config):
         if not isinstance(executor_config, dict):
             executor_config = {"client":executor_config}
-
+        self.executor_config = executor_config
         self.stopped_queue = queue.Queue()
         
         client = executor_config["client"]
-        if "logger" in executor_config:
-            self.logger = executor_config["logger"]
-        else:
-            self.logger = Logger()
+        self.logger = executor_config.get("logger",Logger())
 
         self.path = executor_config.get("path","") + "/"
         self.client_parameters = executor_config.get("client_parameters",None)

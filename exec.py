@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import sys
-from modules.common import get_input,get_formatter,readfile,build_prompt
+from modules.common import get_formatter,readfile,build_prompt
 from modules.clients import Client,DummyClient,GLMClient,ONNXClient, get_client_config
 from modules.formatter import Formatter,PromptBuilder
 from modules.client_api import TextClientAPI

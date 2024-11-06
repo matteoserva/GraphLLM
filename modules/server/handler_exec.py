@@ -16,10 +16,11 @@ from websockets.server import ServerProtocol
 from modules.client_api import GuiClientAPI
 
 class WebExec():
-    def __init__(self,send,blob):
+    def __init__(self,client_api,blob):
         self.blob = blob
         self.t = None
-        self.send_chunk = send
+
+        self.send_chunk = client_api._send_text
         logger = Logger(verbose=True, web_logger=False)
 
 
@@ -29,7 +30,7 @@ class WebExec():
         parameters["seed"] = -1
 
 
-        self.executor_config = {"client":None, "client_parameters":parameters,"logger":logger}
+        self.executor_config = {"client":None, "client_parameters":parameters,"logger":logger,"client_api":client_api}
 
 
         self.logger = logger
@@ -195,7 +196,7 @@ class ExecHandler():
             parsed = parser.load(tempfile.gettempdir() + "/graph.json")
             with open(tempfile.gettempdir() + "/graph.yaml", "w") as f:
                 f.write(yaml.dump(parsed, sort_keys=False))
-            e = WebExec(self.client_api._send_text,self.blob)
+            e = WebExec(self.client_api,self.blob)
             e.run(tempfile.gettempdir() + "/graph.yaml")
             self._send_close()
         finally:
