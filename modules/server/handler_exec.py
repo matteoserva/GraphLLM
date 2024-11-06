@@ -40,19 +40,11 @@ class WebExec():
         #print(t,a,v)
 
         res = {"type": t, "data":a}
-        if t == "audio":
-            binary_data = a[-1]
-            text_data = a[:-1]
-            data_index = self.blob.add_binary_data(binary_data)
-            res = {"type": t, "data": text_data, "address":data_index}
-            resp = json.dumps(res)
-            encoded = resp
-            el = self.send_chunk(encoded,True)
-            pass
-        else:
-            resp = json.dumps(res)
-            encoded = resp
-            self.send_chunk(encoded)
+
+
+        resp = json.dumps(res)
+        encoded = resp
+        self.send_chunk(encoded)
 
     def _run(self,args):
         self.logger.addListener(self)
@@ -105,7 +97,7 @@ class ExecHandler():
         self.socket = server.request
         self.alive = False
         self.send_lock = Lock()
-        self.client_api = GuiClientAPI(self)
+        self.client_api = GuiClientAPI(self,blob=blob)
 
     def _receive_thread(self):
         keep_running = True

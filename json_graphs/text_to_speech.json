@@ -1,6 +1,6 @@
 {
-    "last_node_id": 3,
-    "last_link_id": 2,
+    "last_node_id": 4,
+    "last_link_id": 3,
     "nodes": [
         {
             "id": 1,
@@ -9,10 +9,10 @@
                 1121,
                 234
             ],
-            "size": [
-                500,
-                192
-            ],
+            "size": {
+                "0": 500,
+                "1": 192
+            },
             "flags": {},
             "order": 1,
             "mode": 0,
@@ -20,62 +20,48 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 2,
+                    "link": 3,
                     "slot_index": 0
                 }
             ],
             "properties": {
                 "language": "en",
-                "parameters": "ciao a te.\nciao a me"
+                "parameters": "Sure! Here's a joke for you:\n\nWhy don't scientists trust atoms?\n\nBecause they make up everything!"
             }
         },
         {
-            "id": 3,
-            "type": "llm/llm_call",
+            "id": 4,
+            "type": "llm/input",
             "pos": [
-                231,
-                231
+                290,
+                232
             ],
-            "size": {
-                "0": 570,
-                "1": 185
-            },
+            "size": [
+                551.749832763672,
+                166.09019256591807
+            ],
             "flags": {},
             "order": 0,
             "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": null
-                }
-            ],
             "outputs": [
                 {
                     "name": "out",
                     "type": "string",
                     "links": [
-                        2
+                        3
                     ],
                     "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
                 }
             ],
             "properties": {
-                "conf": "",
-                "subtype": "stateless",
-                "template": "tell me a joke"
+                "parameters": "Sure! Here's a joke for you:\n\nWhy don't scientists trust atoms?\n\nBecause they make up everything!"
             }
         }
     ],
     "links": [
         [
-            2,
             3,
+            4,
             0,
             1,
             0,

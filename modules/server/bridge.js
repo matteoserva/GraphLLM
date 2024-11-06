@@ -164,27 +164,36 @@ class WebBrige {
         console.log(message)
         alert(message)
       }
-      if(obj.type == "audio")
+      if(obj.type == "request")
       {
-        var ref = obj.address
-        ref = "/blob/" + ref
-        console.log(ref)
-        this.audio.src = ref
-        this.audio.load();
-        var socket = this.socket
-        this.audio.onended = function() {
-            console.log("play ended");
-            socket.send( JSON.stringify({type: "audio"}))
-        };
-        this.audio.onerror = function() {
-            console.log("play error");
-            socket.send( JSON.stringify({type: "audio"}))
-        };
-        this.audio.play().then(_ => {console.log("play started")}).catch((error) => {
-              console.error(error);
-            });;
+            if(obj.subtype == "audio")
+              {
+                var ref = obj.address
+                ref = "/blob/" + ref
+                console.log(ref)
+                this.audio.src = ref
+                this.audio.load();
+                var req_id = obj.id
+                var socket = this.socket
+                this.audio.onended = function() {
+                    console.log("play ended");
+                    socket.send( JSON.stringify({type: "response", subtype: "audio", id: req_id}))
+                };
+                this.audio.onerror = function() {
+                    console.log("play error");
+                    socket.send( JSON.stringify({type: "response", subtype: "audio", id: req_id}))
+                };
+                this.audio.play().then(_ => {console.log("play started")}).catch((error) => {
+                      socket.send( JSON.stringify({type: "response", subtype: "audio", id: req_id}))
+                      console.error(error);
+                    });;
+
+              }
+
+
 
       }
+
 
       if(obj.type == "running")
       {
