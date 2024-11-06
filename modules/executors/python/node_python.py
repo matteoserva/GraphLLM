@@ -20,7 +20,7 @@ class PythonExecutor(GenericExecutor):
                 args[i] = readfile(el)
             except:
                 pass
-        if len(args)> 0:
+        if len(args)> 0 and len(args[0].strip()) > 0:
             self.base_template = args[0]
         #todo: gestire parametri successivi
 

@@ -1,6 +1,6 @@
 {
-    "last_node_id": 10,
-    "last_link_id": 6,
+    "last_node_id": 11,
+    "last_link_id": 9,
     "nodes": [
         {
             "id": 7,
@@ -30,55 +30,8 @@
             }
         },
         {
-            "id": 5,
-            "type": "graph/generic_node",
-            "pos": [
-                178,
-                469
-            ],
-            "size": {
-                "0": 286.8185119628906,
-                "1": 108
-            },
-            "flags": {},
-            "order": 6,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 4,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        5
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "Python executor",
-            "properties": {
-                "parameters": "    type: python\n    init: \"\""
-            }
-        },
-        {
             "id": 6,
-            "type": "llm/watch",
+            "type": "output/watch",
             "pos": [
                 533,
                 499
@@ -94,7 +47,7 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 5
+                    "link": 9
                 }
             ],
             "title": "Result",
@@ -112,7 +65,7 @@
                 "1": 112
             },
             "flags": {},
-            "order": 3,
+            "order": 1,
             "mode": 0,
             "properties": {
                 "identifier": "",
@@ -133,7 +86,7 @@
                 "1": 112
             },
             "flags": {},
-            "order": 1,
+            "order": 2,
             "mode": 0,
             "properties": {
                 "identifier": "",
@@ -154,7 +107,7 @@
                 "1": 112
             },
             "flags": {},
-            "order": 2,
+            "order": 3,
             "mode": 0,
             "properties": {
                 "identifier": "",
@@ -165,15 +118,15 @@
         },
         {
             "id": 4,
-            "type": "llm/watch",
+            "type": "output/watch",
             "pos": [
                 537,
                 252
             ],
-            "size": [
-                632.7130449468434,
-                203.89188038219083
-            ],
+            "size": {
+                "0": 632.7130737304688,
+                "1": 203.89187622070312
+            },
             "flags": {},
             "order": 5,
             "mode": 0,
@@ -196,7 +149,7 @@
             ],
             "size": {
                 "0": 300.718505859375,
-                "1": 156
+                "1": 157
             },
             "flags": {},
             "order": 4,
@@ -220,7 +173,7 @@
                     "type": "string",
                     "links": [
                         3,
-                        4
+                        8
                     ],
                     "slot_index": 0
                 },
@@ -235,6 +188,49 @@
                 "subtype": "stateless",
                 "template": "templates/python_gen.txt"
             }
+        },
+        {
+            "id": 11,
+            "type": "tools/python_sandbox",
+            "pos": [
+                187,
+                477
+            ],
+            "size": [
+                295,
+                108
+            ],
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 8
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        9
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {}
         }
     ],
     "links": [
@@ -247,26 +243,26 @@
             "string"
         ],
         [
-            4,
-            3,
-            0,
-            5,
-            0,
-            "string"
-        ],
-        [
-            5,
-            5,
-            0,
-            6,
-            0,
-            "string"
-        ],
-        [
             6,
             7,
             0,
             3,
+            0,
+            "string"
+        ],
+        [
+            8,
+            3,
+            0,
+            11,
+            0,
+            "string"
+        ],
+        [
+            9,
+            11,
+            0,
+            6,
             0,
             "string"
         ]
