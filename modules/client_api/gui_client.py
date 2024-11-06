@@ -46,6 +46,7 @@ class GuiClientAPI:
         data = [node_name] + list(args)
         t = {"type":"print", "data":data}
         text = json.dumps(t)
+        print(*args, **kwargs)
         self._send_text(text)
 
     def play_audio(self,audio_data):
