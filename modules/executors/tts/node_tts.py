@@ -17,8 +17,12 @@ class TTSNode(GenericExecutor):
 
     def __call__(self, *args):
         text = args[0][0]
-        self.node.log("call", "display", text)
-        for el in self.engine.read_text_to_buffers(text):
 
-            self.node.log("audio", {}, el)
+        phonemized = self.engine.phonemize(text)
+        for phonemes in phonemized:
+            display_val = "".join(phonemes)
+            self.node.log("call", "display", display_val)
+            audio = self.engine.read_phonemized_to_buffer(phonemes)
+            self.node.log("audio", {}, audio)
+        self.node.log("call", "display", text)
         return []

@@ -49,6 +49,25 @@ class EngineTTS:
             phoneme_ids = self.synthesizer.phonemes_to_ids(phonemes)
             yield self.synthesizer.synthesize_ids_to_raw(phoneme_ids,**synthesize_args) + silence_bytes
 
+    def phonemize(self,text):
+        sentence_phonemes = self.synthesizer.phonemize(text)
+        return sentence_phonemes
+
+    def read_phonemized_to_buffer(self,phonemes,sentence_silence=0.8):
+        num_silence_samples = int(sentence_silence * self.synthesizer.config.sample_rate)
+        silence_bytes = bytes(num_silence_samples * 2)
+        synthesize_args = {'speaker_id': None, 'length_scale': None, 'noise_scale': None, 'noise_w': None}
+        phoneme_ids = self.synthesizer.phonemes_to_ids(phonemes)
+        audio_bytes = self.synthesizer.synthesize_ids_to_raw(phoneme_ids,**synthesize_args) + silence_bytes
+        with io.BytesIO() as dest, wave.open(dest, "wb") as f:
+            f.setnchannels(1)
+            # 2 bytes per sample.
+            f.setsampwidth(2)
+            f.setframerate(self.synthesizer.config.sample_rate)
+            f.writeframes(audio_bytes)
+            val = dest.getvalue()
+        return val
+
     def read_text_to_buffers(self,line,sentence_silence=0.8):
         for audio_bytes in self.read_text(line):
             with io.BytesIO() as dest, wave.open(dest, "wb") as f:

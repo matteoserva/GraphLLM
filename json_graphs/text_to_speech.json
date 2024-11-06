@@ -1,18 +1,18 @@
 {
-    "last_node_id": 2,
-    "last_link_id": 1,
+    "last_node_id": 3,
+    "last_link_id": 2,
     "nodes": [
         {
             "id": 1,
             "type": "tools/tts",
             "pos": [
-                726,
-                273
+                1121,
+                234
             ],
-            "size": {
-                "0": 210,
-                "1": 88
-            },
+            "size": [
+                500,
+                192
+            ],
             "flags": {},
             "order": 1,
             "mode": 0,
@@ -20,44 +20,62 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 1,
+                    "link": 2,
                     "slot_index": 0
                 }
             ],
-            "properties": {}
+            "properties": {
+                "language": "en",
+                "parameters": "ciao a te.\nciao a me"
+            }
         },
         {
-            "id": 2,
-            "type": "llm/input",
+            "id": 3,
+            "type": "llm/llm_call",
             "pos": [
-                407,
-                261
+                231,
+                231
             ],
             "size": {
-                "0": 210,
-                "1": 88
+                "0": 570,
+                "1": 185
             },
             "flags": {},
             "order": 0,
             "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
             "outputs": [
                 {
                     "name": "out",
                     "type": "string",
                     "links": [
-                        1
-                    ]
+                        2
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
                 }
             ],
             "properties": {
-                "parameters": "ciao"
+                "conf": "",
+                "subtype": "stateless",
+                "template": "tell me a joke"
             }
         }
     ],
     "links": [
         [
-            1,
             2,
+            3,
             0,
             1,
             0,
