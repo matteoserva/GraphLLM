@@ -36,10 +36,10 @@
                 290,
                 232
             ],
-            "size": [
-                551.749832763672,
-                166.09019256591807
-            ],
+            "size": {
+                "0": 551.7498168945312,
+                "1": 166.09019470214844
+            },
             "flags": {},
             "order": 0,
             "mode": 0,
@@ -54,7 +54,7 @@
                 }
             ],
             "properties": {
-                "parameters": "Sure! Here's a joke for you:\n\nWhy don't scientists trust atoms?\n\nBecause they make up everything!"
+                "parameters": "Here's a joke for you:\n\nWhy don't scientists trust atoms?\nBecause they make up everything!"
             }
         }
     ],

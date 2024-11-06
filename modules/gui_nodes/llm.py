@@ -241,7 +241,8 @@ class GuiNodeParser:
             return self.parse_list(old_config ,links)
         if old_config["type"].startswith("llm/chat_history"):
             return self.parse_history(old_config ,links)
-
+        if node_type in ["variable"]:
+            return self.parse_variable(old_config, links)
         if node_type in ["connection"]:
             return self.parse_connection(old_config ,links)
         if node_type in ["web_scraper"]:
