@@ -38,6 +38,9 @@ class GraphNode:
     def log(self,type, *args,**kwargs):
         self.graph.logger.log(type,self.path,*args,**kwargs)
 
+    def print(self, *args,**kwargs):
+        self.api.node_print(self.path,*args,**kwargs)
+
     def initialize(self):
         if isinstance(self.executor, GenericExecutor):
             self.executor.initialize()

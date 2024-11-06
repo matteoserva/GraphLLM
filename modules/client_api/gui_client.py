@@ -1,4 +1,5 @@
 import queue
+import json
 
 class GuiClientAPI:
     _queue_sentinel = object()
@@ -19,6 +20,12 @@ class GuiClientAPI:
         self.send_handler._send_text(text)
         if synchronous:
             return self._get_next_event()
+
+    def node_print(self, node_name, *args, **kwargs):
+        data = [node_name] + list(args)
+        t = {"type":"print", "data":data}
+        text = json.dumps(t)
+        self._send_text(text)
 
     def notify_client_event(self, event):
         self.received_events.put(event)

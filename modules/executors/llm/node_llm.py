@@ -120,7 +120,7 @@ class LlmExecutor(GenericExecutor):
                 self.print_prompt -= 1
             prompt = builder._build()
             print(prompt,end="")
-        res = send_chat(builder,client,self.client_parameters,self.print_response,logger_print=partial(self.logger.log,"print",self.path))
+        res = send_chat(builder,client,self.client_parameters,self.print_response,logger_print=self.node.print)
         resp = [res,{"role":"assistant"}]
 
         if hasattr(client,"prompt_metadata") and "stopped_word" in client.prompt_metadata and client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
