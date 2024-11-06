@@ -130,25 +130,6 @@ class GuiNodeParser:
         new_config["exec"] = self._calc_exec(old_inputs ,links)
         return new_config
 
-    def parse_history(self ,old_config ,links):
-        new_config = {}
-        new_config["type"] = "list"
-        properties = old_config.get("properties", {})
-        template = properties.get("parameters", [])
-        t = ""
-        for i ,v in enumerate(template):
-            if i == 0:
-                t += "{p:system}\n" + v + "{p:eom}\n\n"
-            elif i % 2:
-                t += "{p:user}\n" + v + "{p:eom}\n\n"
-            else:
-                t += "{p:assistant}\n" + v + "{p:eom}\n\n"
-
-        new_config["init"] = [t]
-
-        old_inputs = old_config.get("inputs", [])
-        new_config["exec"] = []
-        return new_config
 
     def parse_input(self ,old_config ,links):
         new_config = {}

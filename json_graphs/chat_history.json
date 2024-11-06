@@ -1,6 +1,6 @@
 {
     "last_node_id": 5,
-    "last_link_id": 6,
+    "last_link_id": 7,
     "nodes": [
         {
             "id": 5,
@@ -27,8 +27,8 @@
             "id": 1,
             "type": "llm/chat_history",
             "pos": [
-                91,
-                341
+                182,
+                361
             ],
             "size": {
                 "0": 317,
@@ -41,7 +41,7 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 4
+                    "link": 7
                 }
             ],
             "outputs": [
@@ -66,12 +66,12 @@
             "id": 4,
             "type": "llm/llm_call",
             "pos": [
-                499,
-                342
+                713,
+                361
             ],
             "size": {
                 "0": 210,
-                "1": 156
+                "1": 157
             },
             "flags": {},
             "order": 2,
@@ -93,7 +93,7 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        4
+                        7
                     ],
                     "slot_index": 0
                 },
@@ -112,18 +112,18 @@
     ],
     "links": [
         [
-            4,
-            4,
-            0,
-            1,
-            0,
-            "string"
-        ],
-        [
             5,
             1,
             0,
             4,
+            0,
+            "string"
+        ],
+        [
+            7,
+            4,
+            0,
+            1,
             0,
             "string"
         ]
