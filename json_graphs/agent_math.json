@@ -1,7 +1,308 @@
 {
-    "last_node_id": 31,
-    "last_link_id": 55,
+    "last_node_id": 32,
+    "last_link_id": 63,
     "nodes": [
+        {
+            "id": 18,
+            "type": "output/watch",
+            "pos": [
+                875,
+                66
+            ],
+            "size": {
+                "0": 683.8999633789062,
+                "1": 226
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 60
+                }
+            ],
+            "title": "Agent answer",
+            "properties": {},
+            "color": "#223",
+            "bgcolor": "#335"
+        },
+        {
+            "id": 20,
+            "type": "output/watch",
+            "pos": [
+                542,
+                342
+            ],
+            "size": {
+                "0": 1021.2000122070312,
+                "1": 139.40000915527344
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 54,
+                    "slot_index": 0
+                }
+            ],
+            "title": "LLM actions\n",
+            "properties": {}
+        },
+        {
+            "id": 22,
+            "type": "output/watch",
+            "pos": [
+                534,
+                525
+            ],
+            "size": {
+                "0": 656.2999877929688,
+                "1": 261.1000061035156
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 31,
+                    "slot_index": 0
+                }
+            ],
+            "title": "Reflexion\n",
+            "properties": {}
+        },
+        {
+            "id": 31,
+            "type": "output/watch",
+            "pos": [
+                1215,
+                524
+            ],
+            "size": {
+                "0": 340.1000061035156,
+                "1": 256.3999938964844
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 55
+                }
+            ],
+            "title": "Tool response\n",
+            "properties": {}
+        },
+        {
+            "id": 32,
+            "type": "llm/generic_agent",
+            "pos": [
+                633,
+                74
+            ],
+            "size": {
+                "0": 210,
+                "1": 148
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "query",
+                    "type": "string",
+                    "link": 59
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        60
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "LLM",
+                    "type": "string",
+                    "links": [
+                        61
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "tools",
+                    "type": "string",
+                    "links": [
+                        62
+                    ],
+                    "slot_index": 2
+                },
+                {
+                    "name": "reflexion",
+                    "type": "string",
+                    "links": [
+                        63
+                    ],
+                    "slot_index": 3
+                }
+            ],
+            "properties": {
+                "parameters": "    type: agent\n    init: \n        - |-\n            {p:bos}\n\n            {p:system}\n            You are a AI task scheduler. Your job is to call the provided tools in the correct sequence to generate the answer for the user question.\n\n            ## Tools\n            {p:tools}\n\n            ## Objective\n            \n            1. First elaborate a detailed plan on how to complete the user request by using the provided tools.\n            Use the following template to describe your plan:\n            ```\n            <planning> A detailed description of your plan </planning>\n            ```\n            \n            2. Then use the following template to process the user request step by step:\n            ```\n            <thinking> Your thoughts about what to do next </thinking>\n            <action> The action to perform and its parameters. The specific format is described later. </action>\n            <result> The result of the action </result>\n            <evaluation> Evaluate if the tool provided all the information you need. Decide if you should call the tool again with a refined input </evaluation>\n            ```\n            \n            format of the action field:\n            - The action field is enclosed between <action> and </action> tags.\n            - The name of the action is inserted between <action_name> and </action_name> tags.\n            - Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n            - Only the value of the parameter is specified. The name of the parameter is omitted.\n            - The parameters can be multiline strings\n            - Example: <action><action_name>eval</action_name><action_parameter>2+3</action_parameter></action>\n\n            3. Keep repeating the previous template until you have the answer.\n\n            ## Rules\n            - If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n            - The input to query_file() should be a very detailed question about what you want from the external agent.\n            - Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n            - Use query_file() as a substitute for a web scraping tool\n            {p:hints}{p:eom}\n\n            {p:user}\n            Question: {}{p:eom}\n\n            {p:assistant}\n            <planning>\n    conf: \n        subtype: reflexion\n        tokens: [\"<evaluation>\",\"<action>\",\"\",\"<result>\"]\n        hints: |-\n                  - prefer returning the answer via answer_file() instead of answer()"
+            }
+        },
+        {
+            "id": 30,
+            "type": "llm/llm_call",
+            "pos": [
+                23,
+                208
+            ],
+            "size": {
+                "0": 368,
+                "1": 157
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 61,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        54
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"grammar\": \"grammars/react_xml_pure.txt\",\"stop\":\"<result>\",\"force_system\":True,\"temperature\":0.001, \"top_k\":1, \"n_predict\":1024,\"print_prompt\":1, \"print_response\":\"partial\"}",
+                "subtype": "stateless",
+                "template": ""
+            }
+        },
+        {
+            "id": 15,
+            "type": "graph/generic_node",
+            "pos": [
+                25,
+                447
+            ],
+            "size": {
+                "0": 362,
+                "1": 121
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 62,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        55
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "tool",
+            "properties": {
+                "parameters": "    type: tool\n    conf: \n        tools: [Filesystem, LLM, Util, Web]"
+            }
+        },
+        {
+            "id": 19,
+            "type": "graph/generic_node",
+            "pos": [
+                30,
+                634
+            ],
+            "size": {
+                "0": 356,
+                "1": 155
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 63,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        31
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "title": "Reflexion",
+            "properties": {
+                "parameters": "    type: stateless\n    init: \n        - templates/agent_xml_reflexion.txt\n        - |-\n            # rules for the agent\n            1. The last action can only use information that has been previously produced in a <result> tag or information given in the user's question. The AI agent is non allowed to use its own knowledge to fill the arguments of the action unless this is the first action.\n            2. The last action must be aligned with the goal. Useless actions are to be considered invalid.\n            3. The model should not attempt to generate a summary if the goal is to extract a URL. Generating a summary removes all metadata ad URL addresses from a web page.\n            4. When using the web_search() tool, the returned URL should not depend on updated information from a dynamically generated website.\n    conf: {\"stop\":\"```\",\"force_system\":True,\"temperature\":0.1, \"top_k\":40, \"n_predict\":512,\"print_prompt\":0, \"print_response\":\"partial\"}"
+            }
+        },
         {
             "id": 17,
             "type": "llm/input",
@@ -21,7 +322,7 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        52
+                        59
                     ],
                     "slot_index": 0
                 }
@@ -31,295 +332,6 @@
             },
             "color": "#233",
             "bgcolor": "#355"
-        },
-        {
-            "id": 18,
-            "type": "llm/watch",
-            "pos": [
-                875,
-                66
-            ],
-            "size": {
-                "0": 683.8999633789062,
-                "1": 226
-            },
-            "flags": {},
-            "order": 8,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 51
-                }
-            ],
-            "title": "Agent answer",
-            "properties": {},
-            "color": "#223",
-            "bgcolor": "#335"
-        },
-        {
-            "id": 30,
-            "type": "llm/llm_call",
-            "pos": [
-                33,
-                206
-            ],
-            "size": [
-                368,
-                156
-            ],
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        53,
-                        54
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "{\"grammar\": \"grammars/react_xml_pure.txt\",\"stop\":\"<result>\",\"force_system\":True,\"temperature\":0.001, \"top_k\":1, \"n_predict\":1024,\"print_prompt\":1, \"print_response\":\"partial\"}",
-                "subtype": "stateless",
-                "template": ""
-            }
-        },
-        {
-            "id": 19,
-            "type": "graph/generic_node",
-            "pos": [
-                46,
-                620
-            ],
-            "size": [
-                356,
-                155
-            ],
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": null,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        31,
-                        50
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "Reflexion",
-            "properties": {
-                "parameters": "    type: stateless\n    init: \n        - templates/agent_xml_reflexion.txt\n        - |-\n            # rules for the agent\n            1. The last action can only use information that has been previously produced in a <result> tag or information given in the user's question. The AI agent is non allowed to use its own knowledge to fill the arguments of the action unless this is the first action.\n            2. The last action must be aligned with the goal. Useless actions are to be considered invalid.\n            3. The model should not attempt to generate a summary if the goal is to extract a URL. Generating a summary removes all metadata ad URL addresses from a web page.\n            4. When using the web_search() tool, the returned URL should not depend on updated information from a dynamically generated website.\n    conf: {\"stop\":\"```\",\"force_system\":True,\"temperature\":0.1, \"top_k\":40, \"n_predict\":512,\"print_prompt\":0, \"print_response\":\"partial\"}"
-            }
-        },
-        {
-            "id": 15,
-            "type": "graph/generic_node",
-            "pos": [
-                43,
-                425
-            ],
-            "size": [
-                362,
-                121
-            ],
-            "flags": {},
-            "order": 2,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": null,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        49,
-                        55
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "title": "tool",
-            "properties": {
-                "parameters": "    type: tool\n    conf: \n        tools: [Filesystem, LLM, Util, Web]"
-            }
-        },
-        {
-            "id": 20,
-            "type": "llm/watch",
-            "pos": [
-                542,
-                342
-            ],
-            "size": {
-                "0": 1021.2000122070312,
-                "1": 139.40000915527344
-            },
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 54,
-                    "slot_index": 0
-                }
-            ],
-            "title": "LLM actions\n",
-            "properties": {}
-        },
-        {
-            "id": 22,
-            "type": "llm/watch",
-            "pos": [
-                534,
-                525
-            ],
-            "size": {
-                "0": 656.2999877929688,
-                "1": 261.1000061035156
-            },
-            "flags": {},
-            "order": 6,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 31,
-                    "slot_index": 0
-                }
-            ],
-            "title": "Reflexion\n",
-            "properties": {}
-        },
-        {
-            "id": 31,
-            "type": "llm/watch",
-            "pos": [
-                1215,
-                524
-            ],
-            "size": {
-                "0": 340.1000061035156,
-                "1": 256.3999938964844
-            },
-            "flags": {},
-            "order": 5,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 55
-                }
-            ],
-            "title": "Tool response\n",
-            "properties": {}
-        },
-        {
-            "id": 29,
-            "type": "llm/generic_agent",
-            "pos": [
-                640,
-                67
-            ],
-            "size": [
-                210,
-                215
-            ],
-            "flags": {},
-            "order": 7,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "query",
-                    "type": "string",
-                    "link": 52
-                },
-                {
-                    "name": "LLM",
-                    "type": "string",
-                    "link": 53
-                },
-                {
-                    "name": "tools",
-                    "type": "string",
-                    "link": 49
-                },
-                {
-                    "name": "reflexion",
-                    "type": "string",
-                    "link": 50
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        51
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": "    type: agent\n    init: \n        - |-\n            {p:bos}\n\n            {p:system}\n            You are a AI task scheduler. Your job is to call the provided tools in the correct sequence to generate the answer for the user question.\n\n            ## Tools\n            {p:tools}\n\n            ## Objective\n            \n            1. First elaborate a detailed plan on how to complete the user request by using the provided tools.\n            Use the following template to describe your plan:\n            ```\n            <planning> A detailed description of your plan </planning>\n            ```\n            \n            2. Then use the following template to process the user request step by step:\n            ```\n            <thinking> Your thoughts about what to do next </thinking>\n            <action> The action to perform and its parameters. The specific format is described later. </action>\n            <result> The result of the action </result>\n            <evaluation> Evaluate if the tool provided all the information you need. Decide if you should call the tool again with a refined input </evaluation>\n            ```\n            \n            format of the action field:\n            - The action field is enclosed between <action> and </action> tags.\n            - The name of the action is inserted between <action_name> and </action_name> tags.\n            - Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n            - Only the value of the parameter is specified. The name of the parameter is omitted.\n            - The parameters can be multiline strings\n            - Example: <action><action_name>eval</action_name><action_parameter>2+3</action_parameter></action>\n\n            3. Keep repeating the previous template until you have the answer.\n\n            ## Rules\n            - If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n            - The input to query_file() should be a very detailed question about what you want from the external agent.\n            - Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n            - Use query_file() as a substitute for a web scraping tool\n            {p:hints}{p:eom}\n\n            {p:user}\n            Question: {}{p:eom}\n\n            {p:assistant}\n            <planning>\n    conf: \n        subtype: reflexion\n        tokens: [\"<evaluation>\",\"<action>\",\"\",\"<result>\"]\n        hints: |-\n                  - prefer returning the answer via answer_file() instead of answer()"
-            }
         }
     ],
     "links": [
@@ -329,46 +341,6 @@
             0,
             22,
             0,
-            "string"
-        ],
-        [
-            49,
-            15,
-            0,
-            29,
-            2,
-            "string"
-        ],
-        [
-            50,
-            19,
-            0,
-            29,
-            3,
-            "string"
-        ],
-        [
-            51,
-            29,
-            0,
-            18,
-            0,
-            "string"
-        ],
-        [
-            52,
-            17,
-            0,
-            29,
-            0,
-            "string"
-        ],
-        [
-            53,
-            30,
-            0,
-            29,
-            1,
             "string"
         ],
         [
@@ -384,6 +356,46 @@
             15,
             0,
             31,
+            0,
+            "string"
+        ],
+        [
+            59,
+            17,
+            0,
+            32,
+            0,
+            "string"
+        ],
+        [
+            60,
+            32,
+            0,
+            18,
+            0,
+            "string"
+        ],
+        [
+            61,
+            32,
+            1,
+            30,
+            0,
+            "string"
+        ],
+        [
+            62,
+            32,
+            2,
+            15,
+            0,
+            "string"
+        ],
+        [
+            63,
+            32,
+            3,
+            19,
             0,
             "string"
         ]

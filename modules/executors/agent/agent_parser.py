@@ -32,14 +32,11 @@ class AgentParser(BaseGuiParser):
     def postprocess_nodes(self, new_nodes):
         agents = [(el, new_nodes[el]) for el in new_nodes if new_nodes[el]["type"] == "agent"]
         for agent_name, agent in agents:
+            node_llm = [el for el in new_nodes if len(new_nodes[el].get("exec",[])) > 0 and new_nodes[el]["type"] == "stateless" and new_nodes[el]["exec"][0]  == agent_name+"[1]"]
+            node_tool = [el for el in new_nodes if len(new_nodes[el].get("exec", [])) > 0 and new_nodes[el]["type"] == "tool" and new_nodes[el]["exec"][0] == agent_name + "[2]"]
+            node_reflexion = [el for el in new_nodes if len(new_nodes[el].get("exec", [])) > 0 and new_nodes[el]["type"] == "stateless" and new_nodes[el]["exec"][0] == agent_name + "[3]"]
             deps = agent["exec"]
-            LLM = deps[1].split("[")[0]
-            node = new_nodes[LLM]
-            node["exec"] = [agent_name + "[1]"]
-            tools = deps[2].split("[")[0]
-            node = new_nodes[tools]
-            node["exec"] = [agent_name + "[2]"]
-            if len(deps) > 3:
-                reflex = deps[3].split("[")[0]
-                node = new_nodes[reflex]
-                node["exec"] = [agent_name + "[3]"]
+            deps.append(node_llm[0] + "[0]")
+            deps.append(node_tool[0] + "[0]")
+            if(len(node_reflexion) > 0):
+                deps.append(node_reflexion[0] + "[0]")
