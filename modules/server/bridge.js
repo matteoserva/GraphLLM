@@ -181,7 +181,7 @@ class WebBrige {
                 };
                 this.audio.onerror = function() {
                     console.log("play error");
-                    socket.send( JSON.stringify({type: "response", subtype: "audio", id: req_id}))
+                    //avoid duplicate response: socket.send( JSON.stringify({type: "response", subtype: "audio", id: req_id}))
                 };
                 this.audio.play().then(_ => {console.log("play started")}).catch((error) => {
                       socket.send( JSON.stringify({type: "response", subtype: "audio", id: req_id}))
