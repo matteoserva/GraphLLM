@@ -7,6 +7,7 @@ from modules.server.handler_exec import ExecHandler
 from modules.server.handler_model import ModelHandler
 from modules.server.handler_editor import EditorHandler
 from modules.server.handler_blob import BlobHandler
+from threading import Lock
 
 class HttpDispatcher:
 
@@ -15,9 +16,10 @@ class HttpDispatcher:
         self.editor = EditorHandler()
         self.blob = BlobHandler()
         self.model = ModelHandler(self.blob)
+        self.model_lock = Lock()
 
     def do_GET(self,server):
-        self.model.server = server
+        
         server.close_connection = True
         http_path = server.path.split("?",1)[0]
 
@@ -46,7 +48,9 @@ class HttpDispatcher:
                 res = op()
             elif hasattr(self.model, operation):
                 op = getattr(self.model, operation)
-                res = op()
+                with self.model_lock:
+                    self.model.server = server
+                    res = op()
 
             else:
                 server.send_response(404)
@@ -67,7 +71,7 @@ class HttpDispatcher:
              server.wfile.write(b'404 - Not Found')
 
     def do_POST(self,server):
-        self.model.server = server
+        #self.model.server = server
         server.close_connection = True
         http_path = server.path.split("?", 1)[0]
         split_path = http_path.split("/", 2)
@@ -77,7 +81,9 @@ class HttpDispatcher:
         if hasattr(self.model,operation):
 
             op = getattr(self.model,operation)
-            res = op(post_data)
+            with self.model_lock:
+                self.model.server = server
+                res = op(post_data)
 
         else:
             server.send_response(404)
