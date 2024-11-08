@@ -1,0 +1,22 @@
+
+/*
+div.div-container div.CustomTextOutput {
+    height: 500px;
+
+}
+*/
+
+div.div-container div.CustomTextOutput a:link { color: lightskyblue; }
+div.div-container div.CustomTextOutput a:visited { color: #6d4b8d; }
+div.div-container div.CustomTextOutput a:hover { color: #ffffff; }
+div.div-container div.CustomTextOutput a:active { color: #ff4040; text-decoration:none; font-weight:normal; }
+div.div-container div.CustomTextOutput pre {
+border: 1px solid gray;
+background-color: #202020;
+}
+
+div.div-container div.CustomTextOutput * {
+
+margin: 0px;}
+
+div.div-container div.CustomTextOutput p { margin: 0  }

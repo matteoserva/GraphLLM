@@ -81,7 +81,7 @@ class CustomTextCommon{
 
             if(this.textarea.tagName.toLowerCase() == "div")
             {
-                this.textarea.innerText = v
+                this.setDisplayValue(v)
             }
             else
             {
@@ -111,8 +111,30 @@ class CustomTextOutput extends CustomTextCommon{
         super(parent,name,options)
         this.options = {multiline:false}
         this.minHeight = 50
+        this.saved_content = null;
     }
 
+    setDisplayValue(value)
+    {
+        this.saved_content = value
+        this.redrawContent()
+    }
+
+    redrawContent(markdown)
+    {
+        if(this.use_markdown)
+        {
+            var text = this.saved_content;
+            var converter = new showdown.Converter();
+            var html = converter.makeHtml(text);
+            this.textarea.innerHTML = html
+        }
+        else
+        {
+            this.textarea.innerHTML = this.saved_content
+        }
+
+    }
 
 
     makeElement(parentNode)
@@ -124,6 +146,18 @@ class CustomTextOutput extends CustomTextCommon{
         text.innerText = this.name
         text.style="position:absolute; top:2px; right:4px; color:DarkGray; user-select: none"
         div.appendChild(text)
+
+        var control= document.createElement("div")
+        control.style="color:DarkGray;position:absolute; top:0px; transform: translateX(-50%) translateY(-100%); left: 50%;"
+        control.innerHTML = '<input type="checkbox"/>Markdown'
+        var checkbox = control.querySelector("input")
+        var that = this
+        checkbox.addEventListener("click",function (e) {
+            that.use_markdown = checkbox.checked
+            that.redrawContent()
+            } );
+        div.appendChild(control)
+
         div.style="position:relative";
         div.style.height = "100%";
         div.style.paddingBottom = "4px";
