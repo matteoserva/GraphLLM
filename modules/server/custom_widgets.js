@@ -139,7 +139,29 @@ class CustomTextOutput extends CustomTextCommon{
         textarea.style.height = "100%";
         this.textarea = textarea
 
-        textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
+        textarea.addEventListener("keydown",  function (ev) {
+           if (ev.key === 'a' && ev.ctrlKey)
+            {
+                ev.preventDefault();
+                if (document.selection) {
+                    var range = document.body.createTextRange();
+                    range.moveToElementText(textarea);
+                    range.select();
+                } else if (window.getSelection) {
+                    var range = document.createRange();
+                    range.selectNode(textarea);
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(range);
+                }
+            }
+
+         });
+        textarea.addEventListener("focusout", function(event){
+                    this.textareaUnfocus(textarea)
+                     if (window.getSelection) {window.getSelection().removeAllRanges();}
+             else if (document.selection) {document.selection.empty();}
+
+        }.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
         textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
         return div
