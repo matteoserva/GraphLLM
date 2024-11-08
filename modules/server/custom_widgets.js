@@ -79,7 +79,14 @@ class CustomTextCommon{
             var totally_scrolled = this.textarea.scrollTop >= 5 &&
                 (Math.abs(this.textarea.scrollHeight - this.textarea.clientHeight - this.textarea.scrollTop) <= 1);
 
-            this.textarea.value=v
+            if(this.textarea.tagName.toLowerCase() == "div")
+            {
+                this.textarea.innerText = v
+            }
+            else
+            {
+                this.textarea.value=v
+            }
             this.configureSizeInFocus()
             if(totally_scrolled)
             {
@@ -98,6 +105,112 @@ class CustomTextCommon{
 
 }
 
+class CustomTextOutput extends CustomTextCommon{
+        constructor(parent,name,options)
+    {
+        super(parent,name,options)
+        this.options = {multiline:false}
+        this.minHeight = 50
+    }
+
+
+
+    makeElement(parentNode)
+    {
+        var dialog = parentNode
+        var div = document.createElement("div");
+        var text = document.createElement("div")
+        text.className = "nameText";
+        text.innerText = this.name
+        text.style="position:absolute; top:2px; right:4px; color:DarkGray; user-select: none"
+        div.appendChild(text)
+        div.style="position:relative";
+        div.style.height = "100%";
+        div.style.paddingBottom = "4px";
+
+        var textarea = document.createElement("div");
+        div.appendChild(textarea)
+        textarea.className="CustomTextOutput"
+        textarea.tabIndex=0;
+        textarea.style='font-family: monospace; overflow: auto; resize:none; white-space: pre;border:0px; padding:3px; ' //+ this.margin + 'px'
+        textarea.style.backgroundColor= "black"
+        textarea.style.color = "white"
+        textarea.style.width = "100%";
+        textarea.style.height = "100%";
+        this.textarea = textarea
+
+        textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
+        textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
+        textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
+        return div
+
+    }
+
+    textareaFocus(textarea)
+    {
+        super.textareaFocus(textarea)
+        textarea.style.borderRadius = "4px"
+        textarea.style.border = "1px solid white"
+        textarea.style.padding = "2px"
+    }
+
+    textareaUnfocus(textarea)
+    {
+        super.textareaUnfocus(textarea)
+        textarea.style.borderRadius = "2px"
+        textarea.style.border = "0px"
+        textarea.style.padding = "3px"
+    }
+
+    configureSizeInFocus()
+    {
+        var textarea = this.textarea
+        if (this.inFocus)
+        {
+
+
+        this.textarea.style.whiteSpace="pre"
+            textarea.style.width = "1px";
+            textarea.style.height = "1px";
+            textarea.style.minHeight = ""
+            textarea.style.minWidth = ""
+
+            var minHeight = (textarea.scrollHeight);
+            var minWidth = (textarea.scrollWidth);
+            textarea.style.width = "100%";
+            textarea.style.height = "100%";
+            var currentWidth = textarea.clientWidth
+            var currentHeight = textarea.clientHeight
+
+            minWidth = Math.min(minWidth,window.innerWidth*0.7)
+            minHeight = Math.min(minHeight,window.innerHeight*0.7)
+            textarea.style.minHeight = (minHeight+10) + "px"
+            textarea.style.minWidth = (minWidth+15)  + "px"
+            this.textarea.style.whiteSpace="pre-wrap"
+        }
+
+    }
+
+    configureSize(aSpace,hSpace)
+    {
+        var textarea = this.textarea
+
+        if (this.inFocus)
+        {
+        }
+        else
+        {
+            textarea.style.width = "100%";
+            textarea.style.height = "100%";
+            textarea.style.minHeight = ""
+            textarea.style.minWidth = ""
+        }
+
+    }
+
+
+
+}
 
 class CustomTextInput extends CustomTextCommon{
     constructor(parent,name,options)
@@ -123,11 +236,12 @@ class CustomTextInput extends CustomTextCommon{
         var textarea = document.createElement("input");
         div.appendChild(textarea)
         textarea.className="CustomTextInput"
-        textarea.style='resize:none; white-space: pre;border:0px solid; border-radius: 10px;' + this.margin + 'px'
+        textarea.style='resize:none; white-space: pre;border:0px solid; border-radius: 10px;' //+ this.margin + 'px'
         textarea.style.backgroundColor= "#202020"
         textarea.style.color = "white"
         textarea.style.paddingLeft = "6px";
         textarea.style.paddingTop = "0px";
+        textarea.style.paddingBottom = "2px";
         textarea.style.width = "100%";
         textarea.style.height = this.minHeight +"px";
         this.textarea = textarea
@@ -218,7 +332,7 @@ class CustomTextarea extends CustomTextCommon{
         var textarea = document.createElement("textarea");
         div.appendChild(textarea)
         textarea.className="CustomTextarea"
-        textarea.style='resize:none; white-space: pre;border:0px;padding:0px' + this.margin + 'px'
+        textarea.style='resize:none; white-space: pre;border:0px;padding: ' + this.margin + 'px'
         textarea.style.backgroundColor= "black" 
         textarea.style.color = "white"
         textarea.style.width = "100%";
@@ -481,6 +595,11 @@ class DivContainer {
         else if(type=="text_input")
         {
             var elem = new CustomTextInput(this, name,options)
+            this.addElement(elem)
+        }
+        else if(type=="text_output")
+        {
+            var elem = new CustomTextOutput(this, name,options)
             this.addElement(elem)
         }
         else

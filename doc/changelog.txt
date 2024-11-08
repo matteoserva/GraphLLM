@@ -2,14 +2,16 @@
 # CHANGELOG for GraphLLM
 #
 
-NEXT:
 MAJOR:
 - websockets
-- tts
+- tts engine
 
-engine:
-- refactoring node structure
+ENGINE:
+- refactoring the node structure
 - communication between frontend and backend
+
+GUI:
+- autoscroll of the watch node
 
 01/11/2024:
 MAJOR:
