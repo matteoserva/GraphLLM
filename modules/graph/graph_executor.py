@@ -48,12 +48,14 @@ class GraphExecutor:
         graph_raw = graph_utils.parse_executor_graph(clean_config)
 
         # poi consumo gli input con i {}
+        cl_args_old = cl_args
         for a in graph_raw:
             for i,v in enumerate(a.get("init",[])):
                 if v == "{}":
                     a["init"][i] = cl_args[1]
                     cl_args = cl_args[:1] + cl_args[2:]
                 pass
+        cl_args = cl_args_old
 
         #add output node if there is only one node
         executable_nodes = [el for el in graph_raw if el["type"] != "variable"]
