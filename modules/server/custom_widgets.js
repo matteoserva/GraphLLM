@@ -394,7 +394,16 @@ class CustomTextarea extends CustomTextCommon{
         textarea.style.width = "100%";
         textarea.style.height = "100%";
         this.textarea = textarea
-        
+
+        this.textarea.ondrop = function(e) {
+            e.preventDefault(); console.log(e);
+            f = e.dataTransfer.items[0].getAsFile()
+            var reader = new FileReader();
+            reader.onload = function(read) {textarea.value = reader.result}
+            reader.readAsText(f)
+            }
+        this.textarea.ondragover = function(e) {e.preventDefault(); }
+
         textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
         textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
