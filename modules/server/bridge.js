@@ -30,7 +30,14 @@ class WebBrige {
     this.audio = new Audio();
   }
 
+  setDefaultConnectionEndpoints()
+  {
+    LiteGraph.slot_types_default_out.string=["output/watch"]
+    LiteGraph.slot_types_default_in.string=["llm/input"]
+  }
+
   connect() {
+    this.setDefaultConnectionEndpoints()
     this.cb_as = this.graph.onAfterStep;
     let cb_bs = this.graph.onBeforeStep;
     let that = this
