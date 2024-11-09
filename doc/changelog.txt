@@ -7,6 +7,7 @@ MAJOR:
 - websockets
 - tts engine
 - display markdown output
+- drag and drop of files
 
 ENGINE:
 - refactoring the node structure
