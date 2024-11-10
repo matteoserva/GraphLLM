@@ -32,7 +32,7 @@ class PromptBuilderNode(GenericExecutor):
         self.builder.reset()
         self.builder.add_request(m)
         prompt = self.builder._build()
-        res = [m,prompt]
+        res = [m,prompt,str(self.builder)]
 
         return res
 

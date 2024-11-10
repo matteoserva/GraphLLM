@@ -87,7 +87,7 @@
               {
                   let numElements = this.outputs.length
                   let should_add = true
-                  if( this.gui_node_config && this.gui_node_config.max_outputs && numElements == this.gui_node_config.max_outputs)
+                  if( this.gui_node_config && this.gui_node_config.max_outputs && numElements >= this.gui_node_config.max_outputs)
                     should_add = false
 
                   if(slot +1 == numElements && !!d && should_add)
