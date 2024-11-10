@@ -8,7 +8,7 @@ class TTSNode(GenericExecutor):
         super().__init__(node_graph_parameters)
 
     def initialize(self):
-        self. engine = EngineTTS()
+        self.engine = EngineTTS()
         selected_voice = self.engine.load_voice("it_IT-riccardo-x_low")
 
     def set_parameters(self, args):

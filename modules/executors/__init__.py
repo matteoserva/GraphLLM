@@ -20,12 +20,14 @@ def _get_all_submodules(node_class=GenericExecutor):
     # now filter
     found_executors = []
     for m in modules:
-        module = import_module(m)
-        attributes = [getattr(module, attribute_name) for attribute_name in dir(module)]
-        generic_executors = [attribute for attribute in attributes if
+        try:
+            module = import_module(m)
+            attributes = [getattr(module, attribute_name) for attribute_name in dir(module)]
+            generic_executors = [attribute for attribute in attributes if
                              inspect.isclass(attribute) and issubclass(attribute, node_class)]
-        found_executors.extend(generic_executors)
-
+            found_executors.extend(generic_executors)
+        except Exception as e:
+            print("Exception while loading module",m, " : ", e)
 
     return found_executors
 
