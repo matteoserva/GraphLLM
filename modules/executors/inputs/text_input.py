@@ -1,4 +1,4 @@
-
+from modules.executors.common import BaseGuiParser
 
 class LLMParser(BaseGuiParser):
     node_types = ["input"]

@@ -1,10 +1,4 @@
 
-/*
-div.div-container div.CustomTextOutput {
-    height: 500px;
-
-}
-*/
 
 div.div-container div.CustomTextOutput a:link { color: lightskyblue; }
 div.div-container div.CustomTextOutput a:visited { color: #6d4b8d; }
@@ -16,7 +10,5 @@ background-color: #202020;
 }
 
 div.div-container div.CustomTextOutput * {
-
-margin: 0px;}
-
-div.div-container div.CustomTextOutput p { margin: 0  }
+margin: 0px;
+}
