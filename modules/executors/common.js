@@ -86,7 +86,11 @@
               if(connected)
               {
                   let numElements = this.outputs.length
-                  if(slot +1 == numElements && !!d)
+                  let should_add = true
+                  if( this.gui_node_config && this.gui_node_config.max_outputs && numElements == this.gui_node_config.max_outputs)
+                    should_add = false
+
+                  if(slot +1 == numElements && !!d && should_add)
                   {
                     var saved_size = this.size
                     this.addOutput("N","string");
