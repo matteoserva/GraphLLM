@@ -126,6 +126,7 @@ class CustomTextOutput extends CustomTextCommon{
         {
             var text = this.saved_content;
             var converter = new showdown.Converter();
+			converter.setOption('tables', true);
             var html = converter.makeHtml(text);
             this.textarea.innerHTML = html
         }

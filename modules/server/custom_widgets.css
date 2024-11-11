@@ -12,3 +12,8 @@ background-color: #202020;
 div.div-container div.CustomTextOutput * {
 margin: 0px;
 }
+
+div.div-container table,div.div-container th,div.div-container td {
+  border: 1px solid white;
+  border-collapse: collapse;
+}
