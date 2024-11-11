@@ -10,7 +10,7 @@
 	this.addInput("in2","string");
 
     this.addOutput("out","string");
-    this.gui_node_config = {max_outputs:1, min_outputs:1, min_inputs: 2}
+    this.gui_node_config = {connection_limits: {max_outputs:1, min_outputs:1, min_inputs: 2}}
 
     }
 

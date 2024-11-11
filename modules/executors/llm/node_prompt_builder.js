@@ -11,7 +11,7 @@
     this.addOutput("out","string");
     this.addOutput("raw","string");
     this.addOutput("GraphLLM","string");
-    this.gui_node_config = {max_outputs:3, min_outputs:3}
+    this.gui_node_config = {connection_limits: {max_outputs:3, min_outputs:3}}
     this.properties = {conf:"",subtype:"stateless",template:""  };
     let tmpl = 'type: python\ninit: "test/python_hello_world.py"'
 
