@@ -340,6 +340,7 @@ class WebBrige {
 
    let xhr = new XMLHttpRequest();
    xhr.open('GET', '/graph/load?file=' + value,false);
+   xhr.addEventListener("error", (event) => {alert("server error")});
    xhr.setRequestHeader("Content-Type", "application/json")
    xhr.send();
    var data = xhr.responseText
