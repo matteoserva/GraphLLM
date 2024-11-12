@@ -56,7 +56,7 @@ class OpenAIClientWrapper(object):
 
 class DummyClient:
 
-    def send_prompt(self,p,params=None):
+    def send_prompt(self,p,params=None,callback=None):
         print(p.messages)
         return ["{ \"answer\": \"dummy response\"}"]
 
@@ -265,7 +265,7 @@ class Client:
     @staticmethod
     def _make_client_list(client_names, client_configs):
         for client_name in client_names:
-            client_config = client_configs[client_name]
+            client_config = client_configs.get(client_name,{})
             type = client_config.get("type",client_name)
             if "type" in client_config:
                 del client_config["type"]
