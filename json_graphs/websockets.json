@@ -1,0 +1,218 @@
+{
+    "last_node_id": 7,
+    "last_link_id": 5,
+    "nodes": [
+        {
+            "id": 2,
+            "type": "llm/input",
+            "pos": [
+                190,
+                208
+            ],
+            "size": [
+                292,
+                88
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        2
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "hello_from_client"
+            }
+        },
+        {
+            "id": 3,
+            "type": "network/websocket_client",
+            "pos": [
+                579,
+                209
+            ],
+            "size": [
+                287,
+                63
+            ],
+            "flags": {
+                "collapsed": false
+            },
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "send",
+                    "type": "string",
+                    "link": 2,
+                    "slot_index": 0
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "receive",
+                    "type": "string",
+                    "links": [
+                        3
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "address": "ws://localhost:8765"
+            }
+        },
+        {
+            "id": 6,
+            "type": "output/watch",
+            "pos": [
+                996,
+                404
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 4
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 5,
+            "type": "network/websocket_server",
+            "pos": [
+                578,
+                402
+            ],
+            "size": [
+                281,
+                58
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "send",
+                    "type": "string",
+                    "link": 5,
+                    "slot_index": 0
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "receive",
+                    "type": "string",
+                    "links": [
+                        4
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "port": 8765
+            }
+        },
+        {
+            "id": 4,
+            "type": "output/watch",
+            "pos": [
+                995,
+                209
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 3
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 7,
+            "type": "llm/input",
+            "pos": [
+                190,
+                402
+            ],
+            "size": {
+                "0": 290,
+                "1": 88
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        5
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "hello_from_server"
+            }
+        }
+    ],
+    "links": [
+        [
+            2,
+            2,
+            0,
+            3,
+            0,
+            "string"
+        ],
+        [
+            3,
+            3,
+            0,
+            4,
+            0,
+            "string"
+        ],
+        [
+            4,
+            5,
+            0,
+            6,
+            0,
+            "string"
+        ],
+        [
+            5,
+            7,
+            0,
+            5,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
