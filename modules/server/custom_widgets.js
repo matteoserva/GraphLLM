@@ -149,8 +149,10 @@ class CustomTextOutput extends CustomTextCommon{
         div.appendChild(text)
 
         var control= document.createElement("div")
-        control.style="color:DarkGray;position:absolute; top:0px; transform: translateX(-50%) translateY(-100%); left: 50%;"
-        control.innerHTML = '<input type="checkbox"/>Markdown'
+        /*control.style="color:DarkGray;position:absolute; top:0px; transform: translateX(-50%) translateY(-100%); left: 50%;"
+        control.innerHTML = '<input type="checkbox"/>Markdown'*/
+		control.style="color:DarkGray;position:absolute; top:0px; transform: translateY(-100%); right: 0px"
+        control.innerHTML = 'Markdown<input type="checkbox"/>'
         var checkbox = control.querySelector("input")
         var that = this
         checkbox.addEventListener("click",function (e) {
