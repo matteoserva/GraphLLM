@@ -62,7 +62,7 @@ class WebsocketServerNode(GenericExecutor):
         
     def echo(self, websocket):
         for el in self.data_to_client:
-            websocket.send("s+"+el)
+            websocket.send(el)
         if self.enable_receive:
             res = websocket.recv()
             self.data_from_client = [res]
