@@ -13,20 +13,18 @@ class WebsocketClientNode(GenericExecutor):
     def set_parameters(self, conf, **kwargs):
         self.address = conf["address"]
         self.enable_receive = conf.get("enable_receive",False)
-        #print("parameters", conf,kwargs)
 
     def __call__(self,prompt_args):
-        
         self.connection.send(prompt_args[0])
         if self.enable_receive:
             res = [self.connection.recv()]
         else:
             res = prompt_args
-        #message = self.connection.recv()
+
         return res
         
     def graph_started(self):
-        self.connection = wsconnect(self.address)
+        self.connection = wsconnect(self.address,close_timeout=1)
     
     def graph_stopped(self):
         self.connection.close()
