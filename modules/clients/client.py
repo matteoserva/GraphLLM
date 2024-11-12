@@ -131,7 +131,7 @@ class LLamaCppClient:
         return resp
 
     def _ricevi(self,req_params, pass_raw,callback):
-        ret = ""
+        ret = []
         with self.connetion_semaphore:
           with requests.post(**req_params) as r1:
             a = 1
@@ -166,8 +166,15 @@ class LLamaCppClient:
                         tmp_res =json_decoded["content"]
                     if callback:
                         callback(tmp_res)
-                    ret += str(tmp_res)
-        return ret
+                    if len(tmp_res) > 0:
+                        ret.append(tmp_res)
+                    
+        if self.prompt_metadata.get("stopped_eos",False):
+            eos_tokens = ["<|endoftext|>"]
+            if len(ret) > 0 and ret[-1] in eos_tokens:
+                ret = ret[:-1]
+        retstring = "".join(ret)
+        return retstring
 
     def tokenize(self,p):
         url = "http://" + self.host + ":" + str(self.port) + "/tokenize"
