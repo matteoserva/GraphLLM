@@ -41,6 +41,12 @@ class GenericExecutor():
     def setup_complete(self, *args, **kwargs):
         pass
 
+    def graph_started(self):
+        pass
+        
+    def graph_stopped(self):
+        pass
+
     def __getattr__(self,name):
         return getattr(self.node,name)
 

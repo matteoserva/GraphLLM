@@ -171,6 +171,14 @@ class GraphExecutor:
     def _launch_nodes(self,runnable):
         _ = [self.graph_nodes[i].start(partial(self._notify_stop,i)) for i in runnable ]
         return runnable
+        
+    def _notify_graph_started(self):
+        for el in self.graph_nodes:
+            el._graph_started()
+    
+    def _notify_graph_stopped(self):
+        for el in self.graph_nodes:
+            el._graph_stopped()
 
     def _get_completions(self):
         completed = [self.stopped_queue.get()]
@@ -217,6 +225,7 @@ class GraphExecutor:
 
         running = []
         max_parallel_jobs = PARALLEL_JOBS
+        self._notify_graph_started()
         try:
             while not self.force_stop:
                 runnable = [i for i, v in enumerate(self.graph_nodes) if v.is_runnable() and i not in running]
@@ -237,4 +246,6 @@ class GraphExecutor:
         except KeyboardInterrupt as e:
             print("")
             raise e from None
+        finally:
+            self._notify_graph_stopped()
         return self.last_output
