@@ -1,0 +1,250 @@
+{
+    "last_node_id": 11,
+    "last_link_id": 12,
+    "nodes": [
+        {
+            "id": 8,
+            "type": "llm/list",
+            "pos": [
+                17,
+                204
+            ],
+            "size": {
+                "0": 591.5999755859375,
+                "1": 374.8999938964844
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        6
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "title": "Instructions (List)",
+            "properties": {
+                "parameters": [
+                    "add a hello world"
+                ]
+            },
+            "color": "#223",
+            "bgcolor": "#335"
+        },
+        {
+            "id": 3,
+            "type": "output/watch",
+            "pos": [
+                1276,
+                451
+            ],
+            "size": {
+                "0": 625.1000366210938,
+                "1": 280.8999938964844
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 2
+                }
+            ],
+            "title": "LLM output",
+            "properties": {}
+        },
+        {
+            "id": 10,
+            "type": "graph/variable",
+            "pos": [
+                647,
+                46
+            ],
+            "size": {
+                "0": 583.9000244140625,
+                "1": 201.19998168945312
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "In this multiturn example, the model iteratively generates\na python program to perform a simple calculation.\nThe file is saved as /tmp/canvas.py\n\nThe model is asked to generate a file content and a comment,\nthe config stops the generation after the file content is ready,\nwithout waiting for the comment."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 9,
+            "type": "tools/file",
+            "pos": [
+                96,
+                51
+            ],
+            "size": {
+                "0": 364.70001220703125,
+                "1": 82
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 11
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        9,
+                        12
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "filename": "/tmp/canvas.html",
+                "config": "{\"free_runs\": 1, \"create\": true}"
+            }
+        },
+        {
+            "id": 11,
+            "type": "output/html_canvas",
+            "pos": [
+                1282,
+                25
+            ],
+            "size": {
+                "0": 588,
+                "1": 372
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 12
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 1,
+            "type": "llm/llm_call",
+            "pos": [
+                630,
+                363
+            ],
+            "size": {
+                "0": 593.7319946289062,
+                "1": 548.7857055664062
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 9
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 6
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        2,
+                        11
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"stop\":\"```\",\"force_system\":True,\"temperature\":0.01, \"top_k\":40, \"n_predict\":-1}",
+                "subtype": "stateless",
+                "template": "{p:system}\nYour job is to edit a file according to the user request.\n\nHere is the content of the file:\n```\n{p:exec1}\n```\n\nYour output should begin with the updated content of the file,\nfollowed by your comment about what you did.\n{p:eom}\n\n{p:user}\n{p:exec2}{p:eom}\n\n{p:assistant}\nHere is the updated content of the file:\n```\n{p:eom}"
+            }
+        }
+    ],
+    "links": [
+        [
+            2,
+            1,
+            0,
+            3,
+            0,
+            "string"
+        ],
+        [
+            6,
+            8,
+            0,
+            1,
+            1,
+            "string"
+        ],
+        [
+            9,
+            9,
+            0,
+            1,
+            0,
+            "string"
+        ],
+        [
+            11,
+            1,
+            0,
+            9,
+            0,
+            "string"
+        ],
+        [
+            12,
+            9,
+            0,
+            11,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}

@@ -160,8 +160,12 @@ class WebBrige {
           if(values.length > 0)
           {
             for(let i = 0; i < values.length; i++)
-
-              n.setOutputData(i,values[i])
+            {
+              var string = new String(values[i]);
+              string.graphllm_type="output"
+              string.text_content=values[i]
+              n.setOutputData(i,string)
+            }
           }
         }
       }
@@ -256,7 +260,10 @@ class WebBrige {
              var old = n.print_log || ""
              var newVal = old + value
              n.print_log = newVal
-             n.setOutputData(0,newVal)
+             var string = new String(newVal);
+             string.graphllm_type="print"
+             string.text_content=newVal
+             n.setOutputData(0,string)
 	 }
       }
 

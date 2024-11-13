@@ -122,48 +122,32 @@ class CustomHtmlCanvas {
         this.saved_content = null;
     }
 
-    setDisplayValue(value)
-    {
-        this.saved_content = value
-        this.redrawContent()
-    }
-
-    redrawContent(markdown)
-    {
-        if(this.use_markdown)
-        {
-            var text = this.saved_content;
-            var converter = new showdown.Converter();
-			converter.setOption('tables', true);
-            var html = converter.makeHtml(text);
-            this.textarea.innerHTML = html
-        }
-        else
-        {
-            this.textarea.innerText = this.saved_content
-        }
-
-    }
-
 
     makeElement(parentNode)
     {
         var dialog = parentNode
         var div = document.createElement("div");
-        var text = document.createElement("div")
-
-        text.innerText = this.name
+        var text = document.createElement("iframe")
+        div.style="width: 100%; height: 100%; background-color: white; margin-bottom: 4px;"
+        text.style="width: 100%; height: 100%"
+        text.src = "about:blank"
 
         div.appendChild(text)
-
-
+        this.textarea = text
         return div
 
     }
 
+    appendElement(dialog)
+    {
+        dialog.appendChild(this.div);
+    }
+
+    draw(ctx, node, widget_width, y, H)
+    {
 
 
-
+    }
 
     configureSize(aSpace,hSpace)
     {
@@ -173,9 +157,12 @@ class CustomHtmlCanvas {
 
     setValue(k,v)
     {
-        if(this.property && this.property == k && this.textarea.value!=v)
+        if(this.property && this.property == k && v && v.graphllm_type == "output" && this.saved_content != v)
         {
-            
+            this.saved_content = v
+            var encoded_html = btoa(v)
+            this.textarea.src = "data:text/html;charset=utf-8;base64," + encoded_html
+            //this.textarea.innerText = v
         }
     }
     getMinHeight()
