@@ -132,7 +132,7 @@ class CustomTextOutput extends CustomTextCommon{
         }
         else
         {
-            this.textarea.innerHTML = this.saved_content
+            this.textarea.innerText = this.saved_content
         }
 
     }
