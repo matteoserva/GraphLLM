@@ -4,7 +4,7 @@
     "nodes": [
         {
             "id": 7,
-            "type": "llm/input",
+            "type": "llm/text_input",
             "pos": [
                 171,
                 111

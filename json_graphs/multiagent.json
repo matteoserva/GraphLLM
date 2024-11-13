@@ -217,7 +217,7 @@
         },
         {
             "id": 33,
-            "type": "llm/input",
+            "type": "llm/text_input",
             "pos": [
                 41,
                 44
@@ -341,7 +341,7 @@
         },
         {
             "id": 38,
-            "type": "llm/input",
+            "type": "llm/text_input",
             "pos": [
                 42,
                 177
