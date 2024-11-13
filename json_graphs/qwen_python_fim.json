@@ -1,0 +1,334 @@
+{
+    "last_node_id": 8,
+    "last_link_id": 7,
+    "nodes": [
+        {
+            "id": 5,
+            "type": "output/watch",
+            "pos": [
+                1141,
+                107
+            ],
+            "size": {
+                "0": 499,
+                "1": 344
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 3
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 2,
+            "type": "output/watch",
+            "pos": [
+                559,
+                583
+            ],
+            "size": {
+                "0": 516,
+                "1": 208
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 1
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 4,
+            "type": "tools/python_sandbox",
+            "pos": [
+                565,
+                367
+            ],
+            "size": {
+                "0": 508,
+                "1": 149
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 4
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 5
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        3,
+                        6
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "template, fill = _C[0], _C[1]\nel = template.replace(\"<|fim_suffix|>\",fill)\nprint(el)\n"
+            }
+        },
+        {
+            "id": 6,
+            "type": "tools/python_sandbox",
+            "pos": [
+                1157,
+                673
+            ],
+            "size": {
+                "0": 210,
+                "1": 108
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 6
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        7
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 7,
+            "type": "output/watch",
+            "pos": [
+                1418,
+                672
+            ],
+            "size": {
+                "0": 227,
+                "1": 99
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 7
+                }
+            ],
+            "properties": {},
+            "color": "#323",
+            "bgcolor": "#535"
+        },
+        {
+            "id": 8,
+            "type": "graph/variable",
+            "pos": [
+                576,
+                120
+            ],
+            "size": {
+                "0": 490,
+                "1": 184
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This test requires Qwen 2.5 coder,\nthe non instruct version.\nThe code is generated and then executed"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 1,
+            "type": "llm/llm_call",
+            "pos": [
+                87,
+                496
+            ],
+            "size": {
+                "0": 420,
+                "1": 285
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 2,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        1,
+                        5
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "json",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{temperature: 0.01}",
+                "subtype": "stateless",
+                "template": "{p:bos}\n<|repo_name|>test\n<|file_sep|>main.py\n<|fim_prefix|>\n{}\n<|fim_middle|>"
+            }
+        },
+        {
+            "id": 3,
+            "type": "llm/text_input",
+            "pos": [
+                85,
+                116
+            ],
+            "size": {
+                "0": 420,
+                "1": 301
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        2,
+                        4
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "# returns the n-th fibonacci number\ndef fibonacci(n):\n<|fim_suffix|>\n\n# now let's print the 10-th value\nresult = fibonacci(10)\nprint(result)"
+            },
+            "color": "#233",
+            "bgcolor": "#355"
+        }
+    ],
+    "links": [
+        [
+            1,
+            1,
+            0,
+            2,
+            0,
+            "string"
+        ],
+        [
+            2,
+            3,
+            0,
+            1,
+            0,
+            "string"
+        ],
+        [
+            3,
+            4,
+            0,
+            5,
+            0,
+            "string"
+        ],
+        [
+            4,
+            3,
+            0,
+            4,
+            0,
+            "string"
+        ],
+        [
+            5,
+            1,
+            0,
+            4,
+            1,
+            "string"
+        ],
+        [
+            6,
+            4,
+            0,
+            6,
+            0,
+            "string"
+        ],
+        [
+            7,
+            6,
+            0,
+            7,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
