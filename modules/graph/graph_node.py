@@ -102,7 +102,7 @@ class GraphNode:
 
         if self["free_runs"] > 0:
             self["free_runs"] -= 1
-            inputs = [""] * len(inputs)
+            inputs = []
             consume_inputs = [False] * len(inputs)
         elif self.input_rule == "XOR":
             consume_inputs = [False] * len(inputs)

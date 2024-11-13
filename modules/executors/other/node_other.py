@@ -162,8 +162,11 @@ class FileNode(GenericExecutor):
         if len(args[0]) > 0:
              with open(self.filename,write_mode) as f:
                       f.write(args[0][0])
-        with open(self.filename) as f:
-           val = f.read()
+        try:
+            with open(self.filename) as f:
+                val = f.read()
+        except FileNotFoundError:
+            val = ""
         return val
 
 
