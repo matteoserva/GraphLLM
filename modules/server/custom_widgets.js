@@ -105,6 +105,88 @@ class CustomTextCommon{
 
 }
 
+class CustomHtmlCanvas {
+        constructor(parent,name,options)
+    {
+        this.disabled = false
+        this.name=name
+        this.H = 15
+        this.type = "custom"
+        this.y=0
+        this.div = this.makeElement(parent)
+
+        this.property = options.property
+        this.parent = parent
+        this.options = {multiline:false}
+        this.minHeight = 50
+        this.saved_content = null;
+    }
+
+    setDisplayValue(value)
+    {
+        this.saved_content = value
+        this.redrawContent()
+    }
+
+    redrawContent(markdown)
+    {
+        if(this.use_markdown)
+        {
+            var text = this.saved_content;
+            var converter = new showdown.Converter();
+			converter.setOption('tables', true);
+            var html = converter.makeHtml(text);
+            this.textarea.innerHTML = html
+        }
+        else
+        {
+            this.textarea.innerText = this.saved_content
+        }
+
+    }
+
+
+    makeElement(parentNode)
+    {
+        var dialog = parentNode
+        var div = document.createElement("div");
+        var text = document.createElement("div")
+
+        text.innerText = this.name
+
+        div.appendChild(text)
+
+
+        return div
+
+    }
+
+
+
+
+
+    configureSize(aSpace,hSpace)
+    {
+
+
+    }
+
+    setValue(k,v)
+    {
+        if(this.property && this.property == k && this.textarea.value!=v)
+        {
+            
+        }
+    }
+    getMinHeight()
+    {
+        return this.minHeight;
+    }
+
+}
+
+
+
 class CustomTextOutput extends CustomTextCommon{
         constructor(parent,name,options)
     {
@@ -668,6 +750,11 @@ class DivContainer {
         else if(type=="text_output")
         {
             var elem = new CustomTextOutput(this, name,options)
+            this.addElement(elem)
+        }
+        else if(type=="html_canvas")
+        {
+            var elem = new CustomHtmlCanvas(this, name,options)
             this.addElement(elem)
         }
         else

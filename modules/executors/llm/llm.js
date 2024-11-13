@@ -72,34 +72,6 @@
 
 
 
-    //node constructor class
-    function MyWatchNode()
-    {
-    this.addInput("in","string");
-    
-    this.container = new DivContainer(this)
-    this.addCustomWidget( this.container);
-    this.container.addWidget("text_output","",{ property: "parameters"})
-    
-    var tmpl = ""
-    this.properties = { };
-    }
-
-    //name to show
-    MyWatchNode.title = "Watch";
-
-    //function to call when the node is executed
-    MyWatchNode.prototype.onExecute = function()
-    {
-    var A = this.getInputData(0);
-    this.container.setValue("parameters",A)
-    }
-
-    //register in the system
-    LiteGraph.registerNodeType("output/watch", MyWatchNode );
-
-
-
 
 
 
