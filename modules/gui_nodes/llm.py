@@ -58,23 +58,6 @@ class GuiNodeParser:
             val_exec.append(vel)
         return val_exec
 
-
-
-    def parse_file(self ,old_config ,links):
-        new_config = {}
-        new_config["type"] = "file"
-        properties = old_config.get("properties", {})
-        template = properties.get("filename", "")
-        new_config["init"] = [template]
-        conf = properties.get("config", "")
-        conf = yaml.safe_load(conf)
-        if conf:
-            new_config["conf"] = conf
-        old_inputs = old_config.get("inputs", [])
-        new_config["exec"] = self._calc_exec(old_inputs ,links)
-        return new_config
-
-
     def parse_connection(self ,old_config ,links):
         new_config = {}
         new_config["type"] = "copy"
@@ -87,34 +70,6 @@ class GuiNodeParser:
         old_inputs = old_config.get("inputs", [])
         new_config["exec"] = self._calc_exec(old_inputs ,links)
         return new_config
-
-
-    def parse_scraper(self ,old_config ,links):
-        new_config = {}
-        new_config["type"] = "exec"
-
-        properties = old_config.get("properties", {})
-        address = properties.get("address")
-        new_config["init"] = ["python3", "extras/scraper/scrape.py", address]
-
-        old_inputs = old_config.get("inputs", [])
-        new_config["exec"] = self._calc_exec(old_inputs ,links)
-        return new_config
-
-    def parse_pdf(self ,old_config ,links):
-        new_config = {}
-        new_config["type"] = "exec"
-
-        properties = old_config.get("properties", {})
-        address = properties.get("address")
-        new_config["init"] = ["python3", "extras/parse_pdf.py", address]
-
-        old_inputs = old_config.get("inputs", [])
-        new_config["exec"] = self._calc_exec(old_inputs ,links)
-        return new_config
-
-
-
 
 
     def parse_variable(self ,old_config ,links):
@@ -155,17 +110,10 @@ class GuiNodeParser:
         if node_type in ["generic_node"]:
             return self.parse_generic(old_config ,links)
 
-        if node_type in ["file"]:
-            return self.parse_file(old_config ,links)
-
         if node_type in ["variable"]:
             return self.parse_variable(old_config, links)
         if node_type in ["connection"]:
             return self.parse_connection(old_config ,links)
-        if node_type in ["web_scraper"]:
-            return self.parse_scraper(old_config ,links)
-        if node_type in ["pdf_parser"]:
-            return self.parse_pdf(old_config ,links)
 
         return None
 
