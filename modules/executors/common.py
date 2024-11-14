@@ -71,52 +71,41 @@ class BaseGuiParser:
     def postprocess_nodes(self,new_nodes):
         pass
 
-class BaseGuiNode:
-    def getNodeString(self):
-        pass
-
-def solve_placeholders(base, confArgs, confVariables={}):
-        for i in range(len(confArgs)):
-            name = "{p:exec" + str(i + 1) + "}"
-            val = confArgs[i]
-            base = base.replace(name, val)
-        for el in confVariables:
-            name = "{p:" + el + "}"
-            val = confVariables[el]
-            base = base.replace(name, val)
-        return base
-
 
 import json
 
-class GuiNodeBuilder():
-    def __init__(self):
+class BaseGuiNode:
 
-        self.config = {"class_name": "", "node_type": "", "title": "", "gui_node_config" : {},
-                       "callbacks": [], "inputs":[], "outputs":[]}
+    def _reset(self):
+        self.config = {"class_name": "", "node_type": "",
+                       "title": "", "gui_node_config": {},
+                       "callbacks": [], "inputs": [], "outputs": []}
 
-
-    def setNames(self,className, nodeType, title):
+    def _setNames(self,className, nodeType, title):
         self.config["class_name"] = className
         self.config["node_type"] = nodeType
         self.config["title"] = title
 
-    def setConnectionLimits(self, limits):
+    def _setConnectionLimits(self, limits):
         self.config["gui_node_config"]["connection_limits"] = limits
 
-    def setCallback(self,cbName, cbString):
+    def _setCallback(self,cbName, cbString):
         self.config["callbacks"].append((cbName,cbString))
 
-    def addInput(self,name,type="string"):
+    def _addInput(self,name,type="string"):
         self.config["inputs"].append((name,type))
 
-    def addOutput(self,name,type="string"):
+    def _addOutput(self,name,type="string"):
         self.config["outputs"].append((name,type))
 
-    def generate(self):
+
+    def buildNode(self):
+        pass
+
+    def getNodeString(self):
         header = """(function(global) {"""
 
-        res =f"""
+        res = f"""
         var LiteGraph = global.LiteGraph;
         /* ********************** *******************   
                 {self.config["class_name"]}: {self.config["title"]}
@@ -141,10 +130,26 @@ class GuiNodeBuilder():
 
         res += f'        LiteGraph.registerNodeType("{self.config["node_type"]}", {self.config["class_name"]} );\n\n'
 
-        footer="})(this);\n\n"
+        footer = "})(this);\n\n"
 
         final = header + res + footer
         return final
+
+def solve_placeholders(base, confArgs, confVariables={}):
+        for i in range(len(confArgs)):
+            name = "{p:exec" + str(i + 1) + "}"
+            val = confArgs[i]
+            base = base.replace(name, val)
+        for el in confVariables:
+            name = "{p:" + el + "}"
+            val = confVariables[el]
+            base = base.replace(name, val)
+        return base
+
+
+
+
+
 
 
         

@@ -12,6 +12,7 @@ LITEGRAPH_PATH = "extras/litegraph.js"
 class EditorHandler():
     def __init__(self):
         gui_nodes = [el() for el in get_gui_nodes()]
+        _ = [el.buildNode() for el in gui_nodes]
         node_strings = [el.getNodeString() for el in gui_nodes]
         self.gui_node_string = "\n\n".join(node_strings)
 

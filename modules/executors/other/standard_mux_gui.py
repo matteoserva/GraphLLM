@@ -1,18 +1,18 @@
-from modules.executors.common import BaseGuiNode,GuiNodeBuilder
+from modules.executors.common import BaseGuiNode
 
 
 class StandardMuxGui(BaseGuiNode):
     def __init__(self):
         pass
 
-    def getNodeString(self):
-        builder = GuiNodeBuilder()
-        builder.addInput("in1","string");
-        builder.addInput("in2", "string");
-        builder.addOutput("out", "string");
+
+    def buildNode(self):
+        builder = self
+        builder._reset()
+        builder._addInput("in1","string");
+        builder._addInput("in2", "string");
+        builder._addOutput("out", "string");
         #builder.addOutput("i", "string");
-        builder.setConnectionLimits ({"max_outputs": 1, "min_outputs": 1, "min_inputs": 2})
-        builder.setNames("StandardMuxNode","graph/standard_mux","Mux")
-        builder.setCallback("onConnectionsChange","MyGraphNode.prototype.onConnectionsChange")
-        s = builder.generate()
-        return s
+        builder._setConnectionLimits ({"max_outputs": 1, "min_outputs": 1, "min_inputs": 2})
+        builder._setNames("StandardMuxNode","graph/standard_mux","Mux")
+        builder._setCallback("onConnectionsChange","MyGraphNode.prototype.onConnectionsChange")
