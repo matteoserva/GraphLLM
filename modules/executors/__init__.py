@@ -5,7 +5,7 @@ import os
 from pkgutil import iter_modules
 from importlib import import_module
 
-from modules.executors.common import GenericExecutor, BaseGuiParser
+from modules.executors.common import GenericExecutor, BaseGuiParser, BaseGuiNode
 
 _cached_classes = None
 
@@ -67,5 +67,9 @@ def get_gui_parsers():
     found_parsers = _get_all_submodules(BaseGuiParser)
     found_parsers = [el for el in found_parsers if hasattr(el,"node_types") and len(el.node_types) > 0]
     return found_parsers
-    
+
+def get_gui_nodes():
+    found_parsers = _get_all_submodules(BaseGuiNode)
+    found_parsers = [el for el in found_parsers if el is not BaseGuiNode]
+    return found_parsers
     

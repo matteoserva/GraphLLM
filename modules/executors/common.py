@@ -71,6 +71,9 @@ class BaseGuiParser:
     def postprocess_nodes(self,new_nodes):
         pass
 
+class BaseGuiNode:
+    def getNodeString(self):
+        pass
 
 def solve_placeholders(base, confArgs, confVariables={}):
         for i in range(len(confArgs)):
@@ -84,7 +87,64 @@ def solve_placeholders(base, confArgs, confVariables={}):
         return base
 
 
+import json
 
+class GuiNodeBuilder():
+    def __init__(self):
+
+        self.config = {"class_name": "", "node_type": "", "title": "", "gui_node_config" : {},
+                       "callbacks": [], "inputs":[], "outputs":[]}
+
+
+    def setNames(self,className, nodeType, title):
+        self.config["class_name"] = className
+        self.config["node_type"] = nodeType
+        self.config["title"] = title
+
+    def setConnectionLimits(self, limits):
+        self.config["gui_node_config"]["connection_limits"] = limits
+
+    def setCallback(self,cbName, cbString):
+        self.config["callbacks"].append((cbName,cbString))
+
+    def addInput(self,name,type="string"):
+        self.config["inputs"].append((name,type))
+
+    def addOutput(self,name,type="string"):
+        self.config["outputs"].append((name,type))
+
+    def generate(self):
+        header = """(function(global) {"""
+
+        res =f"""
+        var LiteGraph = global.LiteGraph;
+        /* ********************** *******************   
+                {self.config["class_name"]}: {self.config["title"]}
+         ********************** *******************  */
+        //node constructor class
+        """
+
+        res += """
+        function """ + self.config["class_name"] + """()
+        {\n"""
+
+        for el in self.config["inputs"]:
+            res += f'        this.addInput("{el[0]}","{el[1]}");\n'
+        for el in self.config["outputs"]:
+            res += f'        this.addOutput("{el[0]}","{el[1]}");\n'
+        if len(self.config["gui_node_config"]) > 0:
+            res += "        this.gui_node_config = " + json.dumps(self.config["gui_node_config"])
+        res += "\n        }\n\n"
+        res += f'        {self.config["class_name"]}.title = "{self.config["title"]}"\n'
+        for el in self.config["callbacks"]:
+            res += f'        {self.config["class_name"]}.prototype.{el[0]} = {el[1]}\n'
+
+        res += f'        LiteGraph.registerNodeType("{self.config["node_type"]}", {self.config["class_name"]} );\n\n'
+
+        footer="})(this);\n\n"
+
+        final = header + res + footer
+        return final
 
 
         

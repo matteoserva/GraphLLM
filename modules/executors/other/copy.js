@@ -1,8 +1,9 @@
 
+/*
  (function(global) {
 
     var LiteGraph = global.LiteGraph;
- /* ********************** ******************* */
+
     //node constructor class
     function StandardMuxNode()
     {
@@ -24,4 +25,4 @@
     //register in the system
     LiteGraph.registerNodeType("graph/standard_mux", StandardMuxNode );
 
-})(this);
+})(this);*/

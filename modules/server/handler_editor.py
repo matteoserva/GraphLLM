@@ -2,12 +2,19 @@ import os
 from glob import glob
 import uuid
 
+from modules.executors import get_gui_nodes
+
 SOURCES_PATH="modules/server"
 NODES_PATH="modules/gui_nodes"
 EXECUTORS_PATH="modules/executors"
 LITEGRAPH_PATH = "extras/litegraph.js"
 
 class EditorHandler():
+    def __init__(self):
+        gui_nodes = [el() for el in get_gui_nodes()]
+        node_strings = [el.getNodeString() for el in gui_nodes]
+        self.gui_node_string = "\n\n".join(node_strings)
+
 
     def do_GET(self, server):
         server.close_connection = True
@@ -47,9 +54,8 @@ class EditorHandler():
                 with open(el,"rb") as f:
                     res += f.read()
                     res += b"\n\n"
-
-
             server.wfile.write(res)
+            server.wfile.write(self.gui_node_string.encode())
 
         elif endpoint in ["editor"]:
             remaining = "index.html" if len(split_path[2]) == 0 else split_path[2]
