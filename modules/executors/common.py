@@ -81,10 +81,10 @@ class BaseGuiNode:
                        "title": "", "gui_node_config": {},
                        "callbacks": [], "inputs": [], "outputs": []}
 
-    def _setNames(self,className, nodeType, title):
-        self.config["class_name"] = className
+    def _setPath(self, nodeType):
+        self.config["class_name"] = type(self).__name__
         self.config["node_type"] = nodeType
-        self.config["title"] = title
+        self.config["title"] = self.node_title
 
     def _setConnectionLimits(self, limits):
         self.config["gui_node_config"]["connection_limits"] = limits
