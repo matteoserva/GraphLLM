@@ -1,6 +1,6 @@
 from modules.executors.common import BaseGuiParser
 
-class LLMParser(BaseGuiParser):
+class TextInputParser(BaseGuiParser):
     node_types = ["text_input"]
 
     def parse_node(self ,old_config):
