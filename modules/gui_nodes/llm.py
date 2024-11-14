@@ -126,27 +126,6 @@ class GuiNodeParser:
 
 
 
-    def parse_python(self ,old_config ,links):
-        new_config = {}
-        new_config["type"] = "python"
-        properties = old_config.get("properties", {})
-        parameters = properties.get("parameters", "")
-        new_config["init"] = [parameters]
-
-        old_inputs = old_config.get("inputs", [])
-        new_config["exec"] = self._calc_exec(old_inputs, links)
-        return new_config
-
-    def parse_tts(self ,old_config ,links):
-        new_config = {}
-        new_config["type"] = "tts"
-        properties = old_config.get("properties", {})
-        language = properties.get("language", "it")
-        new_config["conf"] = {"lang": language}
-
-        old_inputs = old_config.get("inputs", [])
-        new_config["exec"] = self._calc_exec(old_inputs, links)
-        return new_config
 
     def parse_variable(self ,old_config ,links):
         new_config = {}
@@ -205,10 +184,7 @@ class GuiNodeParser:
             return self.parse_scraper(old_config ,links)
         if node_type in ["pdf_parser"]:
             return self.parse_pdf(old_config ,links)
-        if node_type in ["python_sandbox"]:
-            return self.parse_python(old_config ,links)
-        if node_type in ["tts"]:
-            return self.parse_tts(old_config ,links)
+
         return None
 
     def postprocess_nodes(self,new_nodes):
