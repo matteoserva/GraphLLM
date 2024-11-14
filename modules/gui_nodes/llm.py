@@ -74,16 +74,6 @@ class GuiNodeParser:
         new_config["exec"] = self._calc_exec(old_inputs ,links)
         return new_config
 
-    def parse_list(self ,old_config ,links):
-        new_config = {}
-        new_config["type"] = "list"
-        properties = old_config.get("properties", {})
-        template = properties.get("parameters", [])
-        new_config["init"] = template
-
-        old_inputs = old_config.get("inputs", [])
-        new_config["exec"] = self._calc_exec(old_inputs ,links)
-        return new_config
 
     def parse_connection(self ,old_config ,links):
         new_config = {}
@@ -165,17 +155,9 @@ class GuiNodeParser:
         if node_type in ["generic_node"]:
             return self.parse_generic(old_config ,links)
 
-        if node_type in ["virtual_sink" ,"virtual_source"]:
-            return self.parse_virtual(old_config ,links)
-        if old_config["type"].startswith("llm/watch"):
-            return None
-
         if node_type in ["file"]:
             return self.parse_file(old_config ,links)
-        if old_config["type"].startswith("llm/list"):
-            return self.parse_list(old_config ,links)
-        if old_config["type"].startswith("llm/chat_history"):
-            return self.parse_history(old_config ,links)
+
         if node_type in ["variable"]:
             return self.parse_variable(old_config, links)
         if node_type in ["connection"]:
