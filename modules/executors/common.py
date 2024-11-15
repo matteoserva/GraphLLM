@@ -79,7 +79,9 @@ class BaseGuiNode:
     def _reset(self):
         self.config = {"class_name": "", "node_type": "",
                        "title": "", "gui_node_config": {},
-                       "callbacks": [], "inputs": [], "outputs": []}
+                       "callbacks": [], "inputs": [], "outputs": [],
+                       "standard_widgets": [], "custom_widgets": [],
+                       "properties" : {} }
 
     def _setPath(self, nodeType):
         self.config["class_name"] = type(self).__name__
@@ -98,6 +100,21 @@ class BaseGuiNode:
     def _addOutput(self,name,type="string"):
         self.config["outputs"].append((name,type))
 
+    def _addCustomWidget (self, *args):
+        print("custom widget:",args)
+        self.config["custom_widgets"].append(args)
+    
+    def _addStandardWidget (self, *args):
+        print("standard widget:",args)
+        if len(args) > 4 and isinstance(args[4],dict):
+            options = args[4]
+            if "property" in options and len(options["property"]) > 0:
+                property_name = options["property"]
+                default_value = args[2]
+                self.config["properties"][property_name] = default_value
+            
+        self.config["standard_widgets"].append(args)
+        
     #def _addWidget(self, type, title, parameterName, options):
     #    self.config["outputs"].append((name,type))
 
@@ -126,6 +143,22 @@ class BaseGuiNode:
             res += f'        this.addOutput("{el[0]}","{el[1]}");\n'
         if len(self.config["gui_node_config"]) > 0:
             res += "        this.gui_node_config = " + json.dumps(self.config["gui_node_config"])
+            
+        #add properties
+        if len(self.config["properties"]):
+            res += "        this.properties = " + str(self.config["properties"])+ "\n"
+            
+        # add widgets
+        
+        for el in self.config["standard_widgets"]:
+            res += "        this.addWidget(" + json.dumps(el)[1:-1] + ")\n"
+            
+        if len(self.config["custom_widgets"]) > 0:
+            res += "        this.container = new DivContainer(this)\n"
+            res += "        this.addCustomWidget( this.container);\n"
+        for el in self.config["custom_widgets"]:
+            res += "        this.container.addWidget" + str(el) + "\n"
+            
         res += "\n        }\n\n"
         res += f'        {self.config["class_name"]}.title = "{self.config["title"]}"\n'
         for el in self.config["callbacks"]:

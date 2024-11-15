@@ -68,7 +68,7 @@ class WebsocketServerNode(GenericExecutor):
             self.data_from_client = [res]
         
     def graph_started(self):
-        self.server = ws_serve(self.echo, "0.0.0.0", 8765)
+        self.server = ws_serve(self.echo, "0.0.0.0", self.port)
     
     def graph_stopped(self):
         self.server.socket.close()

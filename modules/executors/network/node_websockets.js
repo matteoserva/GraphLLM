@@ -1,3 +1,4 @@
+/*
 (function(global) {
 
     var LiteGraph = global.LiteGraph;
@@ -38,4 +39,5 @@
     LiteGraph.registerNodeType("network/websocket_server", MyWebsocketsServerNode );
 	
 	
-})(this);
+})(this); 
+*/
