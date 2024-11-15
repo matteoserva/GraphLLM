@@ -101,11 +101,11 @@ class BaseGuiNode:
         self.config["outputs"].append((name,type))
 
     def _addCustomWidget (self, *args):
-        print("custom widget:",args)
+        #print("custom widget:",args)
         self.config["custom_widgets"].append(args)
     
     def _addStandardWidget (self, *args):
-        print("standard widget:",args)
+        #print("standard widget:",args)
         if len(args) > 4 and isinstance(args[4],dict):
             options = args[4]
             if "property" in options and len(options["property"]) > 0:
