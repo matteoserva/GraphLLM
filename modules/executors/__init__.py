@@ -14,14 +14,19 @@ def _get_all_classes():
     if _cached_classes:
         return _cached_classes
 
-    sub_path = "modules/executors"
+    # retrieves the name and location of this file
+    module_path = os.path.relpath(os.path.dirname(__file__)) # modules/executors
+    module_name = __name__  # modules.executors
+    sub_path = module_path
+    
+    # now locates all classes
     modules = [el[len(sub_path) + 1:-3] for el in glob(sub_path + "/*.py") if not el.startswith("_")]
 
-    for sub_name, sub_path in [(f.name, f.path) for f in os.scandir("modules/executors") if f.is_dir()]:
+    for sub_name, sub_path in [(f.name, f.path) for f in os.scandir(module_path) if f.is_dir()]:
         sub_modules = [el[len(sub_path) + 1:-3] for el in glob(sub_path + "/*.py") if not el.startswith("_")]
         sub_modules = [sub_name + "." + el for el in sub_modules]
         modules.extend(sub_modules)
-    modules = ["modules.executors." + el for el in modules]
+    modules = [module_name + "." + el for el in modules]
 
     found_classes = []
     for m in modules:
