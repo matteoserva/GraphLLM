@@ -17,3 +17,8 @@ div.div-container table,div.div-container th,div.div-container td {
   border: 1px solid white;
   border-collapse: collapse;
 }
+
+div.div-container textarea.CustomTextarea::selection, div.div-container textarea.CustomTextarea::-moz-selection{
+  /*color: gold;	*/
+  background-color: gray;
+}
