@@ -3,6 +3,8 @@ from modules.executors.common import GenericExecutor
 from websockets.sync.client import connect as ws_connect
 from websockets.sync.server import serve as ws_serve
 
+import socket
+
 class WebsocketClientNode(GenericExecutor):
     node_type = "websocket_client"
     def __init__(self,node_graph_parameters):
@@ -54,7 +56,7 @@ class WebsocketServerNode(GenericExecutor):
 
     def __call__(self,prompt_args):
         self.data_to_client = prompt_args
-        #print(self.data_to_client)
+
         sock, addr = self.server.socket.accept()
         self.server.handler(sock,addr)
 
@@ -71,7 +73,11 @@ class WebsocketServerNode(GenericExecutor):
         self.server = ws_serve(self.echo, "0.0.0.0", self.port)
     
     def graph_stopped(self):
-        self.server.socket.close()
+        try:
+            self.server.socket.shutdown(socket.SHUT_RDWR)
+            self.server.socket.close()
+        except:
+            pass
         
     def setup_complete(self, *args, **kwargs):
         pass
