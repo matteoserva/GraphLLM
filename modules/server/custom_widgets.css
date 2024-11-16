@@ -27,3 +27,25 @@ div.div-container textarea.CustomTextarea::-moz-selection{
   /*color: gold;	*/
   background-color: gray;
 }
+
+div.div-container div.CustomTextDiv {
+position: relative;
+padding-bottom: 4px;
+min-height: 100px;
+}
+
+div.div-container div.CustomTextDiv.deselected {
+flex-grow: 1
+}
+
+div.div-container div.CustomTextDiv .nameText {
+position: absolute;
+top: 2px;
+right: 4px;
+color: DarkGray;
+user-select: none
+}
+
+div.div-container div.CustomTextDiv.selected .nameText{
+display: none
+}

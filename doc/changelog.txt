@@ -8,8 +8,6 @@ new_nodes:
 - prompt builder
 - websockets
 
-
-
 09/11/24
 MAJOR:
 - websockets

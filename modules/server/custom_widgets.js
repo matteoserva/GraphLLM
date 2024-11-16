@@ -8,7 +8,7 @@ class CustomTextCommon{
             this.type = "custom"
             this.y=0
             this.div = this.makeElement(parent)
-
+            this.div.classList.add('deselected');
             this.inFocus = false
             this.margin = 5
             this.property = options.property
@@ -38,24 +38,34 @@ class CustomTextCommon{
     textareaFocus(textarea)
     {
         console.log("focusin");
+        var previousHeight =  this.div.clientHeight
+        this.div.classList.remove('deselected');
+        this.div.classList.add('selected');
+
         this.inFocus = true
         this.configureSize(this.H+this.margin)
-        this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="none"
+        //this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="none"
         var container = this.div.closest(".div-container")
         container.style.zIndex = 1
         this.div.style.zIndex = 1
+        this.div.style.flexGrow = null
+
         this.configureSizeInFocus()
+        this.div.style.height = "" + previousHeight + "px"
     }
 
     textareaUnfocus(textarea)
     {
         console.log("focusout")
+        this.div.classList.remove('selected');
+        this.div.classList.add('deselected');
         this.inFocus = false
         this.configureSize()
-        this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="block"
+        //this.textarea.parentNode.getElementsByClassName("nameText")[0].style.display="block"
         var container = this.div.closest(".div-container")
         container.style.zIndex = ""
         this.div.style.zIndex = ""
+        this.div.style.height = null
         this.textarea.style.whiteSpace="pre"
         this.textChange()
     }
@@ -448,14 +458,13 @@ class CustomTextarea extends CustomTextCommon{
     {
         var dialog = parentNode
         var div = document.createElement("div");
+        div.className = "CustomTextDiv";
+        div.classList.add('deselected');
         var text = document.createElement("div")
         text.className = "nameText";
         text.innerText = this.name
-        text.style="position:absolute; top:2px; right:4px; color:DarkGray; user-select: none"
         div.appendChild(text)
-        div.style="position:relative";
-        div.style.height = "100%";
-        div.style.paddingBottom = "4px";
+
 
         var textarea = document.createElement("textarea");
         div.appendChild(textarea)
