@@ -26,7 +26,8 @@ class CustomList {
     {
         var dialog = parentNode
         var div = document.createElement("div");
-        div.style = "display:flex;flex-direction:column;"
+        div.className = "CustomListContainer";
+        div.style = "display:flex;flex-direction:column; flex-grow: 1"
         var buttonDiv = document.createElement("div");
         buttonDiv.style = "display:flex;"
         var minus = document.createElement("button");
