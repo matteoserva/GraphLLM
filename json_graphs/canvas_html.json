@@ -36,6 +36,8 @@
             "title": "Instructions (List)",
             "properties": {
                 "parameters": [
+                    "make a empty file",
+                    "Make a empty html page",
                     "add a hello world"
                 ]
             },
