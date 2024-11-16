@@ -31,7 +31,7 @@ div.div-container textarea.CustomTextarea::-moz-selection{
 div.div-container div.CustomTextDiv {
 position: relative;
 padding-bottom: 4px;
-min-height: 100px;
+min-height: 50px;
 }
 
 div.div-container div.CustomTextDiv.deselected {

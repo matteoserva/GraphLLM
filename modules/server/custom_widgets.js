@@ -672,22 +672,12 @@ class DivContainer {
     
     computeSize(widget_width)
     {
-        var minHeight = 0;
-        for(let i = 0; i < this.children.length; i++)
-        {
-            var childMinHeight = 0
-            if(this.children[i].getMinHeight)
-            {
-                    childMinHeight = this.children[i].getMinHeight()
-            }
-            minHeight += childMinHeight;
-        }
-        if(minHeight<25)
-        {
-                minHeight = 25;
-        }
-        var res = [widget_width, minHeight]
-        return res
+        var oldHeight = this.dialog.style.height
+        this.dialog.style.height = "1px"
+        var scrollHeight = this.dialog.scrollHeight
+        this.dialog.style.height =oldHeight
+
+        return [undefined,scrollHeight]
     }
     
     draw(ctx, node, widget_width, y, H)
