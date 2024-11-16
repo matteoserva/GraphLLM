@@ -229,7 +229,9 @@ def scrape(url):
   pagina_rjs = load_page(url)
   article = apply_static_readability(pagina_rjs["content"])
   soup = clean_soup(pagina_rjs["content"])
-  markdown_content = convert_to_md(pagina_rjs["title"], str(soup))
+  clean_html = str(soup)
+  scraper_utils.write_file(tempfile.gettempdir() + "/pagina3.html",clean_html)
+  markdown_content = convert_to_md(pagina_rjs["title"], clean_html)
   return markdown_content
 
 if __name__ == "__main__":

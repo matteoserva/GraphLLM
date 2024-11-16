@@ -105,6 +105,75 @@ class CustomTextCommon{
 
 }
 
+class CustomHtmlCanvas {
+        constructor(parent,name,options)
+    {
+        this.disabled = false
+        this.name=name
+        this.H = 15
+        this.type = "custom"
+        this.y=0
+        this.div = this.makeElement(parent)
+
+        this.property = options.property
+        this.parent = parent
+        this.options = {multiline:false}
+        this.minHeight = 50
+        this.saved_content = null;
+    }
+
+
+    makeElement(parentNode)
+    {
+        var dialog = parentNode
+        var div = document.createElement("div");
+        var text = document.createElement("iframe")
+        div.style="width: 100%; height: 100%; background-color: white; margin-bottom: 4px;"
+        text.style="width: 100%; height: 100%"
+        text.src = "about:blank"
+
+        div.appendChild(text)
+        this.textarea = text
+        return div
+
+    }
+
+    appendElement(dialog)
+    {
+        dialog.appendChild(this.div);
+    }
+
+    draw(ctx, node, widget_width, y, H)
+    {
+
+
+    }
+
+    configureSize(aSpace,hSpace)
+    {
+
+
+    }
+
+    setValue(k,v)
+    {
+        if(this.property && this.property == k && v && v.graphllm_type == "output" && this.saved_content != v)
+        {
+            this.saved_content = v
+            var encoded_html = btoa(v)
+            this.textarea.src = "data:text/html;charset=utf-8;base64," + encoded_html
+            //this.textarea.innerText = v
+        }
+    }
+    getMinHeight()
+    {
+        return this.minHeight;
+    }
+
+}
+
+
+
 class CustomTextOutput extends CustomTextCommon{
         constructor(parent,name,options)
     {
@@ -126,12 +195,13 @@ class CustomTextOutput extends CustomTextCommon{
         {
             var text = this.saved_content;
             var converter = new showdown.Converter();
+			converter.setOption('tables', true);
             var html = converter.makeHtml(text);
             this.textarea.innerHTML = html
         }
         else
         {
-            this.textarea.innerHTML = this.saved_content
+            this.textarea.innerText = this.saved_content
         }
 
     }
@@ -148,8 +218,10 @@ class CustomTextOutput extends CustomTextCommon{
         div.appendChild(text)
 
         var control= document.createElement("div")
-        control.style="color:DarkGray;position:absolute; top:0px; transform: translateX(-50%) translateY(-100%); left: 50%;"
-        control.innerHTML = '<input type="checkbox"/>Markdown'
+        /*control.style="color:DarkGray;position:absolute; top:0px; transform: translateX(-50%) translateY(-100%); left: 50%;"
+        control.innerHTML = '<input type="checkbox"/>Markdown'*/
+		control.style="color:DarkGray;position:absolute; top:0px; transform: translateY(-100%); right: 0px"
+        control.innerHTML = 'Markdown<input type="checkbox"/>'
         var checkbox = control.querySelector("input")
         var that = this
         checkbox.addEventListener("click",function (e) {
@@ -396,12 +468,15 @@ class CustomTextarea extends CustomTextCommon{
         this.textarea = textarea
 
         this.textarea.ondrop = function(e) {
-            e.preventDefault(); console.log(e);
-            f = e.dataTransfer.items[0].getAsFile()
-            var reader = new FileReader();
-            reader.onload = function(read) {textarea.value = reader.result}
-            reader.readAsText(f)
-            }
+			if(e.dataTransfer && e.dataTransfer.types && e.dataTransfer.types[0] == "Files")
+			{
+				e.preventDefault(); console.log(e);
+				f = e.dataTransfer.items[0].getAsFile()
+				var reader = new FileReader();
+				reader.onload = function(read) {textarea.value = reader.result}
+				reader.readAsText(f)
+			}
+		}
         this.textarea.ondragover = function(e) {e.preventDefault(); }
 
         textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
@@ -665,6 +740,11 @@ class DivContainer {
         else if(type=="text_output")
         {
             var elem = new CustomTextOutput(this, name,options)
+            this.addElement(elem)
+        }
+        else if(type=="html_canvas")
+        {
+            var elem = new CustomHtmlCanvas(this, name,options)
             this.addElement(elem)
         }
         else

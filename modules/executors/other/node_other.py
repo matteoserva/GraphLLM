@@ -63,15 +63,17 @@ class CopyNode(GenericExecutor):
         elif self._subtype == "repeat":
             if self.cache is None:
                 self.cache = res
-                self._properties["free_runs"] = self.repeat_runs -1
+                self._properties["free_runs"] = self.repeat_runs
             else:
-                res = self.cache
-                if self._properties["free_runs"] > 0:
-                    self._properties["free_runs"] = self._properties["free_runs"] - 1
-                    if self._properties["free_runs"] == 0:
-                        self.cache = None
+                res = self.cache    
+
             if self.repeat_runs == 0: #infinite
                 self._properties["free_runs"] = 1
+            elif self._properties["free_runs"] > 0:
+                self._properties["free_runs"] = self._properties["free_runs"] - 1
+
+            if self._properties["free_runs"] == 0:
+                self.cache = None
 
         elif self._subtype == "gate":
             numInputs = len(res)
@@ -162,8 +164,11 @@ class FileNode(GenericExecutor):
         if len(args[0]) > 0:
              with open(self.filename,write_mode) as f:
                       f.write(args[0][0])
-        with open(self.filename) as f:
-           val = f.read()
+        try:
+            with open(self.filename) as f:
+                val = f.read()
+        except FileNotFoundError:
+            val = ""
         return val
 
 

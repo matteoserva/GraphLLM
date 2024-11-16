@@ -73,6 +73,14 @@ class GraphNode:
         if isinstance(self.executor,GenericExecutor):
             self.executor.setup_complete()
 
+    def _graph_started(self):
+        if hasattr(self.executor,"graph_started"):
+            self.executor.graph_started()
+    
+    def _graph_stopped(self):
+        if hasattr(self.executor,"graph_stopped"):
+            self.executor.graph_stopped()
+
     def get_inputs(self):
         inputs = [el for el in self["inputs"]]
         return inputs
@@ -94,7 +102,7 @@ class GraphNode:
 
         if self["free_runs"] > 0:
             self["free_runs"] -= 1
-            inputs = [""] * len(inputs)
+            inputs = []
             consume_inputs = [False] * len(inputs)
         elif self.input_rule == "XOR":
             consume_inputs = [False] * len(inputs)

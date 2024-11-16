@@ -1,10 +1,10 @@
 {
-    "last_node_id": 38,
-    "last_link_id": 59,
+    "last_node_id": 39,
+    "last_link_id": 64,
     "nodes": [
         {
             "id": 12,
-            "type": "llm/watch",
+            "type": "output/watch",
             "pos": [
                 818,
                 56
@@ -14,7 +14,7 @@
                 "1": 446.8000183105469
             },
             "flags": {},
-            "order": 11,
+            "order": 9,
             "mode": 0,
             "inputs": [
                 {
@@ -87,12 +87,12 @@
                 -63,
                 214
             ],
-            "size": [
-                814.3668841796875,
-                144.23546937500004
-            ],
+            "size": {
+                "0": 814.3668823242188,
+                "1": 144.2354736328125
+            },
             "flags": {},
-            "order": 2,
+            "order": 0,
             "mode": 0,
             "properties": {
                 "identifier": "",
@@ -100,62 +100,6 @@
             },
             "color": "#232",
             "bgcolor": "#353"
-        },
-        {
-            "id": 37,
-            "type": "graph/virtual_source",
-            "pos": [
-                -412,
-                733
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 5,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        56
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "out2"
-            }
-        },
-        {
-            "id": 36,
-            "type": "graph/virtual_source",
-            "pos": [
-                -409,
-                592
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        55
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "out1"
-            }
         },
         {
             "id": 19,
@@ -180,52 +124,24 @@
             "bgcolor": "#335"
         },
         {
-            "id": 30,
-            "type": "llm/input",
-            "pos": [
-                -409,
-                444
-            ],
-            "size": {
-                "0": 210,
-                "1": 88
-            },
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        54
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": "begin!"
-            }
-        },
-        {
             "id": 38,
             "type": "graph/generic_node",
             "pos": [
                 467,
                 409
             ],
-            "size": [
-                281.50286865234375,
-                108
-            ],
+            "size": {
+                "0": 281.50286865234375,
+                "1": 108
+            },
             "flags": {},
-            "order": 8,
+            "order": 7,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 57
+                    "link": 63
                 },
                 {
                     "name": "N",
@@ -264,7 +180,7 @@
                 "1": 112
             },
             "flags": {},
-            "order": 0,
+            "order": 2,
             "mode": 0,
             "title": "Topic 1",
             "properties": {
@@ -281,12 +197,12 @@
                 467,
                 569
             ],
-            "size": [
-                748.077430527344,
-                157
-            ],
+            "size": {
+                "0": 748.0774536132812,
+                "1": 157
+            },
             "flags": {},
-            "order": 9,
+            "order": 10,
             "mode": 0,
             "inputs": [
                 {
@@ -329,12 +245,12 @@
                 462,
                 784
             ],
-            "size": [
-                733.4143705273436,
-                157
-            ],
+            "size": {
+                "0": 733.4143676757812,
+                "1": 157
+            },
             "flags": {},
-            "order": 10,
+            "order": 11,
             "mode": 0,
             "inputs": [
                 {
@@ -377,18 +293,18 @@
                 102,
                 637
             ],
-            "size": [
-                320.9288635253903,
-                128
-            ],
+            "size": {
+                "0": 320.9288635253906,
+                "1": 128
+            },
             "flags": {},
-            "order": 7,
+            "order": 8,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 49
+                    "link": 64
                 },
                 {
                     "name": "N",
@@ -425,34 +341,118 @@
             }
         },
         {
-            "id": 33,
-            "type": "graph/generic_node",
+            "id": 30,
+            "type": "llm/text_input",
             "pos": [
-                -146,
-                577
+                -409,
+                444
             ],
             "size": {
                 "0": 210,
-                "1": 148
+                "1": 88
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        60
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "begin!"
+            }
+        },
+        {
+            "id": 36,
+            "type": "graph/virtual_source",
+            "pos": [
+                -409,
+                592
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        61
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "out1"
+            }
+        },
+        {
+            "id": 37,
+            "type": "graph/virtual_source",
+            "pos": [
+                -412,
+                733
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        62
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "out2"
+            }
+        },
+        {
+            "id": 39,
+            "type": "graph/standard_mux",
+            "pos": [
+                -93,
+                540
+            ],
+            "size": {
+                "0": 140,
+                "1": 86
             },
             "flags": {},
             "order": 6,
             "mode": 0,
             "inputs": [
                 {
-                    "name": "in",
+                    "name": "in1",
                     "type": "string",
-                    "link": 54
+                    "link": 60
+                },
+                {
+                    "name": "in2",
+                    "type": "string",
+                    "link": 61
                 },
                 {
                     "name": "N",
                     "type": "string",
-                    "link": 55
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": 56
+                    "link": 62
                 },
                 {
                     "name": "N",
@@ -465,27 +465,13 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        49,
-                        57
+                        63,
+                        64
                     ],
                     "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": [],
-                    "slot_index": 1
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
                 }
             ],
-            "title": "Mux",
-            "properties": {
-                "parameters": "type: copy\nconf: {subtype: mux}"
-            }
+            "properties": {}
         }
     ],
     "links": [
@@ -506,14 +492,6 @@
             "string"
         ],
         [
-            49,
-            33,
-            0,
-            32,
-            0,
-            "string"
-        ],
-        [
             50,
             31,
             0,
@@ -530,42 +508,50 @@
             "string"
         ],
         [
-            54,
-            30,
-            0,
-            33,
-            0,
-            "string"
-        ],
-        [
-            55,
-            36,
-            0,
-            33,
-            1,
-            "string"
-        ],
-        [
-            56,
-            37,
-            0,
-            33,
-            2,
-            "string"
-        ],
-        [
-            57,
-            33,
-            0,
-            38,
-            0,
-            "string"
-        ],
-        [
             59,
             38,
             0,
             12,
+            0,
+            "string"
+        ],
+        [
+            60,
+            30,
+            0,
+            39,
+            0,
+            "string"
+        ],
+        [
+            61,
+            36,
+            0,
+            39,
+            1,
+            "string"
+        ],
+        [
+            62,
+            37,
+            0,
+            39,
+            2,
+            "string"
+        ],
+        [
+            63,
+            39,
+            0,
+            38,
+            0,
+            "string"
+        ],
+        [
+            64,
+            39,
+            0,
+            32,
             0,
             "string"
         ]

@@ -107,16 +107,16 @@ class ExecHandler():
             except OSError:  # socket closed
                 data = b""
                 
-
-            if data:
-                self.protocol.receive_data(data)
-            else:
-                self.protocol.receive_eof()
-                self.alive = False
-                keep_running = False
-            
-            protocol_events = self.protocol.events_received()
-            self._send_queued_data()
+            with self.send_lock:
+                if data:
+                    self.protocol.receive_data(data)
+                else:
+                    self.protocol.receive_eof()
+                    self.alive = False
+                    keep_running = False
+                
+                protocol_events = self.protocol.events_received()
+                self._send_queued_data()
             
             for el in protocol_events:
                 if el.opcode == Opcode.CLOSE:
@@ -130,31 +130,32 @@ class ExecHandler():
    
 
     def _send_queued_data(self):
-        with self.send_lock:
-            try:
-                for data in self.protocol.data_to_send():
-                    if data:
-                        self.server.wfile.write(data)
-                    else:
+        
+        try:
+            for data in self.protocol.data_to_send():
+                if data:
+                    self.server.wfile.write(data)
+                else:
 
-                        self.alive = False
-                        break
-            except:
-                self.alive = False
-                raise
+                    self.alive = False
+                    break
+        except:
+            self.alive = False
+            raise
 
     def _send_close(self):
-
-        if self.alive:
-            self.protocol.send_close()
-        self._send_queued_data()
+        with self.send_lock:
+            if self.alive:
+                self.protocol.send_close()
+            self._send_queued_data()
         self.alive = False
 
     def _send_text(self,text):
         
         if self.alive:
-            self.protocol.send_text(text.encode())
-            self._send_queued_data()
+            with self.send_lock:
+                self.protocol.send_text(text.encode())
+                self._send_queued_data()
         if not self.alive:
             raise BrokenPipeError("connection closed")
 
@@ -167,9 +168,10 @@ class ExecHandler():
         self.protocol.receive_data(request.encode())
         request = self.protocol.events_received()[0]
         response = self.protocol.accept(request)
-        self.protocol.send_response(response)
-        self.alive = True
-        self._send_queued_data()
+        with self.send_lock:
+            self.protocol.send_response(response)
+            self.alive = True
+            self._send_queued_data()
 
     def exec(self):
         self.state = 1

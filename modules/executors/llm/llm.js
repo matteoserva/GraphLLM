@@ -44,6 +44,8 @@
     this.addInput("in","string");
 
     this.addOutput("out","string");
+    this.addOutput("json","string");
+    this.gui_node_config = {connection_limits: {max_outputs:2, min_outputs:2}}
     this.properties = {conf:"",subtype:"stateless",template:""  };
     let tmpl = 'type: python\ninit: "test/python_hello_world.py"'
 
@@ -70,54 +72,8 @@
 
 
 
-    //node constructor class
-    function MyWatchNode()
-    {
-    this.addInput("in","string");
-    
-    this.container = new DivContainer(this)
-    this.addCustomWidget( this.container);
-    this.container.addWidget("text_output","",{ property: "parameters"})
-    
-    var tmpl = ""
-    this.properties = { };
-    }
-
-    //name to show
-    MyWatchNode.title = "Watch";
-
-    //function to call when the node is executed
-    MyWatchNode.prototype.onExecute = function()
-    {
-    var A = this.getInputData(0);
-    this.container.setValue("parameters",A)
-    }
-
-    //register in the system
-    LiteGraph.registerNodeType("output/watch", MyWatchNode );
 
 
-
-
-
-    //node constructor class
-    function MyInputNode()
-    {
-    this.addOutput("out","string");
-
-    this.container = new DivContainer(this)
-    this.addCustomWidget( this.container);
-    this.container.addWidget("textarea","Parameters",{ property: "parameters"})
-
-
-    this.properties = {  };
-    }
-
-    //name to show
-    MyInputNode.title = "Text Input";
-
-    //register in the system
-    LiteGraph.registerNodeType("llm/input", MyInputNode );
 
     
     /****

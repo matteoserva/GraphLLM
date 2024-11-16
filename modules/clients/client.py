@@ -56,7 +56,7 @@ class OpenAIClientWrapper(object):
 
 class DummyClient:
 
-    def send_prompt(self,p,params=None):
+    def send_prompt(self,p,params=None,callback=None):
         print(p.messages)
         return ["{ \"answer\": \"dummy response\"}"]
 
@@ -131,7 +131,7 @@ class LLamaCppClient:
         return resp
 
     def _ricevi(self,req_params, pass_raw,callback):
-        ret = ""
+        ret = []
         with self.connetion_semaphore:
           with requests.post(**req_params) as r1:
             a = 1
@@ -166,8 +166,15 @@ class LLamaCppClient:
                         tmp_res =json_decoded["content"]
                     if callback:
                         callback(tmp_res)
-                    ret += str(tmp_res)
-        return ret
+                    if len(tmp_res) > 0:
+                        ret.append(tmp_res)
+                    
+        if self.prompt_metadata.get("stopped_eos",False):
+            eos_tokens = ["<|endoftext|>"]
+            if len(ret) > 0 and ret[-1] in eos_tokens:
+                ret = ret[:-1]
+        retstring = "".join(ret)
+        return retstring
 
     def tokenize(self,p):
         url = "http://" + self.host + ":" + str(self.port) + "/tokenize"
@@ -265,7 +272,7 @@ class Client:
     @staticmethod
     def _make_client_list(client_names, client_configs):
         for client_name in client_names:
-            client_config = client_configs[client_name]
+            client_config = client_configs.get(client_name,{})
             type = client_config.get("type",client_name)
             if "type" in client_config:
                 del client_config["type"]

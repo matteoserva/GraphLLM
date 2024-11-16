@@ -46,6 +46,8 @@
     MyGraphNode.prototype.onConnectionsChange = function(dir,slot,connected,d,e)
     {
         console.log("dir: " +dir + "  slot: " + slot + "  connected: "  + connected )
+		let gui_node_config = this.gui_node_config || {}
+		let connection_limits = gui_node_config.connection_limits || {}
         if(dir == LiteGraph.INPUT)
         {
               if(connected)
@@ -86,7 +88,11 @@
               if(connected)
               {
                   let numElements = this.outputs.length
-                  if(slot +1 == numElements && !!d)
+                  let should_add = true
+                  if( connection_limits.max_outputs && numElements >= connection_limits.max_outputs)
+                    should_add = false
+
+                  if(slot +1 == numElements && !!d && should_add)
                   {
                     var saved_size = this.size
                     this.addOutput("N","string");

@@ -25,5 +25,6 @@ class ExecutorFactory:
         executor = None
         if type in _available_executors:
             executor = _available_executors[type](full_config)
-
+        else:
+            raise Exception("missing node:",type)
         return executor

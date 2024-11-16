@@ -522,6 +522,12 @@ class PromptBuilder:
 #        print(text_prompt)
         return text_prompt
 
+    def __str__(self):
+        decorated_messages = ["{p:" + el["role"] + "}\n" + el["content"] + "{p:eom}" for el in self.messages]
+        text_prompt = "{p:bos}\n\n" + "\n\n".join(decorated_messages)
+        return text_prompt
+
+
     def load_model(self,model_name):
         self.formatter.load_model(model_name)
 
