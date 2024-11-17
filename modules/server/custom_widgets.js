@@ -221,15 +221,15 @@ class CustomTextOutput extends CustomTextCommon{
     {
         var dialog = parentNode
         var div = document.createElement("div");
+        div.className = "CustomTextDiv";
+        div.classList.add('deselected');
         var text = document.createElement("div")
         text.className = "nameText";
         text.innerText = this.name
-        text.style="position:absolute; top:2px; right:4px; color:DarkGray; user-select: none"
+
         div.appendChild(text)
 
         var control= document.createElement("div")
-        /*control.style="color:DarkGray;position:absolute; top:0px; transform: translateX(-50%) translateY(-100%); left: 50%;"
-        control.innerHTML = '<input type="checkbox"/>Markdown'*/
 		control.style="color:DarkGray;position:absolute; top:0px; transform: translateY(-100%); right: 0px"
         control.innerHTML = 'Markdown<input type="checkbox"/>'
         var checkbox = control.querySelector("input")
@@ -248,11 +248,6 @@ class CustomTextOutput extends CustomTextCommon{
         div.appendChild(textarea)
         textarea.className="CustomTextOutput"
         textarea.tabIndex=0;
-        textarea.style='font-family: monospace; overflow: auto; resize:none; white-space: pre;border:0px; padding:3px; ' //+ this.margin + 'px'
-        textarea.style.backgroundColor= "black"
-        textarea.style.color = "white"
-        textarea.style.width = "100%";
-        textarea.style.height = "100%";
         this.textarea = textarea
 
         textarea.addEventListener("keydown",  function (ev) {
@@ -284,21 +279,6 @@ class CustomTextOutput extends CustomTextCommon{
 
     }
 
-    textareaFocus(textarea)
-    {
-        super.textareaFocus(textarea)
-        textarea.style.borderRadius = "4px"
-        textarea.style.border = "1px solid white"
-        textarea.style.padding = "2px"
-    }
-
-    textareaUnfocus(textarea)
-    {
-        super.textareaUnfocus(textarea)
-        textarea.style.borderRadius = "2px"
-        textarea.style.border = "0px"
-        textarea.style.padding = "3px"
-    }
 
     configureSizeInFocus()
     {
@@ -338,8 +318,8 @@ class CustomTextOutput extends CustomTextCommon{
         }
         else
         {
-            textarea.style.width = "100%";
-            textarea.style.height = "100%";
+            //textarea.style.width = "100%";
+            //textarea.style.height = "100%";
             textarea.style.minHeight = ""
             textarea.style.minWidth = ""
         }
@@ -709,7 +689,7 @@ class DivContainer {
             child.draw(ctx, node, widget_width, y, childSpace)
         }
         
-        
+
         // not neede this.drawCounter=1;
         this.dialog.style.display="flex"
         this.dialog.style.flexDirection="column"

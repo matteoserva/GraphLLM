@@ -49,3 +49,32 @@ user-select: none
 div.div-container div.CustomTextDiv.selected .nameText{
 display: none
 }
+
+div.div-container {
+display: flex;
+flex-direction: column;
+}
+
+div.div-container div.CustomTextDiv div.CustomTextOutput {
+font-family: monospace;
+overflow: auto;
+resize: none;
+white-space: pre;
+background-color: black;
+color: white;
+width: 100%;
+height: 100%;
+position: absolute;
+}
+
+div.div-container div.CustomTextDiv.deselected div.CustomTextOutput {
+border-radius: 2px;
+border: 0px;
+padding: 3px;
+}
+
+div.div-container div.CustomTextDiv.selected div.CustomTextOutput {
+border-radius: 4px;
+border: 1px solid white;
+padding: 2px;
+}
