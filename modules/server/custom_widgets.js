@@ -626,7 +626,12 @@ class DivContainer {
         
         dialog.style.height = this.height + "px";
         //dialog.style.backgroundColor= "black" 
-        
+
+        var innerDialog = document.createElement("div");
+        innerDialog.className = "div-innercontainer";
+        innerDialog.style ="width: 100%; height: 100%; display: flex; flex-direction: column";
+        this.innerDialog = innerDialog
+        dialog.appendChild(innerDialog)
         this.dialog = dialog
 
     }
@@ -672,10 +677,10 @@ class DivContainer {
     
     computeSize(widget_width)
     {
-        var oldHeight = this.dialog.style.height
-        this.dialog.style.height = "1px"
-        var scrollHeight = this.dialog.scrollHeight
-        this.dialog.style.height =oldHeight
+
+        this.innerDialog.style.height = "min-content"
+        var scrollHeight = this.innerDialog.clientHeight
+        this.innerDialog.style.height = "100%"
 
         return [undefined,scrollHeight]
     }
@@ -721,7 +726,7 @@ class DivContainer {
     addElement(element)
     {
         this.children.push(element)
-        element.appendElement(this.dialog)
+        element.appendElement(this.innerDialog )
         
     }
     addWidget(type, name, options)
