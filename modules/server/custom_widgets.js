@@ -342,10 +342,12 @@ class CustomTextInput extends CustomTextCommon{
     {
         var dialog = parentNode
         var div = document.createElement("div");
+        div.className = "CustomInputDiv";
+        div.classList.add('deselected');
         var text = document.createElement("div")
         text.className = "nameText";
         text.innerText = this.name
-        text.style="position:absolute; top:2px; right:4px; color:DarkGray; user-select: none"
+
         div.appendChild(text)
         div.style="position:relative";
         div.style.height = this.minHeight +"px";

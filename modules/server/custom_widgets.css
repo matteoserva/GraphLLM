@@ -40,7 +40,8 @@ div.div-container div.CustomTextDiv.deselected {
 flex-grow: 1
 }
 
-div.div-container div.CustomTextDiv .nameText {
+/* CustomTextDiv and the custominputdiv */
+div.div-container .nameText {
 position: absolute;
 top: 2px;
 right: 4px;
@@ -48,7 +49,7 @@ color: DarkGray;
 user-select: none
 }
 
-div.div-container div.CustomTextDiv.selected .nameText{
+div.div-container div.selected .nameText{
 display: none
 }
 
