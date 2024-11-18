@@ -449,9 +449,8 @@ class CustomTextarea extends CustomTextCommon{
         var textarea = document.createElement("textarea");
         div.appendChild(textarea)
         textarea.className="CustomTextarea"
-        textarea.style='resize:none; white-space: pre;border:0px;padding: ' + this.margin + 'px'
-        textarea.style.backgroundColor= "black" 
-        textarea.style.color = "white"
+        textarea.style='white-space: pre; padding: ' + this.margin + 'px'
+
         textarea.style.width = "100%";
         textarea.style.height = "100%";
         this.textarea = textarea
@@ -609,7 +608,7 @@ class DivContainer {
 
         var innerDialog = document.createElement("div");
         innerDialog.className = "div-innercontainer";
-        innerDialog.style ="width: 100%; height: 100%; display: flex; flex-direction: column";
+
         this.innerDialog = innerDialog
         dialog.appendChild(innerDialog)
         this.dialog = dialog
