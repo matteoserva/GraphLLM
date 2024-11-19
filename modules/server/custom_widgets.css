@@ -95,3 +95,15 @@ background-color: black;
 color: white;
 border: 0px;
 }
+
+
+div.div-container div.CustomInputDiv .CustomTextInput {
+resize: none;
+border:0px solid;
+border-radius: 10px;
+background-color: #202020;
+color: white;
+padding-left: 6px;
+padding-top: 0px;
+padding-bottom = 2px;
+}

@@ -356,12 +356,7 @@ class CustomTextInput extends CustomTextCommon{
         var textarea = document.createElement("input");
         div.appendChild(textarea)
         textarea.className="CustomTextInput"
-        textarea.style='resize:none; white-space: pre;border:0px solid; border-radius: 10px;' //+ this.margin + 'px'
-        textarea.style.backgroundColor= "#202020"
-        textarea.style.color = "white"
-        textarea.style.paddingLeft = "6px";
-        textarea.style.paddingTop = "0px";
-        textarea.style.paddingBottom = "2px";
+        textarea.style='white-space: pre;'
         textarea.style.width = "100%";
         textarea.style.height = this.minHeight +"px";
         this.textarea = textarea
