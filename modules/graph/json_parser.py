@@ -1,13 +1,26 @@
 import json
 import yaml
 import tempfile
-from modules.gui_nodes.llm import GuiNodeParser
+from modules.graph.gui_node_parser import GuiNodeParser
 
 class JsonParser():
     def __init__(self):
         pass
 
 
+    def _solve_links(self,nodes,links):
+        for node_id in nodes:
+            node = nodes[node_id]
+            inputs = node.get("inputs",[])
+            outputs = node.get("outputs",[])
+            new_inputs = [links[str(el["link"])] if el["link"] else None for el in inputs]
+            new_inputs = [ nodes[str(el[1])] if el else None for el in new_inputs]
+            new_outputs = [el["links"] if el.get("links",None) else [] for el in outputs]
+            new_outputs = [ [ links[str(el)]  for el in s ] for s in new_outputs ]
+            new_outputs = [ [ nodes[str(el[3])]  for el in s ] for s in new_outputs ]
+            node["linked_inputs"] = new_inputs
+            node["linked_outputs"] = new_outputs
+            pass
 
     def load_string(self,v):
         jval = json.loads(v)
@@ -17,6 +30,8 @@ class JsonParser():
 
         nodes = { str(el["id"]):el for el in jval["nodes"] if el["type"].split("/")[0]}
         #print(jval)
+
+        self._solve_links(nodes,links)
 
         gui_node_parser = GuiNodeParser()
         new_nodes = {}
