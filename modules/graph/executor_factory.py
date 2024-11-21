@@ -1,4 +1,4 @@
-from modules.logging.logger import Logger
+from modules.client_api.logger import Logger
 from modules.executors import get_executors
 
 
