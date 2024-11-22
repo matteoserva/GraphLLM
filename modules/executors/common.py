@@ -1,5 +1,5 @@
 from ..parser import solve_templates
-
+from .gui_node_builder import GuiNodeBuilder
 # def metaclass_protect(*protected):
 #     """Returns a metaclass that protects all attributes given as strings"""
 #     class Protect(type):
@@ -72,48 +72,11 @@ class BaseGuiParser:
         pass
 
 
-import json
 
-class BaseGuiNode:
 
-    def _reset(self):
-        self.config = {"class_name": "", "node_type": "",
-                       "title": "", "gui_node_config": {},
-                       "callbacks": [], "inputs": [], "outputs": [],
-                       "standard_widgets": [], "custom_widgets": [],
-                       "properties" : {} }
+class BaseGuiNode(GuiNodeBuilder):
 
-    def _setPath(self, nodeType):
-        self.config["class_name"] = type(self).__name__
-        self.config["node_type"] = nodeType
-        self.config["title"] = self.node_title
 
-    def _setConnectionLimits(self, limits):
-        self.config["gui_node_config"]["connection_limits"] = limits
-
-    def _setCallback(self,cbName, cbString):
-        self.config["callbacks"].append((cbName,cbString))
-
-    def _addInput(self,name,type="string"):
-        self.config["inputs"].append((name,type))
-
-    def _addOutput(self,name,type="string"):
-        self.config["outputs"].append((name,type))
-
-    def _addCustomWidget (self, *args):
-        #print("custom widget:",args)
-        self.config["custom_widgets"].append(args)
-    
-    def _addStandardWidget (self, *args):
-        #print("standard widget:",args)
-        if len(args) > 4 and isinstance(args[4],dict):
-            options = args[4]
-            if "property" in options and len(options["property"]) > 0:
-                property_name = options["property"]
-                default_value = args[2]
-                self.config["properties"][property_name] = default_value
-            
-        self.config["standard_widgets"].append(args)
         
     #def _addWidget(self, type, title, parameterName, options):
     #    self.config["outputs"].append((name,type))
@@ -123,53 +86,7 @@ class BaseGuiNode:
         pass
 
     def getNodeString(self):
-        header = """(function(global) {"""
-
-        res = f"""
-        var LiteGraph = global.LiteGraph;
-        /* ********************** *******************   
-                {self.config["class_name"]}: {self.config["title"]}
-         ********************** *******************  */
-        //node constructor class
-        """
-
-        res += """
-        function """ + self.config["class_name"] + """()
-        {\n"""
-
-        for el in self.config["inputs"]:
-            res += f'        this.addInput("{el[0]}","{el[1]}");\n'
-        for el in self.config["outputs"]:
-            res += f'        this.addOutput("{el[0]}","{el[1]}");\n'
-        if len(self.config["gui_node_config"]) > 0:
-            res += "        this.gui_node_config = " + json.dumps(self.config["gui_node_config"])
-            
-        #add properties
-        if len(self.config["properties"]):
-            res += "        this.properties = " + str(self.config["properties"])+ "\n"
-            
-        # add widgets
-        
-        for el in self.config["standard_widgets"]:
-            res += "        this.addWidget(" + json.dumps(el)[1:-1] + ")\n"
-            
-        if len(self.config["custom_widgets"]) > 0:
-            res += "        this.container = new DivContainer(this)\n"
-            res += "        this.addCustomWidget( this.container);\n"
-        for el in self.config["custom_widgets"]:
-            res += "        this.container.addWidget" + str(el) + "\n"
-            
-        res += "\n        }\n\n"
-        res += f'        {self.config["class_name"]}.title = "{self.config["title"]}"\n'
-        for el in self.config["callbacks"]:
-            res += f'        {self.config["class_name"]}.prototype.{el[0]} = {el[1]}\n'
-
-        res += f'        LiteGraph.registerNodeType("{self.config["node_type"]}", {self.config["class_name"]} );\n\n'
-
-        footer = "})(this);\n\n"
-
-        final = header + res + footer
-        return final
+        return self._getNodeString()
 
 def solve_placeholders(base, confArgs, confVariables={}):
         for i in range(len(confArgs)):

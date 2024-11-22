@@ -32,8 +32,8 @@
         if(source_node)
         {
             var eventId = {type: "print", source: source_node.id.toString()}
-            
-            subscribe(eventId ,(eventId, eventData) => {this.history += eventData; this.container.setValue("parameters",this.history)} )
+
+            subscribe(eventId ,(eventId, eventData) => {this.history += eventData;this.setProperty("parameters",this.history)} )
             var eventId = {type: "starting", source: source_node.id.toString()}
             subscribe(eventId ,(eventId, eventData) => {this.history = ""})
             var eventId = {type: "output", source: source_node.id.toString(), slot: 0}
@@ -43,6 +43,6 @@
 
 
     //register in the system
-    LiteGraph.registerNodeType("output/watch", MyWatchNode );
+    LiteGraph.registerNodeType("aoutput/watch", MyWatchNode );
 
 })(this);
