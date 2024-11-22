@@ -115,6 +115,117 @@ class CustomTextCommon{
 
 }
 
+class CustomFileDrop {
+        constructor(parent,name,options)
+    {
+
+        this.div = this.makeElement(parent)
+        this.property = options.property
+        this.parent = parent
+    }
+
+    makeDropArea()
+    {
+        var dropArea = document.createElement("div")
+        dropArea.className = "dropArea"
+        dropArea.style="border: 2px dashed #ccc;  border-radius: 20px; padding: 20px; text-align: center;";
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropArea.style.borderColor="purple"
+        }
+
+        function unhighlight(e) {
+            dropArea.style.borderColor=null
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+
+             ([...files]).forEach(uploadFile)
+        }
+
+        function uploadFile(file) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                addFile(file.name, e.target.result)
+            };
+            reader.readAsText(file);
+        }
+
+        function addFile(fileName, fileContent) {
+            let fileIcon = document.createElement('div');
+            fileIcon.className = 'file-icon';
+            fileIcon.style="white-space: nowrap"
+            fileIcon.innerHTML = `<i class="fas fa-file"> ${fileName} </i><span class="delete-button">Delete</span>`;
+            fileIcon.querySelector(".delete-button").addEventListener("click", (event)=>{deleteFile(event,fileIcon)}, false);
+            fileIcon.querySelector(".fas").addEventListener("click", (event)=>{showFile(event,fileIcon)}, false);
+            //fileIcon.addEventListener('click', () => showFileContent(file));
+            dropArea.appendChild(fileIcon);
+        }
+
+        function deleteFile(el,fileIcon) {
+            fileIcon.remove()
+        }
+
+        function showFile(el,fileIcon) {
+            fileIcon.remove()
+        }
+
+        return dropArea;
+    }
+
+    makeElement(parentNode)
+    {
+        var dialog = parentNode
+        var div = document.createElement("div");
+        div.className = "CustomFileList"
+        div.style="min-height: 50px; display: flex; flex-direction:column; height:100%; padding-bottom: 2px; /* background-color: black; */"
+
+        div.appendChild(this.makeDropArea());
+
+        var textOutput = new CustomTextarea(this, "",{property:"ciao"})
+        textOutput.appendElement(div)
+        textOutput.setValue("ciao","bbb ciao")
+
+        return div
+    }
+
+    notifyValue(me, k,val)
+    {
+
+    }
+
+    appendElement(dialog)
+    {
+        dialog.appendChild(this.div);
+    }
+
+    setValue(k,v)
+    {
+
+    }
+
+}
+
 class CustomHtmlCanvas {
         constructor(parent,name,options)
     {
@@ -231,6 +342,7 @@ class CustomTextOutput extends CustomTextCommon{
 
         var control= document.createElement("div")
 		control.style="color:DarkGray;position:absolute; top:0px; transform: translateY(-100%); right: 0px"
+		control.className = "TextControl";
         control.innerHTML = 'Markdown<input type="checkbox"/>'
         var checkbox = control.querySelector("input")
         var that = this
@@ -682,7 +794,10 @@ class DivContainer {
             var child = this.children[i]
             var remainingChildren = numChildren-i
             var childSpace = childrenSpace/remainingChildren
-            child.draw(ctx, node, widget_width, y, childSpace)
+            if(child.draw)
+            {
+                child.draw(ctx, node, widget_width, y, childSpace)
+             }
         }
         
 
@@ -725,6 +840,11 @@ class DivContainer {
         else if(type=="html_canvas")
         {
             var elem = new CustomHtmlCanvas(this, name,options)
+            this.addElement(elem)
+        }
+        else if(type=="file_drop")
+        {
+            var elem = new CustomFileDrop(this, name,options)
             this.addElement(elem)
         }
         else
