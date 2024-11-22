@@ -25,10 +25,10 @@ class JsonParser():
     def load_string(self,v):
         jval = json.loads(v)
 
-        links = {str(el[0]):el for el in jval["links"]}
+        links = {str(el[0]):el for el in jval.get("links",[])}
         #valid_sections = ["graph","llm","tools"]
 
-        nodes = { str(el["id"]):el for el in jval["nodes"] if el["type"].split("/")[0]}
+        nodes = { str(el["id"]):el for el in jval.get("nodes",[]) if el["type"].split("/")[0]}
         #print(jval)
 
         self._solve_links(nodes,links)
