@@ -858,6 +858,7 @@ class DivContainer {
     notifyValue(me, k,val)
     {
         this.parent.setProperty(k,val)
+        this.parent.setDirtyCanvas(true, true);
     }
     
     setValue(k,val)

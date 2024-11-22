@@ -59,9 +59,6 @@ class GuiNodeBuilder:
 
     def _makeConstructor(self):
         res = ""
-        res += """
-        function """ + self.config["class_name"] + """()
-        {\n"""
 
         for el in self.config["inputs"]:
             res += f'        this.addInput("{el[0]}","{el[1]}");\n'
@@ -89,7 +86,12 @@ class GuiNodeBuilder:
         if len(self.config["subscriptions"]) > 0:
             res += "        this.history = {};" + "\n"
 
-        res += "\n        }\n\n"
+        res = "\n".join([" "*12 + el.strip() for el in res.split("\n")])
+        res = """
+        function """ + self.config["class_name"] + """()
+        {\n""" + res + """
+        
+        }\n\n"""
 
         return res
 
@@ -127,22 +129,23 @@ class GuiNodeBuilder:
         return res
 
     def _getNodeString(self):
-        header = """(function(global) {"""
+
         res = self._makeHeader()
         res += self._makeConstructor()
         res += self._makeSubscriptions()
 
 
-
-
-        res += f'        {self.config["class_name"]}.title = "{self.config["title"]}"\n'
+        res += '        {ClassName}.title = "{title}"\n'.replace("{ClassName}",self.config["class_name"]).replace("{title}",self.config["title"])
         for el in self.config["callbacks"]:
             res += f'        {self.config["class_name"]}.prototype.{el[0]} = {el[1]}\n'
 
         res += f'        LiteGraph.registerNodeType("{self.config["node_type"]}", {self.config["class_name"]} );\n\n'
 
-        footer = "})(this);\n\n"
 
-        final = header + res + footer
+        final = """(function(global) {
+        {content}
+        })(this);\n\n""".replace("{content}",res)
+
+
         return final
 
