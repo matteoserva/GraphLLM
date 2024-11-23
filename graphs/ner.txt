@@ -17,7 +17,7 @@ T1:
 
             Here is the text to be analyzed:
             ```
-            {}
+            {v:_C[1]}
             ```
         - |-
             Now use the previously provided text to find the relations among the identified entities, ignoring all your previous knowledge.
