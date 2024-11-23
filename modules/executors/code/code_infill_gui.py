@@ -2,7 +2,7 @@ from modules.executors.common import BaseGuiNode
 
 
 class WebsocketClientGui(BaseGuiNode):
-    node_title = "Code infill"
+    node_title = "Code infill (WIP)"
 
     def __init__(self):
         pass
@@ -10,7 +10,7 @@ class WebsocketClientGui(BaseGuiNode):
     def buildNode(self):
         builder = self
         builder._reset()
-        builder._addInput("send", "string");
+        #builder._addInput("send", "string");
         builder._addOutput("receive", "string");
 
         builder._addCustomWidget("file_drop", "files", {"property": "files"})

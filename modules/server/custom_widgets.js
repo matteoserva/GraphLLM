@@ -122,10 +122,12 @@ class CustomFileDrop {
         this.div = this.makeElement(parent)
         this.property = options.property
         this.parent = parent
+        this.files = []
     }
 
     makeDropArea()
     {
+        var that = this
         var dropArea = document.createElement("div")
         dropArea.className = "dropArea"
         dropArea.style="border: 2px dashed #ccc;  border-radius: 20px; padding: 20px; text-align: center;";
@@ -166,31 +168,42 @@ class CustomFileDrop {
         function uploadFile(file) {
             let reader = new FileReader();
             reader.onload = function(e) {
-                addFile(file.name, e.target.result)
+                that.addFile(file.name, e.target.result,dropArea)
+                that.notifyValue(that,that.property,that.files)
             };
             reader.readAsText(file);
         }
 
-        function addFile(fileName, fileContent) {
+        return dropArea;
+    }
+
+    addFile(fileName, fileContent,dropArea) {
             let fileIcon = document.createElement('div');
             fileIcon.className = 'file-icon';
             fileIcon.style="white-space: nowrap"
             fileIcon.innerHTML = `<i class="fas fa-file"> ${fileName} </i><span class="delete-button">Delete</span>`;
-            fileIcon.querySelector(".delete-button").addEventListener("click", (event)=>{deleteFile(event,fileIcon)}, false);
-            fileIcon.querySelector(".fas").addEventListener("click", (event)=>{showFile(event,fileIcon)}, false);
+            var fileData = {name: fileName, content: fileContent}
+
+            fileIcon.querySelector(".delete-button").addEventListener("click", (event)=>{deleteFile(event,fileData,fileIcon)}, false);
+            fileIcon.querySelector(".fas").addEventListener("click", (event)=>{showFile(event,fileData, fileIcon)}, false);
             //fileIcon.addEventListener('click', () => showFileContent(file));
             dropArea.appendChild(fileIcon);
-        }
+            this.files.push(fileData)
 
-        function deleteFile(el,fileIcon) {
-            fileIcon.remove()
-        }
+            var that = this
+            function deleteFile(el,ref,fileIcon) {
+                fileIcon.remove()
+                let index = this.files.indexOf(ref);
+                if(index !== -1) {
+                  that.files.splice(index, 1);
+                }
+                that.notifyValue(that,that.property,that.files)
+            }
 
-        function showFile(el,fileIcon) {
-            fileIcon.remove()
-        }
-
-        return dropArea;
+            function showFile(el,ref, fileIcon) {
+                var textarea = that.div.querySelector(".CustomTextarea")
+                textarea.value = ref.content
+            }
     }
 
     makeElement(parentNode)
@@ -211,7 +224,7 @@ class CustomFileDrop {
 
     notifyValue(me, k,val)
     {
-
+        this.parent.notifyValue(this,k,val)
     }
 
     appendElement(dialog)
@@ -221,7 +234,12 @@ class CustomFileDrop {
 
     setValue(k,v)
     {
-
+        console.log(k,v)
+        if(this.property && this.property == k)
+        {
+            var dropArea = this.div.querySelector(".dropArea")
+            v.forEach((element) => this.addFile(element.name,element.content,dropArea))
+        }
     }
 
 }
@@ -901,7 +919,7 @@ class DivContainer {
             this.saved_diff[action.parameter] += data
             if(Array.isArray(this.saved_values[action.parameter]))
             {
-                var newValue = [...this.saved_values[action.parameter]]; 
+                var newValue = [...this.saved_values[action.parameter]];
                 var message_index = newValue.length-1
                 newValue[message_index] = newValue[message_index] +this.saved_diff[action.parameter]
             }
