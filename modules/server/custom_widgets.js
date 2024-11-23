@@ -115,6 +115,117 @@ class CustomTextCommon{
 
 }
 
+class CustomFileDrop {
+        constructor(parent,name,options)
+    {
+
+        this.div = this.makeElement(parent)
+        this.property = options.property
+        this.parent = parent
+    }
+
+    makeDropArea()
+    {
+        var dropArea = document.createElement("div")
+        dropArea.className = "dropArea"
+        dropArea.style="border: 2px dashed #ccc;  border-radius: 20px; padding: 20px; text-align: center;";
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropArea.style.borderColor="purple"
+        }
+
+        function unhighlight(e) {
+            dropArea.style.borderColor=null
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+
+             ([...files]).forEach(uploadFile)
+        }
+
+        function uploadFile(file) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                addFile(file.name, e.target.result)
+            };
+            reader.readAsText(file);
+        }
+
+        function addFile(fileName, fileContent) {
+            let fileIcon = document.createElement('div');
+            fileIcon.className = 'file-icon';
+            fileIcon.style="white-space: nowrap"
+            fileIcon.innerHTML = `<i class="fas fa-file"> ${fileName} </i><span class="delete-button">Delete</span>`;
+            fileIcon.querySelector(".delete-button").addEventListener("click", (event)=>{deleteFile(event,fileIcon)}, false);
+            fileIcon.querySelector(".fas").addEventListener("click", (event)=>{showFile(event,fileIcon)}, false);
+            //fileIcon.addEventListener('click', () => showFileContent(file));
+            dropArea.appendChild(fileIcon);
+        }
+
+        function deleteFile(el,fileIcon) {
+            fileIcon.remove()
+        }
+
+        function showFile(el,fileIcon) {
+            fileIcon.remove()
+        }
+
+        return dropArea;
+    }
+
+    makeElement(parentNode)
+    {
+        var dialog = parentNode
+        var div = document.createElement("div");
+        div.className = "CustomFileList"
+        div.style="min-height: 50px; display: flex; flex-direction:column; height:100%; padding-bottom: 2px; /* background-color: black; */"
+
+        div.appendChild(this.makeDropArea());
+
+        var textOutput = new CustomTextarea(this, "",{property:"ciao"})
+        textOutput.appendElement(div)
+        textOutput.setValue("ciao","bbb ciao")
+
+        return div
+    }
+
+    notifyValue(me, k,val)
+    {
+
+    }
+
+    appendElement(dialog)
+    {
+        dialog.appendChild(this.div);
+    }
+
+    setValue(k,v)
+    {
+
+    }
+
+}
+
 class CustomHtmlCanvas {
         constructor(parent,name,options)
     {
@@ -231,6 +342,7 @@ class CustomTextOutput extends CustomTextCommon{
 
         var control= document.createElement("div")
 		control.style="color:DarkGray;position:absolute; top:0px; transform: translateY(-100%); right: 0px"
+		control.className = "TextControl";
         control.innerHTML = 'Markdown<input type="checkbox"/>'
         var checkbox = control.querySelector("input")
         var that = this
@@ -342,10 +454,12 @@ class CustomTextInput extends CustomTextCommon{
     {
         var dialog = parentNode
         var div = document.createElement("div");
+        div.className = "CustomInputDiv";
+        div.classList.add('deselected');
         var text = document.createElement("div")
         text.className = "nameText";
         text.innerText = this.name
-        text.style="position:absolute; top:2px; right:4px; color:DarkGray; user-select: none"
+
         div.appendChild(text)
         div.style="position:relative";
         div.style.height = this.minHeight +"px";
@@ -354,12 +468,7 @@ class CustomTextInput extends CustomTextCommon{
         var textarea = document.createElement("input");
         div.appendChild(textarea)
         textarea.className="CustomTextInput"
-        textarea.style='resize:none; white-space: pre;border:0px solid; border-radius: 10px;' //+ this.margin + 'px'
-        textarea.style.backgroundColor= "#202020"
-        textarea.style.color = "white"
-        textarea.style.paddingLeft = "6px";
-        textarea.style.paddingTop = "0px";
-        textarea.style.paddingBottom = "2px";
+        textarea.style='white-space: pre;'
         textarea.style.width = "100%";
         textarea.style.height = this.minHeight +"px";
         this.textarea = textarea
@@ -449,9 +558,8 @@ class CustomTextarea extends CustomTextCommon{
         var textarea = document.createElement("textarea");
         div.appendChild(textarea)
         textarea.className="CustomTextarea"
-        textarea.style='resize:none; white-space: pre;border:0px;padding: ' + this.margin + 'px'
-        textarea.style.backgroundColor= "black" 
-        textarea.style.color = "white"
+        textarea.style='white-space: pre; padding: ' + this.margin + 'px'
+
         textarea.style.width = "100%";
         textarea.style.height = "100%";
         this.textarea = textarea
@@ -609,7 +717,7 @@ class DivContainer {
 
         var innerDialog = document.createElement("div");
         innerDialog.className = "div-innercontainer";
-        innerDialog.style ="width: 100%; height: 100%; display: flex; flex-direction: column";
+
         this.innerDialog = innerDialog
         dialog.appendChild(innerDialog)
         this.dialog = dialog
@@ -686,7 +794,10 @@ class DivContainer {
             var child = this.children[i]
             var remainingChildren = numChildren-i
             var childSpace = childrenSpace/remainingChildren
-            child.draw(ctx, node, widget_width, y, childSpace)
+            if(child.draw)
+            {
+                child.draw(ctx, node, widget_width, y, childSpace)
+             }
         }
         
 
@@ -731,6 +842,11 @@ class DivContainer {
             var elem = new CustomHtmlCanvas(this, name,options)
             this.addElement(elem)
         }
+        else if(type=="file_drop")
+        {
+            var elem = new CustomFileDrop(this, name,options)
+            this.addElement(elem)
+        }
         else
         {
             var elem = new CustomTextarea(this, name,options)
@@ -742,6 +858,7 @@ class DivContainer {
     notifyValue(me, k,val)
     {
         this.parent.setProperty(k,val)
+        this.parent.setDirtyCanvas(true, true);
     }
     
     setValue(k,val)

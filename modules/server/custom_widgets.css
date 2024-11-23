@@ -13,7 +13,9 @@ div.div-container div.CustomTextOutput * {
 margin: 0px;
 }
 
-div.div-container table,div.div-container th,div.div-container td {
+div.div-container div.CustomTextOutput table,
+div.div-container div.CustomTextOutput th,
+div.div-container div.CustomTextOutput td {
   border: 1px solid white;
   border-collapse: collapse;
 }
@@ -38,7 +40,8 @@ div.div-container div.CustomTextDiv.deselected {
 flex-grow: 1
 }
 
-div.div-container div.CustomTextDiv .nameText {
+/* CustomTextDiv and the custominputdiv */
+div.div-container .nameText {
 position: absolute;
 top: 2px;
 right: 4px;
@@ -46,7 +49,7 @@ color: DarkGray;
 user-select: none
 }
 
-div.div-container div.CustomTextDiv.selected .nameText{
+div.div-container div.selected .nameText{
 display: none
 }
 
@@ -77,4 +80,30 @@ div.div-container div.CustomTextDiv.selected div.CustomTextOutput {
 border-radius: 4px;
 border: 1px solid white;
 padding: 2px;
+}
+
+div.div-container div.div-innercontainer {
+width: 100%;
+height: 100%;
+display: flex;
+flex-direction: column
+}
+
+div.div-container div.CustomTextDiv .CustomTextarea {
+resize:none;
+background-color: black;
+color: white;
+border: 0px;
+}
+
+
+div.div-container div.CustomInputDiv .CustomTextInput {
+resize: none;
+border:0px solid;
+border-radius: 10px;
+background-color: #202020;
+color: white;
+padding-left: 6px;
+padding-top: 0px;
+padding-bottom = 2px;
 }

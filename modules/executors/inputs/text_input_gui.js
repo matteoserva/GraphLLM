@@ -20,6 +20,6 @@
     MyInputNode.title = "Text Input";
 
     //register in the system
-    LiteGraph.registerNodeType("llm/text_input", MyInputNode );
+    LiteGraph.registerNodeType("input/text_input", MyInputNode );
 
 })(this);

@@ -125,17 +125,51 @@ class WebBrige {
     this.socket.close()
   }
 
-
   onPlayEvent()
   {
 
       console.log("play")
-
+      this.listeners = {}
+      var listeners = this.listeners
+      this.graph.sendEventToAllNodes("connectPublishers",subscribe)
       var data = JSON.stringify( graph.serialize() );
       this.startWebSocket(data)
 
+      function subscribe(eventId ,callback)
+      {
+         if(!(listeners[eventId.type]))
+         {
+            listeners[eventId.type] = []
+         }
+         var typelistener = listeners[eventId.type]
+         typelistener.push([eventId, callback])
+         //console.log(eventId ,callback)
+      }
+
   }
 
+  notifyListeners(eventId, eventData )
+  {
+        var typeListeners = this.listeners[eventId.type] || []
+        typeListeners = typeListeners.filter(eventFilter)
+        typeListeners.map(executeCallback)
+        //console.log(eventId, eventData);
+
+        function eventFilter(element)
+        {
+            var f1 = eventId.source == element[0].source;
+            var f2 = eventId.type == element[0].type;
+            var f3 = (!("slot" in element[0])) || (eventId.slot == element[0].slot);
+            var res = f1 && f2 && f3;
+            return res;
+        }
+
+        function executeCallback(element)
+        {
+            var callback = element[1]
+            callback(eventId,eventData)
+        }
+  }
 
   processChunk(buffer, chunk)
   {
@@ -152,23 +186,46 @@ class WebBrige {
 
       if(obj.type == "output")
       {
-        var name = obj.data[0].substr(1)
-        var values = obj.data[1]
-        var n = this.graph.getNodeById(name)
-        if(!!n)
-        {
-          if(values.length > 0)
-          {
-            for(let i = 0; i < values.length; i++)
+            var name = obj.data[0].substr(1)
+            var values = obj.data[1]
+            var n = this.graph.getNodeById(name)
+            if((!!n) && values.length > 0)
             {
-              var string = new String(values[i]);
-              string.graphllm_type="output"
-              string.text_content=values[i]
-              n.setOutputData(i,string)
+
+                for(let i = 0; i < values.length; i++)
+                {
+                      var string = new String(values[i]);
+                      string.graphllm_type="output"
+                      string.text_content=values[i]
+                      n.setOutputData(i,string)
+
+                      var eventId = {type: obj.type, source: name, slot: i}
+                      this.notifyListeners(eventId, values[i])
+                }
+
             }
-          }
-        }
       }
+
+      if(obj.type == "print")
+      {
+         var name = obj.data[0].split("/")[1]
+         var value = obj.data[1]
+         var n = this.graph.getNodeById(name)
+         if((!!n) && n.outputs && n.outputs.length > 0)
+         {
+             var old = n.print_log || ""
+             var newVal = old + value
+             n.print_log = newVal
+             var string = new String(newVal);
+             string.graphllm_type="print"
+             string.text_content=newVal
+             n.setOutputData(0,string)
+
+             var eventId = {type: obj.type, source: name}
+             this.notifyListeners(eventId, value)
+	     }
+      }
+
       if(obj.type == "error")
       {
         var message = "error: " + obj.data[0]
@@ -226,6 +283,8 @@ class WebBrige {
 		  {
 			 this.canvas.selectNode(node,true);
 			 if(node.outputs && node.outputs.length > 0) { node.print_log = ""}
+			 var eventId = {type: obj.type, source: name}
+             this.notifyListeners(eventId)
 		  }
           
       }
@@ -243,29 +302,16 @@ class WebBrige {
       }
 	  if(obj.type == "stopping")
       {
-        var name = obj.data[0].substr(1)
+          var name = obj.data[0].substr(1)
 		  var node = this.graph.getNodeById(name)
 		  if (node)
 		  {
 			 this.canvas.deselectNode(node);
+			 var eventId = {type: obj.type, source: name}
+             this.notifyListeners(eventId)
 		  }
       }
-      if(obj.type == "print")
-      {
-         var name = obj.data[0].split("/")[1]
-         var value = obj.data[1]
-         var n = this.graph.getNodeById(name)
-         if((!!n) && n.outputs && n.outputs.length > 0)
-         {
-             var old = n.print_log || ""
-             var newVal = old + value
-             n.print_log = newVal
-             var string = new String(newVal);
-             string.graphllm_type="print"
-             string.text_content=newVal
-             n.setOutputData(0,string)
-	 }
-      }
+
 
       if(obj.type != "print")
       {

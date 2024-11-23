@@ -39,8 +39,8 @@ class CustomList {
         buttonDiv.appendChild(plus)
         div.appendChild(buttonDiv)
         
-        plus.addEventListener("click", this.addTextBox.bind(this))
-        minus.addEventListener("click", this.removeTextBox.bind(this))
+        plus.addEventListener("click", this.addTextBox.bind(this,true))
+        minus.addEventListener("click", this.removeTextBox.bind(this,true))
         this.div = div
         this.addTextBox()
         this.addTextBox()
@@ -52,7 +52,7 @@ class CustomList {
             return index;
     }
     
-    addTextBox()
+    addTextBox(notify=false)
     {
         var index = this.children.length
         var element = new CustomTextarea(this, this.makeCellName(index),{property:"ciao"})
@@ -62,9 +62,13 @@ class CustomList {
         {
             this.value.push("")
         }
+        if(notify)
+        {
+            this.parent.notifyValue(this, this.property,this.value)
+        }
     }
     
-    removeTextBox(notify=true)
+    removeTextBox(notify=false)
     {
         if(this.children.length > 1)
         {
@@ -149,7 +153,7 @@ class CustomList {
             {
                 if(i >= this.children.length)
                 {
-                    this.addTextBox()
+                    this.addTextBox(false)
                 }
                 
                 

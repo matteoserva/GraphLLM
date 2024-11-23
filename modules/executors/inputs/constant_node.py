@@ -1,6 +1,6 @@
 from modules.common import try_solve_files
 from modules.executors.common import GenericExecutor
-from .node_list import ListNode
+from .list_node import ListNode
 
 class ConstantNode(ListNode):
     node_type = "constant"

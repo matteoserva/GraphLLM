@@ -1,6 +1,4 @@
 import json
-import queue
-import select
 import socket
 import tempfile
 import traceback
@@ -10,7 +8,7 @@ import yaml
 from modules.clients import get_client_config, Client
 from modules.graph import GraphExecutor, GraphException
 from modules.graph.json_parser import JsonParser
-from modules.logging.logger import Logger
+from modules.client_api.logger import Logger
 from websockets.frames import Opcode
 from websockets.server import ServerProtocol
 from modules.client_api import GuiClientAPI

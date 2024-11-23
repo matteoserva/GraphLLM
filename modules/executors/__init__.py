@@ -54,7 +54,7 @@ def get_executors():
 
 
 
-    from modules.executors.agent.node_agent import AgentController
+    from modules.executors.agent.agent_node import AgentController
     from modules.executors.tools.node_tools import ToolExecutor, LlamaTool
     from ..graph.graph_executor import GraphExecutor
 
