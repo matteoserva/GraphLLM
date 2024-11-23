@@ -116,13 +116,14 @@ class CustomTextCommon{
 }
 
 class CustomFileDrop {
-        constructor(parent,name,options)
+    constructor(parent,name,options)
     {
 
         this.div = this.makeElement(parent)
         this.property = options.property
         this.parent = parent
         this.files = []
+        this.accumulator = ""
     }
 
     makeDropArea()
@@ -189,8 +190,8 @@ class CustomFileDrop {
             //fileIcon.addEventListener('click', () => showFileContent(file));
             dropArea.appendChild(fileIcon);
             this.files.push(fileData)
-
             var that = this
+            showFile(null,fileData,fileIcon)
             function deleteFile(el,ref,fileIcon) {
                 fileIcon.remove()
                 let index = this.files.indexOf(ref);
@@ -217,14 +218,26 @@ class CustomFileDrop {
 
         var textOutput = new CustomTextarea(this, "",{property:"ciao"})
         textOutput.appendElement(div)
-        textOutput.setValue("ciao","bbb ciao")
+        textOutput.setValue("ciao","")
+
+        this.showData = function(value)
+        {
+            textOutput.setValue("ciao",value)
+        }
 
         return div
     }
 
     notifyValue(me, k,val)
     {
-        this.parent.notifyValue(this,k,val)
+        if(me instanceof CustomTextarea)
+        {
+            console.log("TODO: update file content")
+        }
+        else
+        {
+            this.parent.notifyValue(this,k,val)
+        }
     }
 
     appendElement(dialog)
@@ -239,6 +252,25 @@ class CustomFileDrop {
         {
             var dropArea = this.div.querySelector(".dropArea")
             v.forEach((element) => this.addFile(element.name,element.content,dropArea))
+        }
+    }
+
+    executeAction(eventId, action, data)
+    {
+        console.log("files action",eventId, action, data)
+        if (action.target == "reset")
+        {
+            this.accumulator = ""
+            var textarea = this.div.querySelector(".CustomTextarea")
+            this.original = textarea.value
+
+        } else if (action.target == "append")
+        {
+            this.accumulator += data
+            var appended = this.original.replace("{p:fim}", this.accumulator)
+            this.showData(appended)
+
+
         }
     }
 
@@ -894,9 +926,19 @@ class DivContainer {
         this.children.forEach(function(v,i,a){v.setValue(k,val)})
     }
 
-    executeAction(action, data)
+    executeAction(eventId, action, data)
     {
-        if(action.target == "set")
+        if(action.type == "widget_action")
+        {
+            var filtered = this.children.filter((el) => el.property== action.property)
+            var child = filtered[0]
+            if(child)
+            {
+                child.executeAction(eventId, action, data)
+            }
+
+        }
+        else if(action.target == "set")
         {
             if(Array.isArray(this.saved_values[action.parameter]))
             {

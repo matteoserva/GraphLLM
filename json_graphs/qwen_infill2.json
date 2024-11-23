@@ -1,0 +1,106 @@
+{
+    "last_node_id": 4,
+    "last_link_id": 3,
+    "nodes": [
+        {
+            "id": 3,
+            "type": "llm/llm_call",
+            "pos": [
+                787,
+                189
+            ],
+            "size": {
+                "0": 210,
+                "1": 161
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 2
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [],
+                    "slot_index": 0
+                },
+                {
+                    "name": "json",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": ""
+            }
+        },
+        {
+            "id": 1,
+            "type": "text/code_infill",
+            "pos": [
+                98,
+                132
+            ],
+            "size": {
+                "0": 553,
+                "1": 556
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "send",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "receive",
+                    "type": "string",
+                    "links": [
+                        2
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "files": [
+                    {
+                        "name": "main_infill.py",
+                        "content": "# returns the n-th fibonacci number\ndef fibonacci(n):\n{p:fim}\n\n# now let's print the 10-th value\nresult = fibonacci(10)\nprint(result)"
+                    }
+                ],
+                "ciao": "# returns the n-th fibonacci number\ndef fibonacci(n):\n{p:fim}\n\n# now let's print the 10-th value\nresult = fibonacci(10)\nprint(result)"
+            }
+        }
+    ],
+    "links": [
+        [
+            2,
+            1,
+            0,
+            3,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}

@@ -15,3 +15,18 @@ class WebsocketClientGui(BaseGuiNode):
 
         builder._addCustomWidget("file_drop", "files", {"property": "files"})
         builder._setPath("text/code_infill")
+
+        source_location = {"position": "output", "slot": 0, "filter": "llm_call"}
+        eventId = {"type": "print"};
+        action = {"type": "widget_action", "target": "append", "property": "files"}
+        builder._subscribe(source_location, eventId, action)
+
+        source_location = {"position": "output", "slot": 0, "filter": "llm_call"}
+        eventId = {"type": "starting"};
+        action = {"type": "widget_action", "target": "reset", "property": "files"}
+        builder._subscribe(source_location, eventId, action)
+
+        source_location = {"position": "output", "slot": 0, "filter": "llm_call"}
+        eventId = {"type": "output", "slot": 0};
+        action = {"type": "widget_action", "target": "set", "property": "files"}
+        builder._subscribe(source_location, eventId, action)
