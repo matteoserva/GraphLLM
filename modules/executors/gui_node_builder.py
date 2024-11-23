@@ -1,5 +1,11 @@
 import json
 
+_template_global = """\
+(function(global) {
+     {content}
+})(this);
+"""
+
 class GuiNodeBuilder:
     def _reset(self):
         self.config = {"class_name": "", "node_type": "",
@@ -40,8 +46,8 @@ class GuiNodeBuilder:
 
         self.config["standard_widgets"].append(args)
 
-    def _subscribeSimple(self, event_id,*args):
-        self.config["subscriptions"].append((event_id,args))
+    def _subscribe(self, *args):
+        self.config["subscriptions"].append(args)
 
 
 
@@ -82,10 +88,6 @@ class GuiNodeBuilder:
         for el in self.config["custom_widgets"]:
             res += "        this.container.addWidget" + str(el) + "\n"
 
-        # add variables
-        if len(self.config["subscriptions"]) > 0:
-            res += "        this.history = {};" + "\n"
-
         res = "\n".join([" "*12 + el.strip() for el in res.split("\n")])
         res = """
         function """ + self.config["class_name"] + """()
@@ -96,36 +98,35 @@ class GuiNodeBuilder:
         return res
 
     def _makeSubscriptions(self):
+        subscription_header = "{ClassName}.prototype.connectPublishers = function(subscribe) {"
+        subscription_content= "subscribe(this,{parameters})"
+        subscription_footer = "}"
+
         res = ""
         if len(self.config["subscriptions"]) > 0:
-            res += "        " + self.config["class_name"] + ".prototype.connectPublishers = function(subscribe) {\n"
-        for eventId, actionData in self.config["subscriptions"]:
-            eventType = eventId["type"]
-            source_location = eventId["source"]
-            actionType,parameter = actionData
+            val = " "*8 + subscription_header +"\n"
+            res += val.replace("{ClassName}",self.config["class_name"])
 
-            res += f'        this.history["{parameter}"] = ""\n'
-            if source_location[0].lower()=="input":
-                res += f"        var source_node = this.getInputNode({source_location[1]});\n"
-            res += "        if(source_node) {\n"
-            res += '        var eventId = {type: "' + eventType + '", source: source_node.id.toString()'
-            if "slot" in eventId:
-                res += ', slot: ' + str(eventId["slot"])
-            res += '};\n'
-            res += "        subscribe(eventId ,(eventId, eventData) => {"
-            if(actionType == "append"):
-                res += '        this.history["' + parameter + '"] += eventData;\n'
-                res += '        this.container.setValue("' + parameter + '", this.history["' + parameter + '"])'
-            elif(actionType == "set"):
-                res += '        this.container.setValue("' + parameter + '", eventData);'
-                res += '        this.history["' + parameter + '"] = eventData;'
-            elif (actionType == "reset"):
-                res += '        this.history["' + parameter + '"] = "";'
-            res += "})\n"
-            res += "        }\n\n"
-            #res += str((eventType,source_location, actionType,parameter)) + "\n"
+        for subscription_info in self.config["subscriptions"]:
+            val = " "*12 + subscription_content + "\n"
+            res += val.replace("{parameters}",str(subscription_info)[1:-1])
+
         if len(self.config["subscriptions"]) > 0:
-            res += "        }\n\n"
+            val = " " * 8 + subscription_footer + "\n\n"
+            res += val
+        return res
+
+    def _makePrototypes(self):
+        res = ""
+        for el in self.config["callbacks"]:
+            res += f'        {self.config["class_name"]}.prototype.{el[0]} = {el[1]}\n'
+        return res
+
+    def _makeFooter(self):
+        res = ""
+        res += '        {ClassName}.title = "{title}"\n'.replace("{ClassName}", self.config["class_name"]).replace("{title}", self.config["title"])
+        res += f'        LiteGraph.registerNodeType("{self.config["node_type"]}", {self.config["class_name"]} );\n\n'
+
         return res
 
     def _getNodeString(self):
@@ -133,18 +134,12 @@ class GuiNodeBuilder:
         res = self._makeHeader()
         res += self._makeConstructor()
         res += self._makeSubscriptions()
+        res += self._makePrototypes()
+        res += self._makeFooter()
 
+        final = _template_global
 
-        res += '        {ClassName}.title = "{title}"\n'.replace("{ClassName}",self.config["class_name"]).replace("{title}",self.config["title"])
-        for el in self.config["callbacks"]:
-            res += f'        {self.config["class_name"]}.prototype.{el[0]} = {el[1]}\n'
-
-        res += f'        LiteGraph.registerNodeType("{self.config["node_type"]}", {self.config["class_name"]} );\n\n'
-
-
-        final = """(function(global) {
-        {content}
-        })(this);\n\n""".replace("{content}",res)
+        final = final.replace("{content}",res)
 
 
         return final

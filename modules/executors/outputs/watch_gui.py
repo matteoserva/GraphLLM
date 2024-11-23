@@ -15,9 +15,17 @@ class WatchNodeGui(BaseGuiNode):
         builder._addCustomWidget("text_output", "", {"property": "parameters"})
         builder._setPath("output/watch")
 
-        event_id = {"type": "starting", "source": ("input",0)}
-        builder._subscribeSimple(event_id, "reset", "parameters")
-        event_id = {"type": "print", "source": ("input", 0)}
-        builder._subscribeSimple(event_id, "append", "parameters")
-        event_id = {"type": "output", "source": ("input", 0), "slot": 0}
-        builder._subscribeSimple(event_id, "set", "parameters")
+        source_location = {"position": "input", "slot": 0}
+        eventId = {"type": "output", "slot": 0};
+        action = {"type": "container_action", "target": "set", "parameter": "parameters"}
+        builder._subscribe(source_location, eventId, action)
+
+        source_location = {"position": "input", "slot": 0}
+        eventId = {"type": "print"};
+        action = {"type": "container_action", "target": "append", "parameter": "parameters"}
+        builder._subscribe(source_location, eventId, action)
+
+        source_location = {"position": "input", "slot": 0}
+        eventId = {"type": "starting"};
+        action = {"type": "container_action", "target": "reset", "parameter": "parameters"}
+        builder._subscribe(source_location, eventId, action)
