@@ -1,55 +1,28 @@
 {
-    "last_node_id": 5,
-    "last_link_id": 7,
+    "last_node_id": 7,
+    "last_link_id": 9,
     "nodes": [
         {
-            "id": 5,
-            "type": "graph/variable",
-            "pos": [
-                81,
-                186
-            ],
-            "size": {
-                "0": 427,
-                "1": 113
-            },
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "properties": {
-                "identifier": "",
-                "parameters": "Demo to show the chat history node.\nWORK IN PROGRESS"
-            },
-            "color": "#232",
-            "bgcolor": "#353"
-        },
-        {
-            "id": 1,
+            "id": 6,
             "type": "llm/chat_history",
             "pos": [
-                182,
-                361
+                239,
+                384
             ],
             "size": {
-                "0": 317,
-                "1": 210
+                "0": 428,
+                "1": 344
             },
             "flags": {},
             "order": 1,
             "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 7
-                }
-            ],
             "outputs": [
                 {
                     "name": "out",
                     "type": "string",
                     "links": [
-                        5
+                        8,
+                        9
                     ],
                     "slot_index": 0
                 }
@@ -58,7 +31,7 @@
                 "parameters": [
                     "You are a math assistant",
                     "2+2=?",
-                    "The"
+                    "The sum of 2 + 2 is 4."
                 ]
             }
         },
@@ -66,12 +39,12 @@
             "id": 4,
             "type": "llm/llm_call",
             "pos": [
-                713,
-                361
+                809,
+                203
             ],
             "size": {
                 "0": 210,
-                "1": 157
+                "1": 161
             },
             "flags": {},
             "order": 2,
@@ -80,7 +53,7 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 5
+                    "link": 8
                 },
                 {
                     "name": "N",
@@ -92,9 +65,7 @@
                 {
                     "name": "out",
                     "type": "string",
-                    "links": [
-                        7
-                    ],
+                    "links": [],
                     "slot_index": 0
                 },
                 {
@@ -108,22 +79,68 @@
                 "subtype": "stateless",
                 "template": ""
             }
+        },
+        {
+            "id": 7,
+            "type": "output/watch",
+            "pos": [
+                804,
+                413
+            ],
+            "size": [
+                403,
+                236
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 9
+                }
+            ],
+            "properties": {
+                "parameters": "{p:system}\nYou are a math assistant{p:eom}\n\n{p:user}\n2+2=?{p:eom}\n\n{p:assistant}\nThe sum of 2 + 2 is 4.{p:eom}\n\n"
+            }
+        },
+        {
+            "id": 5,
+            "type": "graph/variable",
+            "pos": [
+                242,
+                200
+            ],
+            "size": {
+                "0": 427,
+                "1": 113
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "Demo to show the chat history node."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
         }
     ],
     "links": [
         [
-            5,
-            1,
+            8,
+            6,
             0,
             4,
             0,
             "string"
         ],
         [
-            7,
-            4,
+            9,
+            6,
             0,
-            1,
+            7,
             0,
             "string"
         ]

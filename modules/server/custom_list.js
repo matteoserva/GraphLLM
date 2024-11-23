@@ -17,7 +17,26 @@ class CustomList {
         this.parent = parent
         this.height = 100
         
-        
+        if (options.cell_name_generator == "prompt")
+        {
+            this.makeCellName = function(index)
+            {
+                if(index == 0)
+                {
+                        return "system";
+                }
+                else if(index % 2)
+                {
+                        return "user";
+                }
+                else
+                {
+                        return "assistant"
+                }
+                return index+1
+            }
+            this.reset()
+        }
     }
     
     

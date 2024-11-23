@@ -686,7 +686,9 @@ class DivContainer {
             }
             this.drawCounter = 0;
         }.bind(this)
-        
+
+        this.saved_values = {}
+        this.saved_diff = {}
     }
     
     onCollapse()
@@ -859,13 +861,63 @@ class DivContainer {
     {
         this.parent.setProperty(k,val)
         this.parent.setDirtyCanvas(true, true);
+        this.saved_values[k] = JSON.parse(JSON.stringify(val))
+        this.saved_diff[k] = ""
     }
     
-    setValue(k,val)
+    setValue(k,val,save=true)
     {
+
+        if(save)
+        {
+            this.saved_values[k] = JSON.parse(JSON.stringify(val))
+            this.saved_diff[k] = ""
+        }
         this.children.forEach(function(v,i,a){v.setValue(k,val)})
     }
-    
+
+    executeAction(action, data)
+    {
+        if(action.target == "set")
+        {
+            if(Array.isArray(this.saved_values[action.parameter]))
+            {
+                var user_value = this.saved_values[action.parameter]
+                var message_index = user_value.length-1
+                user_value[message_index] += data
+                var newValue = user_value
+            }
+            else
+            {
+                this.saved_diff[action.parameter] = data
+                var newValue = this.saved_values[action.parameter] + this.saved_diff[action.parameter]
+
+            }
+            this.setValue(action.parameter,newValue)
+            this.notifyValue(this,action.parameter,newValue)
+        }
+        else if(action.target == "append")
+        {
+            this.saved_diff[action.parameter] += data
+            if(Array.isArray(this.saved_values[action.parameter]))
+            {
+                var newValue = [...this.saved_values[action.parameter]]; 
+                var message_index = newValue.length-1
+                newValue[message_index] = newValue[message_index] +this.saved_diff[action.parameter]
+            }
+            else
+            {
+                var newValue = this.saved_values[action.parameter] + this.saved_diff[action.parameter]
+            }
+            this.setValue(action.parameter,newValue,false)
+        }
+        else if(action.target == "reset")
+        {
+            this.saved_values[action.parameter] = ""
+            this.saved_diff[action.parameter] = ""
+        }
+    }
+
     remove()
     {
         if(this.dialog)

@@ -135,16 +135,40 @@ class WebBrige {
       var data = JSON.stringify( graph.serialize() );
       this.startWebSocket(data)
 
-      function subscribe(eventId ,callback)
+      function subscribe(current_node, source_location, eventId, action)
       {
          if(!(listeners[eventId.type]))
          {
             listeners[eventId.type] = []
          }
+         if(source_location.position.toLowerCase() == "input")
+         {
+             var source_node = current_node.getInputNode(source_location.slot);
+         }
+         else if (source_location.position.toLowerCase() == "output")
+         {
+             var source_nodes = current_node.getOutputNodes(source_location.slot)
+             var filter = "llm_call"
+             source_nodes = source_nodes.filter((element)=>element.type.endsWith(filter));
+             if (source_nodes.length == 1)
+             {
+                var source_node = source_nodes[0]
+             }
+         }
+
+         eventId.source = source_node.id.toString()
+
          var typelistener = listeners[eventId.type]
-         typelistener.push([eventId, callback])
+         typelistener.push([eventId, action_set])
          //console.log(eventId ,callback)
+         function action_set(eventId,eventData)
+         {
+              current_node.container.executeAction(action, eventData)
+         }
       }
+
+
+
 
   }
 
