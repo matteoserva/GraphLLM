@@ -157,8 +157,16 @@ class WebBrige {
          }
 
          var shouldAbort = false
-         eventId.source = source_node.id.toString()
-         if (source_location.position.toLowerCase() == "input" && !("slot" in eventId))
+         if(source_node)
+         {
+            eventId.source = source_node.id.toString()
+         }
+         else
+         {
+            shouldAbort = true
+         }
+
+         if ((!shouldAbort) && source_location.position.toLowerCase() == "input" && !("slot" in eventId))
          {
              var inputLink = current_node.getInputLink(source_location.slot)
 
