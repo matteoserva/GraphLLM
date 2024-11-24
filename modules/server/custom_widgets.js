@@ -13,6 +13,11 @@ class CustomTextCommon{
             this.margin = 5
             this.property = options.property
             this.parent = parent
+            if ("default" in options)
+            {
+                this.textarea.value=options.default
+                this.parent.notifyValue(this,this.property,options.default)
+            }
         }
 
     appendElement(dialog)

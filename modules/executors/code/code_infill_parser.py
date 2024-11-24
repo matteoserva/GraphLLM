@@ -11,9 +11,17 @@ class TextInputParser(BaseGuiParser):
         file_names = [el["name"] for el in files]
         file_init = [el["content"] for el in files]
 
+        exec = []
+        conf = {"repo_name": "test", "file_names": file_names}
+        outputs = old_config["linked_outputs"]
+        if(len(outputs) > 0):
+            output0 = [ el for el in outputs[0] if el["type"].endswith("llm_call")]
+            if len(output0) == 1:
+                exec = [str(output0[0]["id"]) + "[0]"]
+                conf["free_runs"] = 1
 
-        new_config["conf"] = {"repo_name": "test", "file_names": file_names}
+        new_config["conf"] = conf
         new_config["init"] = file_init
-        new_config["exec"] = []
+        new_config["exec"] = exec
 
         return new_config

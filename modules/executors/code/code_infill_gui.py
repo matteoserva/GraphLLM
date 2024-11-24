@@ -11,7 +11,9 @@ class WebsocketClientGui(BaseGuiNode):
         builder = self
         builder._reset()
         #builder._addInput("send", "string");
-        builder._addOutput("receive", "string");
+        builder._addOutput("LLM", "string");
+        builder._addOutput("code", "string");
+        builder._addCustomWidget("text_input", "repo_name", {"property": "repo_name", "default":"test"})
 
         builder._addCustomWidget("file_drop", "files", {"property": "files"})
         builder._setPath("text/code_infill")

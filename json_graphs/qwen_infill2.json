@@ -1,13 +1,13 @@
 {
-    "last_node_id": 4,
-    "last_link_id": 3,
+    "last_node_id": 2,
+    "last_link_id": 1,
     "nodes": [
         {
-            "id": 3,
+            "id": 2,
             "type": "llm/llm_call",
             "pos": [
-                787,
-                189
+                885,
+                96
             ],
             "size": {
                 "0": 210,
@@ -20,7 +20,7 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 2
+                    "link": 1
                 },
                 {
                     "name": "N",
@@ -32,8 +32,7 @@
                 {
                     "name": "out",
                     "type": "string",
-                    "links": [],
-                    "slot_index": 0
+                    "links": null
                 },
                 {
                     "name": "json",
@@ -51,50 +50,48 @@
             "id": 1,
             "type": "text/code_infill",
             "pos": [
-                98,
-                132
+                92,
+                94
             ],
             "size": {
-                "0": 553,
-                "1": 556
+                "0": 591,
+                "1": 563
             },
             "flags": {},
             "order": 0,
             "mode": 0,
-            "inputs": [
-                {
-                    "name": "send",
-                    "type": "string",
-                    "link": null
-                }
-            ],
             "outputs": [
                 {
                     "name": "receive",
                     "type": "string",
                     "links": [
-                        2
+                        1
                     ],
                     "slot_index": 0
+                },
+                {
+                    "name": "code",
+                    "type": "string",
+                    "links": null
                 }
             ],
             "properties": {
+                "repo_name": "test2",
                 "files": [
                     {
                         "name": "main_infill.py",
                         "content": "# returns the n-th fibonacci number\ndef fibonacci(n):\n{p:fim}\n\n# now let's print the 10-th value\nresult = fibonacci(10)\nprint(result)"
                     }
-                ],
-                "ciao": "# returns the n-th fibonacci number\ndef fibonacci(n):\n{p:fim}\n\n# now let's print the 10-th value\nresult = fibonacci(10)\nprint(result)"
+                ]
             }
         }
     ],
     "links": [
         [
-            2,
+            1,
             1,
             0,
-            3,
+            2,
             0,
             "string"
         ]

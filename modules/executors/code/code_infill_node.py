@@ -44,6 +44,11 @@ class CodeInfillNode(GenericExecutor):
         self.full_prompt  = full_prompt
 
     def __call__(self,prompt_args):
-        res = [self.full_prompt ]
 
+        if self.properties.get("free_runs",0) > 0:
+            self.properties["free_runs"] = 0
+        if len(prompt_args) > 0:
+            res = [None,self.full_prompt]
+        else:
+            res = [self.full_prompt]
         return res
