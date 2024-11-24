@@ -35,10 +35,12 @@ class CodeInfillNode(GenericExecutor):
                 fim_files.append([name,content])
             else:
                 context_files.append((name,content))
+
+        context_files.extend(fim_files)
+        self.last_file_content = ""+context_files[-1][1]
         for el in fim_files:
             content = el[1]
             el[1] = "<|fim_prefix|>" + content.replace("{p:fim}","<|fim_suffix|>") + "<|fim_middle|>"
-        context_files.extend(fim_files)
         context_list = ["<|file_sep|>" + el[0] + "\n" + el[1] for el in context_files]
         full_prompt = "<|repo_name|>" + self.repo_name + "\n" + "\n".join(context_list)
         self.full_prompt  = full_prompt
@@ -48,7 +50,14 @@ class CodeInfillNode(GenericExecutor):
         if self.properties.get("free_runs",0) > 0:
             self.properties["free_runs"] = 0
         if len(prompt_args) > 0:
-            res = [None,self.full_prompt]
+            file_content = self.last_file_content
+            if("{p:fim}" in file_content):
+                file_content =file_content.replace("{p:fim}",prompt_args[0])
+            else:
+                file_content = file_content + prompt_args[0]
+
+
+            res = [None,file_content]
         else:
             res = [self.full_prompt]
         return res
