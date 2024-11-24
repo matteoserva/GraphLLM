@@ -237,7 +237,12 @@ class CustomFileDrop {
     {
         if(me instanceof CustomTextarea)
         {
-            console.log("TODO: update file content")
+
+            var selectedIndex = this.files.length-1
+            var currentFile = this.files[selectedIndex]
+            currentFile.content = val
+            this.parent.notifyValue(this,this.property,this.files)
+
         }
         else
         {
