@@ -1,0 +1,317 @@
+{
+    "last_node_id": 12,
+    "last_link_id": 11,
+    "nodes": [
+        {
+            "id": 3,
+            "type": "llm/llm_call",
+            "pos": [
+                720,
+                130
+            ],
+            "size": {
+                "0": 210,
+                "1": 161
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 2
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        4
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "json",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": ""
+            }
+        },
+        {
+            "id": 8,
+            "type": "output/watch",
+            "pos": [
+                110,
+                746
+            ],
+            "size": {
+                "0": 543.51904296875,
+                "1": 277.06793212890625
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 7
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 5,
+            "type": "output/watch",
+            "pos": [
+                966,
+                129
+            ],
+            "size": {
+                "0": 447,
+                "1": 171
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 4
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 1,
+            "type": "text/code_infill",
+            "pos": [
+                105,
+                128
+            ],
+            "size": {
+                "0": 553,
+                "1": 556
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "send",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "receive",
+                    "type": "string",
+                    "links": [
+                        2,
+                        7
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "code",
+                    "type": "string",
+                    "links": [
+                        9,
+                        10
+                    ],
+                    "slot_index": 1
+                }
+            ],
+            "properties": {
+                "repo_name": "test",
+                "files": [
+                    {
+                        "name": "main_infill.py",
+                        "content": "# returns the n-th fibonacci number\ndef fibonacci(n):\n{p:fim}\n\n# now let's print the 10-th value\nresult = fibonacci(10)\nprint(result)"
+                    }
+                ],
+                "ciao": "# returns the n-th fibonacci number\ndef fibonacci(n):\n{p:fim}\n\n# now let's print the 10-th value\nresult = fibonacci(10)\nprint(result)"
+            },
+            "color": "#322",
+            "bgcolor": "#533"
+        },
+        {
+            "id": 12,
+            "type": "graph/variable",
+            "pos": [
+                720,
+                352
+            ],
+            "size": {
+                "0": 686.3960571289062,
+                "1": 112
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "The code on the left is completed by qwen.\nThe code is the executed by a python interpreter below"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 10,
+            "type": "tools/python_sandbox",
+            "pos": [
+                717,
+                516
+            ],
+            "size": {
+                "0": 210,
+                "1": 108
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 10
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        11
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 11,
+            "type": "output/watch",
+            "pos": [
+                952,
+                520
+            ],
+            "size": [
+                448.4960516214371,
+                99.4009368896485
+            ],
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 11
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 9,
+            "type": "output/watch",
+            "pos": [
+                711,
+                675
+            ],
+            "size": [
+                686.1960516214372,
+                339.3009368896485
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 9
+                }
+            ],
+            "properties": {}
+        }
+    ],
+    "links": [
+        [
+            2,
+            1,
+            0,
+            3,
+            0,
+            "string"
+        ],
+        [
+            4,
+            3,
+            0,
+            5,
+            0,
+            "string"
+        ],
+        [
+            7,
+            1,
+            0,
+            8,
+            0,
+            "string"
+        ],
+        [
+            9,
+            1,
+            1,
+            9,
+            0,
+            "string"
+        ],
+        [
+            10,
+            1,
+            1,
+            10,
+            0,
+            "string"
+        ],
+        [
+            11,
+            10,
+            0,
+            11,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
