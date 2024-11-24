@@ -147,7 +147,7 @@ class GraphNode:
             self.graph.logger.log("starting",self.path)
             res = self._execute()
             self.graph.logger.log("stopping",self.path)
-            self.graph.logger.log("output", self.path, [str(el) for el in res])
+            self.graph.logger.log("output", self.path, [str(el) if el is not None else None for el in res])
         except Exception as e:
             self.disable_execution = True
             last_exception =  e

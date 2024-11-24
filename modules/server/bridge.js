@@ -156,10 +156,29 @@ class WebBrige {
              }
          }
 
+         var shouldAbort = false
          eventId.source = source_node.id.toString()
+         if (source_location.position.toLowerCase() == "input" && !("slot" in eventId))
+         {
+             var inputLink = current_node.getInputLink(source_location.slot)
 
-         var typelistener = listeners[eventId.type]
-         typelistener.push([eventId, action_set])
+             // check direct connections
+             if(eventId.type == "output")
+             {
+                eventId.slot = inputLink.origin_slot
+             }
+             if(eventId.type == "print" && inputLink.origin_slot > 0)
+             {
+                shouldAbort = true
+             }
+
+         }
+
+         if(!shouldAbort)
+         {
+            var typelistener = listeners[eventId.type]
+            typelistener.push([eventId, action_set])
+         }
          //console.log(eventId ,callback)
          function action_set(eventId,eventData)
          {
@@ -224,7 +243,11 @@ class WebBrige {
                       n.setOutputData(i,string)
 
                       var eventId = {type: obj.type, source: name, slot: i}
-                      this.notifyListeners(eventId, values[i])
+                      var value = values[i]
+                      if (value != null)
+                      {
+                        this.notifyListeners(eventId, values[i])
+                      }
                 }
 
             }
