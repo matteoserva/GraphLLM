@@ -14,7 +14,7 @@
                 "1": 344
             },
             "flags": {},
-            "order": 1,
+            "order": 0,
             "mode": 0,
             "outputs": [
                 {
@@ -31,7 +31,7 @@
                 "parameters": [
                     "You are a math assistant",
                     "2+2=?",
-                    "The sum of 2 + 2 is 4."
+                    "The"
                 ]
             }
         },
@@ -87,10 +87,10 @@
                 804,
                 413
             ],
-            "size": [
-                403,
-                236
-            ],
+            "size": {
+                "0": 403,
+                "1": 236
+            },
             "flags": {},
             "order": 3,
             "mode": 0,
@@ -101,9 +101,7 @@
                     "link": 9
                 }
             ],
-            "properties": {
-                "parameters": "{p:system}\nYou are a math assistant{p:eom}\n\n{p:user}\n2+2=?{p:eom}\n\n{p:assistant}\nThe sum of 2 + 2 is 4.{p:eom}\n\n"
-            }
+            "properties": {}
         },
         {
             "id": 5,
@@ -117,7 +115,7 @@
                 "1": 113
             },
             "flags": {},
-            "order": 0,
+            "order": 1,
             "mode": 0,
             "properties": {
                 "identifier": "",
