@@ -33,7 +33,7 @@ class CustomTextCommon{
     textChange()
     {
         var value = this.textarea.value
-        if(this.property)
+        if(this.property && value)
         {
             this.parent.notifyValue(this,this.property,value)
         }
