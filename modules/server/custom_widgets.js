@@ -353,7 +353,13 @@ class CustomHtmlCanvas {
 
 }
 
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
 
+function escapeReplacement(string) {
+    return string.replace(/\$/g, '$$$$');
+}
 
 class CustomTextOutput extends CustomTextCommon{
         constructor(parent,name,options)
@@ -382,18 +388,16 @@ class CustomTextOutput extends CustomTextCommon{
                       displayMode: true,
                       throwOnError: false, // allows katex to fail silently
                       errorColor: '#ff0000',
-                      delimiters: [
-                        { left: "$$", right: "$$", display: false },
-                        { left: '~', right: '~', display: false, asciimath: true },
-                        { left: "\( ", right: " \)", display: false },
-                        { left: "\[ ", right: " \]", display: true },
-                      ],
+                      delimiters: [],
                   }
               )]
               }
 
             );
 			converter.setOption('tables', true);
+			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\]\n/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
+			text = text.replace(/\s\\\(([^\n]+?)\\\)/g,' <span><code class="latex language-latex">$1</code></span>')
+			text = text.replace(/\s\\\[([^\n]+?)\\\]/g,' <span><code class="latex language-latex">$1</code></span>')
             var html = converter.makeHtml(text);
             this.textarea.innerHTML = html
         }

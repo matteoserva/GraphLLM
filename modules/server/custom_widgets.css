@@ -120,3 +120,11 @@ display: none
 div.div-container div.CustomTextOutput span.katex-display {
 display: block
 }
+
+div.div-container div.CustomTextOutput span.katex-mathml {
+font-size: large
+}
+
+div.div-container div.CustomTextOutput span[title] > span.katex-display {
+display:inline-block
+}
