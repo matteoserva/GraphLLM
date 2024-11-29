@@ -107,3 +107,11 @@ padding-left: 6px;
 padding-top: 0px;
 padding-bottom = 2px;
 }
+
+div.div-container div.CustomTextOutput span.katex-html {
+display: none
+}
+
+div.div-container div.CustomTextOutput span.katex-display {
+display: block
+}

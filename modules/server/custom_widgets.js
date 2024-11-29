@@ -375,7 +375,24 @@ class CustomTextOutput extends CustomTextCommon{
         if(this.use_markdown)
         {
             var text = this.saved_content;
-            var converter = new showdown.Converter();
+            var converter = new showdown.Converter({
+            extensions: [
+              showdownKatex(
+                  {
+                      displayMode: true,
+                      throwOnError: false, // allows katex to fail silently
+                      errorColor: '#ff0000',
+                      delimiters: [
+                        { left: "$$", right: "$$", display: false },
+                        { left: '~', right: '~', display: false, asciimath: true },
+                        { left: "\( ", right: " \)", display: false },
+                        { left: "\[ ", right: " \]", display: true },
+                      ],
+                  }
+              )]
+              }
+
+            );
 			converter.setOption('tables', true);
             var html = converter.makeHtml(text);
             this.textarea.innerHTML = html
