@@ -379,6 +379,9 @@ class CustomTextOutput extends CustomTextCommon{
 
     redrawContent(markdown)
     {
+        var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size
+        var totally_scrolled = this.textarea.scrollTop >= 5 &&
+            (Math.abs(this.textarea.scrollHeight - this.textarea.clientHeight - this.textarea.scrollTop) <= 1);
         if(this.config.use_markdown)
         {
             var text = this.saved_content;
@@ -407,6 +410,14 @@ class CustomTextOutput extends CustomTextCommon{
         else
         {
             this.textarea.innerText = this.saved_content
+        }
+        if(totally_scrolled)
+        {
+            this.textarea.scrollTo(0,this.textarea.scrollHeight)
+        }
+        else
+        {
+            this.textarea.scrollTop = scrollTop
         }
 
     }
