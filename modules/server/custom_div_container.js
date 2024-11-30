@@ -268,7 +268,10 @@ class DivContainer {
 
             }
             this.setValue(action.parameter,newValue)
-            this.notifyValue(this,action.parameter,newValue)
+            if(!action.silent)
+            {
+                this.notifyValue(this,action.parameter,newValue)
+            }
         }
         else if(action.target == "append")
         {

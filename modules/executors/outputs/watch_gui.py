@@ -17,7 +17,7 @@ class WatchNodeGui(BaseGuiNode):
 
         source_location = {"position": "input", "slot": 0}
         eventId = {"type": "output"};
-        action = {"type": "container_action", "target": "set", "parameter": "parameters"}
+        action = {"type": "container_action", "target": "set", "parameter": "parameters", "silent": True}
         builder._subscribe(source_location, eventId, action)
 
         source_location = {"position": "input", "slot": 0}

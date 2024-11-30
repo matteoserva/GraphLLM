@@ -5,7 +5,7 @@
                 WatchNodeGui: Watch
          ********************** *******************  */
         //node constructor class
-
+/*
         function WatchNodeGui()
         {
             this.addInput("in","string");
@@ -27,7 +27,7 @@
             // print
             var source_location = {position: "input", slot: 0}
             var eventId = {type: "print"};
-            var action = {type: "container_action", target: "append", parameter: "parameters"}
+            var action = {type: "container_action", target: "append", parameter: "parameters", silent: true}
             subscribe(this, source_location, eventId, action)
 
             // starting -> reset
@@ -41,7 +41,7 @@
 
         WatchNodeGui.title = "Watch"
         //LiteGraph.registerNodeType("outpute/watch", WatchNodeGui );
-
+*/
 
         })(this);
 
