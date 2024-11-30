@@ -17,15 +17,15 @@ class WatchNodeGui(BaseGuiNode):
 
         source_location = {"position": "input", "slot": 0}
         eventId = {"type": "output"};
-        action = {"type": "container_action", "target": "set", "parameter": "parameters", "silent": True}
+        action = {"type": "widget_action", "target": "set", "property": "parameters", "silent": True}
         builder._subscribe(source_location, eventId, action)
 
         source_location = {"position": "input", "slot": 0}
         eventId = {"type": "print"};
-        action = {"type": "container_action", "target": "append", "parameter": "parameters"}
+        action = {"type": "widget_action", "target": "append", "property": "parameters"}
         builder._subscribe(source_location, eventId, action)
 
         source_location = {"position": "input", "slot": 0}
         eventId = {"type": "starting"};
-        action = {"type": "container_action", "target": "reset", "parameter": "parameters"}
+        action = {"type": "widget_action", "target": "reset", "property": "parameters"}
         builder._subscribe(source_location, eventId, action)

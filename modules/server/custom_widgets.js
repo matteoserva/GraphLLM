@@ -367,7 +367,8 @@ class CustomTextOutput extends CustomTextCommon{
         super(parent,name,options)
         this.options = {multiline:false}
         this.minHeight = 50
-        this.saved_content = null;
+        this.saved_content = "";
+        this.config={use_markdown: false}
     }
 
     setDisplayValue(value)
@@ -378,7 +379,7 @@ class CustomTextOutput extends CustomTextCommon{
 
     redrawContent(markdown)
     {
-        if(this.use_markdown)
+        if(this.config.use_markdown)
         {
             var text = this.saved_content;
             var converter = new showdown.Converter({
@@ -410,6 +411,20 @@ class CustomTextOutput extends CustomTextCommon{
 
     }
 
+    setConfig(config, notify=false)
+    {
+        if ("use_markdown" in config)
+        {
+
+            this.config.use_markdown = config.use_markdown
+            this.redrawContent()
+
+        }
+        if(notify)
+        {
+            this.parent.notifyValue(this,this.property,this.config)
+        }
+    }
 
     makeElement(parentNode)
     {
@@ -430,8 +445,8 @@ class CustomTextOutput extends CustomTextCommon{
         var checkbox = control.querySelector("input")
         var that = this
         checkbox.addEventListener("click",function (e) {
-            that.use_markdown = checkbox.checked
-            that.redrawContent()
+            that.setConfig({use_markdown: checkbox.checked}, true)
+
             } );
         div.appendChild(control)
 
@@ -521,7 +536,39 @@ class CustomTextOutput extends CustomTextCommon{
 
     }
 
+    setValue(k,v)
+    {
+        if(typeof v == "object")
+        {
+            this.setConfig(v,false)
+            var checkbox = this.div.querySelector("input[type='checkbox']")
+            checkbox.checked = this.config.use_markdown
+        }
+        else
+        {
+            super.setValue(k,v)
+        }
 
+    }
+
+    executeAction(eventId, action, data)
+    {
+
+        if (action.target == "set")
+        {
+            this.saved_content = data
+            this.redrawContent()
+
+        } else if (action.target == "reset")
+        {
+            this.saved_content = ""
+
+        } else if (action.target == "append")
+        {
+            this.saved_content += data
+            this.redrawContent()
+        }
+    }
 
 }
 

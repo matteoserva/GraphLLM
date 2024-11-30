@@ -229,7 +229,9 @@
                 }
             ],
             "properties": {
-                "parameters": "\n"
+                "parameters": {
+                    "use_markdown": true
+                }
             },
             "color": "#223",
             "bgcolor": "#335"
@@ -257,7 +259,9 @@
                 }
             ],
             "properties": {
-                "parameters": ""
+                "parameters": {
+                    "use_markdown": true
+                }
             }
         }
     ],
