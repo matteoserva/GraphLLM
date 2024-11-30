@@ -33,7 +33,7 @@ class CustomTextCommon{
     textChange()
     {
         var value = this.textarea.value
-        if(this.property && value)
+        if(this.property && (typeof value !== 'undefined'))
         {
             this.parent.notifyValue(this,this.property,value)
         }
@@ -396,8 +396,10 @@ class CustomTextOutput extends CustomTextCommon{
             );
 			converter.setOption('tables', true);
 			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\]\n/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
-			text = text.replace(/\s\\\(([^\n]+?)\\\)/g,' <span><code class="latex language-latex">$1</code></span>')
-			text = text.replace(/\s\\\[([^\n]+?)\\\]/g,' <span><code class="latex language-latex">$1</code></span>')
+			text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
+			text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
+			// \boxed{\int_{\Omega} f \, d\mu = \int_{\Omega} f^+ \, d\mu - \int_{\Omega} f^- \, d\mu}
+			text = text.replace(/(^|\n)(\\boxed{[^\n]+})(\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>$3')
             var html = converter.makeHtml(text);
             this.textarea.innerHTML = html
         }
