@@ -120,6 +120,6 @@ class ModelHandler():
         files = []
         self._list_files_recursive(files, "json_graphs/")
         files = [el[:-5] for el in files if el.endswith(".json")]
-        files = sorted(files)
+        files = sorted(files, key=lambda s: s.lower())
         text = "\n".join(files)
         self.server.wfile.write(text.encode())
