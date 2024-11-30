@@ -1,0 +1,110 @@
+{
+    "last_node_id": 23,
+    "last_link_id": 24,
+    "nodes": [
+        {
+            "id": 22,
+            "type": "graph/variable",
+            "pos": [
+                873,
+                128
+            ],
+            "size": {
+                "0": 389,
+                "1": 112
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "raw completion request to a LLM"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 16,
+            "type": "output/watch",
+            "pos": [
+                875,
+                301
+            ],
+            "size": {
+                "0": 539.8499755859375,
+                "1": 421.45001220703125
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 23,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "1. Pepperoni\n2. Mushrooms\n3. Sausage\n4. Onions\n5. Bell Peppers\n"
+            }
+        },
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                109,
+                129
+            ],
+            "size": {
+                "0": 700.8499755859375,
+                "1": 597.0800170898438
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        23
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": [],
+                    "slot_index": 1
+                }
+            ],
+            "properties": {
+                "conf": "{stop: \"```\"}",
+                "subtype": "stateless",
+                "template": "{p:bos}\nThe 5 best pizza toppings are:\n```\n"
+            }
+        }
+    ],
+    "links": [
+        [
+            23,
+            21,
+            0,
+            16,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}

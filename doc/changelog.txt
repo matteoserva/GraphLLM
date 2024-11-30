@@ -2,6 +2,11 @@
 # CHANGELOG for GraphLLM
 #
 
+30/11/2024
+- latex in output nodes
+- support for QwQ model
+- code infill
+- new examples
 
 16/11/24
 new_nodes: 

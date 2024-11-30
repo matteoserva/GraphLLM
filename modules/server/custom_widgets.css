@@ -20,6 +20,11 @@ div.div-container div.CustomTextOutput td {
   border-collapse: collapse;
 }
 
+div.div-container div.CustomTextOutput ul ,
+div.div-container div.CustomTextOutput ol {
+  display: grid
+}
+
 div.div-container textarea.CustomTextarea::selection {
   /*color: gold;	*/
   background-color: gray;
@@ -106,4 +111,20 @@ color: white;
 padding-left: 6px;
 padding-top: 0px;
 padding-bottom = 2px;
+}
+
+div.div-container div.CustomTextOutput span.katex-html {
+display: none
+}
+
+div.div-container div.CustomTextOutput span.katex-display {
+display: block
+}
+
+div.div-container div.CustomTextOutput span.katex-mathml {
+font-size: large
+}
+
+div.div-container div.CustomTextOutput span[title] > span.katex-display {
+display:inline-block
 }

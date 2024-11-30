@@ -79,7 +79,8 @@ class EditorHandler():
 
             server.send_response(200)
             server.send_header('Connection', 'close')
-            # self.send_header('Content-type', 'text/html')
+            if remaining.endswith(".js"):
+                server.send_header('Content-type', 'text/plain; charset=utf-8')
             server.end_headers()
             server.wfile.write(content)
         elif endpoint in ["src", "external", "css", "js", "imgs", "style.css", "examples"]:

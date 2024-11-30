@@ -8,6 +8,7 @@
         if((this.saved_history.length % 2) != 1)
         {
             this.saved_history.push("")
+            this.listWidget.addTextBox(true)
         }
     }
 
@@ -37,7 +38,7 @@
 
     this.container = new DivContainer(this)
     this.addCustomWidget( this.container);
-    var listWidget = this.container.addWidget("list","Parameters",{ property: "parameters", cell_name_generator: "prompt"})
+    this.listWidget = this.container.addWidget("list","Parameters",{ property: "parameters", cell_name_generator: "prompt"})
 
     //this.container.addWidget("textarea","Parameters",{ property: "parameters"})
     this.properties = {  };

@@ -33,7 +33,7 @@ class CustomTextCommon{
     textChange()
     {
         var value = this.textarea.value
-        if(this.property)
+        if(this.property && (typeof value !== 'undefined'))
         {
             this.parent.notifyValue(this,this.property,value)
         }
@@ -353,7 +353,13 @@ class CustomHtmlCanvas {
 
 }
 
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
 
+function escapeReplacement(string) {
+    return string.replace(/\$/g, '$$$$');
+}
 
 class CustomTextOutput extends CustomTextCommon{
         constructor(parent,name,options)
@@ -375,8 +381,25 @@ class CustomTextOutput extends CustomTextCommon{
         if(this.use_markdown)
         {
             var text = this.saved_content;
-            var converter = new showdown.Converter();
+            var converter = new showdown.Converter({
+            extensions: [
+              showdownKatex(
+                  {
+                      displayMode: true,
+                      throwOnError: false, // allows katex to fail silently
+                      errorColor: '#ff0000',
+                      delimiters: [],
+                  }
+              )]
+              }
+
+            );
 			converter.setOption('tables', true);
+			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\]\n/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
+			text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
+			text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
+			// \boxed{\int_{\Omega} f \, d\mu = \int_{\Omega} f^+ \, d\mu - \int_{\Omega} f^- \, d\mu}
+			text = text.replace(/(^|\n)(\\boxed{[^\n]+})(\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>$3')
             var html = converter.makeHtml(text);
             this.textarea.innerHTML = html
         }

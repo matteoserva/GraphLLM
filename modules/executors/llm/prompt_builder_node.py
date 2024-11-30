@@ -37,7 +37,7 @@ class PromptBuilderNode(GenericExecutor):
         return res
 
 
-class VirtualParser(BaseGuiParser):
+class PromptBuilderParser(BaseGuiParser):
     node_types = ["prompt_builder"]
 
     def parse_node(self, old_config):
@@ -45,7 +45,7 @@ class VirtualParser(BaseGuiParser):
         new_config["type"] = old_config["type"].split("/")[-1]
         properties = old_config.get("properties", {})
         template = properties.get("template", "")
-        new_config["init"] = template
+        new_config["init"] = [template]
 
         old_inputs = old_config.get("inputs", [])
         new_config["exec"] = self._calc_exec(old_inputs)
