@@ -65,7 +65,7 @@ class CopyNode(GenericExecutor):
                 self.cache = res
                 self._properties["free_runs"] = self.repeat_runs
             else:
-                res = self.cache    
+                res = self.cache
 
             if self.repeat_runs == 0: #infinite
                 self._properties["free_runs"] = 1
@@ -119,95 +119,3 @@ class CopyNode(GenericExecutor):
             res[0] = base[attr_name]
         return res
 
-class VariableNode(GenericExecutor):
-    node_type = "variable"
-
-    def __init__(self,*args):
-        pass
-
-    def initialize(self):
-        pass
-
-    def set_parameters(self, args):
-        self.parameters = args
-        conf = self.node.config["conf"]
-        graph = self.node.graph
-        variables = self.node.graph.variables
-        name = conf["name"]
-        value = conf["value"]
-        if "[" in name:
-            name, index = name.split("[",1)
-            index = index.split("]")[0]
-            if name not in variables:
-                variables[name] = {}
-            variables[name][index] = value
-
-
-        else:
-            variables[conf["name"]] = conf["value"]
-
-    def __call__(self, *args):
-        return []
-
-class FileNode(GenericExecutor):
-    node_type = "file"
-    def __init__(self,*args):
-        pass
-
-    def set_template(self, args):
-        self.filename = args[0]
-
-    def __call__(self, *args):
-        self.properties["free_runs"] = 0
-        create = self.properties.get("create",False)
-        write_mode = "w+" if create else "w"
-        if len(args[0]) > 0:
-             with open(self.filename,write_mode) as f:
-                      f.write(args[0][0])
-        try:
-            with open(self.filename) as f:
-                val = f.read()
-        except FileNotFoundError:
-            val = ""
-        return val
-
-
-class MemoryNode(GenericExecutor):
-    node_type = "memory"
-    """
-    outputs the accumulated inputs so far
-    """
-    def __init__(self,*args):
-        self.parameters = {}
-        self._properties = {"input_rule":"AND"}
-        self._subtype="append"
-        self._preprocessing="json"
-        self._stack = []
-
-    def get_properties(self):
-        res = self._properties
-        return res
-
-    def set_parameters(self,args):
-        self.parameters = args
-
-    def _json_parse(self,text):
-        val = None
-        try:
-            val = json.loads(text)
-        except:
-            val = json.loads("{" + text + "}")
-        val = json.dumps(val, indent=4).strip()
-        return val
-
-    def __call__(self,*args):
-        res = list(*args)
-        try:
-            val = self._json_parse(res[0])
-            self._stack.append(val)
-        except:
-            self._stack.append(res[0])
-        separator = self.parameters.get("separator","\n")
-        outval = separator.join(self._stack)
-        out = [outval]
-        return out
