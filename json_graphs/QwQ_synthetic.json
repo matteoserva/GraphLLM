@@ -1,0 +1,322 @@
+{
+    "last_node_id": 31,
+    "last_link_id": 34,
+    "nodes": [
+        {
+            "id": 25,
+            "type": "input/text_input",
+            "pos": [
+                35,
+                62
+            ],
+            "size": {
+                "0": 633.1788330078125,
+                "1": 88
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        32
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "compute the cube of the sum of the first 10 even natural numbers"
+            },
+            "color": "#322",
+            "bgcolor": "#533"
+        },
+        {
+            "id": 29,
+            "type": "graph/virtual_sink",
+            "pos": [
+                697,
+                67
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 32
+                }
+            ],
+            "properties": {
+                "identifier": "problem"
+            }
+        },
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                293,
+                412
+            ],
+            "size": {
+                "0": 277.44500732421875,
+                "1": 294.5422058105469
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 33
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        23,
+                        30
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{n_predict: -1}",
+                "subtype": "stateless",
+                "template": "{p:bos}\n\n{p:system}\nYou are a helpful and harmless assistant. You are Qwen developed by Alibaba. You should think step-by-step.{p:eom}\n\n{p:user}\n{}{p:eom}"
+            }
+        },
+        {
+            "id": 30,
+            "type": "graph/virtual_source",
+            "pos": [
+                47,
+                405
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        33,
+                        34
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "problem"
+            }
+        },
+        {
+            "id": 27,
+            "type": "llm/llm_call",
+            "pos": [
+                616,
+                407
+            ],
+            "size": {
+                "0": 277.44500732421875,
+                "1": 294.5422058105469
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 34
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 30
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        31
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{n_predict: -1, stop: \"```\"}",
+                "subtype": "stateless",
+                "template": "{p:bos}\n\n{p:system}\nYou are a helpful assistant. Extremely concise in your answers.{p:eom}\n\n{p:user}\nYou will be provided the original question and the answer produced by a student.\nYour job is to extract the final answer produced by the student.\n\nThe original question is:\n```\n{}\n```\n\nThe student's answer is:\n```\n{}\n```\n\nTell me what is the final answer given by the student.\n{p:eom}\n\n{p:assistant}\nSure! The final answer is:\n```\n{p:eom}"
+            }
+        },
+        {
+            "id": 31,
+            "type": "graph/variable",
+            "pos": [
+                46,
+                203
+            ],
+            "size": {
+                "0": 854.9707641601562,
+                "1": 112
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "The QwQ is extremely verbose in its output. The model is called twice.\nThe first time the output is generated freely.\nThe second call is used to extract the final answer."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 28,
+            "type": "output/watch",
+            "pos": [
+                957,
+                64
+            ],
+            "size": {
+                "0": 519.2000122070312,
+                "1": 321.20001220703125
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 31
+                }
+            ],
+            "properties": {
+                "parameters": {
+                    "use_markdown": true
+                }
+            },
+            "color": "#223",
+            "bgcolor": "#335"
+        },
+        {
+            "id": 16,
+            "type": "output/watch",
+            "pos": [
+                960,
+                440
+            ],
+            "size": {
+                "0": 511.9697570800781,
+                "1": 418.76409912109375
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 23,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": {
+                    "use_markdown": true
+                }
+            }
+        }
+    ],
+    "links": [
+        [
+            23,
+            21,
+            0,
+            16,
+            0,
+            "string"
+        ],
+        [
+            30,
+            21,
+            0,
+            27,
+            1,
+            "string"
+        ],
+        [
+            31,
+            27,
+            0,
+            28,
+            0,
+            "string"
+        ],
+        [
+            32,
+            25,
+            0,
+            29,
+            0,
+            "string"
+        ],
+        [
+            33,
+            30,
+            0,
+            21,
+            0,
+            "string"
+        ],
+        [
+            34,
+            30,
+            0,
+            27,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}

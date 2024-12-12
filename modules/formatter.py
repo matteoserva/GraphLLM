@@ -71,6 +71,13 @@ class Formatter:
 
             formatter["enable_system"] = True
             formatter["roles"] = ["raw","user","assistant","system"]
+        elif model_name.lower().find("exaone") >= 0 :
+            formatter={}
+            formatter["bos"]=""
+            formatter["role_string"] = {"user":"[|user|]","assistant":"[|assistant|]","system":"[|system|]"}
+            formatter["role_eom"] = {"user":"\n","assistant":"[|endofturn|]\n","system":"[|endofturn|]\n"}
+            formatter["enable_system"] = True
+            formatter["roles"] = ["raw","system","user","assistant"]
         elif model_name.lower().find("glm") >= 0 or model_name.lower().find("codegeex") >= 0:
             formatter={}
             formatter["bos"]="[gMASK]<sop>"
@@ -398,10 +405,13 @@ class Formatter:
             system_name = "user"
         a = a.replace("{p:bos}\n",formatter["bos"])
         a = a.replace("{p:bos}",formatter["bos"])
-        a = a.replace("\n{p:system}\n",formatter["bor"]+formatter["system_name"]+formatter["eor"])
-        a = a.replace("{p:eom}\n",formatter["eom"])
-        a = a.replace("\n{p:user}\n",formatter["bor"]+formatter["user_name"]+formatter["eor"])
-        a = a.replace("\n{p:assistant}\n",formatter["bor"]+formatter["assistant_name"]+formatter["eor"])
+        if "bor" in formatter:
+            a = a.replace("\n{p:system}\n",formatter["bor"]+formatter["system_name"]+formatter["eor"])
+        if "eom" in formatter:
+            a = a.replace("{p:eom}\n",formatter["eom"])
+        if "bor" in formatter:
+            a = a.replace("\n{p:user}\n",formatter["bor"]+formatter["user_name"]+formatter["eor"])
+            a = a.replace("\n{p:assistant}\n",formatter["bor"]+formatter["assistant_name"]+formatter["eor"])
         return a
     
     def build_prompt(self,messages,force_system=False):

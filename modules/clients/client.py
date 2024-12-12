@@ -73,7 +73,7 @@ class LLamaCppClient:
         self.client_parameters = {}
         a = {}
         a["n_predict"] = 1024*1
-        a["stop"] = ["<|eom_id|>","<|eot_id|>","<|end|>", "<|im_end|>", "</s>","<end_of_turn>","<|im_start|>"]
+        a["stop"] = ["<|eom_id|>","<|eot_id|>","<|end|>", "<|im_end|>", "</s>","<end_of_turn>","<|im_start|>","[|endofturn|]"]
         #        a["temperature"] = 0.0
         a["seed"] = -1
         a["cache_prompt"] = True
@@ -91,7 +91,10 @@ class LLamaCppClient:
             props = self.get_server_props()
             self.max_slots = props.get("total_slots",1)
 
-            model_path = props["default_generation_settings"]["model"]
+            if "model_path" in props:
+                model_path = props["model_path"]
+            else:
+                model_path = props["default_generation_settings"]["model"]
             model_name = model_path.split("/")[-1]
             self.model_name = model_name
             self.formatter = Formatter()

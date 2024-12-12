@@ -109,7 +109,7 @@ class GuiNodeBuilder:
 
         for subscription_info in self.config["subscriptions"]:
             val = " "*12 + subscription_content + "\n"
-            res += val.replace("{parameters}",str(subscription_info)[1:-1])
+            res += val.replace("{parameters}",json.dumps(subscription_info)[1:-1])
 
         if len(self.config["subscriptions"]) > 0:
             val = " " * 8 + subscription_footer + "\n\n"

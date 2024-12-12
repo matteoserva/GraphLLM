@@ -86,6 +86,7 @@ class PythonInterpreter:
             current_builtins[el] = fake_method(el)
         globalsParameter = {'__builtins__': current_builtins}
         globalsParameter['__builtins__']["__import__"] = self.fakeimport
+        globalsParameter['__builtins__']["__name__"] = "__main__"
         for el in context:
             globalsParameter[el] = context[el]
         f = StringIO()
