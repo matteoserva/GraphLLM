@@ -25,6 +25,11 @@ div.div-container div.CustomTextOutput ol {
   display: grid
 }
 
+div.div-container div.CustomTextOutput blockquote {
+    white-space: normal;
+    margin-left: 10px;
+}
+
 div.div-container textarea.CustomTextarea::selection {
   /*color: gold;	*/
   background-color: gray;
