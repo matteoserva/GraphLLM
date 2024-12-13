@@ -377,6 +377,36 @@ class CustomTextOutput extends CustomTextCommon{
         this.redrawContent()
     }
 
+    cleanHtml(children)
+    {
+        /* if the node contains only one real child and two empty text nodes,
+           then it is a formatting issue in showdownjs. remove the empty nodes.
+           The empty texts are incompatible with the white-space: pre property */
+
+
+        var textChildren = Array.from(children).filter((el) => el.nodeName == "#text");
+
+        var emptyChildren = textChildren.filter((el) => el.textContent.trim() == "");
+
+        var numNodes = children.length
+        var numText = textChildren.length
+        var numEmpty = emptyChildren.length
+
+        if(numText > 0 && numEmpty == numText && numNodes > numText)
+        {
+            //textChildren.map((el) => el.remove())
+        }
+
+        var fathers = Array.from(children).filter((el) => el.childNodes.length > 0);
+        fathers.map((el) => this.cleanHtml(el.childNodes));
+
+        if(numText == 2 && numEmpty == numText && numNodes == 3)
+        {
+            textChildren.map((el) => el.remove())
+        }
+        return 0;
+    }
+
     redrawContent(markdown)
     {
         var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size
@@ -406,6 +436,9 @@ class CustomTextOutput extends CustomTextCommon{
 			text = text.replace(/(^|\n)(\\boxed{[^\n]+})(\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>$3')
             var html = converter.makeHtml(text);
             this.textarea.innerHTML = html
+            var children = this.textarea.childNodes;
+            this.cleanHtml(children)
+
         }
         else
         {

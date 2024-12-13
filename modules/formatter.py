@@ -71,6 +71,15 @@ class Formatter:
 
             formatter["enable_system"] = True
             formatter["roles"] = ["raw","user","assistant","system"]
+
+        elif model_name.lower().find("phi-4") >= 0:
+            formatter={}
+            formatter["bos"]=""
+            formatter["role_string"] = {"user":"<|im_start|>user<|im_sep|>\n","assistant":"<|im_start|>assistant<|im_sep|>\n","system":"<|im_start|>system<|im_sep|>\n"}
+            formatter["role_eom"] = {"user":"<|im_end|>\n","assistant":"<|im_end|>\n","system":"<|im_end|>\n"}
+            formatter["enable_system"] = True
+            formatter["roles"] = ["raw","system","user","assistant"]
+
         elif model_name.lower().find("exaone") >= 0 :
             formatter={}
             formatter["bos"]=""
