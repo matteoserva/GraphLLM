@@ -26,8 +26,18 @@ div.div-container div.CustomTextOutput ol {
 }
 
 div.div-container div.CustomTextOutput blockquote {
-    white-space: normal;
-    margin-left: 10px;
+    /* white-space: normal; */
+    background-color: #404040;
+    padding-left: 10px;
+    border-radius: 5px;
+}
+
+div.div-container div.CustomTextOutput pre > code {
+
+}
+
+div.div-container div.CustomTextOutput p > code {
+    background-color: #202020;
 }
 
 div.div-container textarea.CustomTextarea::selection {
