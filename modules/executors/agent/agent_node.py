@@ -1,4 +1,4 @@
-from modules.parser import solve_templates
+from modules.formatter import solve_templates
 from modules.executors.common import solve_placeholders
 from modules.common import try_solve_files
 import json

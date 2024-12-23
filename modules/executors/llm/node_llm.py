@@ -1,5 +1,5 @@
 from modules.formatter import PromptBuilder
-from modules.parser import solve_templates
+from modules.formatter import solve_templates
 from modules.executors.common import solve_placeholders
 from modules.common import readfile, merge_params
 from functools import partial

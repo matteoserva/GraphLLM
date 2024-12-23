@@ -1,6 +1,6 @@
 
 from .formatter import Formatter
-from .parser import solve_templates
+from .formatter import solve_templates
 import copy
 from .fake_python import PythonInterpreter
 

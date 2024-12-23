@@ -1,4 +1,4 @@
-from ..parser import solve_templates
+from ..formatter import solve_templates
 from .gui_node_builder import GuiNodeBuilder
 # def metaclass_protect(*protected):
 #     """Returns a metaclass that protects all attributes given as strings"""
