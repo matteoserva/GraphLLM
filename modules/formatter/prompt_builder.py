@@ -2,6 +2,7 @@ from .parser import parse_raw, check_special_tokens
 from transformers import AutoTokenizer
 from .formatter_hf import FormatterHF
 from .formatter_custom import FormatterCustom
+from .formatter_jinja import FormatterJinja
 
 import copy
 
@@ -23,6 +24,11 @@ class Formatter:
         self.formatter = FormatterHF()
         if self.formatter.load_model(model_name):
             return True
+        if chat_template is not None:
+            self.formatter = FormatterJinja()
+            if self.formatter.load_template(chat_template):
+             return True
+
         self.formatter = FormatterCustom()
         self.formatter.load_model(model_name)
         return True

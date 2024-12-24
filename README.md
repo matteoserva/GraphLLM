@@ -75,7 +75,7 @@ This screenshot show a Hierarchical graph. The file is downloaded, then summariz
 
 Run these commands in a shell to download and start GraphLLM
 
-- `pip3 install selenium readabilipy html2text pdfminer.six websockets`
+- `pip3 install selenium readabilipy html2text pdfminer.six websockets jinja2`
 - (optional) `pip3 install piper-tts`
 - `git clone https://github.com/matteoserva/GraphLLM.git`
 - `cd GraphLLM`
