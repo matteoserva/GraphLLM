@@ -98,7 +98,11 @@ class LLamaCppClient:
             model_name = model_path.split("/")[-1]
             self.model_name = model_name
             self.formatter = Formatter()
-            self.formatter.load_model(model_name)
+            model_props = {"model_name": model_name}
+            if "chat_template" in props:
+                model_props["chat_template"] = props["chat_template"]
+
+            self.formatter.load_model(model_props)
             #get_formatter(props)
             self.connetion_semaphore = BoundedSemaphore(value = self.max_slots)
             self.connected = True
