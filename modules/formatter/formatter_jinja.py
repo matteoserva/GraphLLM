@@ -50,10 +50,24 @@ class FormatterJinja:
         t = rendered[pos + len(placeholder_assistant):pos2]
         self.transitions["assistant"]["user"] = t
 
+    def _evaluate_template(self):
+        messages = [
+            {"role": "system", "content": placeholder_system},
+            {"role": "user", "content": placeholder_user},
+            {"role": "assistant", "content": placeholder_assistant},
+            {"role": "user", "content": placeholder_user2},
+        ]
+        rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True,bos_token = "<<<BOS>>>")
+        self.has_system = placeholder_system in rendered
+        self.multi_turn = "<<<USER2>>>" in rendered
+        self.has_bos_token = "<<<BOS>>>" in rendered
+
+
     def load_template(self,chat_template):
 
         try:
             self.tokenizer = self.jinja_env.from_string(chat_template)
+            self._evaluate_template()
             messages = [
                 {"role": "system", "content": placeholder_system},
                 {"role": "user", "content": placeholder_user},
@@ -61,8 +75,6 @@ class FormatterJinja:
                 {"role": "user", "content": placeholder_user2},
             ]
             rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True)
-            self.has_system = placeholder_system in rendered
-            self.multi_turn = "<<<USER2>>>" in rendered
 
             if self.has_system:
                 self.load_template_with_system(rendered)

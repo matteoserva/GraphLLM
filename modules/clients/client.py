@@ -183,11 +183,11 @@ class LLamaCppClient:
         retstring = "".join(ret)
         return retstring
 
-    def tokenize(self,p):
+    def tokenize(self,p,add_special=False):
         url = "http://" + self.host + ":" + str(self.port) + "/tokenize"
         a={}
         a["content"] = p
-        a["add_special"] = False
+        a["add_special"] = add_special
         js = json.dumps(a)
         headers = {"Content-Type": "application/json"}
         r = requests.post(url,data=js,headers=headers)
@@ -210,13 +210,17 @@ class LLamaCppClient:
         r3 = json.loads(r2)
         #print(r3)
         return r3
-    
+
+    def _set_prompt_legacy(self,obj, prompt,tokens):
+
+        obj["prompt"] = tokens
+
     def _send_prompt_text(self, p, params,callback):
         tokens = self.tokenize(p)
         #detokenized = self.detokenize(tokens)
 
         a = merge_params(self.default_params,params)
-        a["prompt"] = tokens
+        self._set_prompt_legacy(a,p,tokens)
 
         if len(tokens) +a["n_predict"] >= self.context_size:
             raise Exception("context size exceeded: " + str(len(tokens)) + " + " + str(a["n_predict"]))
