@@ -7,11 +7,19 @@ class OpenAIClient():
     def __init__(self, dummy=None, **extra_client_args):
         print("openai init")
 
-        self.extra_client_args = extra_client_args
+        self.model_name = "llama3-70b-8192"
+        self.extra_client_args = {}
+        for el in ["api_key","base_url"]:
+            if el in extra_client_args:
+                self.extra_client_args[el] = extra_client_args[el]
+        
+        for el in ["model","model_name"]:
+            if el in extra_client_args:
+                self.model_name =  extra_client_args[el]
 
         self.client = None
         self.prompt_metadata = {}
-        self.model_name = "llama3-70b-8192"
+        
         self.default_params = {"temperature": 0.1, "max_tokens": 1024 // 2, "stream": True, "stop": None}
 
     def send_prompt(self, p, params=None, callback=None):
