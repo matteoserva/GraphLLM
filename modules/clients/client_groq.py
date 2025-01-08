@@ -19,7 +19,7 @@ class GrokClient():
         #print(messages)
         user_params = params
         params = copy.deepcopy(self.default_params)
-        if params:
+        if user_params:
             params["stop"] = user_params.get("stop",params["stop"])
             params["temperature"] = user_params.get("temperature",params["temperature"])
             params["max_tokens"] = user_params.get("n_predict",params["max_tokens"])
