@@ -32,7 +32,7 @@ class Formatter:
         if chat_template is not None:
             try:
                 self.formatter = FormatterJinja()
-                if self.formatter.load_template(chat_template):
+                if self.formatter.load_template(model_name,chat_template):
                     return True
             except:
                 pass

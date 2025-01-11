@@ -1,6 +1,7 @@
 import jinja2
 from jinja2.ext import Extension
 from jinja2.sandbox import ImmutableSandboxedEnvironment
+from sympy import false
 
 placeholder_system = "<<<SYSTEM>>>"
 placeholder_user = "<<<USER>>>"
@@ -39,7 +40,7 @@ class FormatterJinja:
 
         self.transitions["init"]["user"] = t
 
-    def load_template_to_assistant(self,rendered):
+    def load_template_assistant(self,rendered):
         pos = rendered.find(placeholder_user)
         pos2 = rendered.find(placeholder_assistant)
         t = rendered[pos + len(placeholder_user):pos2]
@@ -49,6 +50,10 @@ class FormatterJinja:
         pos2 = rendered.find(placeholder_user2)
         t = rendered[pos + len(placeholder_assistant):pos2]
         self.transitions["assistant"]["user"] = t
+
+    def load_template_raw(self,rendered):
+        self.transitions["init"]["raw"] = ""
+        self.transitions["raw"]["assistant"] = ""
 
     def _evaluate_template(self):
         messages = [
@@ -63,7 +68,7 @@ class FormatterJinja:
         self.has_bos_token = "<<<BOS>>>" in rendered
 
 
-    def load_template(self,chat_template):
+    def load_template(self,model_name,chat_template):
 
         try:
             self.tokenizer = self.jinja_env.from_string(chat_template)
@@ -81,11 +86,18 @@ class FormatterJinja:
             else:
                 self.load_template_without_system(rendered)
 
-            self.load_template_to_assistant(rendered)
-
+            self.load_template_assistant(rendered)
+            self.load_template_raw(rendered)
 
         except:
             return False
+
+        if (not self.has_system) or (not self.multi_turn) or (self.has_bos_token ):
+            return false
+
+        #if model_name.lower().find("solar") == 0:
+        #    return True
+
         return False
 
     def build_prompt(self, messages, force_system=False):
@@ -94,6 +106,9 @@ class FormatterJinja:
 
         for el in messages:
             new_role = el["role"]
+            if new_role == "system" and (not force_system) and (not self.has_system):
+                continue
+
             current_prompt += self.transitions[builder_state][new_role]
             current_prompt += el["content"]
             builder_state = new_role
@@ -105,11 +120,7 @@ class FormatterJinja:
         return current_prompt
 
 
-if __name__ == "__main__":
-    from transformers import AutoTokenizer
-
-    tokenizer_path = "tokenizers/Qwen2.5-32B-Instruct"
-    #tokenizer_path = "tokenizers/phi3-mini"
+def execute_test_full(tokenizer_path):
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_path, trust_remote_code=True)
     chat_template = tokenizer.chat_template
 
@@ -123,5 +134,46 @@ if __name__ == "__main__":
     ]
     generated_prompt = formatter.build_prompt(messages)
     reference_prompt = tokenizer.apply_chat_template(messages, add_special_tokens=True, add_generation_prompt=True, tokenize=False)
+    print("### TEST FULL: \n" + generated_prompt)
+    test_passed = generated_prompt == reference_prompt
+    #assert (test_passed)
+
+    messages = [
+        {"role": "raw", "content": "<<<RAW>>>"},
+        {"role": "assistant", "content": "<<<PREFILL>>>"},
+        {"role": "user", "content": "<<<USER2>>>"},
+    ]
+    generated_prompt = formatter.build_prompt(messages)
+    print("### TEST RAW: \n" + generated_prompt)
+    return True
+
+def execute_test_simple(tokenizer_path):
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_path, trust_remote_code=True)
+    chat_template = tokenizer.chat_template
+
+    formatter = FormatterJinja()
+    formatter.load_template(chat_template)
+    messages = [
+        {"role": "system", "content": "<<<SYSTEM>>>"},
+        {"role": "user", "content": "<<<USER>>>"},
+        {"role": "assistant", "content": "<<<ASSISTANT>>>"},
+        {"role": "user", "content": "<<<USER2>>>"},
+    ]
+    generated_prompt = formatter.build_prompt(messages,force_system=True)
+    reference_prompt = tokenizer.apply_chat_template(messages, add_special_tokens=True, add_generation_prompt=True, tokenize=False)
+    print("### TEST SIMPLE FORCED: \n" + generated_prompt)
+    test_passed = generated_prompt == reference_prompt
+
+    generated_prompt = formatter.build_prompt(messages, force_system=False)
+    print("### TEST SIMPLE NOSYSTEM: \n" + generated_prompt)
+    # assert (test_passed)
+
+if __name__ == "__main__":
+    from transformers import AutoTokenizer
+
+    tokenizer_path = "tokenizers/Qwen2.5-32B-Instruct"
+    execute_test_full(tokenizer_path)
+    tokenizer_path = "tokenizers/phi3-mini"
+    execute_test_simple(tokenizer_path)
 
     pass

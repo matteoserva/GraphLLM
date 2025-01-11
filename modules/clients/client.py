@@ -85,6 +85,12 @@ class LLamaCppClient:
         self.default_params = a
         self.connected = False
 
+    def get_formatter_config(self):
+        props = self.get_server_props()
+        model_props = {"model_name": self.model_name}
+        if "chat_template" in props:
+            model_props["chat_template"] = props["chat_template"]
+        return model_props
 
     def connect(self):
         if not self.connected:
@@ -98,9 +104,8 @@ class LLamaCppClient:
             model_name = model_path.split("/")[-1]
             self.model_name = model_name
             self.formatter = Formatter()
-            model_props = {"model_name": model_name}
-            if "chat_template" in props:
-                model_props["chat_template"] = props["chat_template"]
+            model_props = self.get_formatter_config()
+
 
             self.formatter.load_model(model_props)
             #get_formatter(props)
@@ -121,6 +126,8 @@ class LLamaCppClient:
         return self.model_name
 
     def get_server_props(self):
+        if self.connected:
+            return self.server_props
         url = "http://" + self.host + ":" + str(self.port) + "/props"
 
         retries = 10
@@ -135,6 +142,7 @@ class LLamaCppClient:
                 break
         max_context = resp["default_generation_settings"]["n_ctx"]
         self.context_size = max_context
+        self.server_props = resp
         return resp
 
     def _ricevi(self,req_params, pass_raw,callback):
@@ -221,6 +229,7 @@ class LLamaCppClient:
 
         a = merge_params(self.default_params,params)
         self._set_prompt_legacy(a,p,tokens)
+        #a["prompt"] = p
 
         if len(tokens) +a["n_predict"] >= self.context_size:
             raise Exception("context size exceeded: " + str(len(tokens)) + " + " + str(a["n_predict"]))
