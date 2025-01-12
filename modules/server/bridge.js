@@ -38,6 +38,9 @@ class WebBrige {
 
   connect() {
     this.setDefaultConnectionEndpoints()
+
+    this.canvas.allow_searchbox = false
+
     this.cb_as = this.graph.onAfterStep;
     let cb_bs = this.graph.onBeforeStep;
     let that = this
