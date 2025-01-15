@@ -117,6 +117,62 @@ class CustomTextCommon{
     {
         return this.minHeight;
     }
+	
+	handleFocusOutEvent(event,textarea)
+	{
+			if (event.relatedTarget === null) {
+				setTimeout(function () { event.target.focus()},0);
+				console.log("focus null bloccato")
+				return;
+			}
+			if (event.relatedTarget.tagName.toUpperCase() == "CANVAS") {
+				setTimeout(handleCanvasFocus.bind(this,event),0);
+				
+				/*LiteGraph.pointerListenerAdd(event.relatedTarget,"up", function(){
+					console.log("canvas nup");
+					
+					
+				},{once: true, capture:true});*/
+				console.log("focus canvas bloccato")
+				return;
+			}
+			
+			this.textareaUnfocus(textarea)
+		
+		
+			function handleCanvasFocus(event)
+			{
+				var is_dragging = event.relatedTarget.data.pointer_is_down &&  event.relatedTarget.data.dragging_canvas
+				if(is_dragging)
+				{
+					var canvas = event.relatedTarget.data
+					var last_click_position = canvas.last_click_position
+					LiteGraph.pointerListenerAdd(event.relatedTarget.data.getCanvasWindow().document,"mouseup", function(){
+						console.log("canvas document up");
+						
+						if(last_click_position[0] == canvas.mouse[0] || 
+							last_click_position[1] == canvas.mouse[1])
+						{
+							console.log ("canvas up mouse not moved")
+							event.relatedTarget.focus()
+							this.textareaUnfocus(textarea)
+						}
+						else
+						{
+							event.target.focus()
+							
+						}
+						
+					}.bind(this),{once: true, capture:true});
+				}
+				else
+				{
+					event.relatedTarget.focus()
+					this.textareaUnfocus(textarea)
+				}
+			}
+		
+	}
 
 }
 
@@ -521,19 +577,21 @@ class CustomTextOutput extends CustomTextCommon{
             }
 
          });
-        textarea.addEventListener("focusout", function(event){
-                    this.textareaUnfocus(textarea)
-                     if (window.getSelection) {window.getSelection().removeAllRanges();}
-             else if (document.selection) {document.selection.empty();}
-
-        }.bind(this))
+        textarea.addEventListener("focusout", function(e){ this.handleFocusOutEvent(e,textarea)}.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
         textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
         return div
 
     }
 
-
+	textareaUnfocus(textarea)
+	{
+		super.textareaUnfocus(textarea)
+		if (window.getSelection) {window.getSelection().removeAllRanges();}
+             else if (document.selection) {document.selection.empty();}
+	}
+	
+	
     configureSizeInFocus()
     {
         var textarea = this.textarea
@@ -647,7 +705,7 @@ class CustomTextInput extends CustomTextCommon{
         textarea.style.height = this.minHeight +"px";
         this.textarea = textarea
 
-        textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
+        textarea.addEventListener("focusout", function(e){ this.handleFocusOutEvent(e,textarea)}.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
         textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
         return div
@@ -750,14 +808,15 @@ class CustomTextarea extends CustomTextCommon{
 		}
         this.textarea.ondragover = function(e) {e.preventDefault(); }
 
-        textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
+        textarea.addEventListener("focusout", function(e){ this.handleFocusOutEvent(e,textarea)}.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
         textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
         return div
         
+		
     }
     
-
+	
     
     configureSizeInFocus()
     {
