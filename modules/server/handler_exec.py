@@ -69,7 +69,12 @@ class WebExec():
         try:
             if last_error:
                 traceback.print_exception(type(last_error), last_error, last_error.__traceback__)
-                self.logger.log("error",str(last_error))
+                if isinstance(last_error,SyntaxError):
+                    error_string = repr(last_error)
+                else:
+                    error_string = str(last_error)
+
+                self.logger.log("error",error_string)
 
             self.logger.log("stop")
 
