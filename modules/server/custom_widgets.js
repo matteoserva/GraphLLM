@@ -518,6 +518,16 @@ class CustomTextOutput extends CustomTextCommon{
         {
 
             this.config.use_markdown = config.use_markdown
+            if(config.use_markdown)
+            {
+		this.textarea.classList.remove("markdown_off")
+		this.textarea.classList.add("markdown_on")
+	    }
+            else
+            {
+		this.textarea.classList.remove("markdown_on")
+		this.textarea.classList.add("markdown_off")
+	    }
             this.redrawContent()
 
         }
@@ -558,6 +568,7 @@ class CustomTextOutput extends CustomTextCommon{
         var textarea = document.createElement("div");
         div.appendChild(textarea)
         textarea.className="CustomTextOutput"
+        textarea.classList.add("markdown_off")
         textarea.tabIndex=0;
         this.textarea = textarea
 
