@@ -83,7 +83,7 @@ Run these commands in a shell to download and start GraphLLM
 
 In another terminal, launch the llama.cpp server with Qwen2.5 32b.:
 
-- `GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 ./llama-server -ngl 99 -t 6 -c 32768 --host 0.0.0.0 --override-kv tokenizer.ggml.add_bos_token=bool:false -sp -fa -ctk q8_0 -ctv q8_0 -m Qwen2.5-32B-Instruct-Q5_K_M.gguf`
+- `GGML_CUDA_ENABLE_UNIFIED_MEMORY=1 ./llama-server -ngl 99 -t 6 -c 32768 --host 0.0.0.0 -sp -fa -ctk q8_0 -ctv q8_0 -m Qwen2.5-32B-Instruct-Q5_K_M.gguf`
 
 Now you can launch the browser and interact with GraphLLM:
 
@@ -122,11 +122,10 @@ Steps to configure a connection with [llama.cpp](https://github.com/ggerganov/ll
 
 - Launch the server with
 
-  `./llama-server -ngl 99 -t 4 -c 32768 --host 0.0.0.0 -m {your_model} --override-kv tokenizer.ggml.add_bos_token=bool:false -sp -fa`
+  `./llama-server -ngl 99 -t 4 -c 32768 --host 0.0.0.0 -m {your_model} -sp -fa`
   
   Relevant arguments:
   - `-host 0.0.0.0` if you want to run the server on another machine
-  - `--override-kv tokenizer.ggml.add_bos_token=bool:false` to avoid auto inserting a bos token. GraphLLM already adds it
   - `-sp` To receive the eom token, this enables llama3.1 tool calling
   - `-m {your_model}` selects the model to use. This project works best with llama 3.1 or qwen2.5
 
