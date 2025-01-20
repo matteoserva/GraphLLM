@@ -141,6 +141,17 @@ class LLamaCppClient:
             else:
                 break
         max_context = resp["default_generation_settings"]["n_ctx"]
+
+        # try detecting the bos token
+        if "chat_template" in resp:
+            try:
+                rendered = self.tokenize("<<<<USER>>>>", add_special=True,with_pieces=True)
+                textval = "".join([el["piece"] for el in rendered])
+                bos_token = textval[:textval.find("<<<<USER>>>>")]
+                resp["bos_token"] = bos_token
+            except:
+                pass
+                
         self.context_size = max_context
         self.server_props = resp
         return resp
@@ -191,11 +202,13 @@ class LLamaCppClient:
         retstring = "".join(ret)
         return retstring
 
-    def tokenize(self,p,add_special=False):
+    def tokenize(self,p,add_special=False, with_pieces=False):
         url = "http://" + self.host + ":" + str(self.port) + "/tokenize"
         a={}
         a["content"] = p
         a["add_special"] = add_special
+        if with_pieces:
+            a["with_pieces"] = with_pieces
         js = json.dumps(a)
         headers = {"Content-Type": "application/json"}
         r = requests.post(url,data=js,headers=headers)
