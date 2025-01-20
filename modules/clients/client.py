@@ -90,6 +90,8 @@ class LLamaCppClient:
         model_props = {"model_name": self.model_name}
         if "chat_template" in props:
             model_props["chat_template"] = props["chat_template"]
+            if "bos_token" in props:
+                model_props["bos_token"] = props["bos_token"]
         return model_props
 
     def connect(self):
@@ -151,7 +153,7 @@ class LLamaCppClient:
                 resp["bos_token"] = bos_token
             except:
                 pass
-                
+       
         self.context_size = max_context
         self.server_props = resp
         return resp

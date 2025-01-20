@@ -16,13 +16,11 @@ class Formatter:
         self.model_name = None
 
     def load_model(self,model_props):
-        if isinstance(model_props,dict):
-            model_name = model_props["model_name"]
-            chat_template = model_props.get("chat_template",None)
-        else:
-            model_name = model_props
-            chat_template = None
+        if not isinstance(model_props,dict):
+            model_props = { "model_name": model_props, "chat_template": None }
 
+        model_name = model_props["model_name"]
+        chat_template = model_props.get("chat_template",None)
 
         self.model_name = model_name
         self.formatter = FormatterHF()
@@ -32,7 +30,7 @@ class Formatter:
         if chat_template is not None:
             try:
                 self.formatter = FormatterJinja()
-                if self.formatter.load_template(model_name,chat_template):
+                if self.formatter.load_template(model_props):
                     return True
             except:
                 pass

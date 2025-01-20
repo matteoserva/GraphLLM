@@ -68,7 +68,9 @@ class FormatterJinja:
         self.has_bos_token = "<<<BOS>>>" in rendered
 
 
-    def load_template(self,model_name,chat_template):
+    def load_template(self,model_props):
+        model_name = model_props["model_name"]
+        chat_template = model_props.get("chat_template",None)
 
         try:
             self.tokenizer = self.jinja_env.from_string(chat_template)
@@ -91,12 +93,19 @@ class FormatterJinja:
 
         except:
             return False
+        
+        if (not self.has_system) or (not self.multi_turn):
+            return False
 
-        if (not self.has_system) or (not self.multi_turn) or (self.has_bos_token ):
-            return false
+        if (len(model_props.get("bos_token","")) > 0) != self.has_bos_token :
+            return False
 
-        #if model_name.lower().find("solar") == 0:
-        #    return True
+        if self.has_bos_token:
+            self.transitions["init"]["system"] = model_props["bos_token"] + self.transitions["init"]["system"]
+            self.transitions["init"]["user"] = model_props["bos_token"] + self.transitions["init"]["user"]
+            
+        if model_name.lower().find("deepseek-r1") == 0:
+            return True
 
         return False
 
