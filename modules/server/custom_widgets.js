@@ -151,7 +151,8 @@ class CustomTextCommon{
 						console.log("canvas document up");
 						
 						if(last_click_position[0] == canvas.mouse[0] || 
-							last_click_position[1] == canvas.mouse[1])
+							last_click_position[1] == canvas.mouse[1] ||
+                                                        (!event.target.checkVisibility())      )
 						{
 							console.log ("canvas up mouse not moved")
 							event.relatedTarget.focus()
