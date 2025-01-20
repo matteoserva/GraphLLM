@@ -434,9 +434,9 @@ class CustomTextOutput extends CustomTextCommon{
         this.redrawContent()
     }
 
-    cleanHtml(children)
-    {
-        /* if the node contains only one real child and two empty text nodes,
+	cleanHtmlEmptyNodes(children)
+	{
+		   /* if the node contains only one real child and two empty text nodes,
            then it is a formatting issue in showdownjs. remove the empty nodes.
            The empty texts are incompatible with the white-space: pre property */
 
@@ -455,12 +455,45 @@ class CustomTextOutput extends CustomTextCommon{
         }
 
         var fathers = Array.from(children).filter((el) => el.childNodes.length > 0);
-        fathers.map((el) => this.cleanHtml(el.childNodes));
+        fathers.map((el) => this.cleanHtmlEmptyNodes(el.childNodes));
 
         if(numText == 2 && numEmpty == numText && numNodes == 3)
         {
             textChildren.map((el) => el.remove())
         }
+		
+	}
+
+	cleanHtmlCodeBlocks(textarea)
+	{
+		//<p style="position: absolute; top: 0px; right:0px">ciao</p>
+		var codeBlocks = textarea.querySelectorAll("pre > code[class*='language-']")
+		codeBlocks.forEach((element) => appendType(element));
+		
+		function appendType(el)
+		{
+			var p = document.createElement("p");
+			p.style="position: absolute; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+			var className = el.className.match("language-(.*)")[1]
+			p.innerHTML = className;
+			el.parentElement.appendChild(p)
+			el.parentElement.style.marginTop = "4px"
+			el.parentElement.style.marginBottom = "4px"
+			el.parentElement.style.paddingTop = "4px"
+			el.parentElement.style.paddingBottom = "4px"
+			el.parentElement.style.position = "relative"
+		}
+		
+		return 0;
+	}
+
+    cleanHtml(textarea)
+    {
+		
+		var children = textarea.childNodes;
+		textarea.innerHTML = textarea.innerHTML.replace(/\>[\n\r]+\</g,"><")
+		this.cleanHtmlEmptyNodes(children)
+		this.cleanHtmlCodeBlocks(textarea)
         return 0;
     }
 
@@ -493,8 +526,7 @@ class CustomTextOutput extends CustomTextCommon{
 			text = text.replace(/(^|\n)(\\boxed{[^\n]+})(\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>$3')
             var html = converter.makeHtml(text);
             this.textarea.innerHTML = html
-            var children = this.textarea.childNodes;
-            this.cleanHtml(children)
+            this.cleanHtml(this.textarea)
 
         }
         else
