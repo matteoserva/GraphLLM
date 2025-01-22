@@ -519,12 +519,45 @@ class CustomTextOutput extends CustomTextCommon{
 
             );
 			converter.setOption('tables', true);
-			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\]\n/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
+			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\](\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
 			text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
 			text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
 			// \boxed{\int_{\Omega} f \, d\mu = \int_{\Omega} f^+ \, d\mu - \int_{\Omega} f^- \, d\mu}
 			text = text.replace(/(^|\n)(\\boxed{[^\n]+})(\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>$3')
-            var html = converter.makeHtml(text);
+            var d = document.createElement("div")
+			d.innerHTML = text
+			var t = d.querySelector("think")
+			if(t)
+			{
+				
+				var d2 = document.createElement("div")
+				d2.className = "thinking"
+				d2.innerHTML = t.innerHTML.trim()
+				
+				
+				var dc = document.createElement("div")
+				dc.className = "thinking-container"
+				dc.style = "background-color: #202020"
+				dc.style.marginTop = "4px"
+				dc.style.marginBottom = "4px"
+				dc.style.paddingTop = "4px"
+				dc.style.paddingBottom = "4px"
+				dc.style.position = "relative"
+				
+				
+				var p = document.createElement("p");
+				p.style="position: absolute; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+				p.innerHTML = "Think"
+				
+				dc.appendChild(d2)
+				dc.appendChild(p)
+				
+				t.replaceWith(dc)
+				
+				text = d.innerHTML
+			}
+			
+			var html = converter.makeHtml(text);
             this.textarea.innerHTML = html
             this.cleanHtml(this.textarea)
 
