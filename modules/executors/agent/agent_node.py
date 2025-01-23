@@ -53,8 +53,7 @@ class AgentController:
 
         return new_observation
 
-    def _build_template(self,ops_string):
-        variables = {"tools":ops_string, "hints": self.hints}
+    def _build_template(self,variables):
         new_prompt ,_ = solve_templates(self.base_prompt, [],variables)
         new_prompt = solve_placeholders(new_prompt,[],variables)
         return new_prompt
@@ -68,12 +67,17 @@ class AgentController:
         resp = self._clean_response(resp)
 
         respo = self._parse_response(resp)
+
         respo["raw"] = resp
+        respo["scratchpad"] = resp
+        if "</think>" in resp and "<thinking>" in resp:
+            respo["scratchpad"] = "<thinking>" + resp.split("<thinking>",1)[-1]
 
         return respo
 
     def _prompt_insert_scratchpad(self,clean_prompt,scratchpad):
         new_prompt = clean_prompt.replace("{}", scratchpad)
+        new_prompt = clean_prompt.replace("{p:history}", scratchpad)
         return new_prompt
 
     def _execute_prompt(self):
@@ -85,25 +89,26 @@ class AgentController:
         print("sono thread")
         # send query
         ops_string = yield(2,{"command":"get_formatted_ops","args":[]})
-        prompt_template = self._build_template(ops_string)
+
+        variables = {"tools": ops_string, "hints": self.hints, "question": prompt}
+
+        prompt_template = self._build_template(variables)
         clean_prompt = self._handle_query(prompt_template,prompt)
 
-        if "{}" not in clean_prompt:
-            clean_prompt += "{}"
+        if "{}" and "{p:history}" not in clean_prompt:
+            clean_prompt += "{p:history}"
         scratchpad = ""
         reflexion_scratchpad = self.reflexion_history + "<question>" + prompt + "</question>\n"
         while True:
             current_prompt = self._prompt_insert_scratchpad(clean_prompt, scratchpad)
+
+            # call LLM
+
             llm_response = yield (1, current_prompt)
-
-            # call tool
-            current_iteration += 1
-            if current_iteration >= 10:
-                final_response = Exception("llm agent overrun")
-                break
-
-            scratchpad += llm_response
             respo = self._parse_llm_response(llm_response)
+
+            scratchpad += respo["scratchpad"]
+
 
             skip_tool_call = False
             if self.subtype == "reflexion":
@@ -134,6 +139,11 @@ class AgentController:
             if (state == "COMPLETE"):
                 reflexion_scratchpad += "<evaluation> The answer has been sent to the user </evaluation>\n"
                 final_response = tool_response
+                break
+
+            current_iteration += 1
+            if current_iteration >= 10:
+                final_response = Exception("llm agent overrun")
                 break
 
         if hasattr(self,"multi_turn") and self.multi_turn and "{p:user}" in prompt_template:
@@ -181,11 +191,11 @@ class AgentController:
         comando = resp[resp.find(self.tokens[1]) + len(self.tokens[1]):].split("\n")[0].strip()
 
         if resp.find("<action_name>") >= 0:
-            s1 = resp.split("<action_parameter>")
+            s1 = resp.split("<action_parameter")
             a1 = s1[0]
             p1 = s1[1:]
             a2 = a1[a1.find("<action_name>")+13:a1.find("</action_name>")].strip()
-            p2 = [ el[:el.find("</action_parameter>")].strip() for el in p1]
+            p2 = [ el[el.find(">")+1:el.find("</action_parameter>")].strip() for el in p1]
             comando = a2
             parametri = p2
 

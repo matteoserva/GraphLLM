@@ -47,7 +47,7 @@ class AgentWeb(GenericAgent):
 		modified_query = query.replace(" ","+")
 		search_url = "https://lite.duckduckgo.com/lite/?q=" + modified_query + ""
 		self.download(search_url)
-		fullargs = ["graphs/run_template.txt","templates/extract_search_results.txt",tempfile.gettempdir() + "/pagina.md","5"]
+		fullargs = ["-s", "```", "graphs/run_template.txt","templates/extract_search_results.txt",tempfile.gettempdir() + "/pagina.md","5"]
 		val = self._run_graph(*fullargs)
 		v2 = val[0]
 		return v2

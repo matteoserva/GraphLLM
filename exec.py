@@ -42,7 +42,8 @@ if __name__ == "__main__":
     print_json = False
     import getopt
 
-    opts, args = getopt.getopt(sys.argv[1:], 'j')
+    opts, args = getopt.getopt(sys.argv[1:], 'js:')
     for (k, v) in opts:
         if k == "-j": print_json = True
+        if k == "-s": parameters["stop"] = [v]
     run_graph(args,parameters,print_json)

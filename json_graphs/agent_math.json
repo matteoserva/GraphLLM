@@ -1,5 +1,5 @@
 {
-    "last_node_id": 32,
+    "last_node_id": 33,
     "last_link_id": 63,
     "nodes": [
         {
@@ -14,7 +14,7 @@
                 "1": 226
             },
             "flags": {},
-            "order": 2,
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
@@ -40,7 +40,7 @@
                 "1": 139.40000915527344
             },
             "flags": {},
-            "order": 6,
+            "order": 7,
             "mode": 0,
             "inputs": [
                 {
@@ -65,7 +65,7 @@
                 "1": 261.1000061035156
             },
             "flags": {},
-            "order": 8,
+            "order": 9,
             "mode": 0,
             "inputs": [
                 {
@@ -90,7 +90,7 @@
                 "1": 256.3999938964844
             },
             "flags": {},
-            "order": 7,
+            "order": 8,
             "mode": 0,
             "inputs": [
                 {
@@ -114,7 +114,7 @@
                 "1": 148
             },
             "flags": {},
-            "order": 1,
+            "order": 2,
             "mode": 0,
             "inputs": [
                 {
@@ -158,7 +158,7 @@
                 }
             ],
             "properties": {
-                "parameters": "    type: agent\n    init: \n        - |-\n            {p:bos}\n\n            {p:system}\n            You are a AI task scheduler. Your job is to call the provided tools in the correct sequence to generate the answer for the user question.\n\n            ## Tools\n            {p:tools}\n\n            ## Objective\n            \n            1. First elaborate a detailed plan on how to complete the user request by using the provided tools.\n            Use the following template to describe your plan:\n            ```\n            <planning> A detailed description of your plan </planning>\n            ```\n            \n            2. Then use the following template to process the user request step by step:\n            ```\n            <thinking> Your thoughts about what to do next </thinking>\n            <action> The action to perform and its parameters. The specific format is described later. </action>\n            <result> The result of the action </result>\n            <evaluation> Evaluate if the tool provided all the information you need. Decide if you should call the tool again with a refined input </evaluation>\n            ```\n            \n            format of the action field:\n            - The action field is enclosed between <action> and </action> tags.\n            - The name of the action is inserted between <action_name> and </action_name> tags.\n            - Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n            - Only the value of the parameter is specified. The name of the parameter is omitted.\n            - The parameters can be multiline strings\n            - Example: <action><action_name>eval</action_name><action_parameter>2+3</action_parameter></action>\n\n            3. Keep repeating the previous template until you have the answer.\n\n            ## Rules\n            - If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n            - The input to query_file() should be a very detailed question about what you want from the external agent.\n            - Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n            - Use query_file() as a substitute for a web scraping tool\n            {p:hints}{p:eom}\n\n            {p:user}\n            Question: {}{p:eom}\n\n            {p:assistant}\n            <planning>\n    conf: \n        subtype: reflexion\n        tokens: [\"<evaluation>\",\"<action>\",\"\",\"<result>\"]\n        hints: |-\n                  - prefer returning the answer via answer_file() instead of answer()"
+                "parameters": "    type: agent\n    init: {v:agent_template}\n            \n    conf: \n        subtype: reflexion\n        tokens: [\"<evaluation>\",\"<action>\",\"\",\"<result>\"]\n        hints: |-\n                  - prefer returning the answer via answer_file() instead of answer()"
             }
         },
         {
@@ -170,10 +170,10 @@
             ],
             "size": {
                 "0": 368,
-                "1": 157
+                "1": 161
             },
             "flags": {},
-            "order": 3,
+            "order": 4,
             "mode": 0,
             "inputs": [
                 {
@@ -221,7 +221,7 @@
                 "1": 121
             },
             "flags": {},
-            "order": 4,
+            "order": 5,
             "mode": 0,
             "inputs": [
                 {
@@ -268,7 +268,7 @@
                 "1": 155
             },
             "flags": {},
-            "order": 5,
+            "order": 6,
             "mode": 0,
             "inputs": [
                 {
@@ -305,7 +305,7 @@
         },
         {
             "id": 17,
-            "type": "llm/text_input",
+            "type": "input/text_input",
             "pos": [
                 20,
                 57
@@ -332,6 +332,25 @@
             },
             "color": "#233",
             "bgcolor": "#355"
+        },
+        {
+            "id": 33,
+            "type": "graph/variable",
+            "pos": [
+                33,
+                849
+            ],
+            "size": [
+                1515.3419754028314,
+                452.66255493164044
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "agent_template",
+                "parameters": "{p:bos}\n\n{p:system}\nYou are a AI task scheduler. Your job is to call the provided tools in the correct sequence to generate the answer for the user question.\n\n## Tools\n{p:tools}\n\n## Objective\n\n1. First elaborate a detailed plan on how to complete the user request by using the provided tools.\nUse the following template to describe your plan:\n```\n<planning> A detailed description of your plan </planning>\n```\n\n2. Then use the following template to process the user request step by step:\n```\n<thinking> Your thoughts about what to do next </thinking>\n<action> The action to perform and its parameters. The specific format is described later. </action>\n<result> The result of the action </result>\n<evaluation> Evaluate if the tool provided all the information you need. Decide if you should call the tool again with a refined input </evaluation>\n```\n\nformat of the action field:\n- The action field is enclosed between <action> and </action> tags.\n- The name of the action is inserted between <action_name> and </action_name> tags.\n- Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n- Only the value of the parameter is specified. The name of the parameter is omitted.\n- The parameters can be multiline strings\n- Example: <action><action_name>eval</action_name><action_parameter>2+3</action_parameter></action>\n\n3. Keep repeating the previous template until you have the answer.\n\n## Rules\n- If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n- The input to query_file() should be a very detailed question about what you want from the external agent.\n- Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n- Use query_file() as a substitute for a web scraping tool\n{p:hints}{p:eom}\n\n{p:user}\nQuestion: {}{p:eom}\n\n{p:assistant}\n<planning>"
+            }
         }
     ],
     "links": [
