@@ -491,7 +491,11 @@ class CustomTextOutput extends CustomTextCommon{
     {
 		
 		var children = textarea.childNodes;
-		textarea.innerHTML = textarea.innerHTML.replace(/\>[\n\r]+\</g,"><")
+		var inner = textarea.innerHTML
+		inner = inner.replace(/\>[\n\r]+\</g,"><")
+		//inner = inner.replace(/\>\n\s\s\</g,"><")
+		//inner = inner.replace(/\<blockquote>[\n\r\s]+\</g,"<blockquote><")
+		textarea.innerHTML = inner
 		this.cleanHtmlEmptyNodes(children)
 		this.cleanHtmlCodeBlocks(textarea)
         return 0;
@@ -554,7 +558,17 @@ class CustomTextOutput extends CustomTextCommon{
 				
 				t.replaceWith(dc)
 				
-				text = d.innerHTML
+				text = unEscape(d.innerHTML)
+
+				function unEscape(htmlStr) {
+                    htmlStr = htmlStr.replace(/&lt;/g , "<");
+                    htmlStr = htmlStr.replace(/&gt;/g , ">");
+                    htmlStr = htmlStr.replace(/&quot;/g , "\"");
+                    htmlStr = htmlStr.replace(/&#39;/g , "\'");
+                    htmlStr = htmlStr.replace(/&amp;/g , "&");
+                    return htmlStr;
+                }
+
 			}
 			
 			var html = converter.makeHtml(text);
