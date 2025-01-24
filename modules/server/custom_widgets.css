@@ -26,7 +26,7 @@ div.div-container div.CustomTextOutput ol {
 }
 
 div.div-container div.CustomTextOutput blockquote {
-    /* white-space: normal; */
+    white-space: pre-line;
     background-color: #404040;
     padding-left: 10px;
     border-radius: 5px;

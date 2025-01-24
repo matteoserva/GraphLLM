@@ -493,6 +493,7 @@ class CustomTextOutput extends CustomTextCommon{
 		var children = textarea.childNodes;
 		var inner = textarea.innerHTML
 		inner = inner.replace(/\>[\n\r]+\</g,"><")
+		inner = inner.replace(/blockquote\>\n(\s+\<)/g,"blockquote>$1") //blockquote\n  <p>
 		//inner = inner.replace(/\>\n\s\s\</g,"><")
 		//inner = inner.replace(/\<blockquote>[\n\r\s]+\</g,"<blockquote><")
 		textarea.innerHTML = inner
