@@ -143,3 +143,8 @@ font-size: large
 div.div-container div.CustomTextOutput span[title] > span.katex-display {
 display:inline-block
 }
+
+div.div-container div.CustomTextOutput.markdown_on menclose[notation=box] {
+    border: 3px solid white;
+    padding: 5px;
+}
