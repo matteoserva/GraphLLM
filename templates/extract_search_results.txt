@@ -1,7 +1,14 @@
+{p:user}
 Your job is to extract the title and the url of each item in the provided webpage.
 
 ```markdown
 {}
 ```
 
-Extract at most the first {} items.
+Extract at most the first {} items.{p:eom}
+
+{p:assistant}
+Sure! Here is the list of items:
+
+```markdown
+{p:eom}

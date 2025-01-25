@@ -1,5 +1,5 @@
 from modules.formatter import PromptBuilder
-from modules.parser import solve_templates
+from modules.formatter import solve_templates
 from modules.executors.common import solve_placeholders
 from modules.common import readfile, merge_params
 from functools import partial
@@ -72,7 +72,11 @@ class LlmExecutor(GenericExecutor):
            if isinstance(client,str):
                client = Client.get_client(client)
            builder = self.builder
-           builder.load_model(client.get_model_name())
+           try:
+               formatter_config = client.get_formatter_config()
+           except:
+               formatter_config = client.get_model_name()
+           builder.load_model(formatter_config)
            self.client = client
 
 

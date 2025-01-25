@@ -85,6 +85,14 @@ class LLamaCppClient:
         self.default_params = a
         self.connected = False
 
+    def get_formatter_config(self):
+        props = self.get_server_props()
+        model_props = {"model_name": self.model_name}
+        if "chat_template" in props:
+            model_props["chat_template"] = props["chat_template"]
+            if "bos_token" in props:
+                model_props["bos_token"] = props["bos_token"]
+        return model_props
 
     def connect(self):
         if not self.connected:
@@ -98,7 +106,10 @@ class LLamaCppClient:
             model_name = model_path.split("/")[-1]
             self.model_name = model_name
             self.formatter = Formatter()
-            self.formatter.load_model(model_name)
+            model_props = self.get_formatter_config()
+
+
+            self.formatter.load_model(model_props)
             #get_formatter(props)
             self.connetion_semaphore = BoundedSemaphore(value = self.max_slots)
             self.connected = True
@@ -117,6 +128,8 @@ class LLamaCppClient:
         return self.model_name
 
     def get_server_props(self):
+        if self.connected:
+            return self.server_props
         url = "http://" + self.host + ":" + str(self.port) + "/props"
 
         retries = 10
@@ -130,7 +143,19 @@ class LLamaCppClient:
             else:
                 break
         max_context = resp["default_generation_settings"]["n_ctx"]
+
+        # try detecting the bos token
+        if "chat_template" in resp:
+            try:
+                rendered = self.tokenize("<<<<USER>>>>", add_special=True,with_pieces=True)
+                textval = "".join([el["piece"] for el in rendered])
+                bos_token = textval[:textval.find("<<<<USER>>>>")]
+                resp["bos_token"] = bos_token
+            except:
+                pass
+       
         self.context_size = max_context
+        self.server_props = resp
         return resp
 
     def _ricevi(self,req_params, pass_raw,callback):
@@ -179,11 +204,13 @@ class LLamaCppClient:
         retstring = "".join(ret)
         return retstring
 
-    def tokenize(self,p):
+    def tokenize(self,p,add_special=False, with_pieces=False):
         url = "http://" + self.host + ":" + str(self.port) + "/tokenize"
         a={}
         a["content"] = p
-        a["add_special"] = False
+        a["add_special"] = add_special
+        if with_pieces:
+            a["with_pieces"] = with_pieces
         js = json.dumps(a)
         headers = {"Content-Type": "application/json"}
         r = requests.post(url,data=js,headers=headers)
@@ -206,13 +233,18 @@ class LLamaCppClient:
         r3 = json.loads(r2)
         #print(r3)
         return r3
-    
+
+    def _set_prompt_legacy(self,obj, prompt,tokens):
+
+        obj["prompt"] = tokens
+
     def _send_prompt_text(self, p, params,callback):
         tokens = self.tokenize(p)
         #detokenized = self.detokenize(tokens)
 
         a = merge_params(self.default_params,params)
-        a["prompt"] = tokens
+        self._set_prompt_legacy(a,p,tokens)
+        #a["prompt"] = p
 
         if len(tokens) +a["n_predict"] >= self.context_size:
             raise Exception("context size exceeded: " + str(len(tokens)) + " + " + str(a["n_predict"]))

@@ -91,12 +91,14 @@ class PythonInterpreter:
             globalsParameter[el] = context[el]
         f = StringIO()
         with redirect_stdout(f):
+            #alt_s = my_exec(code, globalsParameter, globalsParameter)
             try:
                 alt_s = my_exec(code, globalsParameter, globalsParameter)
             except Exception as e:
-                #traceback.print_exc() 
-                #traceback.print_exception(*sys.exc_info()) 
-                print(str(type(e).__name__ ) + ": " + str(e))
+                raise
+            #    traceback.print_exc()
+            #    traceback.print_exception(*sys.exc_info())
+            #    print(str(type(e).__name__ ) + ": " + str(e))
         del globalsParameter['__builtins__']
         for el in globalsParameter:
             context[el] = globalsParameter[el]

@@ -26,7 +26,7 @@ div.div-container div.CustomTextOutput ol {
 }
 
 div.div-container div.CustomTextOutput blockquote {
-    /* white-space: normal; */
+    white-space: pre-line;
     background-color: #404040;
     padding-left: 10px;
     border-radius: 5px;
@@ -142,4 +142,9 @@ font-size: large
 
 div.div-container div.CustomTextOutput span[title] > span.katex-display {
 display:inline-block
+}
+
+div.div-container div.CustomTextOutput.markdown_on menclose[notation=box] {
+    border: 3px solid white;
+    padding: 5px;
 }

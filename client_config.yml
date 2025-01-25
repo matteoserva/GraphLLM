@@ -1,5 +1,8 @@
 ###
 
+# you can insert multiple clients in client_name.
+# If one of them fails, GraphLLM will try the next one
+
 client_name: [llama_cpp]
 
 ###
@@ -16,3 +19,9 @@ openai:
     type: openai
     api_key: XXX
     base_url: http://localhost:8080/v1
+
+openrouter:
+    type: openai
+    api_key: XXX
+    base_url: https://openrouter.ai/api/v1
+    model: meta-llama/llama-3.2-1b-instruct:free

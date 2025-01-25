@@ -117,6 +117,63 @@ class CustomTextCommon{
     {
         return this.minHeight;
     }
+	
+	handleFocusOutEvent(event,textarea)
+	{
+			if (event.relatedTarget === null) {
+				setTimeout(function () { event.target.focus()},0);
+				console.log("focus null bloccato")
+				return;
+			}
+			if (event.relatedTarget.tagName.toUpperCase() == "CANVAS") {
+				setTimeout(handleCanvasFocus.bind(this,event),0);
+				
+				/*LiteGraph.pointerListenerAdd(event.relatedTarget,"up", function(){
+					console.log("canvas nup");
+					
+					
+				},{once: true, capture:true});*/
+				console.log("focus canvas bloccato")
+				return;
+			}
+			
+			this.textareaUnfocus(textarea)
+		
+		
+			function handleCanvasFocus(event)
+			{
+				var is_dragging = event.relatedTarget.data.pointer_is_down &&  event.relatedTarget.data.dragging_canvas
+				if(is_dragging)
+				{
+					var canvas = event.relatedTarget.data
+					var last_click_position = canvas.last_click_position
+					LiteGraph.pointerListenerAdd(event.relatedTarget.data.getCanvasWindow().document,"mouseup", function(){
+						console.log("canvas document up");
+						
+						if(last_click_position[0] == canvas.mouse[0] || 
+							last_click_position[1] == canvas.mouse[1] ||
+                                                        (!event.target.checkVisibility())      )
+						{
+							console.log ("canvas up mouse not moved")
+							event.relatedTarget.focus()
+							this.textareaUnfocus(textarea)
+						}
+						else
+						{
+							event.target.focus()
+							
+						}
+						
+					}.bind(this),{once: true, capture:true});
+				}
+				else
+				{
+					event.relatedTarget.focus()
+					this.textareaUnfocus(textarea)
+				}
+			}
+		
+	}
 
 }
 
@@ -377,9 +434,9 @@ class CustomTextOutput extends CustomTextCommon{
         this.redrawContent()
     }
 
-    cleanHtml(children)
-    {
-        /* if the node contains only one real child and two empty text nodes,
+	cleanHtmlEmptyNodes(children)
+	{
+		   /* if the node contains only one real child and two empty text nodes,
            then it is a formatting issue in showdownjs. remove the empty nodes.
            The empty texts are incompatible with the white-space: pre property */
 
@@ -398,12 +455,50 @@ class CustomTextOutput extends CustomTextCommon{
         }
 
         var fathers = Array.from(children).filter((el) => el.childNodes.length > 0);
-        fathers.map((el) => this.cleanHtml(el.childNodes));
+        fathers.map((el) => this.cleanHtmlEmptyNodes(el.childNodes));
 
         if(numText == 2 && numEmpty == numText && numNodes == 3)
         {
             textChildren.map((el) => el.remove())
         }
+		
+	}
+
+	cleanHtmlCodeBlocks(textarea)
+	{
+		//<p style="position: absolute; top: 0px; right:0px">ciao</p>
+		var codeBlocks = textarea.querySelectorAll("pre > code[class*='language-']")
+		codeBlocks.forEach((element) => appendType(element));
+		
+		function appendType(el)
+		{
+			var p = document.createElement("p");
+			p.style="position: absolute; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+			var className = el.className.match("language-(.*)")[1]
+			p.innerHTML = className;
+			el.parentElement.appendChild(p)
+			el.parentElement.style.marginTop = "4px"
+			el.parentElement.style.marginBottom = "4px"
+			el.parentElement.style.paddingTop = "4px"
+			el.parentElement.style.paddingBottom = "4px"
+			el.parentElement.style.position = "relative"
+		}
+		
+		return 0;
+	}
+
+    cleanHtml(textarea)
+    {
+		
+		var children = textarea.childNodes;
+		var inner = textarea.innerHTML
+		inner = inner.replace(/\>[\n\r]+\</g,"><")
+		inner = inner.replace(/blockquote\>\n(\s+\<)/g,"blockquote>$1") //blockquote\n  <p>
+		//inner = inner.replace(/\>\n\s\s\</g,"><")
+		//inner = inner.replace(/\<blockquote>[\n\r\s]+\</g,"<blockquote><")
+		textarea.innerHTML = inner
+		this.cleanHtmlEmptyNodes(children)
+		this.cleanHtmlCodeBlocks(textarea)
         return 0;
     }
 
@@ -429,15 +524,57 @@ class CustomTextOutput extends CustomTextCommon{
 
             );
 			converter.setOption('tables', true);
-			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\]\n/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
+			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\](\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
 			text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
 			text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
 			// \boxed{\int_{\Omega} f \, d\mu = \int_{\Omega} f^+ \, d\mu - \int_{\Omega} f^- \, d\mu}
 			text = text.replace(/(^|\n)(\\boxed{[^\n]+})(\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>$3')
-            var html = converter.makeHtml(text);
+            var d = document.createElement("div")
+			d.innerHTML = text
+			var t = d.querySelector("think")
+			if(t)
+			{
+				
+				var d2 = document.createElement("div")
+				d2.className = "thinking"
+				d2.innerHTML = t.innerHTML.trim()
+				
+				
+				var dc = document.createElement("div")
+				dc.className = "thinking-container"
+				dc.style = "background-color: #202020"
+				dc.style.marginTop = "4px"
+				dc.style.marginBottom = "4px"
+				dc.style.paddingTop = "4px"
+				dc.style.paddingBottom = "4px"
+				dc.style.position = "relative"
+				
+				
+				var p = document.createElement("p");
+				p.style="position: absolute; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+				p.innerHTML = "Think"
+				
+				dc.appendChild(d2)
+				dc.appendChild(p)
+				
+				t.replaceWith(dc)
+				
+				text = unEscape(d.innerHTML)
+
+				function unEscape(htmlStr) {
+                    htmlStr = htmlStr.replace(/&lt;/g , "<");
+                    htmlStr = htmlStr.replace(/&gt;/g , ">");
+                    htmlStr = htmlStr.replace(/&quot;/g , "\"");
+                    htmlStr = htmlStr.replace(/&#39;/g , "\'");
+                    htmlStr = htmlStr.replace(/&amp;/g , "&");
+                    return htmlStr;
+                }
+
+			}
+			
+			var html = converter.makeHtml(text);
             this.textarea.innerHTML = html
-            var children = this.textarea.childNodes;
-            this.cleanHtml(children)
+            this.cleanHtml(this.textarea)
 
         }
         else
@@ -461,6 +598,16 @@ class CustomTextOutput extends CustomTextCommon{
         {
 
             this.config.use_markdown = config.use_markdown
+            if(config.use_markdown)
+            {
+		this.textarea.classList.remove("markdown_off")
+		this.textarea.classList.add("markdown_on")
+	    }
+            else
+            {
+		this.textarea.classList.remove("markdown_on")
+		this.textarea.classList.add("markdown_off")
+	    }
             this.redrawContent()
 
         }
@@ -501,6 +648,7 @@ class CustomTextOutput extends CustomTextCommon{
         var textarea = document.createElement("div");
         div.appendChild(textarea)
         textarea.className="CustomTextOutput"
+        textarea.classList.add("markdown_off")
         textarea.tabIndex=0;
         this.textarea = textarea
 
@@ -521,19 +669,21 @@ class CustomTextOutput extends CustomTextCommon{
             }
 
          });
-        textarea.addEventListener("focusout", function(event){
-                    this.textareaUnfocus(textarea)
-                     if (window.getSelection) {window.getSelection().removeAllRanges();}
-             else if (document.selection) {document.selection.empty();}
-
-        }.bind(this))
+        textarea.addEventListener("focusout", function(e){ this.handleFocusOutEvent(e,textarea)}.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
         textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
         return div
 
     }
 
-
+	textareaUnfocus(textarea)
+	{
+		super.textareaUnfocus(textarea)
+		if (window.getSelection) {window.getSelection().removeAllRanges();}
+             else if (document.selection) {document.selection.empty();}
+	}
+	
+	
     configureSizeInFocus()
     {
         var textarea = this.textarea
@@ -647,7 +797,7 @@ class CustomTextInput extends CustomTextCommon{
         textarea.style.height = this.minHeight +"px";
         this.textarea = textarea
 
-        textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
+        textarea.addEventListener("focusout", function(e){ this.handleFocusOutEvent(e,textarea)}.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
         textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
         return div
@@ -750,14 +900,15 @@ class CustomTextarea extends CustomTextCommon{
 		}
         this.textarea.ondragover = function(e) {e.preventDefault(); }
 
-        textarea.addEventListener("focusout", function(event){this.textareaUnfocus(textarea)}.bind(this))
+        textarea.addEventListener("focusout", function(e){ this.handleFocusOutEvent(e,textarea)}.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
         textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
         return div
         
+		
     }
     
-
+	
     
     configureSizeInFocus()
     {
