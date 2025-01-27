@@ -53,6 +53,8 @@ class DivContainer {
 
         this.saved_values = {}
         this.saved_diff = {}
+		
+		
     }
 
     onCollapse()
@@ -95,6 +97,13 @@ class DivContainer {
         titlebar.innerHTML = " ";
         this.titlebar = titlebar
         dialog.appendChild(titlebar)
+		
+		setTimeout(function(){
+            if(this.parent.id)
+			{
+				this.appendElement(this.parent)
+			}
+        }.bind(this) );
     }
 
     appendElement(node)
@@ -153,13 +162,6 @@ class DivContainer {
     {
         //this.H = 2*H
         this.saved_y = y;
-
-        if (!this.attached)
-        {
-            //var canvas = node.graph.list_of_graphcanvas[0]
-            this.appendElement(node)
-
-        }
 
         var availableSpace = node.size[1] - y
         this.updateTextarea(node,node.graph.list_of_graphcanvas[0],y,availableSpace)
