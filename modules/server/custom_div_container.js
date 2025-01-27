@@ -88,6 +88,13 @@ class DivContainer {
         dialog.appendChild(innerDialog)
         this.dialog = dialog
 
+
+        var titlebar = document.createElement("div");
+        titlebar.className = "titlebar-container";
+        titlebar.style.position = "absolute";
+        titlebar.innerHTML = " ";
+        this.titlebar = titlebar
+        dialog.appendChild(titlebar)
     }
 
     appendElement(node)
@@ -125,6 +132,9 @@ class DivContainer {
         var numChildren = this.children.length
         this.H = numChildren * this.height
         this.drawCounter = 1;
+
+        this.titlebar.style.top = (-this.saved_y - 20) + "px";
+        this.titlebar.style.right = "0px";
 
     }
 
