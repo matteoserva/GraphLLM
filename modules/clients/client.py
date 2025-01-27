@@ -132,7 +132,7 @@ class LLamaCppClient:
             return self.server_props
         url = "http://" + self.host + ":" + str(self.port) + "/props"
 
-        retries = 10
+        retries = 30
         while retries > 0:
             r = requests.get(url)
             resp = json.loads(r.content)
