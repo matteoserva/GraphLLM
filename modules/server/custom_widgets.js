@@ -492,12 +492,15 @@ class CustomTextOutput extends CustomTextCommon{
 		
 		var children = textarea.childNodes;
 		var inner = textarea.innerHTML
-		inner = inner.replace(/\>[\n\r]+\</g,"><")
-		inner = inner.replace(/blockquote\>\n(\s+\<)/g,"blockquote>$1") //blockquote\n  <p>
+
+		inner = inner.replace(/\<blockquote\>\n(\s+\<)/g,"<blockquote>$1") //blockquote\n  <p>
+        inner = inner.replace(/\n(\s*)\<\/blockquote\>/g,"$1</blockquote>") //blockquote\n  <p>
+		//inner = inner.replace(/\>[\n\r]+\</g,"><")
+		//inner = inner.replace(/blockquote\>\n(\s+\<)/g,"blockquote>$1") //blockquote\n  <p>
 		//inner = inner.replace(/\>\n\s\s\</g,"><")
 		//inner = inner.replace(/\<blockquote>[\n\r\s]+\</g,"<blockquote><")
 		textarea.innerHTML = inner
-		this.cleanHtmlEmptyNodes(children)
+		//this.cleanHtmlEmptyNodes(children)
 		this.cleanHtmlCodeBlocks(textarea)
         return 0;
     }
@@ -524,6 +527,7 @@ class CustomTextOutput extends CustomTextCommon{
 
             );
 			converter.setOption('tables', true);
+			converter.setOption('disableForced4SpacesIndentedSublists', true)
 			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\](\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
 			text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
 			text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
