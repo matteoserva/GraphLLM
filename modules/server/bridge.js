@@ -39,9 +39,46 @@ class WebBrige {
     LiteGraph.slot_types_default_in.string=["input/text_input"]
   }
 
+  processMouseUp(e)
+  {
+
+          var now = LiteGraph.getTime();
+        var previousClick = this.previousClick || [0,0]
+        this.previousClick = [now,this.canvas.last_mouseclick].concat( [previousClick[0], previousClick[1]])
+        var total = this.previousClick[0] - this.previousClick[3]
+        var t1 = (this.previousClick[0] - this.previousClick[1])
+        var t2 = (this.previousClick[2] - this.previousClick[3])
+        var is_double_click = (total < 300) && (t1 > 1) && (t2 > 1) && (t1 < 100) && (t2 < 100)
+
+		var is_primary = (e.isPrimary === undefined || e.isPrimary);
+        is_double_click = is_double_click && is_primary;
+        var should_handle = this.canvas.selected_group && is_double_click
+        if(should_handle)
+        {
+            var group = this.canvas.selected_group
+            if (group.is_collapsed === undefined)
+            {
+                group.is_collapsed = false
+            }
+
+            for (var i = 0; i < group._nodes.length; ++i) {
+                var node = group._nodes[i];
+                if(!node.flags.collapsed)
+                {
+                    node.collapse()
+                    }
+            }
+        }
+        console.log("group: " + this.canvas.selected_group + "   double " + is_double_click + "   time: "
+        + (now - this.canvas.last_mouseclick), " p " + this.previousClick + "  t " + [total,t1,t2])
+
+    return false;
+  }
+
   connect() {
     this.setDefaultConnectionEndpoints()
-
+    //LiteGraph.pointerListenerRemove(this.canvas.canvas,"up", this.canvas._mouseup_callback,true);
+    LiteGraph.pointerListenerAdd(document,"up", this.processMouseUp.bind(this),true);
     this.canvas.allow_searchbox = false
 
     this.cb_as = this.graph.onAfterStep;
