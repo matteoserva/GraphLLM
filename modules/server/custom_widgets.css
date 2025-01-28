@@ -76,11 +76,12 @@ position: absolute;
 top: 2px;
 right: 4px;
 color: DarkGray;
-user-select: none
+user-select: none;
+pointer-events: none;
 }
 
 div.div-container div.selected .nameText{
-display: none
+display: none;
 }
 
 div.div-container {
