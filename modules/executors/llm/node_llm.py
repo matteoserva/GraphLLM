@@ -160,7 +160,7 @@ class LlmExecutor(GenericExecutor):
         
         self.pending_config = {}
     
-        if self.sysprompt:
+        if self.sysprompt is not None:
             variables = self.graph_data["graph"].variables
             new_value, _ = solve_templates(self.sysprompt, [], variables)
             self.builder.set_param("sysprompt", new_value)

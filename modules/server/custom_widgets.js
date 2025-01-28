@@ -147,7 +147,7 @@ class CustomTextCommon{
 				{
 					var canvas = event.relatedTarget.data
 					var last_click_position = canvas.last_click_position
-					LiteGraph.pointerListenerAdd(event.relatedTarget.data.getCanvasWindow().document,"mouseup", function(){
+					LiteGraph.pointerListenerAdd(event.relatedTarget.data.getCanvasWindow().document,"up", function(){
 						console.log("canvas document up");
 						
 						if(last_click_position[0] == canvas.mouse[0] || 
