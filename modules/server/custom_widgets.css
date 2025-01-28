@@ -9,8 +9,17 @@ border: 1px solid gray;
 background-color: #202020;
 }
 
-div.div-container div.CustomTextOutput * {
+/* div.div-container div.CustomTextOutput * {
 margin: 0px;
+}*/
+
+div.div-container div.CustomTextOutput p {
+margin-top: 0.5em;
+margin-bottom: 0.5em;
+}
+
+div.div-container div.CustomTextOutput blockquote {
+margin-left: 10px;
 }
 
 div.div-container div.CustomTextOutput table,

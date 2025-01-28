@@ -473,7 +473,7 @@ class CustomTextOutput extends CustomTextCommon{
 		function appendType(el)
 		{
 			var p = document.createElement("p");
-			p.style="position: absolute; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+			p.style="position: absolute; margin: 0px; top: -0px; right:10px; transform: translateY(-50%); background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
 			var className = el.className.match("language-(.*)")[1]
 			p.innerHTML = className;
 			el.parentElement.appendChild(p)
@@ -494,7 +494,12 @@ class CustomTextOutput extends CustomTextCommon{
 		var inner = textarea.innerHTML
 
 		inner = inner.replace(/\<blockquote\>\n(\s+\<)/g,"<blockquote>$1") //blockquote\n  <p>
-        inner = inner.replace(/\n(\s*)\<\/blockquote\>/g,"$1</blockquote>") //blockquote\n  <p>
+        //inner = inner.replace(/\n(\s*)\<\/blockquote\>/g,"$1</blockquote>") //blockquote\n  <p>
+       /* inner = inner.replace(/\<\/li\>\n/g,"</li>")
+        inner = inner.replace(/\<\/p\>\n/g,"</p>")
+        inner = inner.replace(/\<\/blockquote\>\n/g,"</blockquote>")
+        inner = inner.replace(/\<ul\>\n/g,"<ul>")*/
+        inner = inner.replace(/\<\/([a-zA-Z0-9]+)\>\n/g,"</$1>")
 		//inner = inner.replace(/\>[\n\r]+\</g,"><")
 		//inner = inner.replace(/blockquote\>\n(\s+\<)/g,"blockquote>$1") //blockquote\n  <p>
 		//inner = inner.replace(/\>\n\s\s\</g,"><")
@@ -555,7 +560,7 @@ class CustomTextOutput extends CustomTextCommon{
 				
 				
 				var p = document.createElement("p");
-				p.style="position: absolute; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+				p.style="position: absolute; margin: 0px; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
 				p.innerHTML = "Think"
 				
 				dc.appendChild(d2)
