@@ -1,0 +1,130 @@
+{
+    "last_node_id": 23,
+    "last_link_id": 23,
+    "nodes": [
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                109,
+                129
+            ],
+            "size": [
+                733.6196823120118,
+                208.4971801757813
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        23
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{grammar: think , temperature: 0.001, sysprompt: \"\"}",
+                "subtype": "stateless",
+                "template": "Solve x*x + x = 6"
+            }
+        },
+        {
+            "id": 16,
+            "type": "output/watch",
+            "pos": [
+                112,
+                399
+            ],
+            "size": [
+                720.9396823120118,
+                424.91718017578137
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 23,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": {
+                    "use_markdown": true
+                }
+            }
+        },
+        {
+            "id": 23,
+            "type": "graph/variable",
+            "pos": [
+                867,
+                400
+            ],
+            "size": {
+                "0": 592.7594604492188,
+                "1": 188.98635864257812
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "think",
+                "parameters": "# edit the think-text to configure\nthink-text ::= think-token{50,}\n\n# here is the full grammar\nroot ::= thought answer\nthought ::= \"<think>\\n\" [a-zA-Z] think-text \"\\n</think>\"\nthink-token ::= [^\\n] | (\"\\n\" [^<]) \n\nanswer ::= ([^\\n] | \"\\n\")+"
+            }
+        },
+        {
+            "id": 22,
+            "type": "graph/variable",
+            "pos": [
+                869,
+                132
+            ],
+            "size": [
+                597.0199226820762,
+                220.06189073609903
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This example uses a grammar to control how much\nthe model should be thinking before answering.\nIt's made with Deepseek-R1-distill in mind\nbut it might work with others too.\n\n{500,} means at least 500 characters\n{,500} means maximum 500 characters\n{10,20} means from 10 to 20"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        }
+    ],
+    "links": [
+        [
+            23,
+            21,
+            0,
+            16,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4
+}
