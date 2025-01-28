@@ -1,4 +1,32 @@
 
+div.litegraph > div.header
+{
+z-index: 1;
+display: flex;
+flex-direction: row;
+}
+
+div.litegraph > div.header > div.tools
+{
+position: relative !important;
+
+}
+
+div.litegraph > div.header > div.tools-left
+{
+margin-right: auto;
+}
+
+div.litegraph > div.header > div.tools-right
+{
+white-space: nowrap;
+}
+
+div.litegraph > div.header  .tool_buttons
+{
+white-space: nowrap;
+}
+
 
 div.div-container div.CustomTextOutput a:link { color: lightskyblue; }
 div.div-container div.CustomTextOutput a:visited { color: #6d4b8d; }

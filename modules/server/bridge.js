@@ -18,7 +18,10 @@ class WebBrige {
     this.graph = editor.graph;
     this.canvas = this.editor.graphcanvas;
     this.topBar = document.querySelector("span#LGEditorTopBarSelector")
-    this.topBar.innerHTML ="Graphs: <span><input id='filename' maxlength='50' style='height: 30px; min-width:400px'/><select style='height: 30px; width:20px'><option>Empty</option></select></span><button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='delete'>Delete</button><button class='btn' id='new'>New</button><button class='btn' id='download'>Download</button> | ";
+    var topbar_html = "Graphs: <span style=\"display: inline-block;position:relative;width: 430px; height: 35px;\" >"
+    topbar_html += "<input id='filename' maxlength='50' style='height: 100%; width:400px;z-index: 1;position: relative;'/><select style='height: 100%; width:430px; position: absolute; top:0px; right: 0px'><option>Empty</option></select></span>"
+    topbar_html += "<span class=\"tool_buttons\"><button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='delete'>Delete</button><button class='btn' id='new'>New</button><button class='btn' id='download'>Download</button></span>| ";
+    this.topBar.innerHTML = topbar_html
 
     this.saveBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#save")
     this.loadBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#load")
@@ -54,7 +57,6 @@ class WebBrige {
     this.newBtn.addEventListener("click",this.newGraph.bind(this));
     document.querySelector("div.tools #playstepnode_button").remove()
     document.querySelector("div.tools #livemode_button").remove()
-    document.querySelector("div.litegraph > div.header").style.zIndex = 1
     document.querySelector("div.litegraph div.headerpanel.loadmeter").style.display="none"
     document.querySelector("div.litegraph div.content").style.overflow="hidden"
     this.graph.onBeforeStep = function()
