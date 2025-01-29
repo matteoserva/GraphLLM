@@ -493,6 +493,10 @@ class WebBrige {
         }
     }
     data["group_states"] = group_states
+    var e = this.nameSelector
+    var value = e.value;
+    data["graph_name"] = value
+
   }
 
   onDeserialize(data)
@@ -591,7 +595,22 @@ class WebBrige {
         window.setTimeout(graph.change.bind(graph))
    console.log("load called")
   }
+
+  loadBackup()
+  {
+    var data = localStorage.getItem("litegraphg demo backup");
+	if(!data)
+		return;
+	var graph_data = JSON.parse(data);
+	this.graph.configure( graph_data );
+    if ("graph_name" in graph_data)
+    {
+        var e = this.nameSelector;
+        e. value = graph_data["graph_name"]
+    }
+  }
 }
 
 const web_bridge = new WebBrige();
 web_bridge.connect()
+web_bridge.loadBackup()
