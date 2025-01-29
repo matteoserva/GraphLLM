@@ -41,7 +41,41 @@ class WebBrige {
 
   processMouseDown(e)
   {
-    //console.log("do")
+    if (this.canvas.selected_group)
+    {
+        if (this.canvas.selected_group.collapse_state && this.canvas.selected_group.collapse_state.is_collapsed &&this.canvas.selected_group_resizing)
+        {
+            this.canvas.selected_group_resizing = false
+            this.canvas.selected_group.recomputeInsideNodes();
+        }
+    }
+    if (this.canvas.node_dragged)
+    {
+        var draggable = true;
+        for (let el in this.graph._groups)
+        {
+            var group = this.graph._groups[el]
+            if(group.collapse_state && group.collapse_state.is_collapsed)
+            {
+                if(!this.canvas.node_dragged)
+                {
+                    console.log("strano")
+                }
+
+                var managed_nodes = Object.keys(group.collapse_state.node_info)
+                if( managed_nodes.includes('' + this.canvas.node_dragged.id) )
+                {
+                    draggable = false
+                }
+            }
+        }
+        if(!draggable)
+        {
+            this.canvas.node_dragged = null
+            }
+
+    }
+
 
   }
   processMouseUp(e)
@@ -106,7 +140,7 @@ class WebBrige {
                 var internal_nodes = group._nodes.map((n) => ''+n.id)
                 // remove nodes not in group
                 var node_info = group.collapse_state.node_info
-                Object.keys(node_info).filter((k) => internal_nodes.includes(k)).reduce((cur,key) => { return Object.assign(cur, { [key]: node_info[key] })}, {});
+                node_info = Object.keys(node_info).filter((k) => internal_nodes.includes(k)).reduce((cur,key) => { return Object.assign(cur, { [key]: node_info[key] })}, {});
                 group.collapse_state.node_info = node_info
                 group.collapse_state.group_size = [...group.size]
                 group.size = [180,110]
