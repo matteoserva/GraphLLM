@@ -12,22 +12,28 @@ function addDemo( select, name, url )
 
 
 
+
 class WebBrige {
   constructor() {
     this.editor = editor;
     this.graph = editor.graph;
     this.canvas = this.editor.graphcanvas;
     this.topBar = document.querySelector("span#LGEditorTopBarSelector")
-    this.topBar.innerHTML ="Graphs: <span><input id='filename' maxlength='50' style='height: 30px; min-width:400px'/><select style='height: 30px; width:20px'><option>Empty</option></select></span><button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='delete'>Delete</button><button class='btn' id='new'>New</button><button class='btn' id='download'>Download</button> | ";
+    var topbar_html = "Graphs: <span style=\"display: inline-block;position:relative;width: 460px; height: 35px;\" >"
+    topbar_html += "<input id='filename' maxlength='50' style='height: 100%; width:400px;position: relative;'/><select class=\"selector-main\" style='height: 100%; width:430px; position: absolute; top:0px; right: 30px'><option>Empty</option></select><select class=\"selector-extras\" style='height: 100%; width:460px; position: absolute; top:0px; right: 0px'><option>Empty</option></select></span>"
+    topbar_html += "<span class=\"tool_buttons\"><button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='delete'>Delete</button><button class='btn' id='new'>New</button><button class='btn' id='download'>Download</button></span>| ";
+    this.topBar.innerHTML = topbar_html
 
     this.saveBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#save")
     this.loadBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#load")
     this.deleteBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#delete")
     this.newBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#new")
     this.nameSelector = document.querySelector("div.litegraph .selector input#filename")
-    this.select = document.querySelector("div.litegraph .selector select")
+    this.select = document.querySelector("div.litegraph .selector .selector-main")
 
     this.audio = new Audio();
+
+    this.graph_handler = new GraphHandler(this.graph,this.canvas)
   }
 
   setDefaultConnectionEndpoints()
@@ -36,10 +42,15 @@ class WebBrige {
     LiteGraph.slot_types_default_in.string=["input/text_input"]
   }
 
+
+
   connect() {
     this.setDefaultConnectionEndpoints()
+    this.graph_handler.connect()
 
     this.canvas.allow_searchbox = false
+
+
 
     this.cb_as = this.graph.onAfterStep;
     let cb_bs = this.graph.onBeforeStep;
@@ -54,7 +65,6 @@ class WebBrige {
     this.newBtn.addEventListener("click",this.newGraph.bind(this));
     document.querySelector("div.tools #playstepnode_button").remove()
     document.querySelector("div.tools #livemode_button").remove()
-    document.querySelector("div.litegraph > div.header").style.zIndex = 1
     document.querySelector("div.litegraph div.headerpanel.loadmeter").style.display="none"
     document.querySelector("div.litegraph div.content").style.overflow="hidden"
     this.graph.onBeforeStep = function()
@@ -65,6 +75,8 @@ class WebBrige {
     }
     this.graph.onPlayEvent = this.onPlayEvent.bind(this)
     this.graph.onStopEvent = this.onStopEvent.bind(this)
+    this.graph.onSerialize = this.onSerialize.bind(this)
+    this.graph.onConfigure= this.onDeserialize.bind(this)
 
     //some examples
     //addDemo("rap battle", "/graph/load?file=rap_battle.json");
@@ -84,7 +96,12 @@ class WebBrige {
             this.startGraph()
         }
     });
+
+
+
   }
+
+
 
   loadList()
   {
@@ -392,6 +409,41 @@ class WebBrige {
         	this.cb_as();
   }
 
+  onSerialize(data)
+  {
+    var group_states = new Object()
+    for(let el in data.groups)
+    {
+        var group = this.graph._groups[el]
+        if ("collapse_state" in group)
+        {
+            group_states[el] = group.collapse_state
+        }
+    }
+    data["group_states"] = group_states
+    var e = this.nameSelector
+    var value = e.value;
+    data["graph_name"] = value
+
+  }
+
+  onDeserialize(data)
+  {
+    if ("group_states" in data)
+    {
+        for(let el in data.group_states)
+        {
+            var group = this.graph._groups[el]
+            group.collapse_state = data.group_states[el]
+        }
+
+    }
+    for (var i = 0; i < this.graph._nodes.length; ++i) {
+        var node = this.graph._nodes[i];
+        this.graph_handler.recomputeOutsideGroup(node)
+    }
+  }
+
   startGraph()
   {
     var isStopped = (graph.status == LGraph.STATUS_STOPPED)
@@ -475,7 +527,22 @@ class WebBrige {
         window.setTimeout(graph.change.bind(graph))
    console.log("load called")
   }
+
+  loadBackup()
+  {
+    var data = localStorage.getItem("litegraphg demo backup");
+	if(!data)
+		return;
+	var graph_data = JSON.parse(data);
+	this.graph.configure( graph_data );
+    if ("graph_name" in graph_data)
+    {
+        var e = this.nameSelector;
+        e. value = graph_data["graph_name"]
+    }
+  }
 }
 
 const web_bridge = new WebBrige();
 web_bridge.connect()
+web_bridge.loadBackup()

@@ -147,7 +147,7 @@ class CustomTextCommon{
 				{
 					var canvas = event.relatedTarget.data
 					var last_click_position = canvas.last_click_position
-					LiteGraph.pointerListenerAdd(event.relatedTarget.data.getCanvasWindow().document,"mouseup", function(){
+					LiteGraph.pointerListenerAdd(event.relatedTarget.data.getCanvasWindow().document,"up", function(){
 						console.log("canvas document up");
 						
 						if(last_click_position[0] == canvas.mouse[0] || 
@@ -473,7 +473,7 @@ class CustomTextOutput extends CustomTextCommon{
 		function appendType(el)
 		{
 			var p = document.createElement("p");
-			p.style="position: absolute; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+			p.style="position: absolute; margin: 0px; top: -0px; right:10px; transform: translateY(-50%); background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
 			var className = el.className.match("language-(.*)")[1]
 			p.innerHTML = className;
 			el.parentElement.appendChild(p)
@@ -492,12 +492,20 @@ class CustomTextOutput extends CustomTextCommon{
 		
 		var children = textarea.childNodes;
 		var inner = textarea.innerHTML
-		inner = inner.replace(/\>[\n\r]+\</g,"><")
-		inner = inner.replace(/blockquote\>\n(\s+\<)/g,"blockquote>$1") //blockquote\n  <p>
+
+		inner = inner.replace(/\<blockquote\>\n(\s+\<)/g,"<blockquote>$1") //blockquote\n  <p>
+        //inner = inner.replace(/\n(\s*)\<\/blockquote\>/g,"$1</blockquote>") //blockquote\n  <p>
+       /* inner = inner.replace(/\<\/li\>\n/g,"</li>")
+        inner = inner.replace(/\<\/p\>\n/g,"</p>")
+        inner = inner.replace(/\<\/blockquote\>\n/g,"</blockquote>")
+        inner = inner.replace(/\<ul\>\n/g,"<ul>")*/
+        inner = inner.replace(/\<\/([a-zA-Z0-9]+)\>\n/g,"</$1>")
+		//inner = inner.replace(/\>[\n\r]+\</g,"><")
+		//inner = inner.replace(/blockquote\>\n(\s+\<)/g,"blockquote>$1") //blockquote\n  <p>
 		//inner = inner.replace(/\>\n\s\s\</g,"><")
 		//inner = inner.replace(/\<blockquote>[\n\r\s]+\</g,"<blockquote><")
 		textarea.innerHTML = inner
-		this.cleanHtmlEmptyNodes(children)
+		//this.cleanHtmlEmptyNodes(children)
 		this.cleanHtmlCodeBlocks(textarea)
         return 0;
     }
@@ -524,9 +532,20 @@ class CustomTextOutput extends CustomTextCommon{
 
             );
 			converter.setOption('tables', true);
+			converter.setOption('disableForced4SpacesIndentedSublists', true)
 			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\](\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
 			text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
 			text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
+
+			/*
+                \[
+                a
+                b
+                \]
+			*/
+			text = text.replace(/(\s|^)\\\[\n(([^\n]+\n){1,5})\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
+
+
 			// \boxed{\int_{\Omega} f \, d\mu = \int_{\Omega} f^+ \, d\mu - \int_{\Omega} f^- \, d\mu}
 			text = text.replace(/(^|\n)(\\boxed{[^\n]+})(\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>$3')
             var d = document.createElement("div")
@@ -551,7 +570,7 @@ class CustomTextOutput extends CustomTextCommon{
 				
 				
 				var p = document.createElement("p");
-				p.style="position: absolute; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+				p.style="position: absolute; margin: 0px; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
 				p.innerHTML = "Think"
 				
 				dc.appendChild(d2)

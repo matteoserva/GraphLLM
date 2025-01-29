@@ -4,7 +4,7 @@ from modules.executors.common import solve_placeholders
 from modules.common import readfile, merge_params
 from functools import partial
 from modules.executors.common import GenericExecutor
-from modules.grammar import load_grammar
+from modules.grammar import load_grammar,load_grammar_text
 from modules.clients.client import Client
 
 
@@ -37,6 +37,7 @@ class LlmExecutor(GenericExecutor):
            self.set_dependencies({"client":node_graph_parameters["client"]})
         self.logger = node_graph_parameters["logger"]
         self.path = node_graph_parameters.get("path","/")
+        self.pending_config={}
 
     def set_parameters(self,args):
             executor_parameters = {}
@@ -49,9 +50,7 @@ class LlmExecutor(GenericExecutor):
                     new_obj[key] = args[key]
 
             if "grammar" in args:
-                grammarfile = args["grammar"]
-                grammar = load_grammar(grammarfile)
-                new_obj[grammar["format"]] = grammar["schema"]
+                self.pending_config["grammar"] = args["grammar"] 
 
             executor_parameters = merge_params(executor_parameters, new_obj)
             self._set_client_parameters(executor_parameters)
@@ -135,7 +134,33 @@ class LlmExecutor(GenericExecutor):
         return resp
 
     def setup_complete(self):
-        if self.sysprompt:
+        if "grammar" in self.pending_config:
+            new_obj = {}
+            executor_parameters = self.client_parameters
+            grammar = self.pending_config["grammar"]
+            if isinstance(grammar,dict):
+                    
+                    print(grammar)
+                    varname = list(grammar.keys())[0].split(":",1)[-1] # {'v:nome': None} -> nome
+                    value = self.graph.variables[varname]
+                    grammar = load_grammar_text(value)
+                    new_obj[grammar["format"]] = grammar["schema"]
+            elif grammar in self.graph.variables:
+                    varname = grammar
+                    value = self.graph.variables[varname]
+                    grammar = load_grammar_text(value)
+                    new_obj[grammar["format"]] = grammar["schema"]
+            else:
+                    grammarfile = grammar
+                    grammar = load_grammar(grammarfile)
+                    new_obj[grammar["format"]] = grammar["schema"]
+                    
+            executor_parameters = merge_params(executor_parameters, new_obj)
+            self._set_client_parameters(executor_parameters)        
+        
+        self.pending_config = {}
+    
+        if self.sysprompt is not None:
             variables = self.graph_data["graph"].variables
             new_value, _ = solve_templates(self.sysprompt, [], variables)
             self.builder.set_param("sysprompt", new_value)

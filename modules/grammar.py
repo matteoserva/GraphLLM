@@ -1,9 +1,6 @@
 import json
 
-def load_grammar(fn):
-    f = open(fn,"r")
-    a = f.read()
-    f.close()
+def load_grammar_text(a):
     res = {}
     try:
         res["schema"] = json.loads(a)
@@ -12,3 +9,9 @@ def load_grammar(fn):
         res["schema"] = a
         res["format"] = "grammar"
     return res
+
+def load_grammar(fn):
+    f = open(fn,"r")
+    a = f.read()
+    f.close()
+    return load_grammar_text(a)

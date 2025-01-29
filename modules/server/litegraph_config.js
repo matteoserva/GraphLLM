@@ -1,0 +1,1 @@
+LiteGraph.pointerevents_method = "pointer"

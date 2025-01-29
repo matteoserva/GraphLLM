@@ -72,7 +72,7 @@ class LLamaCppClient:
         self.port = port
         self.client_parameters = {}
         a = {}
-        a["n_predict"] = 1024*1
+        a["n_predict"] = 1024*2
         a["stop"] = ["<|eom_id|>","<|eot_id|>","<|end|>", "<|im_end|>", "</s>","<end_of_turn>","<|im_start|>","[|endofturn|]"]
         #        a["temperature"] = 0.0
         a["seed"] = -1
@@ -132,7 +132,7 @@ class LLamaCppClient:
             return self.server_props
         url = "http://" + self.host + ":" + str(self.port) + "/props"
 
-        retries = 10
+        retries = 30
         while retries > 0:
             r = requests.get(url)
             resp = json.loads(r.content)

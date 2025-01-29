@@ -1,4 +1,48 @@
 
+div.litegraph > div.header
+{
+z-index: 1;
+display: flex;
+flex-direction: row;
+}
+
+div.litegraph > div.header > div.tools
+{
+position: relative !important;
+
+}
+
+div.litegraph > div.header > div.tools-left
+{
+margin-right: auto;
+}
+
+div.litegraph > div.header > div.tools-right
+{
+white-space: nowrap;
+}
+
+div.litegraph > div.header  .tool_buttons
+{
+white-space: nowrap;
+}
+
+div.litegraph > div.header > div.tools-left input
+{
+z-index: 10;
+}
+
+div.litegraph > div.header > div.tools-left .selector-main
+{
+z-index: 8;
+}
+
+div.litegraph > div.header > div.tools-left .selector-extras
+{
+z-index: 5;
+display: none;
+}
+
 
 div.div-container div.CustomTextOutput a:link { color: lightskyblue; }
 div.div-container div.CustomTextOutput a:visited { color: #6d4b8d; }
@@ -9,8 +53,17 @@ border: 1px solid gray;
 background-color: #202020;
 }
 
-div.div-container div.CustomTextOutput * {
+/* div.div-container div.CustomTextOutput * {
 margin: 0px;
+}*/
+
+div.div-container div.CustomTextOutput p {
+margin-top: 0.5em;
+margin-bottom: 0.5em;
+}
+
+div.div-container div.CustomTextOutput blockquote {
+margin-left: 10px;
 }
 
 div.div-container div.CustomTextOutput table,
@@ -28,7 +81,8 @@ div.div-container div.CustomTextOutput ol {
 div.div-container div.CustomTextOutput blockquote {
     white-space: pre-line;
     background-color: #404040;
-    padding-left: 10px;
+    border-left: 5px solid white;
+    padding-left: 5px;
     border-radius: 5px;
 }
 
@@ -66,11 +120,12 @@ position: absolute;
 top: 2px;
 right: 4px;
 color: DarkGray;
-user-select: none
+user-select: none;
+pointer-events: none;
 }
 
 div.div-container div.selected .nameText{
-display: none
+display: none;
 }
 
 div.div-container {

@@ -71,7 +71,7 @@ class GuiNodeBuilder:
         for el in self.config["outputs"]:
             res += f'        this.addOutput("{el[0]}","{el[1]}");\n'
         if len(self.config["gui_node_config"]) > 0:
-            res += "        this.gui_node_config = " + json.dumps(self.config["gui_node_config"])
+            res += "        this.gui_node_config = " + json.dumps(self.config["gui_node_config"]) + "\n"
 
         # add properties
         if len(self.config["properties"]):

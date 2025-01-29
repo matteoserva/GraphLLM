@@ -2,6 +2,15 @@
 # CHANGELOG for GraphLLM
 #
 
+28/01/2025
+- support for phi-4, EXAONE and deepseek-r1-distill
+- jinja templates
+- graphical fixes: textarea focus, markdown, latex
+- group nodes
+- touchscreen support and small screens
+- grammars from  graph variables
+- graph autosave
+
 30/11/2024
 - latex in output nodes
 - support for QwQ model

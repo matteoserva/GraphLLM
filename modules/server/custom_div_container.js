@@ -53,6 +53,8 @@ class DivContainer {
 
         this.saved_values = {}
         this.saved_diff = {}
+		
+		
     }
 
     onCollapse()
@@ -88,6 +90,20 @@ class DivContainer {
         dialog.appendChild(innerDialog)
         this.dialog = dialog
 
+
+        var titlebar = document.createElement("div");
+        titlebar.className = "titlebar-container";
+        titlebar.style.position = "absolute";
+        titlebar.innerHTML = " ";
+        this.titlebar = titlebar
+        dialog.appendChild(titlebar)
+		
+		setTimeout(function(){
+            if(this.parent.id)
+			{
+				this.appendElement(this.parent)
+			}
+        }.bind(this) );
     }
 
     appendElement(node)
@@ -126,6 +142,9 @@ class DivContainer {
         this.H = numChildren * this.height
         this.drawCounter = 1;
 
+        this.titlebar.style.top = (-this.saved_y - 20) + "px";
+        this.titlebar.style.right = "0px";
+
     }
 
 
@@ -143,13 +162,6 @@ class DivContainer {
     {
         //this.H = 2*H
         this.saved_y = y;
-
-        if (!this.attached)
-        {
-            //var canvas = node.graph.list_of_graphcanvas[0]
-            this.appendElement(node)
-
-        }
 
         var availableSpace = node.size[1] - y
         this.updateTextarea(node,node.graph.list_of_graphcanvas[0],y,availableSpace)
