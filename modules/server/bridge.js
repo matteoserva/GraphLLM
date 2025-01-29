@@ -39,6 +39,11 @@ class WebBrige {
     LiteGraph.slot_types_default_in.string=["input/text_input"]
   }
 
+  processMouseDown(e)
+  {
+    //console.log("do")
+
+  }
   processMouseUp(e)
   {
 
@@ -56,31 +61,74 @@ class WebBrige {
         if(should_handle)
         {
             var group = this.canvas.selected_group
-            if (group.is_collapsed === undefined)
+            if (group.collapse_state === undefined)
             {
-                group.is_collapsed = false
+                group.collapse_state = { is_collapsed: false, node_info: new Object()}
             }
+            if (group.collapse_state.is_collapsed)
+            {
+                group.collapse_state.is_collapsed = false
+                for (var i = 0; i < group._nodes.length; ++i) {
+                    var node = group._nodes[i];
+                    var id = '' + node.id
 
-            for (var i = 0; i < group._nodes.length; ++i) {
-                var node = group._nodes[i];
-                if(!node.flags.collapsed)
-                {
-                    node.collapse()
+                    if(Object.keys(group.collapse_state.node_info).includes(id))
+                    {
+                        var node_info = group.collapse_state.node_info[id]
+                        node.pos = [group.pos[0]+node_info.pos[0], group.pos[1] + node_info.pos[1]]
+                        if (node.flags.collapsed && !node_info.collapsed)
+                        {
+                            node.collapse()
+                        }
+
                     }
+                }
+                group.size = group.collapse_state.group_size
+                group.color = group.collapse_state.color
+                //
+            }
+            else
+            {
+                for (var i = 0; i < group._nodes.length; ++i) {
+                    var node = group._nodes[i];
+                    var delta_pos = [ node.pos[0] - group.pos[0],  node.pos[1] - group.pos[1]]
+                    var new_pos = [ group.pos[0] + 20,   group.pos[1] + 70]
+                    group.collapse_state.node_info[node.id] = {id: node.id, size: node.size, pos: delta_pos, collapsed: node.flags.collapsed}
+
+                    if(!node.flags.collapsed)
+                    {
+                        node.collapse()
+                    }
+                    node.pos = new_pos
+
+
+                }
+                var internal_nodes = group._nodes.map((n) => ''+n.id)
+                // remove nodes not in group
+                var node_info = group.collapse_state.node_info
+                Object.keys(node_info).filter((k) => internal_nodes.includes(k)).reduce((cur,key) => { return Object.assign(cur, { [key]: node_info[key] })}, {});
+                group.collapse_state.node_info = node_info
+                group.collapse_state.group_size = [...group.size]
+                group.size = [180,110]
+                group.collapse_state.color = group.color
+                group.color = "#606060"
+                group.collapse_state.is_collapsed = true
+
             }
         }
-        console.log("group: " + this.canvas.selected_group + "   double " + is_double_click + "   time: "
-        + (now - this.canvas.last_mouseclick), " p " + this.previousClick + "  t " + [total,t1,t2])
+        //console.log("group: " + this.canvas.selected_group + "   double " + is_double_click + "   time: "
+        //+ (now - this.canvas.last_mouseclick), " p " + this.previousClick + "  t " + [total,t1,t2])
 
     return false;
   }
 
   connect() {
     this.setDefaultConnectionEndpoints()
-    //LiteGraph.pointerListenerRemove(this.canvas.canvas,"up", this.canvas._mouseup_callback,true);
-    LiteGraph.pointerListenerAdd(document,"up", this.processMouseUp.bind(this),true);
+
     this.canvas.allow_searchbox = false
 
+    this.canvas.onMouseDown = this.processMouseDown.bind(this)
+    LiteGraph.pointerListenerAdd(document,"up", this.processMouseUp.bind(this),true);
     this.cb_as = this.graph.onAfterStep;
     let cb_bs = this.graph.onBeforeStep;
     let that = this
@@ -104,6 +152,8 @@ class WebBrige {
     }
     this.graph.onPlayEvent = this.onPlayEvent.bind(this)
     this.graph.onStopEvent = this.onStopEvent.bind(this)
+    this.graph.onSerialize = this.onSerialize.bind(this)
+    this.graph.onConfigure= this.onDeserialize.bind(this)
 
     //some examples
     //addDemo("rap battle", "/graph/load?file=rap_battle.json");
@@ -429,6 +479,33 @@ class WebBrige {
   {
      if(this.cb_as)
         	this.cb_as();
+  }
+
+  onSerialize(data)
+  {
+    var group_states = new Object()
+    for(let el in data.groups)
+    {
+        var group = this.graph._groups[el]
+        if ("collapse_state" in group)
+        {
+            group_states[el] = group.collapse_state
+        }
+    }
+    data["group_states"] = group_states
+  }
+
+  onDeserialize(data)
+  {
+    if ("group_states" in data)
+    {
+        for(let el in data.group_states)
+        {
+            var group = this.graph._groups[el]
+            group.collapse_state = data.group_states[el]
+        }
+
+    }
   }
 
   startGraph()
