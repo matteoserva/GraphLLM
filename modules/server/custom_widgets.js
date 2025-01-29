@@ -536,6 +536,16 @@ class CustomTextOutput extends CustomTextCommon{
 			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\](\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
 			text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
 			text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
+
+			/*
+                \[
+                a
+                b
+                \]
+			*/
+			text = text.replace(/(\s|^)\\\[\n(([^\n]+\n){1,5})\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
+
+
 			// \boxed{\int_{\Omega} f \, d\mu = \int_{\Omega} f^+ \, d\mu - \int_{\Omega} f^- \, d\mu}
 			text = text.replace(/(^|\n)(\\boxed{[^\n]+})(\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>$3')
             var d = document.createElement("div")

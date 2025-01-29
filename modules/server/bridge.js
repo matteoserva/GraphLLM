@@ -12,6 +12,7 @@ function addDemo( select, name, url )
 
 
 
+
 class WebBrige {
   constructor() {
     this.editor = editor;
@@ -92,6 +93,17 @@ class WebBrige {
 		var is_primary = (e.isPrimary === undefined || e.isPrimary);
         is_double_click = is_double_click && is_primary;
         var should_handle = this.canvas.selected_group && is_double_click
+        if(this.canvas.selected_group)
+        {
+            this.recomputeInsideNodes(this.canvas.selected_group)
+
+        }
+        if(this.canvas.node_dragged || this.canvas.resizing_node)
+        {
+            let node = this.canvas.node_dragged || this.canvas.resizing_node
+            this.recomputeOutsideGroup(node)
+        }
+
         if(should_handle)
         {
             var group = this.canvas.selected_group
@@ -207,6 +219,69 @@ class WebBrige {
             this.startGraph()
         }
     });
+
+    var orig = LGraphGroup.prototype.recomputeInsideNodes
+    LGraphGroup.prototype.recomputeInsideNodes = function() {
+        var group = this
+        that.recomputeInsideNodes(group,orig)
+    };
+
+  }
+
+  recomputeOutsideGroup(node)
+  {
+    var node_bounding = new Float32Array(4);
+    node.getBounding(node_bounding);
+
+    if (node.parent_group)
+    {
+        if (LiteGraph.overlapBounding(node.parent_group._bounding, node_bounding)) {
+            return;
+        }
+
+    }
+
+    var found_group = null
+    for (var i = 0; i < this.graph._groups.length; ++i) {
+        var group = this.graph._groups[i]
+        if (!LiteGraph.overlapBounding(group._bounding, node_bounding)) {
+            continue;
+        }
+        found_group = group
+    }
+
+    if (found_group)
+    {
+        node.parent_group = found_group
+        console.log("outside group")
+    }
+
+  }
+
+  recomputeInsideNodes(group, orig)
+  {
+    group._nodes.length = 0;
+    var nodes = this.graph._nodes;
+    var node_bounding = new Float32Array(4);
+
+    for (var i = 0; i < nodes.length; ++i) {
+        var node = nodes[i];
+        node.getBounding(node_bounding);
+        if (!LiteGraph.overlapBounding(group._bounding, node_bounding)) {
+            continue;
+        } //out of the visible area
+        if(node.parent_group && node.parent_group != group)
+        {
+            var parent_group = node.parent_group
+            if (LiteGraph.overlapBounding(parent_group._bounding, node_bounding)) {
+                continue;
+            }
+            console.log("stealing")
+        }
+        group._nodes.push(node);
+        node.parent_group = group
+    }
+    console.log("recompute")
   }
 
   loadList()
@@ -543,6 +618,10 @@ class WebBrige {
             group.collapse_state = data.group_states[el]
         }
 
+    }
+    for (var i = 0; i < this.graph._nodes.length; ++i) {
+        var node = this.graph._nodes[i];
+        this.recomputeOutsideGroup(node)
     }
   }
 
