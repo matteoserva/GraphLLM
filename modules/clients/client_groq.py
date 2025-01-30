@@ -15,7 +15,7 @@ class GrokClient():
         if isinstance(p,list):
             messages = p
         else:
-            messages = p.messages
+            messages = p.get_messages()
         #print(messages)
         user_params = params
         params = copy.deepcopy(self.default_params)

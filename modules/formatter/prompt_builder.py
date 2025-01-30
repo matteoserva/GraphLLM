@@ -127,7 +127,9 @@ class PromptBuilder:
         else:
             self.messages.append({"role":role,"content":str(message)})
         return self.messages
-        
+
+    def get_messages(self):
+        return self.messages
 
 
 
