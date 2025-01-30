@@ -23,9 +23,12 @@ class Formatter:
         chat_template = model_props.get("chat_template",None)
 
         self.model_name = model_name
-        self.formatter = FormatterHF()
-        if self.formatter.load_model(model_name):
-            return True
+        try:
+            self.formatter = FormatterHF()
+            if self.formatter.load_model(model_name):
+                return True
+        except:
+            pass
 
         if chat_template is not None:
             try:
