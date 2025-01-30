@@ -1,0 +1,181 @@
+{
+    "last_node_id": 33,
+    "last_link_id": 41,
+    "nodes": [
+        {
+            "id": 25,
+            "type": "tools/python_sandbox",
+            "pos": [
+                -1153,
+                229
+            ],
+            "size": {
+                "0": 632.4400634765625,
+                "1": 507.2523193359375
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        38
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "val = [\n\"italy\",\n\"palestine\",\n\"hong kong\",\n\"Taiwan\",\n\"the Uyghurs\",\n\"Tibet\",\n\"USA\"\n]\n\n_O = [val]"
+            }
+        },
+        {
+            "id": 33,
+            "type": "graph/copy_unpack",
+            "pos": [
+                -412,
+                -15
+            ],
+            "size": {
+                "0": 140,
+                "1": 26
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "vector_in",
+                    "type": "string",
+                    "link": 38,
+                    "slot_index": 0
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        41
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 30,
+            "type": "graph/generic_node",
+            "pos": [
+                -237,
+                250
+            ],
+            "size": {
+                "0": 266.7272033691406,
+                "1": 235.8810272216797
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 41,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        30
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "type: memory\nconf: {separator: \"\\n--\\n\"}"
+            }
+        },
+        {
+            "id": 31,
+            "type": "output/watch",
+            "pos": [
+                293,
+                -9
+            ],
+            "size": {
+                "0": 683.7872924804688,
+                "1": 560.6510009765625
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 30
+                }
+            ],
+            "properties": {}
+        }
+    ],
+    "links": [
+        [
+            30,
+            30,
+            0,
+            31,
+            0,
+            "string"
+        ],
+        [
+            38,
+            25,
+            0,
+            33,
+            0,
+            "string"
+        ],
+        [
+            41,
+            33,
+            0,
+            30,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "demo_nodes"
+}
