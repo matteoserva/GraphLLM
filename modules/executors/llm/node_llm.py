@@ -68,7 +68,7 @@ class LlmExecutor(GenericExecutor):
     def set_dependencies(self,d):
         if "client" in d:
            client = d["client"]
-           if isinstance(client,str):
+           if isinstance(client,str): # da conservare in caso il client arrivi dal graph
                client = Client.get_client(client)
            builder = self.builder
            try:

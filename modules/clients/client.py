@@ -67,9 +67,15 @@ class DummyClient:
         return ""
 
 class LLamaCppClient:
-    def __init__(self,host=DEFAULT_HOST, port=80800):
+    def __init__(self,host=DEFAULT_HOST, port=8080, url=None, model= None):
         self.host = host
         self.port = port
+        if url:
+            self.base_url = url
+            if model:
+                self.base_url = url + "/upstream/" + model
+        else:
+            self.base_url = "http://" + self.host + ":" + str(self.port)
         self.client_parameters = {}
         a = {}
         a["n_predict"] = 1024*2
@@ -205,7 +211,7 @@ class LLamaCppClient:
         return retstring
 
     def tokenize(self,p,add_special=False, with_pieces=False):
-        url = "http://" + self.host + ":" + str(self.port) + "/tokenize"
+        url = self.base_url + "/tokenize"
         a={}
         a["content"] = p
         a["add_special"] = add_special
@@ -222,7 +228,7 @@ class LLamaCppClient:
         return r4
     
     def detokenize(self,p):
-        url = "http://" + self.host + ":" + str(self.port) + "/detokenize"
+        url = self.base_url + "/detokenize"
         a={}
         a["tokens"] = p
         js = json.dumps(a)
@@ -252,7 +258,7 @@ class LLamaCppClient:
         #a = {"messages":p}
         js = json.dumps(a)
         #print(a,"\n-\n" + p + "-")
-        url = "http://" + self.host + ":" + str(self.port) +"/completion"
+        url = self.base_url +"/completion"
         headers = {"Content-Type": "application/json"}
 
         data = js
@@ -282,9 +288,14 @@ class Client:
     client_configs = None
     @staticmethod
     def get_client(client_name):
-        
-        client_config = Client.client_configs[client_name]
-        client =  Client._make_client_simple(client_name,client_config)
+        if ":" in client_name:
+            client_name, model= client_name.split(":",1)
+            client_config = Client.client_configs[client_name]
+            client_config = {el: client_config[el] for el in client_config}
+            client_config["model"] = model
+        else:
+            client_config = Client.client_configs[client_name]
+        client =  Client._make_client_simple(client_config["type"],client_config)
         client.connect()
         return client
 
@@ -294,7 +305,7 @@ class Client:
             del client_config["type"]
         if client_name=="dummy":
             return DummyClient()
-        elif client_name == "llama_cpp":
+        elif client_name == "llama_cpp" or client_name == "llama_swap":
             conf = client_config
             return LLamaCppClient(**conf)
         elif client_name == "groq":
