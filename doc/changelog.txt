@@ -2,6 +2,10 @@
 # CHANGELOG for GraphLLM
 #
 
+##
+- llama_swap
+
+
 28/01/2025
 - support for phi-4, EXAONE and deepseek-r1-distill
 - jinja templates
