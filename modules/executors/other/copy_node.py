@@ -106,6 +106,14 @@ class CopyNode(GenericExecutor):
             outval[index] = value
             self._demux_i = (self._demux_i + 1) % self._demux_N
             res = outval
+
+        elif self._subtype == "unpack" and len(self.node.outputs) == 1:
+            if len(self.stack) == 0:
+                self.stack = res[0][::-1]
+            val = self.stack.pop()
+            res = [val]
+            self._properties["free_runs"] = 1 if len(self.stack) > 0 else 0
+
         elif self._subtype == "log":
             if "logfile" in self.parameters:
               fn = self.parameters["logfile"]
