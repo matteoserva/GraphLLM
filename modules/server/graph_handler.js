@@ -108,6 +108,22 @@ class GraphHandler {
         group.size = group.collapse_state.group_size
         group.color = group.collapse_state.color
 
+        // check overlaps with other expanded groups
+        for (var i = 0; i < this.graph._groups.length; ++i) {
+            var other = this.graph._groups[i]
+            if(other == group)
+            {
+                continue;
+            }
+            if (!LiteGraph.overlapBounding(group._bounding, other._bounding)) {
+                continue;
+            }
+            if (other.collapse_state && !other.collapse_state.is_collapsed)
+            {
+                this.groupCollapse(other)
+            }
+        }
+
   }
 
   processMouseUp(e)
