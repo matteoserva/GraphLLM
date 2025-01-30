@@ -59,6 +59,14 @@ def my_exec(code, globals, locals):
     exec(ast.unparse(a), globals, locals)
     if last_expression:
         return eval(last_expression, globals, locals)
+    if a.body and isinstance(a.body[-1], ast.Assign):
+        try:
+            target_name = a.body[-1].targets[0].id
+            val = locals[target_name]
+            return val
+        except:
+            pass
+
 
 class PythonInterpreter:
     def __init__(self):
