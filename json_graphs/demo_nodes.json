@@ -1,6 +1,6 @@
 {
-    "last_node_id": 34,
-    "last_link_id": 44,
+    "last_node_id": 42,
+    "last_link_id": 50,
     "nodes": [
         {
             "id": 25,
@@ -9,10 +9,10 @@
                 -1210,
                 -5
             ],
-            "size": [
-                210,
-                292.973549194336
-            ],
+            "size": {
+                "0": 210,
+                "1": 292.9735412597656
+            },
             "flags": {},
             "order": 0,
             "mode": 0,
@@ -54,7 +54,7 @@
                 "1": 26
             },
             "flags": {},
-            "order": 1,
+            "order": 4,
             "mode": 0,
             "inputs": [
                 {
@@ -88,7 +88,7 @@
                 "1": 67
             },
             "flags": {},
-            "order": 2,
+            "order": 7,
             "mode": 0,
             "inputs": [
                 {
@@ -118,12 +118,12 @@
                 -156,
                 -1
             ],
-            "size": [
-                210,
-                288.973549194336
-            ],
+            "size": {
+                "0": 210,
+                "1": 288.9735412597656
+            },
             "flags": {},
-            "order": 3,
+            "order": 10,
             "mode": 0,
             "inputs": [
                 {
@@ -133,6 +133,263 @@
                 }
             ],
             "properties": {}
+        },
+        {
+            "id": 36,
+            "type": "graph/standard_mux",
+            "pos": [
+                -873,
+                380
+            ],
+            "size": {
+                "0": 140,
+                "1": 46
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in1",
+                    "type": "string",
+                    "link": 45
+                },
+                {
+                    "name": "in2",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        46
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 35,
+            "type": "input/list",
+            "pos": [
+                -1190,
+                372
+            ],
+            "size": {
+                "0": 210,
+                "1": 209
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        45
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": [
+                    "a",
+                    "b",
+                    "{p:eos}"
+                ]
+            }
+        },
+        {
+            "id": 37,
+            "type": "output/watch",
+            "pos": [
+                -483,
+                377
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 46
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 39,
+            "type": "input/text_input",
+            "pos": [
+                -1211,
+                649
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        47
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "a"
+            }
+        },
+        {
+            "id": 40,
+            "type": "input/text_input",
+            "pos": [
+                -1194,
+                806
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        48
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "b"
+            }
+        },
+        {
+            "id": 42,
+            "type": "output/watch",
+            "pos": [
+                -283,
+                703
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 50
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 38,
+            "type": "graph/standard_mux",
+            "pos": [
+                -873,
+                710
+            ],
+            "size": {
+                "0": 140,
+                "1": 66
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in1",
+                    "type": "string",
+                    "link": 47,
+                    "slot_index": 0
+                },
+                {
+                    "name": "in2",
+                    "type": "string",
+                    "link": 48,
+                    "slot_index": 1
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        49
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 41,
+            "type": "other/memory",
+            "pos": [
+                -628,
+                715
+            ],
+            "size": {
+                "0": 210,
+                "1": 67
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 49
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        50
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "separator": "\"\\n\""
+            }
         }
     ],
     "links": [
@@ -157,6 +414,54 @@
             34,
             0,
             31,
+            0,
+            "string"
+        ],
+        [
+            45,
+            35,
+            0,
+            36,
+            0,
+            "string"
+        ],
+        [
+            46,
+            36,
+            0,
+            37,
+            0,
+            "string"
+        ],
+        [
+            47,
+            39,
+            0,
+            38,
+            0,
+            "string"
+        ],
+        [
+            48,
+            40,
+            0,
+            38,
+            1,
+            "string"
+        ],
+        [
+            49,
+            38,
+            0,
+            41,
+            0,
+            "string"
+        ],
+        [
+            50,
+            41,
+            0,
+            42,
             0,
             "string"
         ]
