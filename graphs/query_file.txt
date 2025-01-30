@@ -22,6 +22,7 @@ T1:
              
              # instructions
              - be synthetic
+             - use only the information provided in the file, ignoring all your previous knowledge
              {p:eom}
 
              {p:user}

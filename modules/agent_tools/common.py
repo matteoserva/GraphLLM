@@ -17,7 +17,7 @@ class GenericAgent():
 		pass
 
 	def _run_graph(self,*args):
-		fullargs = ["python3", "exec.py","-j"]
+		fullargs = ["python3", "exec.py","-j", "-k" ]
 		fullargs.extend(args)
 		proc = subprocess.Popen(fullargs,stdout=subprocess.PIPE,text=True)
 		ret = ""
