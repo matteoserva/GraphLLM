@@ -332,7 +332,7 @@ class FormatterCustom:
             a = a.replace("\n{p:assistant}\n", formatter["bor"] + formatter["assistant_name"] + formatter["eor"])
         return a
 
-    def build_prompt(self, messages, force_system=False):
+    def build_prompt(self, messages, force_system=False, **kwargs):
         messages = copy.deepcopy(messages)
 
         prompt = self.build_handmade_prompt(messages, force_system)

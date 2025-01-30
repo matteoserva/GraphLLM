@@ -39,10 +39,10 @@ class Formatter:
         self.formatter.load_model(model_name)
         return True
 
-    def build_prompt(self,messages,force_system=False):
+    def build_prompt(self,messages,force_system=False, **kwargs):
         messages = copy.deepcopy(messages)
         
-        prompt = self.formatter.build_prompt(messages,force_system)
+        prompt = self.formatter.build_prompt(messages,force_system=force_system, **kwargs)
         #workaround per deepseek
         if self.model_name.lower().startswith("deepseek") and prompt.endswith("Assistant: "):
             prompt = prompt[:-1]
@@ -61,6 +61,8 @@ class PromptBuilder:
         self.formatter = Formatter()
         self.sysprompt = "You are a helpful assistant"
         self.force_system=False
+        self.custom_default_sysprompt =  False
+        self.updated_sysprompt = False
         self.messages = []
         self.reset()
 
@@ -73,11 +75,13 @@ class PromptBuilder:
         if name == "force_system":
              self.force_system = val
         elif name == "sysprompt":
+             self.custom_default_sysprompt = True
+             self.updated_sysprompt = True
              self.sysprompt = val
              self.reset()
 
     def _build(self):
-        text_prompt = self.formatter.build_prompt(self.messages,force_system=self.force_system)
+        text_prompt = self.formatter.build_prompt(self.messages,force_system=self.force_system, custom_sysprompt = self.updated_sysprompt)
 #        print(text_prompt)
         return text_prompt
 
@@ -94,6 +98,7 @@ class PromptBuilder:
         self.messages = []
         self.messages.append({"role":"system","content":self.sysprompt})
         self.first_prompt = True
+        self.updated_sysprompt = self.custom_default_sysprompt
 
     def set_from_raw(self,message):
         self.messages = parse_raw(message)
@@ -115,6 +120,7 @@ class PromptBuilder:
                 self.messages = [el]
             elif el["role"] == "system":
                 if self.messages[0]["role"] == "system":
+                    self.updated_sysprompt = True
                     self.messages[0] = el
             else:
                 self.messages.append(el)

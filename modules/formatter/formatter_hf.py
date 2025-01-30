@@ -43,7 +43,7 @@ class FormatterHF:
             return True
         return False
 
-    def build_prompt(self, messages, force_system=False):
+    def build_prompt(self, messages, force_system=False, **kwargs):
         # se il primo è raw, allora salva così com'è
         #     se il secondo è presente e assistant, appendi senza preamble?
         # se l'ultimo è raw o assistant allora non mettere il generation token

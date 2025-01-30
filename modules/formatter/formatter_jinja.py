@@ -13,7 +13,7 @@ class FormatterJinja:
         self.jinja_env = ImmutableSandboxedEnvironment(trim_blocks=True, lstrip_blocks=True, extensions=[jinja2.ext.loopcontrols])
         self.tokenizer = None
         self.has_system = False
-
+        self.optional_system = False
         self.transitions = {"init":{}, "raw": {} , "system": {}, "user": {} , "assistant": {}}
 
 
@@ -109,13 +109,18 @@ class FormatterJinja:
             self.bos_token = model_props["bos_token"]
 
         if model_name.lower().find("deepseek-r1") == 0:
+            self.optional_system = True
             return True
 
         return False
 
-    def build_prompt_j(self, messages, force_system=False):
+    def build_prompt_j(self, messages, force_system=False,custom_sysprompt = False, **kwargs):
 
         rendered = ""
+
+        if messages[0]["role"] == "system" and (not custom_sysprompt) and self.optional_system:
+            messages = messages[1:]
+
         updated_messages = [el for el in messages]
 
         if messages[0]["role"] == "raw":
@@ -151,7 +156,7 @@ class FormatterJinja:
         return rendered
 
 
-    def build_prompt_sm(self, messages, force_system=False):
+    def build_prompt_sm(self, messages, force_system=False,**kwargs):
         builder_state="init"
         current_prompt = ""
 
