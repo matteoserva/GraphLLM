@@ -1,18 +1,18 @@
 {
-    "last_node_id": 33,
-    "last_link_id": 41,
+    "last_node_id": 34,
+    "last_link_id": 44,
     "nodes": [
         {
             "id": 25,
             "type": "tools/python_sandbox",
             "pos": [
-                -1153,
-                229
+                -1210,
+                -5
             ],
-            "size": {
-                "0": 632.4400634765625,
-                "1": 507.2523193359375
-            },
+            "size": [
+                210,
+                292.973549194336
+            ],
             "flags": {},
             "order": 0,
             "mode": 0,
@@ -44,10 +44,10 @@
         },
         {
             "id": 33,
-            "type": "graph/copy_unpack",
+            "type": "other/copy_unpack",
             "pos": [
-                -412,
-                -15
+                -821,
+                -7
             ],
             "size": {
                 "0": 140,
@@ -69,7 +69,7 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        41
+                        43
                     ],
                     "slot_index": 0
                 }
@@ -77,15 +77,15 @@
             "properties": {}
         },
         {
-            "id": 30,
-            "type": "graph/generic_node",
+            "id": 34,
+            "type": "other/memory",
             "pos": [
-                -237,
-                250
+                -541,
+                -10
             ],
             "size": {
-                "0": 266.7272033691406,
-                "1": 235.8810272216797
+                "0": 210,
+                "1": 67
             },
             "flags": {},
             "order": 2,
@@ -94,13 +94,7 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 41,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
+                    "link": 43
                 }
             ],
             "outputs": [
@@ -108,31 +102,26 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        30
+                        44
                     ],
                     "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
                 }
             ],
             "properties": {
-                "parameters": "type: memory\nconf: {separator: \"\\n--\\n\"}"
+                "separator": "\"\\n--\\n\""
             }
         },
         {
             "id": 31,
             "type": "output/watch",
             "pos": [
-                293,
-                -9
+                -156,
+                -1
             ],
-            "size": {
-                "0": 683.7872924804688,
-                "1": 560.6510009765625
-            },
+            "size": [
+                210,
+                288.973549194336
+            ],
             "flags": {},
             "order": 3,
             "mode": 0,
@@ -140,21 +129,13 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 30
+                    "link": 44
                 }
             ],
             "properties": {}
         }
     ],
     "links": [
-        [
-            30,
-            30,
-            0,
-            31,
-            0,
-            "string"
-        ],
         [
             38,
             25,
@@ -164,10 +145,18 @@
             "string"
         ],
         [
-            41,
+            43,
             33,
             0,
-            30,
+            34,
+            0,
+            "string"
+        ],
+        [
+            44,
+            34,
+            0,
+            31,
             0,
             "string"
         ]
