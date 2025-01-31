@@ -438,10 +438,15 @@ class WebBrige {
         }
 
     }
+    for (var i = 0; i < this.graph._groups.length; ++i) {
+        var group = this.graph._groups[i];
+        this.graph_handler.recomputeInsideNodes(group)
+    }
+    /*
     for (var i = 0; i < this.graph._nodes.length; ++i) {
         var node = this.graph._nodes[i];
         this.graph_handler.recomputeOutsideGroup(node)
-    }
+    }*/
   }
 
   startGraph()
