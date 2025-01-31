@@ -2,7 +2,7 @@ from .parser import parse_raw, check_special_tokens
 from transformers import AutoTokenizer
 from .formatter_hf import FormatterHF
 from .formatter_custom import FormatterCustom
-
+from .formatter_llamacpp import FormatterLlamacpp
 try:
     from .formatter_jinja import FormatterJinja
 except:
@@ -31,6 +31,12 @@ class Formatter:
             pass
 
         if chat_template is not None:
+            try:
+                self.formatter = FormatterLlamacpp()
+                if self.formatter.load_template(model_props):
+                    return True
+            except:
+                pass
             try:
                 self.formatter = FormatterJinja()
                 if self.formatter.load_template(model_props):

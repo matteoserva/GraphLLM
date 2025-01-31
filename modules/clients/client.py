@@ -157,6 +157,8 @@ class LLamaCppClient:
                 textval = "".join([el["piece"] for el in rendered])
                 bos_token = textval[:textval.find("<<<<USER>>>>")]
                 resp["bos_token"] = bos_token
+                resp["apply_template"] = self.apply_template
+
             except:
                 pass
        
@@ -224,6 +226,21 @@ class LLamaCppClient:
         r2 = r1
         r3 = json.loads(r2)
         r4 = r3["tokens"]
+        #print("tokens: ", len(r4))
+        return r4
+
+    def apply_template(self,messages):
+        url = self.base_url + "/apply-template"
+        a={}
+        a["messages"] = messages
+
+        js = json.dumps(a)
+        headers = {"Content-Type": "application/json"}
+        r = requests.post(url,data=js,headers=headers)
+        r1 = r.text
+        r2 = r1
+        r3 = json.loads(r2)
+        r4 = r3["prompt"]
         #print("tokens: ", len(r4))
         return r4
     
