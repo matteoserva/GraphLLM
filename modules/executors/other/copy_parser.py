@@ -8,6 +8,7 @@ class CopyParser(BaseGuiParser):
     def parse_node(self, old_config):
         mapping = {}
         mapping["copy_unpack"] = "unpack"
+        mapping["copy_pack"] = "pack"
         mapping["standard_mux"] = "mux"
 
         subtype = old_config["type"].split("/",1)[-1]

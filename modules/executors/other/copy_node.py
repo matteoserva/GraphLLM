@@ -114,6 +114,12 @@ class CopyNode(GenericExecutor):
             res = [val]
             self._properties["free_runs"] = 1 if len(self.stack) > 0 else 0
 
+        elif self._subtype == "pack" and len(self.node.inputs) > 1:
+            val = res
+            res = [val]
+
+
+
         elif self._subtype == "log":
             if "logfile" in self.parameters:
               fn = self.parameters["logfile"]
