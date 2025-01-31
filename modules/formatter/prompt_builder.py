@@ -14,6 +14,7 @@ class Formatter:
     def __init__(self):
         self.formatter = None
         self.model_name = None
+        self.use_template = False
 
     def load_model(self,model_props):
         if not isinstance(model_props,dict):
@@ -26,7 +27,7 @@ class Formatter:
         try:
             self.formatter = FormatterHF()
             if self.formatter.load_model(model_name):
-                return True
+                pass
         except:
             pass
 
@@ -34,6 +35,7 @@ class Formatter:
             try:
                 self.formatter = FormatterLlamacpp()
                 if self.formatter.load_template(model_props):
+                    self.use_template = True
                     return True
             except:
                 pass
@@ -89,9 +91,14 @@ class PromptBuilder:
              self.sysprompt = val
              self.reset()
 
+    def send_tokenized(self):
+        use_template =  self.formatter.use_template
+        send_tokenized = not use_template
+        return send_tokenized
+
     def _build(self):
         text_prompt = self.formatter.build_prompt(self.messages,force_system=self.force_system, custom_sysprompt = self.updated_sysprompt)
-#        print(text_prompt)
+        print(text_prompt, end="")
         return text_prompt
 
     def __str__(self):

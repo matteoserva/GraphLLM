@@ -98,6 +98,8 @@ class LLamaCppClient:
             model_props["chat_template"] = props["chat_template"]
             if "bos_token" in props:
                 model_props["bos_token"] = props["bos_token"]
+            model_props["apply_template"] = self.apply_template
+
         return model_props
 
     def connect(self):
@@ -157,7 +159,6 @@ class LLamaCppClient:
                 textval = "".join([el["piece"] for el in rendered])
                 bos_token = textval[:textval.find("<<<<USER>>>>")]
                 resp["bos_token"] = bos_token
-                resp["apply_template"] = self.apply_template
 
             except:
                 pass
@@ -257,17 +258,16 @@ class LLamaCppClient:
         #print(r3)
         return r3
 
-    def _set_prompt_legacy(self,obj, prompt,tokens):
 
-        obj["prompt"] = tokens
-
-    def _send_prompt_text(self, p, params,callback):
+    def _send_prompt_text(self, p, params,callback, send_tokenized = True):
         tokens = self.tokenize(p)
         #detokenized = self.detokenize(tokens)
 
         a = merge_params(self.default_params,params)
-        self._set_prompt_legacy(a,p,tokens)
-        #a["prompt"] = p
+        if send_tokenized:
+            a["prompt"] = tokens
+        else:
+            a["prompt"] = p
 
         if len(tokens) +a["n_predict"] >= self.context_size:
             raise Exception("context size exceeded: " + str(len(tokens)) + " + " + str(a["n_predict"]))
@@ -287,7 +287,8 @@ class LLamaCppClient:
 
     def _send_prompt_builder(self,p,params,callback):
         prompt = p._build()
-        return self._send_prompt_text(prompt,params,callback)
+        send_tokenized = p.send_tokenized()
+        return self._send_prompt_text(prompt,params,callback, send_tokenized=send_tokenized )
 
     def apply_format_templates(self,prompt):
         return self.formatter.apply_format_templates(prompt)

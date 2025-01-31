@@ -121,8 +121,7 @@ class LlmExecutor(GenericExecutor):
             x = self.print_prompt
             if isinstance(x, (int, float, complex)) and not isinstance(x, bool):
                 self.print_prompt -= 1
-            prompt = builder._build()
-            print(prompt,end="")
+
         res = send_chat(builder,client,self.client_parameters,self.print_response,logger_print=self.node.print)
         resp = [res,{"role":"assistant", "content":res}]
 
