@@ -67,9 +67,15 @@ class DummyClient:
         return ""
 
 class LLamaCppClient:
-    def __init__(self,host=DEFAULT_HOST, port=80800):
+    def __init__(self,host=DEFAULT_HOST, port=8080, base_url=None, model= None):
         self.host = host
         self.port = port
+        if base_url:
+            self.base_url = base_url
+            if model:
+                self.base_url = base_url + "/upstream/" + model
+        else:
+            self.base_url = "http://" + self.host + ":" + str(self.port)
         self.client_parameters = {}
         a = {}
         a["n_predict"] = 1024*2
@@ -92,6 +98,8 @@ class LLamaCppClient:
             model_props["chat_template"] = props["chat_template"]
             if "bos_token" in props:
                 model_props["bos_token"] = props["bos_token"]
+            model_props["apply_template"] = self.apply_template
+
         return model_props
 
     def connect(self):
@@ -151,6 +159,7 @@ class LLamaCppClient:
                 textval = "".join([el["piece"] for el in rendered])
                 bos_token = textval[:textval.find("<<<<USER>>>>")]
                 resp["bos_token"] = bos_token
+
             except:
                 pass
        
@@ -205,7 +214,7 @@ class LLamaCppClient:
         return retstring
 
     def tokenize(self,p,add_special=False, with_pieces=False):
-        url = "http://" + self.host + ":" + str(self.port) + "/tokenize"
+        url = self.base_url + "/tokenize"
         a={}
         a["content"] = p
         a["add_special"] = add_special
@@ -220,9 +229,24 @@ class LLamaCppClient:
         r4 = r3["tokens"]
         #print("tokens: ", len(r4))
         return r4
+
+    def apply_template(self,messages):
+        url = self.base_url + "/apply-template"
+        a={}
+        a["messages"] = messages
+
+        js = json.dumps(a)
+        headers = {"Content-Type": "application/json"}
+        r = requests.post(url,data=js,headers=headers)
+        r1 = r.text
+        r2 = r1
+        r3 = json.loads(r2)
+        r4 = r3["prompt"]
+        #print("tokens: ", len(r4))
+        return r4
     
     def detokenize(self,p):
-        url = "http://" + self.host + ":" + str(self.port) + "/detokenize"
+        url = self.base_url + "/detokenize"
         a={}
         a["tokens"] = p
         js = json.dumps(a)
@@ -234,17 +258,16 @@ class LLamaCppClient:
         #print(r3)
         return r3
 
-    def _set_prompt_legacy(self,obj, prompt,tokens):
 
-        obj["prompt"] = tokens
-
-    def _send_prompt_text(self, p, params,callback):
+    def _send_prompt_text(self, p, params,callback, send_tokenized = True):
         tokens = self.tokenize(p)
         #detokenized = self.detokenize(tokens)
 
         a = merge_params(self.default_params,params)
-        self._set_prompt_legacy(a,p,tokens)
-        #a["prompt"] = p
+        if send_tokenized:
+            a["prompt"] = tokens
+        else:
+            a["prompt"] = p
 
         if len(tokens) +a["n_predict"] >= self.context_size:
             raise Exception("context size exceeded: " + str(len(tokens)) + " + " + str(a["n_predict"]))
@@ -252,7 +275,7 @@ class LLamaCppClient:
         #a = {"messages":p}
         js = json.dumps(a)
         #print(a,"\n-\n" + p + "-")
-        url = "http://" + self.host + ":" + str(self.port) +"/completion"
+        url = self.base_url +"/completion"
         headers = {"Content-Type": "application/json"}
 
         data = js
@@ -264,7 +287,8 @@ class LLamaCppClient:
 
     def _send_prompt_builder(self,p,params,callback):
         prompt = p._build()
-        return self._send_prompt_text(prompt,params,callback)
+        send_tokenized = p.send_tokenized()
+        return self._send_prompt_text(prompt,params,callback, send_tokenized=send_tokenized )
 
     def apply_format_templates(self,prompt):
         return self.formatter.apply_format_templates(prompt)
@@ -282,9 +306,14 @@ class Client:
     client_configs = None
     @staticmethod
     def get_client(client_name):
-        
-        client_config = Client.client_configs[client_name]
-        client =  Client._make_client_simple(client_name,client_config)
+        if ":" in client_name:
+            client_name, model= client_name.split(":",1)
+            client_config = Client.client_configs[client_name]
+            client_config = {el: client_config[el] for el in client_config}
+            client_config["model"] = model
+        else:
+            client_config = Client.client_configs[client_name]
+        client =  Client._make_client_simple(client_config["type"],client_config)
         client.connect()
         return client
 
@@ -294,7 +323,7 @@ class Client:
             del client_config["type"]
         if client_name=="dummy":
             return DummyClient()
-        elif client_name == "llama_cpp":
+        elif client_name == "llama_cpp" or client_name == "llama_swap":
             conf = client_config
             return LLamaCppClient(**conf)
         elif client_name == "groq":

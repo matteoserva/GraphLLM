@@ -3,13 +3,28 @@
 # you can insert multiple clients in client_name.
 # If one of them fails, GraphLLM will try the next one
 
-client_name: [llama_cpp]
+client_name: [llama_cpp, openai]
 
 ###
 llama_cpp:
     type: llama_cpp
     host: "localhost"
     port: 8080
+
+    
+    
+# you can also select the model in the llm node by using {client: llama_swap:phi }
+llama_swap:
+    type: llama_swap
+    base_url: http://localhost:8081
+    model: qwen
+
+openrouter:
+    type: openai
+    api_key: XXX
+    base_url: https://openrouter.ai/api/v1
+    model: meta-llama/llama-3.2-1b-instruct:free
+    
 
 groq:
     type: groq
@@ -19,9 +34,3 @@ openai:
     type: openai
     api_key: XXX
     base_url: http://localhost:8080/v1
-
-openrouter:
-    type: openai
-    api_key: XXX
-    base_url: https://openrouter.ai/api/v1
-    model: meta-llama/llama-3.2-1b-instruct:free

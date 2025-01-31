@@ -63,7 +63,7 @@ class GLMClient():
             if isinstance(p,list):
                 messages = p
             else:
-                messages = p.messages
+                messages = p.get_messages()
             print(messages)
             params = self.default_params
             model_name = self.model_name

@@ -2,7 +2,7 @@ from .parser import parse_raw, check_special_tokens
 from transformers import AutoTokenizer
 from .formatter_hf import FormatterHF
 from .formatter_custom import FormatterCustom
-
+from .formatter_llamacpp import FormatterLlamacpp
 try:
     from .formatter_jinja import FormatterJinja
 except:
@@ -14,6 +14,7 @@ class Formatter:
     def __init__(self):
         self.formatter = None
         self.model_name = None
+        self.use_template = False
 
     def load_model(self,model_props):
         if not isinstance(model_props,dict):
@@ -23,11 +24,21 @@ class Formatter:
         chat_template = model_props.get("chat_template",None)
 
         self.model_name = model_name
-        self.formatter = FormatterHF()
-        if self.formatter.load_model(model_name):
-            return True
+        try:
+            self.formatter = FormatterHF()
+            if self.formatter.load_model(model_name):
+                pass
+        except:
+            pass
 
         if chat_template is not None:
+            try:
+                self.formatter = FormatterLlamacpp()
+                if self.formatter.load_template(model_props):
+                    self.use_template = True
+                    return True
+            except:
+                pass
             try:
                 self.formatter = FormatterJinja()
                 if self.formatter.load_template(model_props):
@@ -39,10 +50,10 @@ class Formatter:
         self.formatter.load_model(model_name)
         return True
 
-    def build_prompt(self,messages,force_system=False):
+    def build_prompt(self,messages,force_system=False, **kwargs):
         messages = copy.deepcopy(messages)
         
-        prompt = self.formatter.build_prompt(messages,force_system)
+        prompt = self.formatter.build_prompt(messages,force_system=force_system, **kwargs)
         #workaround per deepseek
         if self.model_name.lower().startswith("deepseek") and prompt.endswith("Assistant: "):
             prompt = prompt[:-1]
@@ -61,6 +72,8 @@ class PromptBuilder:
         self.formatter = Formatter()
         self.sysprompt = "You are a helpful assistant"
         self.force_system=False
+        self.custom_default_sysprompt =  False
+        self.updated_sysprompt = False
         self.messages = []
         self.reset()
 
@@ -73,12 +86,19 @@ class PromptBuilder:
         if name == "force_system":
              self.force_system = val
         elif name == "sysprompt":
+             self.custom_default_sysprompt = True
+             self.updated_sysprompt = True
              self.sysprompt = val
              self.reset()
 
+    def send_tokenized(self):
+        use_template =  self.formatter.use_template
+        send_tokenized = not use_template
+        return send_tokenized
+
     def _build(self):
-        text_prompt = self.formatter.build_prompt(self.messages,force_system=self.force_system)
-#        print(text_prompt)
+        text_prompt = self.formatter.build_prompt(self.messages,force_system=self.force_system, custom_sysprompt = self.updated_sysprompt)
+        print(text_prompt, end="")
         return text_prompt
 
     def __str__(self):
@@ -94,6 +114,7 @@ class PromptBuilder:
         self.messages = []
         self.messages.append({"role":"system","content":self.sysprompt})
         self.first_prompt = True
+        self.updated_sysprompt = self.custom_default_sysprompt
 
     def set_from_raw(self,message):
         self.messages = parse_raw(message)
@@ -115,6 +136,7 @@ class PromptBuilder:
                 self.messages = [el]
             elif el["role"] == "system":
                 if self.messages[0]["role"] == "system":
+                    self.updated_sysprompt = True
                     self.messages[0] = el
             else:
                 self.messages.append(el)
@@ -127,7 +149,9 @@ class PromptBuilder:
         else:
             self.messages.append({"role":role,"content":str(message)})
         return self.messages
-        
+
+    def get_messages(self):
+        return self.messages
 
 
 

@@ -1,0 +1,17 @@
+
+
+
+CONTROL:
+    type: copy
+    conf: {"subtype": "mux"}
+    exec: _C T1
+
+IN:
+    type: user
+    init: {v:c*}
+    exec: CONTROL
+
+T1:
+    type: stateful
+    conf: {"print_prompt":1}
+    exec: IN

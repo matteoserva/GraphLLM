@@ -20,7 +20,7 @@ class ONNXClient():
             if isinstance(p,list):
                 messages = p
             else:
-                messages = p.messages
+                messages = p.get_messages()
             print(messages)
 
             input_string = self.tokenizer.apply_chat_template(messages,add_special_tokens=True, add_generation_prompt=True,tokenize=False)

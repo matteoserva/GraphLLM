@@ -193,8 +193,10 @@ Some engines and API providers support only a subset of these features.
 
 Available engines:
 - **llama.cpp** server: complete support
+- **llama_swap**: full support
 - **groq** API: Grammars and raw prompts not available
-- **OpenAI** API: Grammars and raw prompts not available
+- **openrouter** API: Grammars and raw prompts not available
+- **OpenAI** and compatible API: Grammars and raw prompts not available
 - **HF transformers**: partial support
 
 **models**

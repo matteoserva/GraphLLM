@@ -18,7 +18,7 @@ class GraphHandler {
         };
     }
 
-      processMouseDown(e)
+  processMouseDown(e)
   {
     if (this.canvas.selected_group)
     {
@@ -57,6 +57,75 @@ class GraphHandler {
 
 
   }
+
+  groupCollapse(group)
+  {
+        for (var i = 0; i < group._nodes.length; ++i) {
+            var node = group._nodes[i];
+            var delta_pos = [ node.pos[0] - group.pos[0],  node.pos[1] - group.pos[1]]
+            var new_pos = [ group.pos[0] + 20,   group.pos[1] + 70]
+            group.collapse_state.node_info[node.id] = {id: node.id, size: node.size, pos: delta_pos, collapsed: node.flags.collapsed}
+
+            if(!node.flags.collapsed)
+            {
+                node.collapse()
+            }
+            node.pos = new_pos
+
+
+        }
+        var internal_nodes = group._nodes.map((n) => ''+n.id)
+        // remove nodes not in group
+        var node_info = group.collapse_state.node_info
+        node_info = Object.keys(node_info).filter((k) => internal_nodes.includes(k)).reduce((cur,key) => { return Object.assign(cur, { [key]: node_info[key] })}, {});
+        group.collapse_state.node_info = node_info
+        group.collapse_state.group_size = [...group.size]
+        group.size = [180,110]
+        group.collapse_state.color = group.color
+        group.color = "#606060"
+        group.collapse_state.is_collapsed = true
+
+  }
+
+  groupExpand(group)
+  {
+        group.collapse_state.is_collapsed = false
+        for (var i = 0; i < group._nodes.length; ++i) {
+            var node = group._nodes[i];
+            var id = '' + node.id
+
+            if(Object.keys(group.collapse_state.node_info).includes(id))
+            {
+                var node_info = group.collapse_state.node_info[id]
+                node.pos = [group.pos[0]+node_info.pos[0], group.pos[1] + node_info.pos[1]]
+                if (node.flags.collapsed && !node_info.collapsed)
+                {
+                    node.collapse()
+                }
+
+            }
+        }
+        group.size = group.collapse_state.group_size
+        group.color = group.collapse_state.color
+
+        // check overlaps with other expanded groups
+        for (var i = 0; i < this.graph._groups.length; ++i) {
+            var other = this.graph._groups[i]
+            if(other == group)
+            {
+                continue;
+            }
+            if (!LiteGraph.overlapBounding(group._bounding, other._bounding)) {
+                continue;
+            }
+            if (other.collapse_state && !other.collapse_state.is_collapsed)
+            {
+                this.groupCollapse(other)
+            }
+        }
+
+  }
+
   processMouseUp(e)
   {
 
@@ -91,52 +160,12 @@ class GraphHandler {
             }
             if (group.collapse_state.is_collapsed)
             {
-                group.collapse_state.is_collapsed = false
-                for (var i = 0; i < group._nodes.length; ++i) {
-                    var node = group._nodes[i];
-                    var id = '' + node.id
-
-                    if(Object.keys(group.collapse_state.node_info).includes(id))
-                    {
-                        var node_info = group.collapse_state.node_info[id]
-                        node.pos = [group.pos[0]+node_info.pos[0], group.pos[1] + node_info.pos[1]]
-                        if (node.flags.collapsed && !node_info.collapsed)
-                        {
-                            node.collapse()
-                        }
-
-                    }
-                }
-                group.size = group.collapse_state.group_size
-                group.color = group.collapse_state.color
+                this.groupExpand(group)
                 //
             }
             else
             {
-                for (var i = 0; i < group._nodes.length; ++i) {
-                    var node = group._nodes[i];
-                    var delta_pos = [ node.pos[0] - group.pos[0],  node.pos[1] - group.pos[1]]
-                    var new_pos = [ group.pos[0] + 20,   group.pos[1] + 70]
-                    group.collapse_state.node_info[node.id] = {id: node.id, size: node.size, pos: delta_pos, collapsed: node.flags.collapsed}
-
-                    if(!node.flags.collapsed)
-                    {
-                        node.collapse()
-                    }
-                    node.pos = new_pos
-
-
-                }
-                var internal_nodes = group._nodes.map((n) => ''+n.id)
-                // remove nodes not in group
-                var node_info = group.collapse_state.node_info
-                node_info = Object.keys(node_info).filter((k) => internal_nodes.includes(k)).reduce((cur,key) => { return Object.assign(cur, { [key]: node_info[key] })}, {});
-                group.collapse_state.node_info = node_info
-                group.collapse_state.group_size = [...group.size]
-                group.size = [180,110]
-                group.collapse_state.color = group.color
-                group.color = "#606060"
-                group.collapse_state.is_collapsed = true
+                this.groupCollapse(group)
 
             }
         }

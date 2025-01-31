@@ -68,7 +68,7 @@ class LlmExecutor(GenericExecutor):
     def set_dependencies(self,d):
         if "client" in d:
            client = d["client"]
-           if isinstance(client,str):
+           if isinstance(client,str): # da conservare in caso il client arrivi dal graph
                client = Client.get_client(client)
            builder = self.builder
            try:
@@ -121,8 +121,7 @@ class LlmExecutor(GenericExecutor):
             x = self.print_prompt
             if isinstance(x, (int, float, complex)) and not isinstance(x, bool):
                 self.print_prompt -= 1
-            prompt = builder._build()
-            print(prompt,end="")
+
         res = send_chat(builder,client,self.client_parameters,self.print_response,logger_print=self.node.print)
         resp = [res,{"role":"assistant", "content":res}]
 
