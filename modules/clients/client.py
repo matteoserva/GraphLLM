@@ -67,13 +67,13 @@ class DummyClient:
         return ""
 
 class LLamaCppClient:
-    def __init__(self,host=DEFAULT_HOST, port=8080, url=None, model= None):
+    def __init__(self,host=DEFAULT_HOST, port=8080, base_url=None, model= None):
         self.host = host
         self.port = port
-        if url:
-            self.base_url = url
+        if base_url:
+            self.base_url = base_url
             if model:
-                self.base_url = url + "/upstream/" + model
+                self.base_url = base_url + "/upstream/" + model
         else:
             self.base_url = "http://" + self.host + ":" + str(self.port)
         self.client_parameters = {}
