@@ -3,51 +3,11 @@
     "last_link_id": 50,
     "nodes": [
         {
-            "id": 25,
-            "type": "tools/python_sandbox",
-            "pos": [
-                -1210,
-                -5
-            ],
-            "size": {
-                "0": 210,
-                "1": 292.9735412597656
-            },
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        38
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "parameters": "val = [\n\"italy\",\n\"palestine\",\n\"hong kong\",\n\"Taiwan\",\n\"the Uyghurs\",\n\"Tibet\",\n\"USA\"\n]\n\n_O = [val]"
-            }
-        },
-        {
             "id": 33,
             "type": "other/copy_unpack",
             "pos": [
-                -821,
-                -7
+                431.9767799999994,
+                65.47294999999998
             ],
             "size": {
                 "0": 140,
@@ -80,8 +40,8 @@
             "id": 34,
             "type": "other/memory",
             "pos": [
-                -541,
-                -10
+                711.9767799999994,
+                62.472949999999976
             ],
             "size": {
                 "0": 210,
@@ -115,8 +75,8 @@
             "id": 31,
             "type": "output/watch",
             "pos": [
-                -156,
-                -1
+                1096.976779999999,
+                71.47294999999998
             ],
             "size": {
                 "0": 210,
@@ -138,8 +98,8 @@
             "id": 36,
             "type": "graph/standard_mux",
             "pos": [
-                -873,
-                380
+                379.97677999999945,
+                452.4729499999999
             ],
             "size": {
                 "0": 140,
@@ -176,8 +136,8 @@
             "id": 35,
             "type": "input/list",
             "pos": [
-                -1190,
-                372
+                62.976779999999344,
+                444.4729499999999
             ],
             "size": {
                 "0": 210,
@@ -215,8 +175,8 @@
             "id": 37,
             "type": "output/watch",
             "pos": [
-                -483,
-                377
+                769.9767799999994,
+                449.4729499999999
             ],
             "size": {
                 "0": 210,
@@ -238,8 +198,8 @@
             "id": 39,
             "type": "input/text_input",
             "pos": [
-                -1211,
-                649
+                41.97677999999932,
+                721.47295
             ],
             "size": {
                 "0": 210,
@@ -265,8 +225,8 @@
             "id": 40,
             "type": "input/text_input",
             "pos": [
-                -1194,
-                806
+                58.97677999999933,
+                878.47295
             ],
             "size": {
                 "0": 210,
@@ -292,8 +252,8 @@
             "id": 42,
             "type": "output/watch",
             "pos": [
-                -283,
-                703
+                969.9767799999994,
+                775.47295
             ],
             "size": {
                 "0": 210,
@@ -315,8 +275,8 @@
             "id": 38,
             "type": "graph/standard_mux",
             "pos": [
-                -873,
-                710
+                379.97677999999945,
+                782.47295
             ],
             "size": {
                 "0": 140,
@@ -360,8 +320,8 @@
             "id": 41,
             "type": "other/memory",
             "pos": [
-                -628,
-                715
+                624.9767799999994,
+                787.47295
             ],
             "size": {
                 "0": 210,
@@ -389,6 +349,46 @@
             ],
             "properties": {
                 "separator": "\"\\n\""
+            }
+        },
+        {
+            "id": 25,
+            "type": "tools/python_sandbox",
+            "pos": [
+                43,
+                67
+            ],
+            "size": {
+                "0": 210,
+                "1": 292.9735412597656
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        38
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "val = [\n\"italy\",\n\"palestine\",\n\"hong kong\",\n\"Taiwan\",\n\"the Uyghurs\",\n\"Tibet\",\n\"USA\"\n]\n\n_O = [val]"
             }
         }
     ],
