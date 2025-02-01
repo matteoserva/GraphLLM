@@ -4,7 +4,8 @@
 
 ##
 - llama_swap
-
+- new nodes
+- new examples
 
 28/01/2025
 - support for phi-4, EXAONE and deepseek-r1-distill
