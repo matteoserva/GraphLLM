@@ -19,8 +19,9 @@ class WebBrige {
     this.graph = editor.graph;
     this.canvas = this.editor.graphcanvas;
     this.topBar = document.querySelector("span#LGEditorTopBarSelector")
-    var topbar_html = "Graphs: <span style=\"display: inline-block;position:relative;width: 460px; height: 35px;\" >"
-    topbar_html += "<input id='filename' maxlength='50' style='height: 100%; width:400px;position: relative;'/><select class=\"selector-main\" style='height: 100%; width:430px; position: absolute; top:0px; right: 30px'><option>Empty</option></select><select class=\"selector-extras\" style='height: 100%; width:460px; position: absolute; top:0px; right: 0px'><option>Empty</option></select></span>"
+    var topbar_html = "Graphs: <span class=\"selector-bar\" style=\"display: inline-block;position:relative;width: 400px; height: 35px;\" >"
+    topbar_html += "<input id='filename' maxlength='50' style='height: 100%; width:370px;position: relative;'/><select class=\"selector-main\" style='height: 100%; width:400px; position: absolute; top:0px; right: 0px'><option>Empty</option></select></span>"
+    //topbar_html += "<select class=\"selector-extras\" style='height: 100%; width:460px; position: absolute; top:0px; right: 0px'><option>Empty</option></select>"
     topbar_html += "<span class=\"tool_buttons\"><button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='delete'>Delete</button><button class='btn' id='new'>New</button><button class='btn' id='download'>Download</button></span>| ";
     this.topBar.innerHTML = topbar_html
 
