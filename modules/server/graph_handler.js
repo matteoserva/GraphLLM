@@ -145,6 +145,12 @@ class GraphHandler {
             this.recomputeInsideNodes(this.canvas.selected_group)
 
         }
+        if (this.canvas.resizing_node)
+        {
+            this.canvas.resizing_node.size[0] = LiteGraph.CANVAS_GRID_SIZE * Math.round(this.canvas.resizing_node.size[0] / LiteGraph.CANVAS_GRID_SIZE);
+            this.canvas.resizing_node.size[1] = LiteGraph.CANVAS_GRID_SIZE * Math.round(this.canvas.resizing_node.size[1] / LiteGraph.CANVAS_GRID_SIZE);
+        }
+
         if(this.canvas.node_dragged || this.canvas.resizing_node)
         {
             let node = this.canvas.node_dragged || this.canvas.resizing_node
