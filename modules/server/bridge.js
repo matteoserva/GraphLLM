@@ -96,22 +96,93 @@ class WebBrige {
         if(event.ctrlKey && event.key == "Enter") {
             this.startGraph()
         }
-        if(event.ctrlKey && event.key == "h") {
+        if(event.ctrlKey && event.key == "r") {
             var selectedNodes = this.canvas.selected_nodes
             for (var i in selectedNodes) {
                 var node = this.canvas.selected_nodes[i];
-                node.horizontal = !node.horizontal;
+                var nodeRotation = node.node_rotation || 0
+                nodeRotation = (nodeRotation + 1) % 2;
+                this.setNodeRotation(node,nodeRotation)
+
             }
         }
         event.preventDefault()
         event.stopPropagation()
+
+
     });
 
 
 
   }
 
+ setNodeRotation(node, r)
+        {
+            var offset = LiteGraph.NODE_SLOT_HEIGHT * 0.5
+            if (node.inputs) {
+                   for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
+                        switch (r) {
+                            case 1:
+                                node.inputs[j].pos = null;
+                                node.inputs[j].dir = null;
+                                node.inputs[j].shape = null;
+                                node.horizontal = true;
+                            break;
 
+                            case 2:
+                            {
+
+                                let y = (j + 0.7) * LiteGraph.NODE_SLOT_HEIGHT ;
+                                Object.defineProperty(node.inputs[j], "pos", {
+                                    get: function() {
+
+                                        let x =  node.size[0] + 1 - offset;
+                                        return [x, y]
+                                    },
+                                    configurable: true,
+                                      set: function(v) {
+                                          delete this.pos;
+                                         this.pos = v
+                                      },
+                                });
+                                //node.inputs[j].pos = [x,y]
+                                node.inputs[j].dir = LiteGraph.RIGHT;
+                                node.inputs[j].shape = LiteGraph.ARROW_SHAPE;
+                                node.horizontal = false;
+                            }
+                            break;
+
+                            case 3:
+                                node.inputs[j].pos = null;
+                                node.inputs[j].dir = null;
+                                node.inputs[j].shape = null;
+                                node.horizontal = true;
+                            break;
+
+                            default:
+                            node.inputs[j].pos = null;
+                            node.inputs[j].dir = null;
+                            node.inputs[j].shape = null;
+                                node.horizontal = false
+                            break;
+                        }
+
+                        if(r > 0)
+                        {
+
+
+                        }
+                        else
+                        {
+                            node.inputs[j].pos = null;
+                            node.inputs[j].dir = null;
+                            node.inputs[j].shape = null;
+                        }
+                   }
+            }
+
+            node.node_rotation = r
+        }
 
   loadList()
   {
@@ -444,8 +515,8 @@ class WebBrige {
     {
         var node_id = data.nodes[i].id
         var node = this.graph.getNodeById(node_id)
-        var horizontal = !!node.horizontal
-        node_states[node_id] = {horizontal: horizontal}
+        var rotation = node.node_rotation || 0;
+        node_states[node_id] = {rotation: rotation}
 
     }
     data["node_states"] = node_states
@@ -474,7 +545,7 @@ class WebBrige {
         {
             var node = this.graph.getNodeById(node_id)
             var info = data.node_states[node_id]
-            node.horizontal = info.horizontal
+            this.setNodeRotation(node,info.rotation)
         }
 
     }
