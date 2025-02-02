@@ -134,7 +134,7 @@ class DivContainer {
         this.dialog.style.width = (node.size[0]-30) + "px";
         this.dialog.style.transform = "scale(" + canvas.ds.scale + ")"
         this.dialog.style.transformOrigin = "top left"
-        this.dialog.style.height = (availableSpace-10) + "px"
+        this.dialog.style.height = (availableSpace-15) + "px"
         this.dialog.style.display = "inline-block"
         var textarea = this.dialog.querySelector("textarea")
         this.configureSize(node,textarea,availableSpace)

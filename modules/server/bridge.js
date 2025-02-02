@@ -96,6 +96,15 @@ class WebBrige {
         if(event.ctrlKey && event.key == "Enter") {
             this.startGraph()
         }
+        if(event.ctrlKey && event.key == "h") {
+            var selectedNodes = this.canvas.selected_nodes
+            for (var i in selectedNodes) {
+                var node = this.canvas.selected_nodes[i];
+                node.horizontal = !node.horizontal;
+            }
+        }
+        event.preventDefault()
+        event.stopPropagation()
     });
 
 
@@ -412,6 +421,7 @@ class WebBrige {
 
   onSerialize(data)
   {
+    // groups
     var group_states = new Object()
     for(let el in data.groups)
     {
@@ -422,9 +432,23 @@ class WebBrige {
         }
     }
     data["group_states"] = group_states
+
+    // graph name
     var e = this.nameSelector
     var value = e.value;
     data["graph_name"] = value
+
+    //nodes
+    var node_states = new Object()
+    for(let i in data.nodes)
+    {
+        var node_id = data.nodes[i].id
+        var node = this.graph.getNodeById(node_id)
+        var horizontal = !!node.horizontal
+        node_states[node_id] = {horizontal: horizontal}
+
+    }
+    data["node_states"] = node_states
 
   }
 
@@ -442,6 +466,17 @@ class WebBrige {
     for (var i = 0; i < this.graph._groups.length; ++i) {
         var group = this.graph._groups[i];
         this.graph_handler.recomputeInsideNodes(group)
+    }
+
+    if ("node_states" in data)
+    {
+        for(let node_id in data.node_states)
+        {
+            var node = this.graph.getNodeById(node_id)
+            var info = data.node_states[node_id]
+            node.horizontal = info.horizontal
+        }
+
     }
     /*
     for (var i = 0; i < this.graph._nodes.length; ++i) {
