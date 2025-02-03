@@ -118,21 +118,26 @@ class WebBrige {
   }
 
  setNodeRotation(node, r)
-        {
-            var offset = LiteGraph.NODE_SLOT_HEIGHT * 0.5
-            if (node.inputs) {
+  {
+        var offset = LiteGraph.NODE_SLOT_HEIGHT * 0.5
+        switch (r) {
+            case 1:
+            {
+                if (node.inputs) {
                    for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
-                        switch (r) {
-                            case 1:
+
                                 node.inputs[j].pos = null;
                                 node.inputs[j].dir = null;
                                 node.inputs[j].shape = null;
+                                }}
                                 node.horizontal = true;
-                            break;
+            }
+            break;
 
-                            case 2:
-                            {
-
+            case 2:
+            {
+                   if (node.inputs) {
+                        for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
                                 let y = (j + 0.7) * LiteGraph.NODE_SLOT_HEIGHT ;
                                 Object.defineProperty(node.inputs[j], "pos", {
                                     get: function() {
@@ -149,41 +154,42 @@ class WebBrige {
                                 //node.inputs[j].pos = [x,y]
                                 node.inputs[j].dir = LiteGraph.RIGHT;
                                 node.inputs[j].shape = LiteGraph.ARROW_SHAPE;
-                                node.horizontal = false;
-                            }
-                            break;
+                        }
+                   }
+                   node.horizontal = false;
+            }
+            break;
 
-                            case 3:
+            case 3:
+            {
+                if (node.inputs) {
+                    for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
                                 node.inputs[j].pos = null;
                                 node.inputs[j].dir = null;
                                 node.inputs[j].shape = null;
-                                node.horizontal = true;
-                            break;
-
-                            default:
-                            node.inputs[j].pos = null;
-                            node.inputs[j].dir = null;
-                            node.inputs[j].shape = null;
-                                node.horizontal = false
-                            break;
-                        }
-
-                        if(r > 0)
-                        {
-
-
-                        }
-                        else
-                        {
-                            node.inputs[j].pos = null;
-                            node.inputs[j].dir = null;
-                            node.inputs[j].shape = null;
-                        }
-                   }
+                    }
+                }
+                node.horizontal = true;
             }
+            break;
+
+            default:
+            {
+                   if (node.inputs) {
+                   for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
+                            node.inputs[j].pos = null;
+                            node.inputs[j].dir = null;
+                            node.inputs[j].shape = null;
+                   }}
+                   node.horizontal = false
+            }
+            break;
+        }
+
+
 
             node.node_rotation = r
-        }
+  }
 
   loadList()
   {
