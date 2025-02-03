@@ -2,7 +2,11 @@
 # CHANGELOG for GraphLLM
 #
 
-##
+
+#
+- node rotation
+
+01/02/2025
 - llama_swap
 - new nodes
 - new examples
