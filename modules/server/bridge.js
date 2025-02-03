@@ -51,6 +51,7 @@ class WebBrige {
 
     this.canvas.allow_searchbox = false
     this.canvas.align_to_grid = true
+    this.graph.config.align_to_grid = true
 
 
     this.cb_as = this.graph.onAfterStep;
