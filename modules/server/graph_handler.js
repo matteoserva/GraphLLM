@@ -8,6 +8,7 @@ class GraphHandler {
     connect()
     {
         this.canvas.onMouseDown = this.processMouseDown.bind(this)
+        this.canvas.onNodeMoved = this.onNodeMoved.bind(this)
         LiteGraph.pointerListenerAdd(document,"up", this.processMouseUp.bind(this),true);
 
         var that = this
@@ -16,7 +17,14 @@ class GraphHandler {
             var group = this
             that.recomputeInsideNodes(group,orig)
         };
+
+
     }
+
+  onNodeMoved(node_dragged)
+  {
+    //console.log("dragged")
+  }
 
   processMouseDown(e)
   {
@@ -55,7 +63,7 @@ class GraphHandler {
 
     }
 
-
+    //this.last_mouse = this.canvas.last_mouse
   }
 
   groupCollapse(group)
@@ -66,11 +74,12 @@ class GraphHandler {
             var new_pos = [ group.pos[0] + 20,   group.pos[1] + 70]
             group.collapse_state.node_info[node.id] = {id: node.id, size: node.size, pos: delta_pos, collapsed: node.flags.collapsed}
 
+            node.pos = new_pos
             if(!node.flags.collapsed)
             {
                 node.collapse()
             }
-            node.pos = new_pos
+
 
 
         }
@@ -140,6 +149,15 @@ class GraphHandler {
 		var is_primary = (e.isPrimary === undefined || e.isPrimary);
         is_double_click = is_double_click && is_primary;
         var should_handle = this.canvas.selected_group && is_double_click
+
+        if(is_double_click)
+        {
+            if(this.canvas.node_dragged && this.canvas.node_dragged.onDblClick)
+            {
+                this.canvas.node_dragged.onDblClick();
+            }
+        }
+
         if(this.canvas.selected_group)
         {
             this.recomputeInsideNodes(this.canvas.selected_group)
@@ -155,6 +173,11 @@ class GraphHandler {
         {
             let node = this.canvas.node_dragged || this.canvas.resizing_node
             this.recomputeOutsideGroup(node)
+
+            if (node.constructor.name == "GroupNodeGui")
+            {
+                node.recomputeInsideNodes()
+            }
         }
 
         if(should_handle)
@@ -203,9 +226,46 @@ class GraphHandler {
         found_group = group
     }
 
+    for (var i = 0; i < this.graph._nodes.length; ++i) {
+            var group = this.graph._nodes[i];
+            if(group == node)
+            {
+                continue;
+            }
+            if (group.constructor.name != "GroupNodeGui")
+            {
+                continue
+            }
+            if (!LiteGraph.overlapBounding(group._bounding, node_bounding)) {
+                continue;
+            }
+            found_group = group
+    }
+
     if (found_group)
     {
+        if(node.parent_group && node.parent_group._nodes)
+        {
+            deleteByValue(node.parent_group._nodes, node)
+        }
+        if(found_group._nodes)
+        {
+            deleteByValue(found_group._nodes, node)
+            found_group._nodes.push(node)
+        }
+
         node.parent_group = found_group
+
+        function deleteByValue(obj, val) {
+            for(var f in obj) {
+                if(obj.hasOwnProperty(f) && obj[f] == val) {
+                    delete obj[f];
+                }
+            }
+        }
+
+
+
 
     }
 
@@ -220,16 +280,34 @@ class GraphHandler {
     for (var i = 0; i < nodes.length; ++i) {
         var node = nodes[i];
         node.getBounding(node_bounding);
+        if(node == group)
+        {
+            continue;
+        }
+        if (group.constructor.name == "GroupNodeGui" && node.constructor.name == "GroupNodeGui")
+        {
+            continue;
+        }
+
         if (!LiteGraph.overlapBounding(group._bounding, node_bounding)) {
             continue;
         } //out of the visible area
         if(node.parent_group && node.parent_group != group)
         {
             var parent_group = node.parent_group
-            if (LiteGraph.overlapBounding(parent_group._bounding, node_bounding)) {
-                continue;
+            if (group.constructor.name == "GroupNodeGui" && node.parent_group.constructor.name != "GroupNodeGui")
+            {
+
+                console.log("stealing")
             }
-            console.log("stealing")
+            else
+            {
+                if (LiteGraph.overlapBounding(parent_group._bounding, node_bounding)) {
+                continue;
+                }
+            }
+
+
         }
         group._nodes.push(node);
         node.parent_group = group
