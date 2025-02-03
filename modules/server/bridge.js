@@ -94,10 +94,11 @@ class WebBrige {
 
         }.bind(this));
     document.addEventListener('keydown', (event) => {
+        var input_handled = true;
         if(event.ctrlKey && event.key == "Enter") {
             this.startGraph()
         }
-        if(event.ctrlKey && event.key == "r") {
+        else if(event.ctrlKey && event.key == "r") {
             var selectedNodes = this.canvas.selected_nodes
             for (var i in selectedNodes) {
                 var node = this.canvas.selected_nodes[i];
@@ -107,8 +108,16 @@ class WebBrige {
 
             }
         }
-        event.preventDefault()
-        event.stopPropagation()
+        else
+        {
+            input_handled = false
+        }
+
+        if(input_handled)
+        {
+            event.preventDefault()
+            event.stopPropagation()
+        }
 
 
     });
