@@ -202,7 +202,7 @@ class WebBrige {
 
   loadList()
   {
-    var data = JSON.stringify( graph.serialize() );
+    var data = {};
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '/graph/list',false);
 
