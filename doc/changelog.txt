@@ -5,6 +5,7 @@
 
 #
 - node rotation
+- group node
 
 01/02/2025
 - llama_swap

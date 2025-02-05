@@ -217,16 +217,16 @@
 					{
 						continue;
 					}
-					if(node.pos[0] < (this.pos[0] + this.size[0]))
+					if (node.constructor.name == "GroupNodeGui" && !node.flags.collapsed)
 					{
-						node.pos[0] = (this.pos[0] + this.size[0]) + 10;
-					
+						node.collapse() 
 					}
-					if(node.pos[1] < (this.pos[1] + this.size[1]))
-					{
-						node.pos[1] = (this.pos[1] + this.size[1]) + 10 + LiteGraph.NODE_TITLE_HEIGHT;
 					
-					}
+					node.pos[0] = (this.pos[0] + this.size[0]) + 10;
+					node.pos[1] = (this.pos[1] + this.size[1]) + 10 + LiteGraph.NODE_TITLE_HEIGHT;
+
+					
+
 				}
 				
                 graph.sendActionToCanvas("sendToBack", [this])
