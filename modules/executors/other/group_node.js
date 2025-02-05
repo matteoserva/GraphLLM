@@ -198,6 +198,9 @@
                     node.onDrawCollapsed = null
                 }
 				
+				var collapsed_size = [ this._collapsed_width, LiteGraph.NODE_TITLE_HEIGHT]
+				var center_pos  = [this.pos[0] + collapsed_size[0]/2, this.pos[1] + collapsed_size[1]/2]
+				
 				LGraphNode.prototype.collapse.apply(this,force)
 				
 				// push away overlapping nodes
@@ -222,8 +225,24 @@
 						node.collapse() 
 					}
 					
-					node.pos[0] = (this.pos[0] + this.size[0]) + 10;
-					node.pos[1] = (this.pos[1] + this.size[1]) + 10 + LiteGraph.NODE_TITLE_HEIGHT;
+					
+					// push the other node along the line connecting centers. assuming distance[0] and 1 are positive
+					var other_size = [node.size[0], node.size[1] + LiteGraph.NODE_TITLE_HEIGHT]
+					var other_pos = [node.pos[0] + other_size[0]/2, node.pos[1] + other_size[1]/2]
+					var center_distance = [other_pos[0] - center_pos[0], other_pos[1] - center_pos[1]]
+					var distance_required = [this.size[0] + other_size[0]/2 + 10 - collapsed_size[0]/2,
+					                          (this.size[1]+ LiteGraph.NODE_TITLE_HEIGHT) + other_size[1]/2 + 10 - collapsed_size[1]/2]
+					var tentativey = center_distance[1] * distance_required[0]/center_distance[0]
+					var tentativex = distance_required[0]
+					
+					if (tentativey > distance_required[1])
+					{
+						tentativey = distance_required[1]
+						tentativex = center_distance[0] * distance_required[1]/center_distance[1]
+					}
+					
+					node.pos[0] += tentativex - center_distance[0]
+					node.pos[1] += tentativey - center_distance[1]
 
 					
 
