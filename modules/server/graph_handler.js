@@ -9,6 +9,8 @@ class GraphHandler {
     {
         this.canvas.onMouseDown = this.processMouseDown.bind(this)
         this.canvas.onNodeMoved = this.onNodeMoved.bind(this)
+		this.canvas.onRender = this.onRender.bind(this)
+		this.canvas.onDrawForeground = this.onDrawForeground.bind(this)
         LiteGraph.pointerListenerAdd(document,"up", this.processMouseUp.bind(this),true);
 
         var that = this
@@ -20,6 +22,26 @@ class GraphHandler {
 
 
     }
+	
+  onRender(canvas, ctx){ // after background, before nodes
+	//console.log("onrender")
+	
+  }
+  onDrawForeground(ctx, visible_rect)
+  {
+	 var visible_nodes = this.canvas.visible_nodes
+	 var all_nodes = this.graph._nodes;
+	 var hidden_nodes = all_nodes.filter((el) => !visible_nodes.includes(el));
+	 hidden_nodes.map((el) => {if (el.onVisibilityChange) {
+		 el.onVisibilityChange.map((f) => f(false));
+		 
+		 }});
+	 visible_nodes.map((el) => {if (el.onVisibilityChange) {
+		 el.onVisibilityChange.map((f) => f(true));
+		 
+		 }});
+	 
+  }
 
   onNodeMoved(node_dragged)
   {

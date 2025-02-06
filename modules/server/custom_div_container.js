@@ -54,21 +54,38 @@ class DivContainer {
         this.saved_values = {}
         this.saved_diff = {}
 		
+		// visibility handling
+		var visibilityContainer = parent.onVisibilityChange || []
+		visibilityContainer.push(this.onVisibilityChange.bind(this))
+		parent.onVisibilityChange = visibilityContainer
 		
+		this.parent_visible = false
     }
+
+	processVisibilityChange()
+	{
+		var is_visible = this.parent_visible && !this.parent.flags.collapsed;
+		if(is_visible)
+        {
+			this.dialog.style.display =""
+            
+        }
+        else
+        {
+            this.dialog.style.display ="none"
+        }
+	}
+
+	onVisibilityChange(isVisible)
+	{
+		this.parent_visible = isVisible
+		this.processVisibilityChange()
+	}
 
     onCollapse()
     {
         var collapsed = this.parent.flags.collapsed
-        if(collapsed)
-        {
-            this.dialog.style.display ="none"
-        }
-        else
-        {
-            this.dialog.style.display =""
-
-        }
+        this.processVisibilityChange()
 
     }
 
