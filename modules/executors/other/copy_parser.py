@@ -10,6 +10,7 @@ class CopyParser(BaseGuiParser):
         mapping["copy_unpack"] = "unpack"
         mapping["copy_pack"] = "pack"
         mapping["standard_mux"] = "mux"
+        mapping["simple_copy"] = "copy"
 
         subtype = old_config["type"].split("/",1)[-1]
         subtype = mapping[subtype]
@@ -24,3 +25,6 @@ class CopyParser(BaseGuiParser):
 
     def postprocess_nodes(self, new_nodes):
         pass
+        
+class SimpleCopyParser(CopyParser):
+    node_types = ["simple_copy"]
