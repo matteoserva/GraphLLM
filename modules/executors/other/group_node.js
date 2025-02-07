@@ -212,7 +212,9 @@
 
         function push_away(group, center_pos, graph)
         {
-				var group_bonding = group._bounding
+				var group_bonding = new Float32Array(4);
+				group.getBounding(group_bonding,true)
+				var pushed_nodes = []
         // push away overlapping nodes
 				for (var i = 0; i < group.graph._nodes.length; ++i) {
                     var node = group.graph._nodes[i]
@@ -222,7 +224,7 @@
 					if (!LiteGraph.overlapBounding(group_bonding, node_bounding)) {
 						continue;
 					}
-					if(Object.keys(group.collapse_state.node_info).includes(id))
+					if(group.constructor.name == "GroupNodeGui" && Object.keys(group.collapse_state.node_info).includes(id))
 					{
 						continue;
 					}
@@ -247,20 +249,20 @@
                     var other_minimum_delta = [0,0]
                     if (center_distance[0] > 0)
                     {
-                        other_minimum_delta[0] = group_bonding[0] + group_bonding[2] - node_bounding[0]
+                        other_minimum_delta[0] = group_bonding[0] + 1 + group_bonding[2] - node_bounding[0]
                     }
                     else
                     {
-                        other_minimum_delta[0] = group_bonding[0] - (node_bounding[0] + node_bounding[2])
+                        other_minimum_delta[0] = group_bonding[0] -1 - (node_bounding[0] + node_bounding[2])
                     }
 
                     if (center_distance[1] > 0)
                     {
-                        other_minimum_delta[1] = group_bonding[1] + group_bonding[3] - node_bounding[1]
+                        other_minimum_delta[1] = group_bonding[1] + 1 +group_bonding[3] - node_bounding[1]
                     }
                     else
                     {
-                        other_minimum_delta[1] = group_bonding[1] - (node_bounding[1] + node_bounding[3])
+                        other_minimum_delta[1] = group_bonding[1] - 1 -(node_bounding[1] + node_bounding[3])
                     }
                     var tentativex = other_minimum_delta[0]
                     var tentativey = tentativex * center_distance[1] / center_distance[0]
@@ -274,8 +276,14 @@
 					node.pos[0] += tentativex
 					node.pos[1] += tentativey
 
+                    pushed_nodes.push({node: node, center: center_other})
 
-
+				}
+				for(i in pushed_nodes)
+				{
+				    var el = pushed_nodes[i]
+				    //console.log("pushed: ", el)
+				    push_away(el.node,el.center,graph)
 				}
         }
 
