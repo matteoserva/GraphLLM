@@ -9,7 +9,16 @@ class TitlebarContainer {
         this.type = "custom"
         this.options = {}
         this.parent = parent
-        this.parent.onRemoved = function(){this.remove()}.bind(this)
+
+        var oldRemoved = this.parent.onRemoved
+        this.parent.onRemoved = function()
+        {
+			if(oldRemoved)
+				oldRemoved.apply(this.parent)
+            this.remove()
+        }.bind(this)
+
+
         
         var oldCollapse = this.parent.collapse.bind(this.parent)
         this.parent.collapse = function()
@@ -42,9 +51,9 @@ class TitlebarContainer {
         var dialog = document.createElement("div");
         dialog.className = "titlebar-container";
         dialog.style.position = "absolute";
-        dialog.innerHTML = " ";
+        dialog.innerHTML = '<img src="img/circle.png" style="vertical-align: middle; width: 9px; height: 9px"></img>'
 
-        dialog.style.height = this.height + "px";
+        //dialog.style.height = this.height + "px";
 		
 		setTimeout(function(){
             if(this.parent.id)
@@ -66,8 +75,8 @@ class TitlebarContainer {
 		var node = this.parent;
 		var canvas = node.graph.list_of_graphcanvas[0];
 		var scale = canvas.ds.scale
-		var width = this.parent.flags.collapsed? node._collapsed_width:node.size[0] 
-        var posX = node.pos[0] + width - 5  + canvas.ds.offset[0]
+		var width = this.parent.flags.collapsed? node._collapsed_width-3 :node.size[0]
+        var posX = node.pos[0] + width -4.5  + canvas.ds.offset[0]
         var posY = node.pos[1] - LiteGraph.NODE_TITLE_HEIGHT/2  + 0.2 + canvas.ds.offset[1]
         posX *= scale
         posY *= scale
@@ -132,7 +141,15 @@ class DivContainer {
         this.options = {}
         this.parent = parent
         this.attached = false
-        this.parent.onRemoved = function(){this.remove()}.bind(this)
+
+        var oldRemoved = this.parent.onRemoved
+        this.parent.onRemoved = function()
+        {
+			if(oldRemoved)
+				oldRemoved.apply(this.parent)
+            this.remove()
+        }.bind(this)
+
         var that = this
         this.parent.onPropertyChanged= function( k, val )
         {

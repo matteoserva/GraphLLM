@@ -54,8 +54,7 @@
     this.addWidget("combo","subtype","stateless",null, { property: "subtype", values: ["stateless","stateful"] } );
     this.container = new DivContainer(this)
     this.addCustomWidget( this.container);
-	this.titlebar = new TitlebarContainer(this)
-    this.addCustomWidget( this.titlebar);
+    //this.addCustomWidget( new TitlebarContainer(this));
     //this.container.addElement(new CustomTextarea("Parameters","parameters"))
 
     this.container.addWidget("text_input","Config",{ property: "conf"})
