@@ -198,59 +198,85 @@
                     node.onDrawCollapsed = null
                 }
 				
-				var collapsed_size = [ this._collapsed_width, LiteGraph.NODE_TITLE_HEIGHT]
-				var center_pos  = [this.pos[0] + collapsed_size[0]/2, this.pos[1] + collapsed_size[1]/2]
-				
+
+				var group_bonding = group._bounding
+				var center_pos  = [group_bonding[0] + group_bonding[2]/2, group_bonding[1] + group_bonding[3]/2]
 				LGraphNode.prototype.collapse.apply(this,force)
+				push_away(this, center_pos, this.graph)
+
 				
-				// push away overlapping nodes
-				for (var i = 0; i < this.graph._nodes.length; ++i) {
-                    var node = this.graph._nodes[i]
+                graph.sendActionToCanvas("sendToBack", [this])
+            }
+            
+        }
+
+        function push_away(group, center_pos, graph)
+        {
+				var group_bonding = group._bounding
+        // push away overlapping nodes
+				for (var i = 0; i < group.graph._nodes.length; ++i) {
+                    var node = group.graph._nodes[i]
 					var id = '' + node.id
 					var node_bounding = new Float32Array(4);
 					node.getBounding(node_bounding,true);
-					if (!LiteGraph.overlapBounding(this._bounding, node_bounding)) {
+					if (!LiteGraph.overlapBounding(group_bonding, node_bounding)) {
 						continue;
 					}
 					if(Object.keys(group.collapse_state.node_info).includes(id))
 					{
 						continue;
 					}
-					if(node == this)
+					if(node == group)
 					{
 						continue;
 					}
 					if (node.constructor.name == "GroupNodeGui" && !node.flags.collapsed)
 					{
-						node.collapse() 
+						node.collapse()
+                        node.getBounding(node_bounding,true);
+                        if (!LiteGraph.overlapBounding(group_bonding, node_bounding)) {
+                            continue;
+                        }
 					}
-					
-					
-					// push the other node along the line connecting centers. assuming distance[0] and 1 are positive
-					var other_size = [node.size[0], node.size[1] + LiteGraph.NODE_TITLE_HEIGHT]
-					var other_pos = [node.pos[0] + other_size[0]/2, node.pos[1] + other_size[1]/2]
-					var center_distance = [other_pos[0] - center_pos[0], other_pos[1] - center_pos[1]]
-					var distance_required = [this.size[0] + other_size[0]/2 + 10 - collapsed_size[0]/2,
-					                          (this.size[1]+ LiteGraph.NODE_TITLE_HEIGHT) + other_size[1]/2 + 10 - collapsed_size[1]/2]
-					var tentativey = center_distance[1] * distance_required[0]/center_distance[0]
-					var tentativex = distance_required[0]
-					
-					if (tentativey > distance_required[1])
-					{
-						tentativey = distance_required[1]
-						tentativex = center_distance[0] * distance_required[1]/center_distance[1]
-					}
-					
-					node.pos[0] += tentativex - center_distance[0]
-					node.pos[1] += tentativey - center_distance[1]
 
-					
+					// push the other node along the line connecting centers. assuming distance[0] and 1 are positive
+					var other_size = [node_bounding[2], node_bounding[3]]
+					var center_other = [node_bounding[0] + node_bounding[2]/2, node_bounding[1] + node_bounding[3]/2]
+					var center_distance = [center_other[0] - center_pos[0], center_other[1] - center_pos[1]]
+
+                    var other_minimum_delta = [0,0]
+                    if (center_distance[0] > 0)
+                    {
+                        other_minimum_delta[0] = group_bonding[0] + group_bonding[2] - node_bounding[0]
+                    }
+                    else
+                    {
+                        other_minimum_delta[0] = group_bonding[0] - (node_bounding[0] + node_bounding[2])
+                    }
+
+                    if (center_distance[1] > 0)
+                    {
+                        other_minimum_delta[1] = group_bonding[1] + group_bonding[3] - node_bounding[1]
+                    }
+                    else
+                    {
+                        other_minimum_delta[1] = group_bonding[1] - (node_bounding[1] + node_bounding[3])
+                    }
+                    var tentativex = other_minimum_delta[0]
+                    var tentativey = tentativex * center_distance[1] / center_distance[0]
+
+                    if ((center_distance[1] > 0 && tentativey > other_minimum_delta[1]) || (center_distance[1] < 0 && tentativey < other_minimum_delta[1]))
+                    {
+                        tentativey = other_minimum_delta[1]
+                        tentativex = tentativey * center_distance[0] / center_distance[1]
+                    }
+
+					node.pos[0] += tentativex
+					node.pos[1] += tentativey
+
+
 
 				}
-				
-                graph.sendActionToCanvas("sendToBack", [this])
-            }
-            
         }
 
         GroupNodeGui.prototype.onConnectionsChange = function(dir,slot,connected,d,e)
