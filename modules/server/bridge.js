@@ -39,8 +39,10 @@ class WebBrige {
 
   setDefaultConnectionEndpoints()
   {
-    LiteGraph.slot_types_default_out.string=["output/watch"]
-    LiteGraph.slot_types_default_in.string=["input/text_input"]
+    LiteGraph.slot_types_default_out.string=["output/watch","graph/virtual_sink"]
+    LiteGraph.slot_types_default_in.string=["input/text_input","graph/virtual_source"]
+    LiteGraph.slot_types_default_out.virtual=["graph/virtual_source"]
+    LiteGraph.slot_types_default_in.virtual=["graph/virtual_sink"]
   }
 
 
@@ -135,9 +137,9 @@ class WebBrige {
                 if (node.inputs) {
                    for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
 
-                                node.inputs[j].pos = null;
+                                /*node.inputs[j].pos = null;
                                 node.inputs[j].dir = null;
-                                node.inputs[j].shape = null;
+                                node.inputs[j].shape = null;*/
                                 }}
                                 node.horizontal = true;
             }
@@ -173,9 +175,9 @@ class WebBrige {
             {
                 if (node.inputs) {
                     for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
-                                node.inputs[j].pos = null;
+                                /*node.inputs[j].pos = null;
                                 node.inputs[j].dir = null;
-                                node.inputs[j].shape = null;
+                                node.inputs[j].shape = null;*/
                     }
                 }
                 node.horizontal = true;
@@ -188,7 +190,7 @@ class WebBrige {
                    for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
                             node.inputs[j].pos = null;
                             node.inputs[j].dir = null;
-                            node.inputs[j].shape = null;
+                            //node.inputs[j].shape = null;
                    }}
                    node.horizontal = false
             }
