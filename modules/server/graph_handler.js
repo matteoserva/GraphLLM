@@ -279,16 +279,19 @@ class GraphHandler {
         node.parent_group = found_group
 
         function deleteByValue(obj, val) {
-            for(var f in obj) {
-                if(obj.hasOwnProperty(f) && obj[f] == val) {
-                    delete obj[f];
-                }
+            var index = obj.indexOf(val);
+            if (index !== -1) {
+              obj.splice(index, 1);
             }
         }
 
 
 
 
+    }
+    else
+    {
+        node.parent_group = null
     }
 
   }
