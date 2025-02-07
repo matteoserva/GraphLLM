@@ -287,6 +287,25 @@
 				}
         }
 
+        GroupNodeGui.prototype.getExtraMenuOptions = function (canvas,options)
+        {
+            var menu_info = canvas.getCanvasMenuOptions();
+            //menu_info = canvas.getNodeMenuOptions({})
+            menu_info = [
+                {
+                    content: "Add Node",
+                    has_submenu: true,
+                    callback: onMenuAdd
+                }
+                ]
+            return menu_info;
+
+            function onMenuAdd(node, options, e, prev_menu, callback)
+            {
+                LGraphCanvas.onMenuAdd(node, options, e, prev_menu, null)
+            }
+        }
+
         GroupNodeGui.prototype.onConnectionsChange = function(dir,slot,connected,d,e)
         {
             console.log("dir: " +dir + "  slot: " + slot + "  connected: "  + connected )
