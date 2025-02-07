@@ -248,7 +248,9 @@ class GraphHandler {
         found_group = group
     }
 
-    for (var i = 0; i < this.graph._nodes.length; ++i) {
+    if (node.constructor.name != "GroupNodeGui")
+    {
+        for (var i = 0; i < this.graph._nodes.length; ++i) {
             var group = this.graph._nodes[i];
             if(group == node)
             {
@@ -266,6 +268,7 @@ class GraphHandler {
                 continue
             }
             found_group = group
+        }
     }
 
     if (found_group)
