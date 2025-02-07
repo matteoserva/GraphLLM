@@ -261,6 +261,10 @@ class GraphHandler {
             if (!LiteGraph.overlapBounding(group._bounding, node_bounding)) {
                 continue;
             }
+            if (group.flags.collapsed)
+            {
+                continue
+            }
             found_group = group
     }
 
@@ -275,6 +279,8 @@ class GraphHandler {
             deleteByValue(found_group._nodes, node)
             found_group._nodes.push(node)
         }
+
+
 
         node.parent_group = found_group
 
