@@ -18,10 +18,31 @@ class OpenAIClient():
             if el in extra_client_args:
                 self.model_name =  extra_client_args[el]
 
+        if "model_name" not in extra_client_args and "base_url" in extra_client_args:
+            self.try_update_model_name(extra_client_args["base_url"])
+
         self.client = None
         self.prompt_metadata = {}
         
         self.default_params = {"temperature": 0.1, "max_tokens": 1024 // 2, "stream": True, "stop": None}
+
+    def get_models(self,base_url):
+        try:
+            headers = {"accept": "application/json"}
+            url = base_url + "/models"
+            r = requests.get(url, headers=headers)
+            r1 = r.text
+            r2 = r1
+            r3 = json.loads(r2)
+            data = r3["data"]
+        except:
+            return []
+        return data
+
+    def try_update_model_name(self,base_url):
+        data = self.get_models(base_url)
+        if len(data) == 1:
+             self.model_name = data[0]["id"]
 
     def tokenize(self, p):
         request_body = {
