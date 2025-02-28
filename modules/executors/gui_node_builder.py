@@ -12,7 +12,7 @@ class GuiNodeBuilder:
                        "title": "", "gui_node_config": {},
                        "callbacks": [], "inputs": [], "outputs": [],
                        "standard_widgets": [], "custom_widgets": [],
-                       "properties": {}, "subscriptions" : []}
+                       "properties": {}, "subscriptions" : [], "extra_properties": []}
 
     def _setPath(self, nodeType):
         self.config["class_name"] = type(self).__name__
@@ -21,8 +21,13 @@ class GuiNodeBuilder:
 
     def _setConnectionLimits(self, limits):
         self.config["gui_node_config"]["connection_limits"] = limits
+        self._setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")
 
     def _setCallback(self, cbName, cbString):
+        if cbName in ["onConnectionsChange"]:
+            cb_names = [el[0] for el in self.config["callbacks"]]
+            if cbName in cb_names:
+                self.config["callbacks"] = [el for el in self.config["callbacks"] if el[0] != cbName]
         self.config["callbacks"].append((cbName, cbString))
 
     def _addInput(self, name, type="string"):
@@ -35,6 +40,9 @@ class GuiNodeBuilder:
         # print("custom widget:",args)
         self.config["custom_widgets"].append(args)
 
+    def _addSimpleProperty(self,property_name,default_value):
+        self.config["properties"][property_name] = default_value
+
     def _addStandardWidget(self, *args):
         # print("standard widget:",args)
         if len(args) > 4 and isinstance(args[4], dict):
@@ -42,7 +50,11 @@ class GuiNodeBuilder:
             if "property" in options and len(options["property"]) > 0:
                 property_name = options["property"]
                 default_value = args[2]
-                self.config["properties"][property_name] = default_value
+                self._addSimpleProperty(property_name,default_value)
+
+            if args[0] == "combo" and "property" in options and len(options["property"]) >0 and len(options.get("values",[])) > 0:
+                extra_property = [args[1], args[2], "enum", {"values": options["values"]} ]
+                self.config["extra_properties"].append(extra_property)
 
         self.config["standard_widgets"].append(args)
 
@@ -76,6 +88,8 @@ class GuiNodeBuilder:
         # add properties
         if len(self.config["properties"]):
             res += "        this.properties = " + str(self.config["properties"]) + "\n"
+            for el in self.config["extra_properties"]:
+                res += "            this.addProperty(" + json.dumps(el)[1:-1] + ");\n"
 
         # add widgets
 

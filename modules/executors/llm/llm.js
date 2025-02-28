@@ -39,6 +39,7 @@
 
     /* ********************** ******************* */
     //node constructor class
+/*
     function MyLLMCallNode()
     {
     this.addInput("in","string");
@@ -71,7 +72,7 @@
     //register in the system
     LiteGraph.registerNodeType("llm/llm_call", MyLLMCallNode );
 
-
+*/
 
 
 

@@ -4,8 +4,9 @@
 
 
 #
-- node rotation
+- node rotation (CTRL+R)
 - group node
+- virtual nodes connection upgrade
 
 01/02/2025
 - llama_swap
