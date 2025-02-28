@@ -7,6 +7,7 @@
 - node rotation (CTRL+R)
 - group node
 - virtual nodes connection upgrade
+- OpenAI client upgraded (prefill and detecting model name)
 
 01/02/2025
 - llama_swap

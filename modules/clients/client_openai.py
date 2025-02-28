@@ -112,7 +112,11 @@ class OpenAIClient():
             val = chunk.choices[0].delta.content or ""
             res += val
             if callback:
-                callback(val)
+                try:
+                    callback(val)
+                except:
+                    completion.close()
+                    raise
         return res
 
     def connect(self):
