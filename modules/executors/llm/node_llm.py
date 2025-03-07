@@ -105,6 +105,14 @@ class LlmExecutor(GenericExecutor):
     def get_prompt_len(self):
         return self.current_prompt.count("{}")
 
+    def send_chat(self,builder,logger_print):
+        res = send_chat(builder, self.client, self.client_parameters, self.print_response, logger_print=logger_print)
+        response = {"role": "assistant", "content": res}
+        client = self.client
+        if hasattr(client,"prompt_metadata") and "stopped_word" in client.prompt_metadata and client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
+            response = {"role": "call", "content": res}
+        return response
+
     def basic_exec(self,text_prompt):
         if text_prompt == "{p:eos}":
             self.builder.reset()
@@ -122,17 +130,11 @@ class LlmExecutor(GenericExecutor):
             if isinstance(x, (int, float, complex)) and not isinstance(x, bool):
                 self.print_prompt -= 1
 
-        res = send_chat(self.builder,self.client,self.client_parameters,self.print_response,logger_print=self.node.print)
-        resp = [res,{"role":"assistant", "content":res}]
-
-        if hasattr(client,"prompt_metadata") and "stopped_word" in client.prompt_metadata and client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
-            messages = builder.add_response(str(res),"call")
-            resp = [res, {"role":"call", "content":res}]
-        else:
-            messages = builder.add_response(str(res))
+        res = self.send_chat(self.builder,logger_print=self.node.print)
+        builder.add_response(res["content"], res["role"])
+        resp = [self.builder,res]
 
         self.builder.set_serialize_format("last")
-        resp[0] = self.builder
 
         return resp
 

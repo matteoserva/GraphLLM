@@ -164,7 +164,7 @@ class PromptBuilder:
         return self.messages
 
     def add_response(self,message,role = "assistant"):
-        if(self.messages[-1]["role"] == "assistant"):
+        if(self.messages[-1]["role"] == "assistant" and role == "assistant"):
             self.messages[-1]["content"] = self.messages[-1]["content"]  + str(message)
         else:
             self.messages.append({"role":role,"content":str(message)})
