@@ -75,7 +75,9 @@ class PromptBuilder:
         self.custom_default_sysprompt =  False
         self.updated_sysprompt = False
         self.messages = []
+        self.serialize_format = "GraphLLM"
         self.reset()
+
 
     @staticmethod
     def _check_special_tokens(m):
@@ -91,6 +93,9 @@ class PromptBuilder:
              self.sysprompt = val
              self.reset()
 
+    def set_serialize_format(self,format):
+        self.serialize_format = format
+
     def send_tokenized(self):
         use_template =  self.formatter.use_template
         send_tokenized = not use_template
@@ -102,8 +107,13 @@ class PromptBuilder:
         return text_prompt
 
     def __str__(self):
-        decorated_messages = ["{p:" + el["role"] + "}\n" + el["content"] + "{p:eom}" for el in self.messages]
-        text_prompt = "{p:bos}\n\n" + "\n\n".join(decorated_messages)
+        if self.serialize_format.lower() == "graphllm":
+            decorated_messages = ["{p:" + el["role"] + "}\n" + el["content"] + "{p:eom}" for el in self.messages]
+            text_prompt = "{p:bos}\n\n" + "\n\n".join(decorated_messages)
+        elif self.serialize_format.lower() == "text":
+            text_prompt = self.messages[-1]["content"]
+        else:
+            text_prompt = str(self.messages)
         return text_prompt
 
 
