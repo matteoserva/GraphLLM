@@ -318,7 +318,8 @@ class Client:
         return client
 
     @staticmethod
-    def _make_client_simple(client_name, client_config):
+    def _make_client_simple(client_name, cfg):
+        client_config = cfg.copy()
         if "type" in client_config:
             del client_config["type"]
         if client_name=="dummy":
@@ -338,8 +339,6 @@ class Client:
         for client_name in client_names:
             client_config = client_configs.get(client_name,{})
             type = client_config.get("type",client_name)
-            if "type" in client_config:
-                del client_config["type"]
             try:
                client = Client._make_client_simple(type,client_config)
                client.connect()
