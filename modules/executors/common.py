@@ -92,11 +92,11 @@ def solve_placeholders(base, confArgs, confVariables={}):
         for i in range(len(confArgs)):
             name = "{p:exec" + str(i + 1) + "}"
             val = confArgs[i]
-            base = base.replace(name, val)
+            base = base.replace(name, str(val))
         for el in confVariables:
             name = "{p:" + el + "}"
             val = confVariables[el]
-            base = base.replace(name, val)
+            base = base.replace(name, str(val))
         return base
 
 

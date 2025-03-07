@@ -122,7 +122,7 @@ class LlmExecutor(GenericExecutor):
             if isinstance(x, (int, float, complex)) and not isinstance(x, bool):
                 self.print_prompt -= 1
 
-        res = send_chat(builder,client,self.client_parameters,self.print_response,logger_print=self.node.print)
+        res = send_chat(self.builder,self.client,self.client_parameters,self.print_response,logger_print=self.node.print)
         resp = [res,{"role":"assistant", "content":res}]
 
         if hasattr(client,"prompt_metadata") and "stopped_word" in client.prompt_metadata and client.prompt_metadata["stopped_word"] and client.prompt_metadata["stopping_word"] == "<|eom_id|>":
@@ -130,6 +130,10 @@ class LlmExecutor(GenericExecutor):
             resp = [res, {"role":"call", "content":res}]
         else:
             messages = builder.add_response(str(res))
+
+        self.builder.set_serialize_format("last")
+        resp[0] = self.builder
+
         return resp
 
     def setup_complete(self):

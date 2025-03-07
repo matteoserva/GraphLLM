@@ -34,7 +34,7 @@ class PythonExecutor(GenericExecutor):
         script = self.base_template
         if script.find(self.base_subst) >= 0:
             for el in scr:
-                script = script.replace(self.base_subst,el,1)
+                script = script.replace(self.base_subst,str(el),1)
 
         scriptContext = {"_C":scr,"self":self}
         for el in self.saved_variables:

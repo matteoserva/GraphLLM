@@ -75,6 +75,7 @@ class PromptBuilder:
         self.custom_default_sysprompt =  False
         self.updated_sysprompt = False
         self.messages = []
+        self.last_message = None
         self.serialize_format = "GraphLLM"
         self.reset()
 
@@ -96,6 +97,11 @@ class PromptBuilder:
     def set_serialize_format(self,format):
         self.serialize_format = format
 
+    def __getattr__(self, attr):
+        serialized = self.__str__()
+        bar = getattr(serialized, attr)
+        return bar
+
     def send_tokenized(self):
         use_template =  self.formatter.use_template
         send_tokenized = not use_template
@@ -110,8 +116,11 @@ class PromptBuilder:
         if self.serialize_format.lower() == "graphllm":
             decorated_messages = ["{p:" + el["role"] + "}\n" + el["content"] + "{p:eom}" for el in self.messages]
             text_prompt = "{p:bos}\n\n" + "\n\n".join(decorated_messages)
-        elif self.serialize_format.lower() == "text":
-            text_prompt = self.messages[-1]["content"]
+        elif self.serialize_format.lower() == "text" or self.serialize_format.lower() == "last":
+            if self.messages[-1]["role"] == "assistant" and self.last_message:
+                text_prompt = self.last_message
+            else:
+                text_prompt = self.messages[-1]["content"]
         else:
             text_prompt = str(self.messages)
         return text_prompt
@@ -122,6 +131,7 @@ class PromptBuilder:
 
     def reset(self):
         self.messages = []
+        self.last_message = None
         self.messages.append({"role":"system","content":self.sysprompt})
         self.first_prompt = True
         self.updated_sysprompt = self.custom_default_sysprompt
@@ -158,6 +168,7 @@ class PromptBuilder:
             self.messages[-1]["content"] = self.messages[-1]["content"]  + str(message)
         else:
             self.messages.append({"role":role,"content":str(message)})
+        self.last_message = message
         return self.messages
 
     def get_messages(self):
