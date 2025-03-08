@@ -74,6 +74,12 @@ class FakeString(str):
     def get_inner(self):
         return self.inner_value
 
+    def regenerate(self,format=None):
+        new_text = self.inner_value["prompt_builder"].to_string(format)
+        res = FakeString(new_text)
+        res.set_inner(self.inner_value)
+        return res
+
 class PromptBuilder:
 
     def __init__(self):

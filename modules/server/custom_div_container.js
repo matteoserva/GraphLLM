@@ -243,12 +243,12 @@ class DivContainer {
         this.dialog = dialog
 
 
-        var titlebar = document.createElement("div");
+        /*var titlebar = document.createElement("div");
         titlebar.className = "titlebar-container";
         titlebar.style.position = "absolute";
         titlebar.innerHTML = " ";
         this.titlebar = titlebar
-        dialog.appendChild(titlebar)
+        dialog.appendChild(titlebar)*/
 		
 		setTimeout(function(){
             if(this.parent.id)
@@ -294,8 +294,8 @@ class DivContainer {
         this.H = numChildren * this.height
         this.drawCounter = 1;
 
-        this.titlebar.style.top = (-this.saved_y - 20) + "px";
-        this.titlebar.style.right = "0px";
+        /*this.titlebar.style.top = (-this.saved_y - 20) + "px";
+        this.titlebar.style.right = "0px";*/
 
     }
 

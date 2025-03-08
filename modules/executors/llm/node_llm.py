@@ -134,7 +134,7 @@ class LlmExecutor(GenericExecutor):
         builder.add_response(res["content"], res["role"])
         self.builder.set_serialize_format("last")
         out0 = self.builder.to_string("last")
-        out0.get_inner()["send_message"] = self
+        out0.get_inner()["send_chat"] = self.send_chat
         resp = [out0,res]
 
         return resp

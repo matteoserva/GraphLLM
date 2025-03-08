@@ -11,7 +11,7 @@ class GuiNodeBuilder:
         self.config = {"class_name": "", "node_type": "",
                        "title": "", "gui_node_config": {},
                        "callbacks": [], "inputs": [], "outputs": [],
-                       "standard_widgets": [], "custom_widgets": [],
+                       "standard_widgets": [], "custom_widgets": [], "titlebar_widgets" : [],
                        "properties": {}, "subscriptions" : [], "extra_properties": []}
 
     def _setPath(self, nodeType):
@@ -39,6 +39,10 @@ class GuiNodeBuilder:
     def _addCustomWidget(self, *args):
         # print("custom widget:",args)
         self.config["custom_widgets"].append(args)
+
+    def _addTitlebarWidget(self, *args):
+        # print("custom widget:",args)
+        self.config["titlebar_widgets"].append(args)
 
     def _addSimpleProperty(self,property_name,default_value):
         self.config["properties"][property_name] = default_value
@@ -99,8 +103,12 @@ class GuiNodeBuilder:
         if len(self.config["custom_widgets"]) > 0:
             res += "        this.container = new DivContainer(this)\n"
             res += "        this.addCustomWidget( this.container);\n"
+
         for el in self.config["custom_widgets"]:
             res += "        this.container.addWidget" + str(el) + "\n"
+
+        if len(self.config["titlebar_widgets"]) > 0:
+            res += "        this.addCustomWidget( new TitlebarContainer(this));\n"
 
         res = "\n".join([" "*12 + el.strip() for el in res.split("\n")])
         res = """
