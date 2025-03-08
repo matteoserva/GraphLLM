@@ -1,4 +1,4 @@
-
+from modules.formatter import PromptBuilder
 import json
 import requests
 #from . import common
@@ -296,10 +296,12 @@ class LLamaCppClient:
     def send_prompt(self,p,params=None,callback=None):
         if params is None:
             params = self.client_parameters
-        if isinstance(p,str):
-            return self._send_prompt_text(p,params,callback)
+        if isinstance(p,PromptBuilder):
+            return self._send_prompt_builder(p, params, callback)
         else:
-            return self._send_prompt_builder(p,params,callback)
+            return self._send_prompt_text(p,params,callback)
+
+
 
 class Client:
 

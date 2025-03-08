@@ -68,6 +68,10 @@ class Formatter:
 ## questa è la parte che non ha bisongno di conoscere il modello
 
 class PromptBuilder:
+    @property
+    def __class__(self):
+      return str
+
     def __init__(self):
         self.formatter = Formatter()
         self.sysprompt = "You are a helpful assistant"
@@ -112,7 +116,7 @@ class PromptBuilder:
         print(text_prompt, end="")
         return text_prompt
 
-    def __str__(self):
+    def __repr__(self):
         if self.serialize_format.lower() == "graphllm":
             decorated_messages = ["{p:" + el["role"] + "}\n" + el["content"] + "{p:eom}" for el in self.messages]
             text_prompt = "{p:bos}\n\n" + "\n\n".join(decorated_messages)

@@ -158,7 +158,7 @@ def solve_templates(prompt,args_stack=[],variables={}):
       need_more = prompt.find("{}")>= 0 
       if not need_more or len(args_stack) == 0:
         break;
-      prompt = prompt.replace("{}", str(args_stack[0]), 1)
+      prompt = prompt.replace("{}", args_stack[0], 1)
       args_stack = args_stack[1:]
 
     return prompt, need_more

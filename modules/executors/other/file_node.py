@@ -16,7 +16,7 @@ class FileNode(GenericExecutor):
         write_mode = "w+" if create else "w"
         if len(args[0]) > 0:
              with open(self.filename,write_mode) as f:
-                      f.write(str(args[0][0]))
+                      f.write(args[0][0])
         try:
             with open(self.filename) as f:
                 val = f.read()
