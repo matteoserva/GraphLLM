@@ -133,7 +133,8 @@ class LlmExecutor(GenericExecutor):
         res = self.send_chat(self.builder,logger_print=self.node.print)
         builder.add_response(res["content"], res["role"])
         self.builder.set_serialize_format("last")
-        out0 = self.builder.to_string()
+        out0 = self.builder.to_string("last")
+        out0.get_inner()["send_message"] = self
         resp = [out0,res]
 
         return resp

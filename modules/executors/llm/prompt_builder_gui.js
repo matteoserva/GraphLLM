@@ -29,6 +29,6 @@
     PromptBuilderNode.prototype.onConnectionsChange = MyGraphNode.prototype.onConnectionsChange
 
     //register in the system
-    LiteGraph.registerNodeType("text/prompt_builder", PromptBuilderNode );
+    LiteGraph.registerNodeType("llm/prompt_builder", PromptBuilderNode );
 
 })(this);

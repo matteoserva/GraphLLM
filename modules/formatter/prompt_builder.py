@@ -138,7 +138,7 @@ class PromptBuilder:
             text_prompt = str(self.messages)
 
         res = FakeString(text_prompt)
-        res.set_inner(self)
+        res.set_inner({"prompt_builder": self})
         return res
 
 
