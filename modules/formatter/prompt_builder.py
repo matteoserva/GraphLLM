@@ -67,10 +67,14 @@ class Formatter:
 
 ## questa è la parte che non ha bisongno di conoscere il modello
 
+class FakeString(str):
+    def set_inner(self,value):
+        self.inner_value = value
+
+    def get_inner(self):
+        return self.inner_value
+
 class PromptBuilder:
-    @property
-    def __class__(self):
-      return str
 
     def __init__(self):
         self.formatter = Formatter()
@@ -116,18 +120,26 @@ class PromptBuilder:
         print(text_prompt, end="")
         return text_prompt
 
-    def __repr__(self):
-        if self.serialize_format.lower() == "graphllm":
+    def to_string(self,format=None):
+        if format is None:
+            serialize_format = self.serialize_format.lower()
+        else:
+            serialize_format=format.lower()
+
+        if serialize_format == "graphllm":
             decorated_messages = ["{p:" + el["role"] + "}\n" + el["content"] + "{p:eom}" for el in self.messages]
             text_prompt = "{p:bos}\n\n" + "\n\n".join(decorated_messages)
-        elif self.serialize_format.lower() == "text" or self.serialize_format.lower() == "last":
+        elif serialize_format == "text" or serialize_format == "last":
             if self.messages[-1]["role"] == "assistant" and self.last_message:
                 text_prompt = self.last_message
             else:
                 text_prompt = self.messages[-1]["content"]
         else:
             text_prompt = str(self.messages)
-        return text_prompt
+
+        res = FakeString(text_prompt)
+        res.set_inner(self)
+        return res
 
 
     def load_model(self,model_name):
