@@ -10,6 +10,7 @@ class CopyParser(BaseGuiParser):
         mapping["copy_unpack"] = "unpack"
         mapping["copy_pack"] = "pack"
         mapping["standard_mux"] = "mux"
+        mapping["demux"] = "demux"
         mapping["simple_copy"] = "copy"
 
         subtype = old_config["type"].split("/",1)[-1]
