@@ -3,7 +3,8 @@
 #
 
 
-#
+# 15/3/2025
+- support for gemma 3 and qwq
 - node rotation (CTRL+R)
 - group node
 - virtual nodes connection upgrade
