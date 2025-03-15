@@ -40,6 +40,9 @@ class FormatterCustom:
             formatter["enable_system"] = True
             formatter["roles"] = ["raw", "user", "assistant", "system"]
 
+            if model_name.lower().find("qwq") >= 0:
+                formatter["clean_thinking"] = True
+
         elif model_name.lower().find("phi-4") >= 0:
             formatter = {}
             formatter["bos"] = ""
@@ -334,6 +337,12 @@ class FormatterCustom:
 
     def build_prompt(self, messages, force_system=False, **kwargs):
         messages = copy.deepcopy(messages)
+
+        #remove thinking tokens if the assistant response is not a a prefill
+        if self.f.get("clean_thinking"):
+            assistant_messages = [el for el in messages[:-1] if el["role"] == "assistant"]
+            for el in assistant_messages:
+                el["content"] = el["content"].split("</think>")[-1].lstrip()
 
         prompt = self.build_handmade_prompt(messages, force_system)
 

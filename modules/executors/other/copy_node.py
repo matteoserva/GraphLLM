@@ -93,8 +93,10 @@ class CopyNode(GenericExecutor):
                     self.stack.append(res[0])
                     res = [None]
             else: #mux nello spazio
-                l = [el for el in res if el is not None] #TODO: solo uno e mettere da parte gli altri
-                res = l
+
+                l = [(idx,el) for idx,el in enumerate(res) if el is not None][0] #TODO: solo uno e mettere da parte gli altri
+                res = [l[1],l[0]]
+
         elif self._subtype == "demux":
             """ if the index is present, then use it, else alternate the outputs """
             if len(res) > 1:
@@ -113,6 +115,12 @@ class CopyNode(GenericExecutor):
             val = self.stack.pop()
             res = [val]
             self._properties["free_runs"] = 1 if len(self.stack) > 0 else 0
+
+        elif self._subtype == "pack" and len(self.node.inputs) > 1:
+            val = res
+            res = [val]
+
+
 
         elif self._subtype == "log":
             if "logfile" in self.parameters:

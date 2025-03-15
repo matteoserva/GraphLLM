@@ -79,6 +79,15 @@ class GraphExecutor:
         node_names = [self.path + el["name"] for el in graph_nodes]
         self.logger.log("names", node_names)
 
+        # preparing the connections
+        for i,el in enumerate(node_connections):
+            num_inputs = len(el["deps"])
+            num_outputs = len(el["forwards"])
+            graph_nodes[i]["inputs"] = [None] * num_inputs
+            graph_nodes[i]["outputs"] = [None] * num_outputs
+            graph_nodes[i]["forwards"] = el["forwards"]
+            graph_nodes[i]["backwards"] = el["deps"]
+
         # step: initialize
         for i, node in enumerate(graph_nodes):
             node.initialize()
@@ -118,16 +127,9 @@ class GraphExecutor:
         for _,node in enumerate(graph_nodes):
             node.setup_complete()
 
-        # preparing the connections
-        for i,el in enumerate(node_connections):
-            num_inputs = len(el["deps"])
-            num_outputs = len(el["forwards"])
-            graph_nodes[i]["inputs"] = [None] * num_inputs
-            graph_nodes[i]["outputs"] = [None] * num_outputs
-
         self.graph_nodes = graph_nodes
         self.node_configs = node_configs
-        self.node_connections = node_connections
+        #self.node_connections = node_connections
         return cl_args
 
 
@@ -145,7 +147,7 @@ class GraphExecutor:
             if node_index in running:
                 continue
             source_outputs = node.get_outputs()
-            forwards_list = self.node_connections[node_index]["forwards"]
+            forwards_list = node["forwards"]
             for source_port,forwards in enumerate(forwards_list):
                 current_output = source_outputs[source_port]
                 destinations_busy = len([i for i,p in forwards if i in running]) > 0

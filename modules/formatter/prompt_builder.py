@@ -67,7 +67,21 @@ class Formatter:
 
 ## questa è la parte che non ha bisongno di conoscere il modello
 
+class FakeString(str):
+    def set_inner(self,value):
+        self.inner_value = value
+
+    def get_inner(self):
+        return self.inner_value
+
+    def regenerate(self,format=None):
+        new_text = self.inner_value["prompt_builder"].to_string(format)
+        res = FakeString(new_text)
+        res.set_inner(self.inner_value)
+        return res
+
 class PromptBuilder:
+
     def __init__(self):
         self.formatter = Formatter()
         self.sysprompt = "You are a helpful assistant"
@@ -75,7 +89,10 @@ class PromptBuilder:
         self.custom_default_sysprompt =  False
         self.updated_sysprompt = False
         self.messages = []
+        self.last_message = None
+        self.serialize_format = "GraphLLM"
         self.reset()
+
 
     @staticmethod
     def _check_special_tokens(m):
@@ -91,6 +108,14 @@ class PromptBuilder:
              self.sysprompt = val
              self.reset()
 
+    def set_serialize_format(self,format):
+        self.serialize_format = format
+
+    def __getattr__(self, attr):
+        serialized = self.__str__()
+        bar = getattr(serialized, attr)
+        return bar
+
     def send_tokenized(self):
         use_template =  self.formatter.use_template
         send_tokenized = not use_template
@@ -101,10 +126,26 @@ class PromptBuilder:
         print(text_prompt, end="")
         return text_prompt
 
-    def __str__(self):
-        decorated_messages = ["{p:" + el["role"] + "}\n" + el["content"] + "{p:eom}" for el in self.messages]
-        text_prompt = "{p:bos}\n\n" + "\n\n".join(decorated_messages)
-        return text_prompt
+    def to_string(self,format=None):
+        if format is None:
+            serialize_format = self.serialize_format.lower()
+        else:
+            serialize_format=format.lower()
+
+        if serialize_format == "graphllm":
+            decorated_messages = ["{p:" + el["role"] + "}\n" + el["content"] + "{p:eom}" for el in self.messages]
+            text_prompt = "{p:bos}\n\n" + "\n\n".join(decorated_messages)
+        elif serialize_format == "text" or serialize_format == "last":
+            if self.messages[-1]["role"] == "assistant" and self.last_message:
+                text_prompt = self.last_message
+            else:
+                text_prompt = self.messages[-1]["content"]
+        else:
+            text_prompt = str(self.messages)
+
+        res = FakeString(text_prompt)
+        res.set_inner({"prompt_builder": self})
+        return res
 
 
     def load_model(self,model_name):
@@ -112,6 +153,7 @@ class PromptBuilder:
 
     def reset(self):
         self.messages = []
+        self.last_message = None
         self.messages.append({"role":"system","content":self.sysprompt})
         self.first_prompt = True
         self.updated_sysprompt = self.custom_default_sysprompt
@@ -144,10 +186,11 @@ class PromptBuilder:
         return self.messages
 
     def add_response(self,message,role = "assistant"):
-        if(self.messages[-1]["role"] == "assistant"):
+        if(self.messages[-1]["role"] == "assistant" and role == "assistant"):
             self.messages[-1]["content"] = self.messages[-1]["content"]  + str(message)
         else:
             self.messages.append({"role":role,"content":str(message)})
+        self.last_message = message
         return self.messages
 
     def get_messages(self):

@@ -8,8 +8,8 @@ class GrokClient():
         self.api_key=api_key
         self.client = None
         self.prompt_metadata={}
-        self.model_name="llama3-70b-8192"
-        self.default_params={ "temperature":0.1, "max_tokens":1024//2, "stream":True, "stop":None}
+        self.model_name="deepseek-r1-distill-llama-70b"
+        self.default_params={ "temperature":0.1, "max_tokens":1024*4, "stream":True, "stop":None}
 
     def send_prompt(self,p,params=None, callback=None):
         if isinstance(p,list):

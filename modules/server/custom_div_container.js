@@ -1,4 +1,131 @@
 
+class TitlebarContainer {
+	constructor(parent)
+    {
+        this.disabled = false
+        this.name="CParameters"
+        this.value=""
+
+        this.type = "custom"
+        this.options = {}
+        this.parent = parent
+
+        var oldRemoved = this.parent.onRemoved
+        this.parent.onRemoved = function()
+        {
+			if(oldRemoved)
+				oldRemoved.apply(this.parent)
+            this.remove()
+        }.bind(this)
+
+
+        
+        var oldCollapse = this.parent.collapse.bind(this.parent)
+        this.parent.collapse = function()
+        {
+            oldCollapse()
+            this.onCollapse()
+        }.bind(this)
+		
+		var oldonDrawTitleBar = this.parent.onDrawTitleBar
+        this.parent.onDrawTitleBar = function()
+        {
+			if(oldonDrawTitleBar)
+				oldonDrawTitleBar.apply(this.parent)
+            this.onDrawTitleBar()
+        }.bind(this)
+
+		this.makeElement()
+		
+		// visibility handling
+		var visibilityContainer = parent.onVisibilityChange || []
+		visibilityContainer.push(this.onVisibilityChange.bind(this))
+		parent.onVisibilityChange = visibilityContainer
+		
+		this.parent_visible = false
+    }
+	
+	makeElement()
+    {
+
+        var dialog = document.createElement("div");
+        dialog.className = "titlebar-container";
+        dialog.style.position = "absolute";
+        dialog.innerHTML = '<img src="img/circle.png" style="vertical-align: middle; width: 9px; height: 9px"></img>'
+
+        //dialog.style.height = this.height + "px";
+		
+		setTimeout(function(){
+            if(this.parent.id)
+			{
+				var canvas = this.parent.graph.list_of_graphcanvas[0]
+				canvas.canvas.parentNode.appendChild(dialog);
+			}
+        }.bind(this) );
+		this.dialog = dialog
+    }
+	
+	computeSize(widget_width)
+	{
+			return [undefined,-4];
+	}
+	
+	onDrawTitleBar( ctx, title_height, size, scale, fgcolor )
+	{
+		var node = this.parent;
+		var canvas = node.graph.list_of_graphcanvas[0];
+		var scale = canvas.ds.scale
+		var width = this.parent.flags.collapsed? node._collapsed_width-3 :node.size[0]
+        var posX = node.pos[0] + width -4.5  + canvas.ds.offset[0]
+        var posY = node.pos[1] - LiteGraph.NODE_TITLE_HEIGHT/2  + 0.2 + canvas.ds.offset[1]
+        posX *= scale
+        posY *= scale
+        this.dialog.style.left = posX + "px";
+        this.dialog.style.top  = Math.round(posY) + "px";
+        //this.dialog.style.width = (node.size[0]-30) + "px";
+		//this.dialog.style.height = LiteGraph.NODE_TITLE_HEIGHT + "px"
+        this.dialog.style.transform = "scale(" + canvas.ds.scale + ") translateX(-100%) translateY(-50%)"
+        this.dialog.style.transformOrigin = "top left"
+	}
+	
+	
+	processVisibilityChange()
+	{
+		var is_visible = this.parent_visible ;//&& !this.parent.flags.collapsed;
+		if(is_visible)
+        {
+			this.dialog.style.display =""
+            
+        }
+        else
+        {
+            this.dialog.style.display ="none"
+        }
+	}
+
+	onVisibilityChange(isVisible)
+	{
+		this.parent_visible = isVisible
+		this.processVisibilityChange()
+	}
+
+    onCollapse()
+    {
+        var collapsed = this.parent.flags.collapsed
+        this.processVisibilityChange()
+
+    }
+	
+	remove()
+    {
+        if(this.dialog)
+        {
+            this.dialog.remove()
+        }
+    }
+}
+
+
 class DivContainer {
     constructor(parent)
     {
@@ -14,7 +141,15 @@ class DivContainer {
         this.options = {}
         this.parent = parent
         this.attached = false
-        this.parent.onRemoved = function(){this.remove()}.bind(this)
+
+        var oldRemoved = this.parent.onRemoved
+        this.parent.onRemoved = function()
+        {
+			if(oldRemoved)
+				oldRemoved.apply(this.parent)
+            this.remove()
+        }.bind(this)
+
         var that = this
         this.parent.onPropertyChanged= function( k, val )
         {
@@ -54,21 +189,38 @@ class DivContainer {
         this.saved_values = {}
         this.saved_diff = {}
 		
+		// visibility handling
+		var visibilityContainer = parent.onVisibilityChange || []
+		visibilityContainer.push(this.onVisibilityChange.bind(this))
+		parent.onVisibilityChange = visibilityContainer
 		
+		this.parent_visible = false
     }
+
+	processVisibilityChange()
+	{
+		var is_visible = this.parent_visible && !this.parent.flags.collapsed;
+		if(is_visible)
+        {
+			this.dialog.style.display =""
+            
+        }
+        else
+        {
+            this.dialog.style.display ="none"
+        }
+	}
+
+	onVisibilityChange(isVisible)
+	{
+		this.parent_visible = isVisible
+		this.processVisibilityChange()
+	}
 
     onCollapse()
     {
         var collapsed = this.parent.flags.collapsed
-        if(collapsed)
-        {
-            this.dialog.style.display ="none"
-        }
-        else
-        {
-            this.dialog.style.display =""
-
-        }
+        this.processVisibilityChange()
 
     }
 
@@ -91,12 +243,12 @@ class DivContainer {
         this.dialog = dialog
 
 
-        var titlebar = document.createElement("div");
+        /*var titlebar = document.createElement("div");
         titlebar.className = "titlebar-container";
         titlebar.style.position = "absolute";
         titlebar.innerHTML = " ";
         this.titlebar = titlebar
-        dialog.appendChild(titlebar)
+        dialog.appendChild(titlebar)*/
 		
 		setTimeout(function(){
             if(this.parent.id)
@@ -134,7 +286,7 @@ class DivContainer {
         this.dialog.style.width = (node.size[0]-30) + "px";
         this.dialog.style.transform = "scale(" + canvas.ds.scale + ")"
         this.dialog.style.transformOrigin = "top left"
-        this.dialog.style.height = (availableSpace-10) + "px"
+        this.dialog.style.height = (availableSpace-15) + "px"
         this.dialog.style.display = "inline-block"
         var textarea = this.dialog.querySelector("textarea")
         this.configureSize(node,textarea,availableSpace)
@@ -142,8 +294,8 @@ class DivContainer {
         this.H = numChildren * this.height
         this.drawCounter = 1;
 
-        this.titlebar.style.top = (-this.saved_y - 20) + "px";
-        this.titlebar.style.right = "0px";
+        /*this.titlebar.style.top = (-this.saved_y - 20) + "px";
+        this.titlebar.style.right = "0px";*/
 
     }
 

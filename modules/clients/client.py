@@ -1,4 +1,4 @@
-
+from modules.formatter import PromptBuilder
 import json
 import requests
 #from . import common
@@ -296,10 +296,12 @@ class LLamaCppClient:
     def send_prompt(self,p,params=None,callback=None):
         if params is None:
             params = self.client_parameters
-        if isinstance(p,str):
-            return self._send_prompt_text(p,params,callback)
+        if isinstance(p,PromptBuilder):
+            return self._send_prompt_builder(p, params, callback)
         else:
-            return self._send_prompt_builder(p,params,callback)
+            return self._send_prompt_text(p,params,callback)
+
+
 
 class Client:
 
@@ -318,7 +320,8 @@ class Client:
         return client
 
     @staticmethod
-    def _make_client_simple(client_name, client_config):
+    def _make_client_simple(client_name, cfg):
+        client_config = cfg.copy()
         if "type" in client_config:
             del client_config["type"]
         if client_name=="dummy":
@@ -338,8 +341,6 @@ class Client:
         for client_name in client_names:
             client_config = client_configs.get(client_name,{})
             type = client_config.get("type",client_name)
-            if "type" in client_config:
-                del client_config["type"]
             try:
                client = Client._make_client_simple(type,client_config)
                client.connect()

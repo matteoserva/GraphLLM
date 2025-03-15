@@ -1,0 +1,565 @@
+{
+    "last_node_id": 15,
+    "last_link_id": 22,
+    "nodes": [
+        {
+            "id": 4,
+            "type": "graph/connection",
+            "pos": [
+                105,
+                193
+            ],
+            "size": {
+                "0": 210,
+                "1": 78
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 4,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        3
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "input",
+                "template": ""
+            }
+        },
+        {
+            "id": 5,
+            "type": "input/text_input",
+            "pos": [
+                139,
+                54
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        4
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "1"
+            }
+        },
+        {
+            "id": 10,
+            "type": "llm/llm_call",
+            "pos": [
+                135.20820123535174,
+                632.030245166016
+            ],
+            "size": {
+                "0": 625.8831787109375,
+                "1": 325.56365966796875
+            },
+            "flags": {
+                "collapsed": true
+            },
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 8
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        9,
+                        11
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "json",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"temperature\":0.01, \"top_k\":1,\"stop\":\"```\"}",
+                "subtype": "stateless",
+                "template": "{p:user}\nYou will be given a problem to solve and a set of instructions.\n\n# instructions\n- Write python code that solves the problem.\n- Ignore error checking the validity of the solution.\n- Assume that provided inputs are correct, even if unrealistic.\n- The code should only print the answer in this form: \"The answer is: {your answer}\".\n\n# Here is the problem:\n```\n{p:exec1}\n```{p:eom}\n\n{p:assistant}\nHere is the python code that solves the problem:\n\n```python\n{p:eom}"
+            }
+        },
+        {
+            "id": 13,
+            "type": "tools/python_sandbox",
+            "pos": [
+                135.20820123535174,
+                632.030245166016
+            ],
+            "size": {
+                "0": 210,
+                "1": 108
+            },
+            "flags": {
+                "collapsed": true
+            },
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 11
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        13
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 15,
+            "type": "other/copy_pack",
+            "pos": [
+                135.20820123535174,
+                632.030245166016
+            ],
+            "size": {
+                "0": 140,
+                "1": 66
+            },
+            "flags": {
+                "collapsed": true
+            },
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 22
+                },
+                {
+                    "name": "2",
+                    "type": "string",
+                    "link": 21
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        17
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 14,
+            "type": "tools/python_sandbox",
+            "pos": [
+                135.20820123535174,
+                632.030245166016
+            ],
+            "size": {
+                "0": 210,
+                "1": 108
+            },
+            "flags": {
+                "collapsed": true
+            },
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 13
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        21
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "val = _C[0]\nval = val.split(\":\",1)[1]\nval = val.strip()\nval = [el for el in val if el in \"0123456789-.\"]\nval = \"\".join(val)\n_O = [float(val)]\ndel val"
+            }
+        },
+        {
+            "id": 1,
+            "type": "tools/python_sandbox",
+            "pos": [
+                135.20820123535174,
+                632.030245166016
+            ],
+            "size": {
+                "0": 648.0830688476562,
+                "1": 295.263671875
+            },
+            "flags": {
+                "collapsed": true
+            },
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 3,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        1,
+                        8
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": [
+                        22
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "import json\nproblem_id = int(_C[0])\nwith open(\"test/gsm8k_hard.json\",\"r\") as f:\n    fval = f.read()\n    fval = json.loads(fval)\nproblem_row = fval[problem_id]\n_O = [problem_row[\"problem\"],problem_row[\"solution\"]]"
+            }
+        },
+        {
+            "id": 2,
+            "type": "output/watch",
+            "pos": [
+                404,
+                63
+            ],
+            "size": [
+                1409.3135884423832,
+                126.16716802246106
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 1
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 11,
+            "type": "output/watch",
+            "pos": [
+                1080,
+                268
+            ],
+            "size": {
+                "0": 659.5830688476562,
+                "1": 255.46368408203125
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 9
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 12,
+            "type": "output/watch",
+            "pos": [
+                409,
+                292
+            ],
+            "size": {
+                "0": 384.04010009765625,
+                "1": 139.76416015625
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 17
+                }
+            ],
+            "properties": {}
+        }
+    ],
+    "links": [
+        [
+            1,
+            1,
+            0,
+            2,
+            0,
+            "string"
+        ],
+        [
+            3,
+            4,
+            0,
+            1,
+            0,
+            "string"
+        ],
+        [
+            4,
+            5,
+            0,
+            4,
+            0,
+            "string"
+        ],
+        [
+            8,
+            1,
+            0,
+            10,
+            0,
+            "string"
+        ],
+        [
+            9,
+            10,
+            0,
+            11,
+            0,
+            "string"
+        ],
+        [
+            11,
+            10,
+            0,
+            13,
+            0,
+            "string"
+        ],
+        [
+            13,
+            13,
+            0,
+            14,
+            0,
+            "string"
+        ],
+        [
+            17,
+            15,
+            0,
+            12,
+            0,
+            "string"
+        ],
+        [
+            21,
+            14,
+            0,
+            15,
+            1,
+            "string"
+        ],
+        [
+            22,
+            1,
+            1,
+            15,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [
+        {
+            "title": "Group",
+            "bounding": [
+                115,
+                562,
+                180,
+                110
+            ],
+            "color": "#606060",
+            "font_size": 24
+        }
+    ],
+    "config": {},
+    "extra": {},
+    "version": 0.4,
+    "group_states": {
+        "0": {
+            "is_collapsed": true,
+            "node_info": {
+                "1": {
+                    "id": 1,
+                    "size": {
+                        "0": 648.0830688476562,
+                        "1": 295.263671875
+                    },
+                    "pos": [
+                        12.343078789062702,
+                        121.68472670898439
+                    ],
+                    "collapsed": false
+                },
+                "10": {
+                    "id": 10,
+                    "size": {
+                        "0": 625.8831787109375,
+                        "1": 325.56365966796875
+                    },
+                    "pos": [
+                        33.3430787890627,
+                        467.6847267089845
+                    ],
+                    "collapsed": false
+                },
+                "13": {
+                    "id": 13,
+                    "size": {
+                        "0": 210,
+                        "1": 108
+                    },
+                    "pos": [
+                        40.34307878906276,
+                        836.6847267089847
+                    ],
+                    "collapsed": false
+                },
+                "14": {
+                    "id": 14,
+                    "size": {
+                        "0": 210,
+                        "1": 108
+                    },
+                    "pos": [
+                        437.3430787890627,
+                        835.6847267089847
+                    ],
+                    "collapsed": false
+                },
+                "15": {
+                    "id": 15,
+                    "size": {
+                        "0": 140,
+                        "1": 66
+                    },
+                    "pos": [
+                        736.3430787890629,
+                        507.6847267089845
+                    ],
+                    "collapsed": false
+                }
+            },
+            "group_size": [
+                912.9154663085938,
+                984.1488647460938
+            ],
+            "color": "#3f789e"
+        }
+    },
+    "graph_name": "gsm8k_hard"
+}

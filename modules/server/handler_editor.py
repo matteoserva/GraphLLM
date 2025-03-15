@@ -58,6 +58,26 @@ class EditorHandler():
             server.wfile.write(res)
             server.wfile.write(self.gui_node_string.encode())
 
+        elif endpoint in ["editor"] and split_path[2] == "img":
+            server.send_response(200)
+            server.send_header('Connection', 'close')
+            server.end_headers()
+
+            content = None
+            filename = SOURCES_PATH + "/" + remaining
+            if os.path.exists(filename):
+                content = open(filename, "rb").read()
+            if content:
+                server.send_response(200)
+                # self.send_header('Content-type', 'text/html')
+                server.end_headers()
+                server.wfile.write(content)
+            else:
+                server.send_response(404)
+                server.send_header('Content-type', 'text/html')
+                server.end_headers()
+                server.wfile.write(b'404 - Not Found')
+
         elif endpoint in ["editor"]:
             remaining = "index.html" if len(split_path[2]) == 0 else split_path[2]
             #print(remaining)

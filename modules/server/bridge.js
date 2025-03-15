@@ -19,8 +19,9 @@ class WebBrige {
     this.graph = editor.graph;
     this.canvas = this.editor.graphcanvas;
     this.topBar = document.querySelector("span#LGEditorTopBarSelector")
-    var topbar_html = "Graphs: <span style=\"display: inline-block;position:relative;width: 460px; height: 35px;\" >"
-    topbar_html += "<input id='filename' maxlength='50' style='height: 100%; width:400px;position: relative;'/><select class=\"selector-main\" style='height: 100%; width:430px; position: absolute; top:0px; right: 30px'><option>Empty</option></select><select class=\"selector-extras\" style='height: 100%; width:460px; position: absolute; top:0px; right: 0px'><option>Empty</option></select></span>"
+    var topbar_html = "Graphs: <span class=\"selector-bar\" style=\"display: inline-block;position:relative;width: 400px; height: 35px;\" >"
+    topbar_html += "<input id='filename' maxlength='50' style='height: 100%; width:370px;position: relative;'/><select class=\"selector-main\" style='height: 100%; width:400px; position: absolute; top:0px; right: 0px'><option>Empty</option></select></span>"
+    //topbar_html += "<select class=\"selector-extras\" style='height: 100%; width:460px; position: absolute; top:0px; right: 0px'><option>Empty</option></select>"
     topbar_html += "<span class=\"tool_buttons\"><button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='delete'>Delete</button><button class='btn' id='new'>New</button><button class='btn' id='download'>Download</button></span>| ";
     this.topBar.innerHTML = topbar_html
 
@@ -38,8 +39,10 @@ class WebBrige {
 
   setDefaultConnectionEndpoints()
   {
-    LiteGraph.slot_types_default_out.string=["output/watch"]
-    LiteGraph.slot_types_default_in.string=["input/text_input"]
+    LiteGraph.slot_types_default_out.string=["output/watch","graph/virtual_sink"]
+    LiteGraph.slot_types_default_in.string=["input/text_input","graph/virtual_source"]
+    LiteGraph.slot_types_default_out.virtual=["graph/virtual_source"]
+    LiteGraph.slot_types_default_in.virtual=["graph/virtual_sink"]
   }
 
 
@@ -49,7 +52,8 @@ class WebBrige {
     this.graph_handler.connect()
 
     this.canvas.allow_searchbox = false
-
+    this.canvas.align_to_grid = true
+    this.graph.config.align_to_grid = true
 
 
     this.cb_as = this.graph.onAfterStep;
@@ -92,20 +96,115 @@ class WebBrige {
 
         }.bind(this));
     document.addEventListener('keydown', (event) => {
+        var input_handled = true;
         if(event.ctrlKey && event.key == "Enter") {
             this.startGraph()
         }
+        else if(event.ctrlKey && event.key == "r") {
+            var selectedNodes = this.canvas.selected_nodes
+            for (var i in selectedNodes) {
+                var node = this.canvas.selected_nodes[i];
+                var nodeRotation = node.node_rotation || 0
+                nodeRotation = (nodeRotation + 1) % 2;
+                this.setNodeRotation(node,nodeRotation)
+
+            }
+        }
+        else
+        {
+            input_handled = false
+        }
+
+        if(input_handled)
+        {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+
+
     });
 
 
 
   }
 
+ setNodeRotation(node, r)
+  {
+        var offset = LiteGraph.NODE_SLOT_HEIGHT * 0.5
+        switch (r) {
+            case 1:
+            {
+                if (node.inputs) {
+                   for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
 
+                                /*node.inputs[j].pos = null;
+                                node.inputs[j].dir = null;
+                                node.inputs[j].shape = null;*/
+                                }}
+                                node.horizontal = true;
+            }
+            break;
+
+            case 2:
+            {
+                   if (node.inputs) {
+                        for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
+                                let y = (j + 0.7) * LiteGraph.NODE_SLOT_HEIGHT ;
+                                Object.defineProperty(node.inputs[j], "pos", {
+                                    get: function() {
+
+                                        let x =  node.size[0] + 1 - offset;
+                                        return [x, y]
+                                    },
+                                    configurable: true,
+                                      set: function(v) {
+                                          delete this.pos;
+                                         this.pos = v
+                                      },
+                                });
+                                //node.inputs[j].pos = [x,y]
+                                node.inputs[j].dir = LiteGraph.RIGHT;
+                                node.inputs[j].shape = LiteGraph.ARROW_SHAPE;
+                        }
+                   }
+                   node.horizontal = false;
+            }
+            break;
+
+            case 3:
+            {
+                if (node.inputs) {
+                    for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
+                                /*node.inputs[j].pos = null;
+                                node.inputs[j].dir = null;
+                                node.inputs[j].shape = null;*/
+                    }
+                }
+                node.horizontal = true;
+            }
+            break;
+
+            default:
+            {
+                   if (node.inputs) {
+                   for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
+                            node.inputs[j].pos = null;
+                            node.inputs[j].dir = null;
+                            //node.inputs[j].shape = null;
+                   }}
+                   node.horizontal = false
+            }
+            break;
+        }
+
+
+
+            node.node_rotation = r
+  }
 
   loadList()
   {
-    var data = JSON.stringify( graph.serialize() );
+    var data = {};
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '/graph/list',false);
 
@@ -411,6 +510,7 @@ class WebBrige {
 
   onSerialize(data)
   {
+    // groups
     var group_states = new Object()
     for(let el in data.groups)
     {
@@ -421,9 +521,23 @@ class WebBrige {
         }
     }
     data["group_states"] = group_states
+
+    // graph name
     var e = this.nameSelector
     var value = e.value;
     data["graph_name"] = value
+
+    //nodes
+    var node_states = new Object()
+    for(let i in data.nodes)
+    {
+        var node_id = data.nodes[i].id
+        var node = this.graph.getNodeById(node_id)
+        var rotation = node.node_rotation || 0;
+        node_states[node_id] = {rotation: rotation}
+
+    }
+    data["node_states"] = node_states
 
   }
 
@@ -438,10 +552,26 @@ class WebBrige {
         }
 
     }
+    for (var i = 0; i < this.graph._groups.length; ++i) {
+        var group = this.graph._groups[i];
+        this.graph_handler.recomputeInsideNodes(group)
+    }
+
+    if ("node_states" in data)
+    {
+        for(let node_id in data.node_states)
+        {
+            var node = this.graph.getNodeById(node_id)
+            var info = data.node_states[node_id]
+            this.setNodeRotation(node,info.rotation)
+        }
+
+    }
+    /*
     for (var i = 0; i < this.graph._nodes.length; ++i) {
         var node = this.graph._nodes[i];
         this.graph_handler.recomputeOutsideGroup(node)
-    }
+    }*/
   }
 
   startGraph()

@@ -9,10 +9,10 @@
                 109,
                 129
             ],
-            "size": [
-                733.6196823120118,
-                208.4971801757813
-            ],
+            "size": {
+                "0": 733.6196899414062,
+                "1": 208.49717712402344
+            },
             "flags": {},
             "order": 0,
             "mode": 0,
@@ -40,8 +40,8 @@
             ],
             "properties": {
                 "conf": "{grammar: think , temperature: 0.001, sysprompt: \"\"}",
-                "subtype": "stateless",
-                "template": "Solve x*x + x = 6"
+                "template": "Solve x*x + x = 6",
+                "subtype": "stateless"
             }
         },
         {
@@ -51,10 +51,10 @@
                 112,
                 399
             ],
-            "size": [
-                720.9396823120118,
-                424.91718017578137
-            ],
+            "size": {
+                "0": 720.939697265625,
+                "1": 424.91717529296875
+            },
             "flags": {},
             "order": 3,
             "mode": 0,
@@ -84,11 +84,11 @@
                 "1": 188.98635864257812
             },
             "flags": {},
-            "order": 2,
+            "order": 1,
             "mode": 0,
             "properties": {
                 "identifier": "think",
-                "parameters": "# edit the think-text to configure\nthink-text ::= think-token{50,}\n\n# here is the full grammar\nroot ::= thought answer\nthought ::= \"<think>\\n\" [a-zA-Z] think-text \"\\n</think>\"\nthink-token ::= [^\\n] | (\"\\n\" [^<]) \n\nanswer ::= ([^\\n] | \"\\n\")+"
+                "parameters": "# edit the think-text to configure\nthink-text ::= think-token{50,100}\n\n# here is the full grammar\nroot ::= thought answer\nthought ::= \"<think>\\n\" [a-zA-Z] think-text \"\\n</think>\"\nthink-token ::= [^\\n] | (\"\\n\"+ [^<\\n]) | (\"\\n\"+ \"<\" [^\\n/]) \n\nanswer ::= ([^\\n] | \"\\n\")+"
             }
         },
         {
@@ -98,12 +98,12 @@
                 869,
                 132
             ],
-            "size": [
-                597.0199226820762,
-                220.06189073609903
-            ],
+            "size": {
+                "0": 597.0198974609375,
+                "1": 220.0618896484375
+            },
             "flags": {},
-            "order": 1,
+            "order": 2,
             "mode": 0,
             "properties": {
                 "identifier": "",
@@ -126,5 +126,21 @@
     "groups": [],
     "config": {},
     "extra": {},
-    "version": 0.4
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "grammar_think",
+    "node_states": {
+        "16": {
+            "rotation": 0
+        },
+        "21": {
+            "rotation": 0
+        },
+        "22": {
+            "rotation": 0
+        },
+        "23": {
+            "rotation": 0
+        }
+    }
 }

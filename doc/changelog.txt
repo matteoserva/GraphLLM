@@ -2,9 +2,18 @@
 # CHANGELOG for GraphLLM
 #
 
-##
-- llama_swap
 
+# 15/3/2025
+- support for gemma 3 and qwq
+- node rotation (CTRL+R)
+- group node
+- virtual nodes connection upgrade
+- OpenAI client upgraded (prefill and detecting model name)
+
+01/02/2025
+- llama_swap
+- new nodes
+- new examples
 
 28/01/2025
 - support for phi-4, EXAONE and deepseek-r1-distill

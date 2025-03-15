@@ -1,0 +1,384 @@
+{
+    "last_node_id": 31,
+    "last_link_id": 33,
+    "nodes": [
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                110,
+                130
+            ],
+            "size": [
+                480,
+                180
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null,
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        23,
+                        29
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{temperature: 0.7, n_predict: 2048, stop: \"</think>\"}",
+                "template": "{v:prompt}",
+                "subtype": "stateless"
+            }
+        },
+        {
+            "id": 28,
+            "type": "tools/python_sandbox",
+            "pos": [
+                630,
+                130
+            ],
+            "size": [
+                390,
+                180
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 29,
+                    "pos": null,
+                    "dir": null
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        31
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "parameters": "_O = _C\n_O[0] = _C[0].rstrip(\"\\n \") + \"\\n</think>\\n\\n\""
+            }
+        },
+        {
+            "id": 29,
+            "type": "graph/variable",
+            "pos": [
+                110,
+                370
+            ],
+            "size": [
+                480,
+                160
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "properties": {
+                "identifier": "prompt",
+                "parameters": "solve x*2=-1"
+            },
+            "color": "#2a363b",
+            "bgcolor": "#3f5159"
+        },
+        {
+            "id": 22,
+            "type": "graph/variable",
+            "pos": [
+                110,
+                590
+            ],
+            "size": [
+                480,
+                220
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This example shows how to perform\nthe thinking process at higher temperature\nand the generation of the answer at lower temperature"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 25,
+            "type": "llm/prompt_builder",
+            "pos": [
+                1070,
+                130
+            ],
+            "size": {
+                "0": 340,
+                "1": 180
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 31,
+                    "pos": null,
+                    "dir": null
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        32
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "raw",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": "{p:user}\n{v:prompt}{p:eom}\n\n{p:assistant}\n{}{p:eom}"
+            }
+        },
+        {
+            "id": 30,
+            "type": "llm/llm_call",
+            "pos": [
+                1460,
+                130
+            ],
+            "size": [
+                340,
+                180
+            ],
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 32,
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        33
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{temperature: 0.1, n_predict: 1000}",
+                "template": "",
+                "subtype": "stateless"
+            }
+        },
+        {
+            "id": 31,
+            "type": "output/watch",
+            "pos": [
+                1850,
+                130
+            ],
+            "size": [
+                850,
+                690
+            ],
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 33,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "properties": {
+                "parameters": {
+                    "use_markdown": true
+                }
+            }
+        },
+        {
+            "id": 16,
+            "type": "output/watch",
+            "pos": [
+                630,
+                380
+            ],
+            "size": [
+                1160,
+                430
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 23,
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "properties": {
+                "parameters": "\n"
+            }
+        }
+    ],
+    "links": [
+        [
+            23,
+            21,
+            0,
+            16,
+            0,
+            "string"
+        ],
+        [
+            29,
+            21,
+            0,
+            28,
+            0,
+            "string"
+        ],
+        [
+            31,
+            28,
+            0,
+            25,
+            0,
+            "string"
+        ],
+        [
+            32,
+            25,
+            0,
+            30,
+            0,
+            "string"
+        ],
+        [
+            33,
+            30,
+            0,
+            31,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "think_multitemp",
+    "node_states": {
+        "16": {
+            "rotation": 0
+        },
+        "21": {
+            "rotation": 0
+        },
+        "22": {
+            "rotation": 0
+        },
+        "25": {
+            "rotation": 0
+        },
+        "28": {
+            "rotation": 0
+        },
+        "29": {
+            "rotation": 0
+        },
+        "30": {
+            "rotation": 0
+        },
+        "31": {
+            "rotation": 0
+        }
+    }
+}

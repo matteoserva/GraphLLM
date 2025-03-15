@@ -39,6 +39,7 @@
 
     /* ********************** ******************* */
     //node constructor class
+/*
     function MyLLMCallNode()
     {
     this.addInput("in","string");
@@ -54,6 +55,7 @@
     this.addWidget("combo","subtype","stateless",null, { property: "subtype", values: ["stateless","stateful"] } );
     this.container = new DivContainer(this)
     this.addCustomWidget( this.container);
+    //this.addCustomWidget( new TitlebarContainer(this));
     //this.container.addElement(new CustomTextarea("Parameters","parameters"))
 
     this.container.addWidget("text_input","Config",{ property: "conf"})
@@ -70,7 +72,7 @@
     //register in the system
     LiteGraph.registerNodeType("llm/llm_call", MyLLMCallNode );
 
-
+*/
 
 
 
@@ -85,6 +87,7 @@
     function MyVirtualSourceNode()
     {
     this.addOutput("out","string");
+    this.addInput("sink","virtual",{shape :LiteGraph.ARROW_SHAPE});
     this.addWidget("text","identifier","", { property: "identifier"});
 
     this.properties = { identifier: "" };
@@ -96,6 +99,20 @@
     //function to call when the node is executed
     MyVirtualSourceNode.prototype.onExecute = function(){}
 
+    MyVirtualSourceNode.prototype.onConnectInput = function(target_slot, type, output, source, slot)
+    {
+        if(source.constructor.name == "MyVirtualSinkNode")
+        {
+            if(!source.properties.identifier)
+            {
+                source.setProperty("identifier", LiteGraph.uuidv4())
+            }
+            this.setProperty("identifier", source.properties.identifier)
+        }
+
+        return false;
+    }
+
     //register in the system
     LiteGraph.registerNodeType("graph/virtual_source", MyVirtualSourceNode );
 
@@ -105,7 +122,7 @@
     {
     this.addInput("in","string");
     this.addWidget("text","identifier","", { property: "identifier"});
-
+    this.addOutput("source","virtual",{shape :LiteGraph.ARROW_SHAPE});
     this.properties = { identifier: "" };
     }
 
@@ -114,6 +131,13 @@
 
     //function to call when the node is executed
     MyVirtualSinkNode.prototype.onExecute = function(){}
+
+    MyVirtualSinkNode.prototype.onConnectOutput = function(slot, type, input, target_node, target_slot)
+    {
+
+        return false;
+    }
+
 
     //register in the system
     LiteGraph.registerNodeType("graph/virtual_sink", MyVirtualSinkNode );
