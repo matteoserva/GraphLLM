@@ -78,7 +78,7 @@ class LLamaCppClient:
             self.base_url = "http://" + self.host + ":" + str(self.port)
         self.client_parameters = {}
         a = {}
-        a["n_predict"] = 1024*2
+        a["n_predict"] = 1024*4
         a["stop"] = ["<|eom_id|>","<|eot_id|>","<|end|>", "<|im_end|>", "</s>","<end_of_turn>","<|im_start|>","[|endofturn|]"]
         #        a["temperature"] = 0.0
         a["seed"] = -1

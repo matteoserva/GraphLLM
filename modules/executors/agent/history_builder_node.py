@@ -34,5 +34,7 @@ class AgentHistoryBuilderNode(GenericExecutor):
 
         res = [self._format_xml_action(data) for data in history]
         prompt_args[0]["history"] = "\n".join(res)
+        if len(history) == 0:
+            prompt_args[0]["history"] = "<!-- no action performed yet -->"
         res = prompt_args[0]
         return [res]
