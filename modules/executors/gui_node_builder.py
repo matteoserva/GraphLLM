@@ -16,7 +16,11 @@ class GuiNodeBuilder:
 
     def _setPath(self, nodeType):
         self.config["class_name"] = type(self).__name__
-        self.config["node_type"] = nodeType
+        if "/" in nodeType:
+            self.config["node_type"] = nodeType
+        else:
+            module = self.__module__.split(".")[-2]
+            self.config["node_type"] = module + "/" + nodeType
         self.config["title"] = self.node_title
 
     def _setConnectionLimits(self, limits):

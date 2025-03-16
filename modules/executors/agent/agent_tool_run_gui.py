@@ -14,4 +14,4 @@ class AgentToolRunGui(BaseGuiNode):
         builder._addOutput("out", "string");
         builder._addOutput("json", "string");
 
-        builder._setPath("agent/agent_tool_run")
+        builder._setPath("agent_tool_run")
