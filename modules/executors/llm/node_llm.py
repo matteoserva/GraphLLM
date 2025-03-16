@@ -1,6 +1,6 @@
 from modules.formatter import PromptBuilder
 from modules.formatter import solve_templates
-from modules.executors.common import solve_placeholders
+from modules.executors.common import solve_placeholders,solve_prompt_args
 from modules.common import readfile, merge_params
 from functools import partial
 from modules.executors.common import GenericExecutor
@@ -177,8 +177,7 @@ class StatelessExecutor(LlmExecutor):
         super().__init__(client)
 
     def __call__(self,prompt_args):
-        m ,_ = solve_templates(self.current_prompt,prompt_args)
-        m = solve_placeholders(m,prompt_args)
+        m = solve_prompt_args(self.current_prompt,prompt_args)
         self.builder.reset()
 
         res = self.basic_exec(m)
