@@ -122,6 +122,7 @@ class OpenAIClient():
     def connect(self):
         if not self.client:
             self.client = OpenAI(**self.extra_client_args)
+            self.client.models.list()
 
     def get_model_name(self):
         return "grok"
