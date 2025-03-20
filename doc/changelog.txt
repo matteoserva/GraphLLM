@@ -2,6 +2,9 @@
 # CHANGELOG for GraphLLM
 #
 
+- mancano:
+json extract e insert.
+l'insert accetta un parametro opzionale che è un oggetto già esistente, altrimenti lo crea vuoto
 
 # 15/3/2025
 - support for gemma 3 and qwq

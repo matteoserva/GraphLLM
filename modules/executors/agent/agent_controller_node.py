@@ -1,14 +1,15 @@
 from modules.executors.common import GenericExecutor
-from modules.agent_tools import AgentOps
 import copy
+from modules.tool_call.tools_factory import ToolsFactory
 
 class AgentToolRunNode(GenericExecutor):
     node_type = "agent_controller"
     def __init__(self,node_graph_parameters):
-        ops = AgentOps(node_graph_parameters)
-        tools_list = ["Filesystem", "LLM", "Util", "Web"]
-        ops.prepare({"tools":tools_list})
-        self.tools = ops.get_formatted_ops()
+        tools_factory = ToolsFactory()
+        tools_list = tools_factory.get_tools_list()
+        tool_runner = tools_factory.make_tool_runner(tools_list,node_graph_parameters)
+        formatted_ops = tool_runner.get_formatted_ops()
+        self.tools = formatted_ops
         self.run_parameters = {}
 
     def initialize(self):
