@@ -1,5 +1,5 @@
 from .executor_factory import ExecutorFactory
-from modules.executors.common import GenericExecutor
+from modules.executors.common import GenericExecutor, ExecutorOutput
 from ..formatter import solve_templates
 import sys
 import threading
@@ -30,7 +30,7 @@ class GraphNode:
 
         if isinstance(self.executor,GenericExecutor):
             self.executor.graph_data = node_graph_parameters
-            self.executor.properties = {"free_runs": 0, "input_rule":"AND", "input_active": []}
+            self.executor.properties = {"free_runs": 0, "input_rule":"AND", "wrap_input": False, "input_active": []}
             self.executor.node = self
 
         self.tid = None
@@ -83,6 +83,8 @@ class GraphNode:
 
     def get_inputs(self):
         inputs = [el for el in self["inputs"]]
+        if not self.executor.properties["wrap_input"]:
+            inputs = [el.data if isinstance(el,ExecutorOutput) else el for el in inputs ]
         return inputs
 
     def get_outputs(self):
@@ -102,6 +104,7 @@ class GraphNode:
 
         if self["free_runs"] > 0:
             self["free_runs"] -= 1
+            self.executor.properties["free_runs"] = self["free_runs"]
             inputs = []
             consume_inputs = [False] * len(inputs)
         elif self.input_rule == "XOR":

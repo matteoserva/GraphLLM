@@ -16,6 +16,16 @@ from .gui_node_builder import GuiNodeBuilder
 
 #metaclass=metaclass_protect("pre_initialize","set_template")
 
+class ExecutorOutput():
+    def __init__(self,data,meta={}):
+        self.data = data
+        self.meta = meta
+
+    def __str__(self):
+        return str(self.data)
+
+
+
 class GenericExecutor():
     def __init__(self, initial_parameters):
         """ initialize, set_parameters(conf) - set_dependencies(deps) - set_template(init) - setup_complete - execute"""

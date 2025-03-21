@@ -16,7 +16,7 @@ class CopyNode(GenericExecutor):
 
     def __init__(self,*args):
         self.parameters = {}
-        self._properties = {"input_rule":"AND"}
+        self.properties = {"input_rule":"AND"}
         self._subtype="copy"
         self.stack = []
         self.cache = None
@@ -25,19 +25,19 @@ class CopyNode(GenericExecutor):
         self._demux_i = 0
 
     def get_properties(self):
-        res = self._properties
+        res = self.properties
         return res
 
     def set_parameters(self,args):
         if "subtype" in args:
             self._subtype = args["subtype"]
             if args["subtype"] == "mux":
-                self._properties["input_rule"] = "OR"
+                self.properties["input_rule"] = "OR"
             if args["subtype"] == "gate":
-                self._properties["input_rule"] = "XOR"
-                self._properties["input_active"] = 0
+                self.properties["input_rule"] = "XOR"
+                self.properties["input_active"] = 0
             if args["subtype"] == "repeat":
-                self.repeat_runs = args.get("free_runs",0)
+                self.repeat_runs = args.get("repeat",0)
         self.parameters = args
 
     def _json_parse(self,text):
@@ -63,26 +63,24 @@ class CopyNode(GenericExecutor):
         elif self._subtype == "repeat":
             if self.cache is None:
                 self.cache = res
-                self._properties["free_runs"] = self.repeat_runs
+                self.properties["free_runs"] = self.repeat_runs - 1 if self.repeat_runs > 1 else 0
             else:
                 res = self.cache
 
             if self.repeat_runs == 0: #infinite
-                self._properties["free_runs"] = 1
-            elif self._properties["free_runs"] > 0:
-                self._properties["free_runs"] = self._properties["free_runs"] - 1
+                self.properties["free_runs"] = 1
 
-            if self._properties["free_runs"] == 0:
+            if self.properties["free_runs"] == 0:
                 self.cache = None
 
         elif self._subtype == "gate":
             numInputs = len(res)
             outval = [None] * numInputs
-            input_active = self._properties["input_active"]
+            input_active = self.properties["input_active"]
             outval[input_active] = res[input_active]
             input_active = (input_active + 1) % numInputs
 
-            self._properties["input_active"] = input_active
+            self.properties["input_active"] = input_active
             res = outval
         elif self._subtype == "mux":
             if len(res) == 1: #mux nel tempo
@@ -114,7 +112,7 @@ class CopyNode(GenericExecutor):
                 self.stack = res[0][::-1]
             val = self.stack.pop()
             res = [val]
-            self._properties["free_runs"] = 1 if len(self.stack) > 0 else 0
+            self.properties["free_runs"] = 1 if len(self.stack) > 0 else 0
 
         elif self._subtype == "pack" and len(self.node.inputs) > 1:
             val = res

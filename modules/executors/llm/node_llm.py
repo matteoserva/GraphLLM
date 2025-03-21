@@ -3,7 +3,7 @@ from modules.formatter import solve_templates
 from modules.executors.common import solve_placeholders,solve_prompt_args
 from modules.common import readfile, merge_params
 from functools import partial
-from modules.executors.common import GenericExecutor
+from modules.executors.common import GenericExecutor,ExecutorOutput
 from modules.grammar import load_grammar,load_grammar_text
 from modules.clients.client import Client
 
@@ -134,7 +134,6 @@ class LlmExecutor(GenericExecutor):
         builder.add_response(res["content"], res["role"])
         self.builder.set_serialize_format("last")
         out0 = self.builder.to_string("last")
-        out0.get_inner()["send_chat"] = self.send_chat
         resp = [out0,res]
 
         return resp
@@ -187,6 +186,7 @@ class LlmExecutor(GenericExecutor):
             self.builder.reset()
 
             res = self.basic_exec(m)
+        res = [ExecutorOutput(el,{"source_llm":self.node.name}) for el in res]
         return res
 
 

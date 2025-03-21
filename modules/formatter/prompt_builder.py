@@ -67,19 +67,6 @@ class Formatter:
 
 ## questa è la parte che non ha bisongno di conoscere il modello
 
-class FakeString(str):
-    def set_inner(self,value):
-        self.inner_value = value
-
-    def get_inner(self):
-        return self.inner_value
-
-    def regenerate(self,format=None):
-        new_text = self.inner_value["prompt_builder"].to_string(format)
-        res = FakeString(new_text)
-        res.set_inner(self.inner_value)
-        return res
-
 class PromptBuilder:
 
     def __init__(self):
@@ -143,9 +130,7 @@ class PromptBuilder:
         else:
             text_prompt = str(self.messages)
 
-        res = FakeString(text_prompt)
-        res.set_inner({"prompt_builder": self})
-        return res
+        return text_prompt
 
 
     def load_model(self,model_name):
