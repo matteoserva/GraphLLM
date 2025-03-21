@@ -178,7 +178,10 @@ class GraphExecutor:
             el._graph_stopped()
 
     def _get_completions(self):
-        completed = [self.stopped_queue.get()]
+        try:
+            completed = [self.stopped_queue.get(timeout=1.0)]
+        except queue.Empty:
+            completed = []
 
         while not self.stopped_queue.empty():
             completed += [self.stopped_queue.get()]
@@ -235,6 +238,8 @@ class GraphExecutor:
                     running += self._launch_nodes(runnable)
                 if len(running) > 0:
                     completed = self._get_completions()
+                    if len(completed) == 0:
+                        self.logger.log("keepalive")
                     running = [i for i in running if i not in completed]
                 self.logger.log("running", running)
                 self._execute_arcs(running)
