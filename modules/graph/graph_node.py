@@ -29,11 +29,16 @@ class GraphNode:
         self.executor.graph = graph
 
         if isinstance(self.executor,GenericExecutor):
-            self.executor.graph_data = node_graph_parameters
-            default_properties = {"free_runs": 0, "input_rule":"AND", "wrap_input": False, "input_active": []}
-            self.executor.properties = default_properties
-
             self.executor.node = self
+            self.executor.graph_data = node_graph_parameters
+
+            default_properties = {"free_runs": 0, "input_rule":"AND", "wrap_input": False, "input_active": []}
+            if not hasattr(self.executor, "properties"):
+                self.executor.properties = {}
+            for el in default_properties:
+                if el not in self.executor.properties:
+                    self.executor.properties[el] = default_properties[el]
+
 
         self.tid = None
         self["last_output"] = [None]
