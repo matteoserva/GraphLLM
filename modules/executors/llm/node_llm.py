@@ -171,30 +171,28 @@ class LlmExecutor(GenericExecutor):
             new_value, _ = solve_templates(self.sysprompt, [], variables)
             self.builder.set_param("sysprompt", new_value)
 
+
+    def __call__(self, prompt_args):
+        if self.node_type == "stateful":
+            if len(prompt_args) > 0 and isinstance(prompt_args[0],tuple):
+                m = prompt_args[0]
+            else:
+                m ,_ = solve_templates(self.current_prompt,prompt_args)
+                m = solve_placeholders(m, prompt_args)
+            self.current_prompt="{}"
+
+            res = self.basic_exec(m)
+        else:
+            m = solve_prompt_args(self.current_prompt, prompt_args)
+            self.builder.reset()
+
+            res = self.basic_exec(m)
+        return res
+
+
 class StatelessExecutor(LlmExecutor):
     node_type = "stateless"
-    def __init__(self,client):
-        super().__init__(client)
-
-    def __call__(self,prompt_args):
-        m = solve_prompt_args(self.current_prompt,prompt_args)
-        self.builder.reset()
-
-        res = self.basic_exec(m)
-        return res
 
 class StatefulExecutor(LlmExecutor):
     node_type = "stateful"
-    def __init__(self,client):
-        super().__init__(client)
 
-    def __call__(self,prompt_args):
-        if len(prompt_args) > 0 and isinstance(prompt_args[0],tuple):
-            m = prompt_args[0]
-        else:
-            m ,_ = solve_templates(self.current_prompt,prompt_args)
-            m = solve_placeholders(m, prompt_args)
-        self.current_prompt="{}"
-
-        res = self.basic_exec(m)
-        return res
