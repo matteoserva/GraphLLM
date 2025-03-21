@@ -30,7 +30,9 @@ class GraphNode:
 
         if isinstance(self.executor,GenericExecutor):
             self.executor.graph_data = node_graph_parameters
-            self.executor.properties = {"free_runs": 0, "input_rule":"AND", "wrap_input": False, "input_active": []}
+            default_properties = {"free_runs": 0, "input_rule":"AND", "wrap_input": False, "input_active": []}
+            self.executor.properties = default_properties
+
             self.executor.node = self
 
         self.tid = None

@@ -6,6 +6,7 @@ from .graph_node import GraphNode
 import queue
 from functools import partial
 from .common import GraphException
+from modules.executors.common import ExecutorOutput
 
 PARALLEL_JOBS=2
 
@@ -148,7 +149,16 @@ class GraphExecutor:
                 continue
             source_outputs = node.get_outputs()
             forwards_list = node["forwards"]
-            for source_port,forwards in enumerate(forwards_list):
+
+            for source_port,current_output in enumerate(source_outputs):
+                forwards = forwards_list[source_port]
+                if isinstance(current_output,ExecutorOutput) and "destination" in current_output.meta:
+                    dest_tuple = current_output.meta["destination"]
+                    dest_node = [i for i,el in enumerate(self.graph_nodes) if el.name == dest_tuple[0]][0]
+                    dest_tuple = (dest_node,dest_tuple[1])
+                    forwards = [dest_tuple]
+                    pass
+            #for source_port,forwards in enumerate(forwards_list):
                 current_output = source_outputs[source_port]
                 destinations_busy = len([i for i,p in forwards if i in running]) > 0
                 
@@ -157,6 +167,10 @@ class GraphExecutor:
                 source_ready = current_output is not None
                 if destinations_busy or (not source_ready) or (not destination_ready):
                     continue
+
+                if isinstance(current_output, ExecutorOutput) and "destination" in current_output.meta:
+                    del current_output.meta["destination"]
+
                 for di,dp in forwards:
                     self.graph_nodes[di]["inputs"][dp] = current_output
                 node["outputs"][source_port] = None
