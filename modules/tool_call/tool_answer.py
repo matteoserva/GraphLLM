@@ -8,4 +8,4 @@ class AgentAnswer(GenericTool):
 	def answer(self, computed_answer):
 		"""outputs the answer to the user request."""
 		print_agent_answer (computed_answer)
-		return "Operation complete"
+		return computed_answer
