@@ -12,9 +12,6 @@ class PromptBuilderNode(GenericExecutor):
         self.builder = PromptBuilder()
         self.client = node_graph_parameters["client"]
 
-    def initialize(self):
-        self.builder.load_model(self.client.get_model_name())
-
     def set_template(self,cl_args=None):
         for i,el in enumerate(cl_args):
             try:
@@ -32,8 +29,7 @@ class PromptBuilderNode(GenericExecutor):
 
         self.builder.reset()
         self.builder.add_request(m)
-        prompt = self.builder._build()
-        res = [m,prompt,self.builder.to_string("graphllm")]
+        res = [m,self.builder.to_string("graphllm")]
 
         return res
 
