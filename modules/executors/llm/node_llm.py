@@ -75,7 +75,7 @@ class LlmExecutor(GenericExecutor):
                formatter_config = client.get_formatter_config()
            except:
                formatter_config = client.get_model_name()
-           builder.load_model(formatter_config)
+           #builder.load_model(formatter_config)
            self.client = client
 
 

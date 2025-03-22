@@ -70,7 +70,7 @@ class Formatter:
 class PromptBuilder:
 
     def __init__(self):
-        self.formatter = Formatter()
+
         self.sysprompt = "You are a helpful assistant"
         self.force_system=False
         self.custom_default_sysprompt =  False
@@ -103,13 +103,8 @@ class PromptBuilder:
         bar = getattr(serialized, attr)
         return bar
 
-    def send_tokenized(self):
-        use_template =  self.formatter.use_template
-        send_tokenized = not use_template
-        return send_tokenized
-
-    def _build(self):
-        text_prompt = self.formatter.build_prompt(self.messages,force_system=self.force_system, custom_sysprompt = self.updated_sysprompt)
+    def _build(self,formatter):
+        text_prompt = formatter.build_prompt(self.messages,force_system=self.force_system, custom_sysprompt = self.updated_sysprompt)
         print(text_prompt, end="")
         return text_prompt
 
@@ -131,10 +126,6 @@ class PromptBuilder:
             text_prompt = str(self.messages)
 
         return text_prompt
-
-
-    def load_model(self,model_name):
-        self.formatter.load_model(model_name)
 
     def reset(self):
         self.messages = []

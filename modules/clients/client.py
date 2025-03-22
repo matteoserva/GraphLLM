@@ -8,6 +8,7 @@ import time
 import copy
 from threading import BoundedSemaphore
 
+
 DEFAULT_HOST="minipd"
 
 class ONNXClient(object):
@@ -90,6 +91,7 @@ class LLamaCppClient:
         self.prompt_metadata= {}
         self.default_params = a
         self.connected = False
+        self.formatter = Formatter()
 
     def get_formatter_config(self):
         props = self.get_server_props()
@@ -113,7 +115,7 @@ class LLamaCppClient:
                 model_path = props["default_generation_settings"]["model"]
             model_name = model_path.split("/")[-1]
             self.model_name = model_name
-            self.formatter = Formatter()
+
             model_props = self.get_formatter_config()
 
 
@@ -286,8 +288,9 @@ class LLamaCppClient:
         return g
 
     def _send_prompt_builder(self,p,params,callback):
-        prompt = p._build()
-        send_tokenized = p.send_tokenized()
+        prompt = p._build(self.formatter)
+        use_template = self.formatter.use_template
+        send_tokenized = not use_template
         return self._send_prompt_text(prompt,params,callback, send_tokenized=send_tokenized )
 
     def apply_format_templates(self,prompt):
