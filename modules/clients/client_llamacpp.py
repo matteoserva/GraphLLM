@@ -22,7 +22,7 @@ class LLamaCppClient:
             self.base_url = "http://" + self.host + ":" + str(self.port)
         self.client_parameters = {}
         a = {}
-        a["n_predict"] = 1024 * 4
+        #a["n_predict"] = 1024 * 4
         a["stop"] = ["<|eom_id|>", "<|eot_id|>", "<|end|>", "<|im_end|>", "</s>", "<end_of_turn>", "<|im_start|>", "[|endofturn|]"]
         #        a["temperature"] = 0.0
         a["seed"] = -1
@@ -154,7 +154,7 @@ class LLamaCppClient:
             if len(ret) > 0 and ret[-1] in eos_tokens:
                 ret = ret[:-1]
         retstring = "".join(ret)
-        return retstring
+        return retstring, len(ret)
 
     def tokenize(self, p, add_special=False, with_pieces=False):
         url = self.base_url + "/tokenize"
@@ -211,8 +211,9 @@ class LLamaCppClient:
         else:
             a["prompt"] = p
 
-        if len(tokens) + a["n_predict"] >= self.context_size:
-            raise Exception("context size exceeded: " + str(len(tokens)) + " + " + str(a["n_predict"]))
+        requested_num_tokens_answer = a.get("n_predict",1024)
+        if len(tokens) + requested_num_tokens_answer >= self.context_size:
+            raise Exception("context size exceeded: " + str(len(tokens)) + " + " + requested_num_tokens_answer)
 
         # a = {"messages":p}
         js = json.dumps(a)
@@ -224,7 +225,11 @@ class LLamaCppClient:
         pass_raw = "n_probs" in a
 
         req_params = {"url": url, "data": data, "headers": headers, "stream": True}
-        g = self._ricevi(req_params, pass_raw, callback)
+        g, actual_num_tokens_answer = self._ricevi(req_params, pass_raw, callback)
+
+        if len(tokens) + actual_num_tokens_answer >= self.context_size:
+            raise Exception("After inference, context size exceeded: " + str(len(tokens)) + " + " + actual_num_tokens_answer)
+
         return g
 
     def _send_prompt_builder(self, p, params, callback):
