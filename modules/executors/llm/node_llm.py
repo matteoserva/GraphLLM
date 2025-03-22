@@ -114,16 +114,10 @@ class LlmExecutor(GenericExecutor):
         return response
 
     def basic_exec(self,text_prompt):
-        if text_prompt == "{p:eos}":
-            self.builder.reset()
-            return ["{p:eos}"]
+
         m = text_prompt
         client = self.client
         builder = self.builder
-        if isinstance(m,tuple):
-            messages = builder.add_request(m[1],m[0])
-        else:
-            messages = builder.add_request(m)
 
         if bool(self.print_prompt):
             x = self.print_prompt
@@ -172,20 +166,27 @@ class LlmExecutor(GenericExecutor):
 
 
     def __call__(self, prompt_args):
-        if self.node_type == "stateful":
-            if len(prompt_args) > 0 and isinstance(prompt_args[0],tuple):
-                m = prompt_args[0]
-            else:
-                m ,_ = solve_templates(self.current_prompt,prompt_args)
-                m = solve_placeholders(m, prompt_args)
-            self.current_prompt="{}"
+        builder = self.builder
 
-            res = self.basic_exec(m)
+        if len(prompt_args) > 0 and isinstance(prompt_args[0], str) and prompt_args[0] ==  "{p:eos}":
+            self.builder.reset()
+            return ["{p:eos}"]
+        elif len(prompt_args) > 0 and isinstance(prompt_args[0], tuple):
+            m = prompt_args[0]
+            self.current_prompt = "{}"
+            builder.add_request(m[1], m[0])
+        elif self.node_type == "stateful":
+            m ,_ = solve_templates(self.current_prompt,prompt_args)
+            m = solve_placeholders(m, prompt_args)
+            self.current_prompt="{}"
+            builder.add_request(m)
         else:
             m = solve_prompt_args(self.current_prompt, prompt_args)
             self.builder.reset()
+            builder.add_request(m)
 
-            res = self.basic_exec(m)
+
+        res = self.basic_exec(m)
         res = [ExecutorOutput(el,{"source_llm":self.node.name}) for el in res]
         return res
 
