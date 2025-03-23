@@ -27,7 +27,7 @@ class ParseToolCallNode(GenericExecutor):
 
         action_parsed = {"name": action_name, "parameters": action_parameters_parsed}
         original = "<thinking>" + thinking + "</thinking>\n" + "<action>" + action + "</action>"
-        res = {"planning": "", "thought": thinking, "text": original, "action": action_parsed}
+        res = {"planning": "", "thought": thinking, "role": "assistant", "content": original, "action": action_parsed}
         return res
 
     def __call__(self,prompt_args):

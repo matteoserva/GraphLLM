@@ -17,5 +17,7 @@ class AgentToolRunNode(GenericExecutor):
         parameters = [el["value"] for el in data["parameters"]]
         result = self.ops.exec(data["name"],parameters)
         prompt_args[0]["result"] = result
+        prompt_args[0]["content"] = str(result)
+        prompt_args[0]["role"] = "tool"
         res = [result, prompt_args[0]]
         return res
