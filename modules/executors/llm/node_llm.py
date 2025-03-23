@@ -171,6 +171,11 @@ class LlmExecutor(GenericExecutor):
         if len(prompt_args) > 0 and isinstance(prompt_args[0], str) and prompt_args[0] ==  "{p:eos}":
             self.builder.reset()
             return ["{p:eos}"]
+        elif len(prompt_args) > 0 and isinstance(prompt_args[0], dict) and "role" in prompt_args[0]:
+            m = prompt_args[0]
+            self.current_prompt = "{}"
+            builder.add_request(prompt_args[0]["content"], prompt_args[0]["role"])
+
         elif len(prompt_args) > 0 and isinstance(prompt_args[0], tuple):
             m = prompt_args[0]
             self.current_prompt = "{}"

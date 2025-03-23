@@ -38,7 +38,8 @@ class FormatterCustom:
             formatter["assistant_name"] = "assistant"
 
             formatter["enable_system"] = True
-            formatter["roles"] = ["raw", "user", "assistant", "system"]
+            formatter["roles"] = ["raw", "user", "assistant", "system", "tool"]
+            formatter["role_string"] = {"tool": formatter["bor"] + "user" + formatter["eor"]}
 
             if model_name.lower().find("qwq") >= 0:
                 formatter["clean_thinking"] = True
@@ -411,7 +412,7 @@ class FormatterCustom:
                     else:
                         prompt = prompt + formatter["eom"]
         if not skip_final:
-            if "role_string" in formatter and el["role"] in formatter["role_string"]:
+            if "role_string" in formatter and "assistant" in formatter["role_string"]:
                 prompt = prompt + formatter["role_string"]["assistant"]
             else:
                 prompt = prompt + formatter["bor"] + formatter["assistant_name"] + formatter["eor"]
