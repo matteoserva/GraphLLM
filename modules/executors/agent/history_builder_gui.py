@@ -10,7 +10,11 @@ class AgentHistoryBuilderGui(BaseGuiNode):
     def buildNode(self):
         builder = self
         builder._reset()
-        builder._addInput("in", "string");
-        builder._addOutput("out", "string");
+        builder._addInput("controller", "string");
+        builder._addInput("tools", "string");
+        builder._addOutput("variables", "string");
+
+        builder._addStandardWidget("combo","Tools","markdown",None, { "property": "tools_format", "values": ["markdown"] })
+        builder._addStandardWidget("combo","Agent","ReAct(xml)",None, { "property": "agent_type", "values": ["ReAct(xml)"] })
 
         builder._setPath("agent/agent_history_builder")
