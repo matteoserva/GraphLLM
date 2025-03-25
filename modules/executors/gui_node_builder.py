@@ -95,7 +95,7 @@ class GuiNodeBuilder:
 
         # add properties
         if len(self.config["properties"]):
-            res += "        this.properties = " + str(self.config["properties"]) + "\n"
+            res += "        this.properties = " + str(json.dumps(self.config["properties"])) + "\n"
             for el in self.config["extra_properties"]:
                 res += "            this.addProperty(" + json.dumps(el)[1:-1] + ");\n"
 
