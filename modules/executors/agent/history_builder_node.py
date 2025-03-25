@@ -30,11 +30,14 @@ class AgentHistoryBuilderNode(GenericExecutor):
         return res
 
     def __call__(self,prompt_args):
-        history = prompt_args[0]["history"]
+        agent_variables = prompt_args[0]
+        tools_list = prompt_args[1] if len(prompt_args) > 1 else []
+
+        history = agent_variables["history"]
 
         res = [self._format_xml_action(data) for data in history]
-        prompt_args[0]["history"] = "\n".join(res)
+        agent_variables["history"] = "\n".join(res)
         if len(history) == 0:
-            prompt_args[0]["history"] = "<!-- no action performed yet -->"
-        res = prompt_args[0]
-        return [res]
+            agent_variables["history"] = "<!-- no action performed yet -->"
+        res = [None,None,agent_variables]
+        return res
