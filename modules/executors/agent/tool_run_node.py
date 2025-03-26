@@ -9,7 +9,7 @@ class ParseToolCallNode(GenericExecutor):
     def __init__(self,node_graph_parameters):
         self.properties = {"wrap_input": True}
         tools_factory = ToolsFactory()
-        tools_list = tools_factory.get_tools_list()
+        tools_list = tools_factory.get_tools_list(only_default=False)
         tool_runner = tools_factory.make_tool_runner(tools_list, node_graph_parameters)
         self.ops = tool_runner
 
@@ -57,8 +57,9 @@ class ParseToolCallNode(GenericExecutor):
         result = []
         for data in tool_calls:
             parameters = [data["arguments"][el] for el in data["arguments"]]
-            r = self.ops.exec(data["name"], parameters)
-            r = {"result": r}
+            r = self.ops.exec(data["name"], **data["arguments"])
+            if not isinstance(r,dict):
+                r = {"result": r}
             result.append(str(r))
 
         result = ["<tool_response>\n" + json.dumps(el)[1:-1] + "\n</tool_response>" for el in result]

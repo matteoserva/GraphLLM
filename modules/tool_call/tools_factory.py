@@ -29,7 +29,8 @@ def _load_available_tools():
     _available_tools = []
     for tool in found_tools:
         ops = [el for el in dir(tool) if not el.startswith("_")]
-        tool_info = {"name": tool.tool_name, "class":tool, "operators": []}
+        is_default = tool.properties["default"] if hasattr(tool, "properties") and "default" in tool.properties else True
+        tool_info = {"name": tool.tool_name, "class":tool, "operators": [], "default": is_default}
         for op in ops:
 
             c = getattr(tool, op)
@@ -46,6 +47,7 @@ def _load_available_tools():
             row["name"] = op
             row["params"] = params
             row["doc"] = c.__doc__
+
             tool_info["operators"].append(row)
 
         _available_tools.append(tool_info)
@@ -89,16 +91,22 @@ class ToolRunner():
         res = "\n".join(textlist)
         return res
 
-    def _exec_name_parameters(self, function_name, function_parameters):
+    def _exec_name_list(self, function_name, function_parameters):
         op_info = self.ops[function_name]
         result = op_info["function"](*function_parameters)
         return result
 
+    def _exec_name_dict(self, function_name, named_parameters):
+        op_info = self.ops[function_name]
+        result = op_info["function"](**named_parameters)
+        return result
 
     def exec(self,*args,**kwargs):
         result = ""
         if len(args) == 2 and isinstance(args[0],str) and isinstance(args[1],list):
-            result = self._exec_name_parameters(args[0],args[1])
+            result = self._exec_name_list(args[0],args[1])
+        if len(args) == 1 and isinstance(args[0],str) and len(kwargs) > 0:
+            result = self._exec_name_dict(args[0],kwargs)
         return result
 
 class ToolsFactory():
@@ -106,9 +114,15 @@ class ToolsFactory():
         if not _available_tools:
             _load_available_tools()
 
-    def get_tools_list(self):
-        tools_list = [el["name"] for el in _available_tools]
+    def get_tools_list(self, only_default=True):
+        tools_list = [el["name"] for el in _available_tools if el["default"] or not only_default]
         return tools_list
+
+    def get_operators(self):
+        operators = []
+        for el in _available_tools:
+            operators += el["operators"]
+        return operators
 
     def make_tool_runner(self,tools_list, node_graph_parameters={}):
         tool_runner = ToolRunner(tools_list,node_graph_parameters)
