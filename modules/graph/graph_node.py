@@ -90,7 +90,10 @@ class GraphNode:
 
     def get_inputs(self):
         inputs = [el for el in self["inputs"]]
-        if not self.executor.properties["wrap_input"]:
+
+        if self.executor.properties["wrap_input"]:
+            inputs = [el if isinstance(el, ExecutorOutput) else ExecutorOutput(el) for el in inputs]
+        else:
             inputs = [el.data if isinstance(el,ExecutorOutput) else el for el in inputs ]
         return inputs
 

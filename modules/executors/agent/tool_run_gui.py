@@ -2,7 +2,7 @@ from modules.executors.common import BaseGuiNode
 
 
 class ParseToolCallGui(BaseGuiNode):
-    node_title = "Tool Call parser"
+    node_title = "Tool Run"
 
     def __init__(self):
         pass
@@ -11,7 +11,8 @@ class ParseToolCallGui(BaseGuiNode):
         builder = self
         builder._reset()
         builder._addInput("in", "string");
-        builder._addOutput("out", "string");
-        builder._addOutput("json", "string");
+        builder._addOutput("result", "string");
+        builder._addOutput("tool out", "string");
+        builder._addOutput("llm out", "string");
 
-        builder._setPath("agent/tool_call_parser")
+        builder._setPath("execute_tool_call")

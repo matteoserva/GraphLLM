@@ -2,7 +2,7 @@ from modules.executors.common import BaseGuiParser
 
 
 class ParseToolCallParser(BaseGuiParser):
-    node_types = ["tool_call_parser"]
+    node_types = ["execute_tool_call"]
 
     def parse_node(self, old_config):
         # print(old_config)
