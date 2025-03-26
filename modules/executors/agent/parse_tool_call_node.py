@@ -1,4 +1,4 @@
-from modules.executors.common import GenericExecutor
+from modules.executors.common import GenericExecutor, ExecutorOutput
 
 from modules.executors.common import BaseGuiParser
 import json
@@ -6,7 +6,7 @@ import json
 class ParseToolCallNode(GenericExecutor):
     node_type = "tool_call_parser"
     def __init__(self,node_graph_parameters):
-        pass
+        self.properties = {"wrap_input": True}
 
     def _parse_xml_react(self,llm_output):
         thinking = llm_output.split("</thinking>")[:-1]
@@ -38,17 +38,19 @@ class ParseToolCallNode(GenericExecutor):
         calls = [el.strip() for el in calls]
         calls = [json.loads(el) for el in calls]
 
-        res = {"type": "json", "role": "assistant", "content": text_content, "tool_calls": calls}
+        res = {"type": "native", "role": "assistant", "content": text_content, "tool_calls": calls}
         return res
 
     def __call__(self,prompt_args):
-        llm_output = str(prompt_args[0])
+        wrapped_llm_output = prompt_args[0]
+        llm_output = str(wrapped_llm_output.data)
         if "<action>" in llm_output and "</thinking>" in llm_output:
             res = self._parse_xml_react(llm_output)
             res = [None, res]
         elif "<tool_call>" in llm_output and '"arguments"' in llm_output:
             res = self._parse_qwen_tool(llm_output)
-            res = [None, res]
+            wrapped_output = ExecutorOutput(res,wrapped_llm_output.meta)
+            res = [None, wrapped_output]
         else:
             res = [llm_output]
         return res

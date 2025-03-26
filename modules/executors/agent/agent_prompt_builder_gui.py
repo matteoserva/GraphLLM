@@ -25,4 +25,4 @@ class AgentHistoryBuilderGui(BaseGuiNode):
         builder._setConnectionLimits({"max_outputs": 3, "min_outputs": 3, "min_inputs": 3})
         builder._setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")
 
-        builder._setPath("agent/agent_history_builder")
+        builder._setPath("agent/agent_prompt_builder")

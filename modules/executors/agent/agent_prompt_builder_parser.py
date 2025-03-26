@@ -2,7 +2,7 @@ from modules.executors.common import BaseGuiParser
 
 
 class AgentHistoryBuilderParser(BaseGuiParser):
-    node_types = ["agent_history_builder"]
+    node_types = ["agent_prompt_builder"]
 
 
 

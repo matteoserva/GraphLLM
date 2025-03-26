@@ -5,7 +5,7 @@ from modules.formatter import PromptBuilder
 from modules.tool_call.tools_factory import ToolsFactory
 
 class AgentHistoryBuilderNode(GenericExecutor):
-    node_type = "agent_history_builder"
+    node_type = "agent_prompt_builder"
     def __init__(self,node_graph_parameters):
         self.builder = PromptBuilder()
         self.current_prompt = "{}"
@@ -48,12 +48,11 @@ class AgentHistoryBuilderNode(GenericExecutor):
         return res
 
     def __call__(self,prompt_args):
-        agent_variables = prompt_args[0]
+        agent_variables = prompt_args[0] if len(prompt_args) > 0 else {}
         tools_list = prompt_args[1] if len(prompt_args) > 1 else self.full_tools_list
         prompt_subs = prompt_args[2:]
 
-        history = agent_variables["history"]
-
+        history = agent_variables.get("history",[])
         res = [self._format_xml_action(data) for data in history]
         agent_variables["history"] = "\n".join(res)
         if len(history) == 0:
