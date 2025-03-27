@@ -10,7 +10,7 @@ class AgentHistoryBuilderNode(GenericExecutor):
         self.builder = PromptBuilder()
         self.current_prompt = "{}"
         self.tools_factory = ToolsFactory()
-        self.full_tools_list = self.tools_factory.get_tools_list()
+        self.full_tools_list = self.tools_factory.get_tool_classes()
 
 
     def initialize(self,*args,**kwargs):
@@ -48,8 +48,11 @@ class AgentHistoryBuilderNode(GenericExecutor):
         return res
 
     def __call__(self,prompt_args):
-        agent_variables = prompt_args[0] if len(prompt_args) > 0 else {}
-        tools_list = prompt_args[1] if len(prompt_args) > 1 else self.full_tools_list
+        single_shot = len(prompt_args) == 0 or (prompt_args[0] is None and len(prompt_args)< 3) # no controller and no exec
+        if single_shot:
+            self.node.disable_execution = True
+        agent_variables = prompt_args[0] if len(prompt_args) > 0 and prompt_args[0] is not None else {}
+        tools_list = prompt_args[1] if len(prompt_args) > 1 and prompt_args[1] is not None else self.full_tools_list
         prompt_subs = prompt_args[2:]
 
         history = agent_variables.get("history",[])

@@ -69,10 +69,14 @@ class BaseGuiParser:
         new_inputs = old_inputs
         new_inputs = [str(el[1]) + "[" + str(el[2]) + "]" if el else None for el in new_inputs]
         val_exec = []
-        for vel in new_inputs:
-            if not vel:
-                break
+
+        max_arg_pos = -1
+        for arg_pos, vel in enumerate(new_inputs):
+            if vel:
+                max_arg_pos = arg_pos
             val_exec.append(vel)
+        if max_arg_pos > 0:
+            val_exec = val_exec[:max_arg_pos+1]
         return val_exec
 
     def parse_node(self,old_config):

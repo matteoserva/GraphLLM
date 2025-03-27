@@ -6,7 +6,7 @@ class ToolsListGui(BaseGuiNode):
 
     def __init__(self):
         tools_factory = ToolsFactory()
-        self.tools_list = tools_factory.get_tools_list()
+        self.tools_list = tools_factory.get_tool_classes()
 
     def buildNode(self):
         builder = self

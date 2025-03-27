@@ -62,6 +62,8 @@ def create_arcs(graph_nodes):
 
         if "exec" in el:
             for di,nn in enumerate(el["exec"]):
+                if not nn:
+                    continue
                 spos = nn.find("[")
                 if spos > 0:
                     ssi =  nn[:spos]
@@ -92,7 +94,9 @@ def create_arcs(graph_nodes):
         di = arc[2]
         dp = arc[3]
         graph_connections[si]["forwards"][sp].append((di,dp))
-        graph_connections[di]["deps"].append((si,sp))
+        while len(graph_connections[di]["deps"]) < (dp+1):
+            graph_connections[di]["deps"].append(None)
+        graph_connections[di]["deps"][dp] = (si,sp)
 
     return graph_connections
 

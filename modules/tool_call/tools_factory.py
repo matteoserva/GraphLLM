@@ -30,19 +30,21 @@ def _load_available_tools():
     for tool in found_tools:
         ops = [el for el in dir(tool) if not el.startswith("_")]
         is_default = tool.properties["default"] if hasattr(tool, "properties") and "default" in tool.properties else True
+        tool_object = tool()
         tool_info = {"name": tool.tool_name, "class":tool, "operators": [], "default": is_default}
+
         for op in ops:
 
-            c = getattr(tool, op)
+            c = getattr(tool_object, op)
             if not c:
                 continue
             if not callable(c):
                 continue
-            d = inspect.signature(c)
-            params = list(d.parameters.keys())[1:]
+            d = inspect.getfullargspec(c)
+            params = d[0][1:]
             e = len(params)
 
-
+            params = [{"name": el} for el in params]
             row = {}
             row["name"] = op
             row["params"] = params
@@ -55,6 +57,7 @@ def _load_available_tools():
 class ToolRunner():
     def __init__(self,tools_list, node_graph_parameters):
         self.ops = {}
+        tool_names = [el for el in tools_list]
         for tool_name in tools_list:
             tool_info = [el for el in _available_tools if el["name"] == tool_name][0]
             tool_object = tool_info["class"]()
@@ -78,12 +81,13 @@ class ToolRunner():
     def get_formatted_ops(self):
         ops = [self.ops[el] for el in self.ops]
         textlist = []
-        for el in ops:
+        for op in ops:
             row = ""
-            row = row + "- " + el["name"]
-            if el["doc"] is not None:
-                row = row + ": " + el["doc"]
-            params_string = ",".join(el["params"])
+            row = row + "- " + op["name"]
+            if op["doc"] is not None:
+                row = row + ": " + op["doc"]
+            param_names = [el["name"] for el in op["params"]]
+            params_string = ",".join(param_names)
             if row[-1] == ".":
                 row = row[:-1]
             row = row + ". Parameters: " + params_string
@@ -114,14 +118,13 @@ class ToolsFactory():
         if not _available_tools:
             _load_available_tools()
 
-    def get_tools_list(self, only_default=True):
+    def get_tool_classes(self, only_default=True):
         tools_list = [el["name"] for el in _available_tools if el["default"] or not only_default]
         return tools_list
 
-    def get_operators(self):
-        operators = []
-        for el in _available_tools:
-            operators += el["operators"]
+    def get_operators(self, tool_classes):
+        selected_tools = [el for el in available_tools if el["name"] in tool_classes]
+        operators = [op for el in selected_tools for op in el["operators"]]
         return operators
 
     def make_tool_runner(self,tools_list, node_graph_parameters={}):
