@@ -1,15 +1,10 @@
 from modules.executors.common import GenericExecutor
 import copy
-from modules.tool_call.tools_factory import ToolsFactory
+
 
 class AgentToolRunNode(GenericExecutor):
     node_type = "agent_controller"
     def __init__(self,node_graph_parameters):
-        tools_factory = ToolsFactory()
-        tools_list = tools_factory.get_tools_list()
-        tool_runner = tools_factory.make_tool_runner(tools_list,node_graph_parameters)
-        formatted_ops = tool_runner.get_formatted_ops()
-        self.tools = formatted_ops
         self.run_parameters = {}
 
     def initialize(self):
@@ -17,7 +12,7 @@ class AgentToolRunNode(GenericExecutor):
 
     def __call__(self,prompt_args):
         if prompt_args[0]:
-            self.run_parameters = {"tools": self.tools, "question": prompt_args[0], "hints":"", "history": []}
+            self.run_parameters = {"question": prompt_args[0], "hints":"", "history": []}
             res = [None, copy.deepcopy(self.run_parameters)]
         else:
             result = prompt_args[1]

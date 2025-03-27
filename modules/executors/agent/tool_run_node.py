@@ -93,9 +93,13 @@ class ParseToolCallNode(GenericExecutor):
         if tool_call_data:
             tool_result = self._execute_tools(tool_call_data)
             outwrapped = ExecutorOutput(tool_call_data)
+
+            lout = None
             if "source_llm" in wrapped_llm_output.meta and tool_call_data["type"] == "native":
                 outwrapped.meta["destination"] = (wrapped_llm_output.meta["source_llm"], 0)
-            res = [ outwrapped, tool_result,None]
+            else:
+                lout = llm_output
+            res = [ outwrapped, tool_result,lout]
         else:
             res = [None,None,llm_output]
         return res
