@@ -123,7 +123,7 @@ class ToolsFactory():
         return tools_list
 
     def get_operators(self, tool_classes):
-        selected_tools = [el for el in available_tools if el["name"] in tool_classes]
+        selected_tools = [el for el in _available_tools if el["name"] in tool_classes]
         operators = [op for el in selected_tools for op in el["operators"]]
         return operators
 

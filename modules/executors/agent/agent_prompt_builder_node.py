@@ -9,8 +9,9 @@ class AgentHistoryBuilderNode(GenericExecutor):
     def __init__(self,node_graph_parameters):
         self.builder = PromptBuilder()
         self.current_prompt = "{}"
-        self.tools_factory = ToolsFactory()
-        self.full_tools_list = self.tools_factory.get_tool_classes()
+        tools_factory = ToolsFactory()
+        tool_classes = tools_factory.get_tool_classes()
+        self.full_tools_list = tools_factory.get_operators(tool_classes)
 
 
     def initialize(self,*args,**kwargs):
@@ -47,6 +48,23 @@ class AgentHistoryBuilderNode(GenericExecutor):
         res += "</result>"
         return res
 
+    def _format_tools_markdown(self,tools):
+        ops = [el for el in tools]
+        textlist = []
+        for op in ops:
+            row = ""
+            row = row + "- " + op["name"]
+            if op["doc"] is not None:
+                row = row + ": " + op["doc"]
+            param_names = [el["name"] for el in op["params"]]
+            params_string = ",".join(param_names)
+            if row[-1] == ".":
+                row = row[:-1]
+            row = row + ". Parameters: " + params_string
+            textlist.append(row)
+        res = "\n".join(textlist)
+        return res
+
     def __call__(self,prompt_args):
         single_shot = len(prompt_args) == 0 or (prompt_args[0] is None and len(prompt_args)< 3) # no controller and no exec
         if single_shot:
@@ -61,8 +79,7 @@ class AgentHistoryBuilderNode(GenericExecutor):
         if len(history) == 0:
             agent_variables["history"] = "<!-- no action performed yet -->"
 
-        tool_runner = self.tools_factory.make_tool_runner(tools_list, {})
-        formatted_ops = tool_runner.get_formatted_ops()
+        formatted_ops = self._format_tools_markdown(tools_list)
         agent_variables["tools"] = formatted_ops
 
         m = solve_prompt_args(self.current_prompt, prompt_subs)

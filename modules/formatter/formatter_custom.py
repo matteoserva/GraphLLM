@@ -387,6 +387,8 @@ class FormatterCustom:
             if el["role"] not in formatter["roles"]:
                 if el["role"] == "system" and force_system:
                     pass
+                elif el["role"] == "tool":
+                    el["role"] = "user"
                 else:
                     continue
 

@@ -9,7 +9,7 @@ class ParseToolCallNode(GenericExecutor):
     def __init__(self,node_graph_parameters):
         self.properties = {"wrap_input": True}
         tools_factory = ToolsFactory()
-        tools_list = tools_factory.get_tools_list(only_default=False)
+        tools_list = tools_factory.get_tool_classes(only_default=False)
         tool_runner = tools_factory.make_tool_runner(tools_list, node_graph_parameters)
         self.ops = tool_runner
 
