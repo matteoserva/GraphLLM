@@ -934,9 +934,9 @@ class CustomTextarea extends CustomTextCommon{
         var textarea = this.textarea
         if (this.inFocus)
         {
-            
+            var oldScrollTop = this.textarea.scrollTop
         
-        this.textarea.style.whiteSpace="pre"
+            this.textarea.style.whiteSpace="pre"
             textarea.style.width = "1px";
             textarea.style.height = "1px";
             textarea.style.minHeight = ""
@@ -953,8 +953,16 @@ class CustomTextarea extends CustomTextCommon{
             minHeight = Math.min(minHeight,window.innerHeight*0.7)
             textarea.style.minHeight = (minHeight+10) + "px"
             textarea.style.minWidth = (minWidth+15)  + "px"
-            this.textarea.style.whiteSpace="pre-wrap"
+            this.textarea.style.whiteSpace="pre-wrap";
+
+            var newScrollTop = this.textarea.scrollTop;
+            if (newScrollTop < oldScrollTop)
+            {
+                this.textarea.scrollTop = oldScrollTop;
+            }
+
         }
+
         
     }
     
