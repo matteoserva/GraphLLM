@@ -186,7 +186,7 @@ class GraphNode:
         node = self
         input_rule = self._get_input_rule()
 
-        missing_inputs = [1 if el is None and node["backwards"][i] is not None else 0 for i, el in enumerate(node["inputs"])]
+        missing_inputs = [1 if el is None and node["backwards"][i] is not None else 0 for i, el in enumerate(node["inputs"][:len(node["backwards"])])]
         missing_inputs = sum(missing_inputs)
         blocked_outputs = len([el for el in node["outputs"] if not el is None])
         if ( input_rule == "OR"):
