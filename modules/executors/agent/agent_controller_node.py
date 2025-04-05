@@ -17,10 +17,15 @@ class AgentToolRunNode(GenericExecutor):
         else:
             result = prompt_args[1]
             self.run_parameters["history"].append(result)
-            action_name = result["action"]["name"]
-            if(action_name.startswith("answer")):
-                res = [result["result"]]
-            else:
+            action_names = [el["name"] for el in result["tool_calls"]]
+            actions_type_answer = [(i,el) for i, el in enumerate(action_names) if el.startswith("answer")]
+            has_answer = len(actions_type_answer)
 
+            if has_answer:
+                results = result["result"]
+                answer_index = actions_type_answer[0][0]
+                answer = results[answer_index]["result"]
+                res = [answer]
+            else:
                 res = [None, copy.deepcopy(self.run_parameters)]
         return res

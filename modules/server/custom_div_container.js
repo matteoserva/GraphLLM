@@ -91,7 +91,7 @@ class TitlebarContainer {
 	
 	processVisibilityChange()
 	{
-		var is_visible = this.parent_visible ;//&& !this.parent.flags.collapsed;
+		var is_visible = this.parent_visible && !this.parent.flags.collapsed;
 		if(is_visible)
         {
 			this.dialog.style.display =""

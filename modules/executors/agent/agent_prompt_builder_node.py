@@ -32,20 +32,22 @@ class AgentHistoryBuilderNode(GenericExecutor):
         res = "<thinking>"
         res += data["thought"]
         res += "</thinking>\n"
-        res += "<action><action_name>"
-        res += data["action"]["name"]
-        res += "</action_name>"
-        parameters = data["action"]["parameters"]
-        for el in parameters:
-            res += "<action_parameter name=\""
-            res += el["name"]
-            res += "\">"
-            res += el["value"]
-            res += "</action_parameter>"
-        res += "</action>\n"
-        res += "<result>"
-        res += str(data["result"])
-        res += "</result>"
+        for action in data["tool_calls"]:
+            res += "<action><action_name>"
+            res += action["name"]
+            res += "</action_name>"
+            parameters = action["parameters"]
+            for el in parameters:
+                res += "<action_parameter name=\""
+                res += el["name"]
+                res += "\">"
+                res += el["value"]
+                res += "</action_parameter>"
+            res += "</action>\n"
+        for result in data["result"]:
+            res += "<result>"
+            res += str(result["result"])
+            res += "</result>\n"
         return res
 
     def _format_tools_markdown(self,tools):
@@ -74,8 +76,9 @@ class AgentHistoryBuilderNode(GenericExecutor):
         prompt_subs = prompt_args[2:]
 
         history = agent_variables.get("history",[])
-        res = [self._format_xml_action(data) for data in history]
-        agent_variables["history"] = "\n".join(res)
+        res = [self._format_xml_action(data).strip() for data in history]
+        history_formatted = "\n".join(res)
+        agent_variables["history"] = history_formatted
         if len(history) == 0:
             agent_variables["history"] = "<!-- no action performed yet -->"
 
