@@ -1,6 +1,6 @@
 {
-    "last_node_id": 66,
-    "last_link_id": 67,
+    "last_node_id": 70,
+    "last_link_id": 69,
     "nodes": [
         {
             "id": 40,
@@ -14,7 +14,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 1,
+            "order": 0,
             "mode": 0,
             "outputs": [
                 {
@@ -43,7 +43,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 2,
+            "order": 1,
             "mode": 0,
             "outputs": [
                 {
@@ -72,7 +72,7 @@
                 "1": 66
             },
             "flags": {},
-            "order": 12,
+            "order": 13,
             "mode": 0,
             "inputs": [
                 {
@@ -128,7 +128,7 @@
                 "1": 67
             },
             "flags": {},
-            "order": 23,
+            "order": 25,
             "mode": 0,
             "inputs": [
                 {
@@ -165,7 +165,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 29,
+            "order": 32,
             "mode": 0,
             "inputs": [
                 {
@@ -190,7 +190,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 24,
+            "order": 26,
             "mode": 0,
             "inputs": [
                 {
@@ -215,7 +215,7 @@
                 "1": 66
             },
             "flags": {},
-            "order": 13,
+            "order": 14,
             "mode": 0,
             "inputs": [
                 {
@@ -266,7 +266,7 @@
             "flags": {
                 "collapsed": false
             },
-            "order": 15,
+            "order": 16,
             "mode": 0,
             "inputs": [
                 {
@@ -304,7 +304,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 26,
+            "order": 28,
             "mode": 0,
             "inputs": [
                 {
@@ -329,7 +329,7 @@
                 "1": 58
             },
             "flags": {},
-            "order": 14,
+            "order": 15,
             "mode": 0,
             "inputs": [
                 {
@@ -367,7 +367,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 25,
+            "order": 27,
             "mode": 0,
             "inputs": [
                 {
@@ -392,7 +392,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 3,
+            "order": 2,
             "mode": 0,
             "outputs": [
                 {
@@ -419,7 +419,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 4,
+            "order": 3,
             "mode": 0,
             "outputs": [
                 {
@@ -446,7 +446,7 @@
                 "1": 108
             },
             "flags": {},
-            "order": 5,
+            "order": 4,
             "mode": 0,
             "inputs": [
                 {
@@ -488,7 +488,7 @@
                 "1": 108
             },
             "flags": {},
-            "order": 6,
+            "order": 5,
             "mode": 0,
             "inputs": [
                 {
@@ -530,7 +530,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 16,
+            "order": 17,
             "mode": 0,
             "inputs": [
                 {
@@ -555,7 +555,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 17,
+            "order": 18,
             "mode": 0,
             "inputs": [
                 {
@@ -580,7 +580,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 27,
+            "order": 29,
             "mode": 0,
             "inputs": [
                 {
@@ -605,7 +605,7 @@
                 "1": 108
             },
             "flags": {},
-            "order": 18,
+            "order": 19,
             "mode": 0,
             "inputs": [
                 {
@@ -653,7 +653,7 @@
                 "1": 89.48770904541016
             },
             "flags": {},
-            "order": 7,
+            "order": 6,
             "mode": 0,
             "outputs": [
                 {
@@ -680,7 +680,7 @@
                 "1": 112
             },
             "flags": {},
-            "order": 8,
+            "order": 7,
             "mode": 0,
             "properties": {
                 "identifier": "test_output",
@@ -699,7 +699,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 19,
+            "order": 20,
             "mode": 0,
             "inputs": [
                 {
@@ -724,7 +724,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 9,
+            "order": 8,
             "mode": 0,
             "outputs": [
                 {
@@ -752,7 +752,7 @@
                 "1": 253.09422302246094
             },
             "flags": {},
-            "order": 10,
+            "order": 9,
             "mode": 0,
             "outputs": [
                 {
@@ -779,7 +779,7 @@
                 "1": 200
             },
             "flags": {},
-            "order": 20,
+            "order": 21,
             "mode": 0,
             "inputs": [
                 {
@@ -805,7 +805,7 @@
                 "1": 46
             },
             "flags": {},
-            "order": 22,
+            "order": 31,
             "mode": 0,
             "inputs": [
                 {
@@ -848,7 +848,7 @@
                 "1": 209
             },
             "flags": {},
-            "order": 0,
+            "order": 10,
             "mode": 0,
             "inputs": [
                 {
@@ -889,7 +889,7 @@
                 "1": 46
             },
             "flags": {},
-            "order": 11,
+            "order": 22,
             "mode": 0,
             "inputs": [
                 {
@@ -937,7 +937,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 21,
+            "order": 30,
             "mode": 0,
             "inputs": [
                 {
@@ -962,7 +962,7 @@
                 "1": 288.9735412597656
             },
             "flags": {},
-            "order": 30,
+            "order": 34,
             "mode": 0,
             "inputs": [
                 {
@@ -987,7 +987,7 @@
                 "1": 67
             },
             "flags": {},
-            "order": 28,
+            "order": 33,
             "mode": 0,
             "inputs": [
                 {
@@ -1011,6 +1011,113 @@
             "properties": {
                 "separator": "\"\\n--\\n\""
             }
+        },
+        {
+            "id": 67,
+            "type": "network/udp_sender",
+            "pos": [
+                400,
+                1630
+            ],
+            "size": {
+                "0": 210,
+                "1": 91
+            },
+            "flags": {},
+            "order": 23,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "message",
+                    "type": "string",
+                    "link": 68,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "port": 8765,
+                "ip": "127.0.0.1"
+            }
+        },
+        {
+            "id": 68,
+            "type": "input/text_input",
+            "pos": [
+                120,
+                1630
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        68
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "test1"
+            }
+        },
+        {
+            "id": 69,
+            "type": "network/udp_receiver",
+            "pos": [
+                700,
+                1620
+            ],
+            "size": {
+                "0": 210,
+                "1": 115
+            },
+            "flags": {},
+            "order": 12,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "message",
+                    "type": "string",
+                    "links": [
+                        69
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "port": 8765,
+                "iterations": 1,
+                "ip": "0.0.0.0"
+            }
+        },
+        {
+            "id": 70,
+            "type": "output/watch",
+            "pos": [
+                1020,
+                1620
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 24,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 69
+                }
+            ],
+            "properties": {}
         }
     ],
     "links": [
@@ -1189,6 +1296,22 @@
             33,
             0,
             "string"
+        ],
+        [
+            68,
+            68,
+            0,
+            67,
+            0,
+            "string"
+        ],
+        [
+            69,
+            69,
+            0,
+            70,
+            0,
+            "string"
         ]
     ],
     "groups": [],
@@ -1289,6 +1412,18 @@
             "rotation": 0
         },
         "66": {
+            "rotation": 0
+        },
+        "67": {
+            "rotation": 0
+        },
+        "68": {
+            "rotation": 0
+        },
+        "69": {
+            "rotation": 0
+        },
+        "70": {
             "rotation": 0
         }
     }
