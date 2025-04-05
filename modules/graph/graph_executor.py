@@ -13,6 +13,7 @@ PARALLEL_JOBS=2
 
 
 class GraphExecutor:
+    properties = {"free_runs": 0, "input_rule":"AND", "wrap_input": False, "input_active": []}
     def __init__(self,executor_config):
         if not isinstance(executor_config, dict):
             executor_config = {"client":executor_config}
