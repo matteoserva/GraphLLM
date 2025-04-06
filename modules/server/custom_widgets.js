@@ -420,6 +420,7 @@ class CustomToolSelector {
         this.y=0
         this.tools_list = this.initToolsList(options.tools_list)
         this.div = this.makeElement(parent)
+        this.updateCategoryView()
 
 
         this.property = options.property
@@ -438,7 +439,8 @@ class CustomToolSelector {
             for (let i in tools_list_data[category])
             {
                 let tool_name = tools_list_data[category][i]
-                tools_list[category][tool_name] = {enabled: false}
+                let defaultEnabled = category == "answer"
+                tools_list[category][tool_name] = {enabled: defaultEnabled}
             }
         }
         return tools_list
@@ -447,17 +449,52 @@ class CustomToolSelector {
     updateCategoryCounter(category_name)
     {
         let category_counter = 0
-
+        let disabled_counter = 0
         for (let tool in this.tools_list[category_name])
         {
             if(this.tools_list[category_name][tool].enabled)
             {
                 category_counter += 1;
             }
+            else
+            {
+                disabled_counter += 1;
+            }
         }
         let category_nodes = Array.from(this.div.querySelectorAll(".category"))
         let filtered_node = category_nodes.filter((c) => c.dataset.category == category_name)[0];
-        filtered_node.querySelector(".category-counter").innerText = category_counter
+        let node = filtered_node.querySelector(".category-counter")
+        node.innerText = category_counter
+        if(category_counter > 0)
+        {
+            if(disabled_counter > 0)
+            {
+                node.style.backgroundColor = "#404000"
+            }
+            else
+            {
+                node.style.backgroundColor = "#004000"
+            }
+        }
+        else
+        {
+            node.style.backgroundColor = null;
+        }
+    }
+
+    collapseCategories()
+    {
+        this.div.querySelectorAll('.category-header').forEach(header => {
+
+            const toolsDiv = header.nextElementSibling;
+            let wasVisible = toolsDiv.style.display === 'block'
+            if(wasVisible)
+            {
+                toolsDiv.style.display = 'none';
+                header.classList.remove("focused")
+            }
+        });
+
     }
 
     makeElement(parentNode)
@@ -499,14 +536,43 @@ class CustomToolSelector {
         div.querySelectorAll('.category-header').forEach(header => {
           header.addEventListener('click', () => {
             const toolsDiv = header.nextElementSibling;
-            toolsDiv.style.display = toolsDiv.style.display === 'block' ? 'none' : 'block';
+            let wasVisible = toolsDiv.style.display === 'block'
+            if(!wasVisible)
+            {
+                this.collapseCategories()
+            }
+
+            toolsDiv.style.display = wasVisible ? 'none' : 'block';
+            if(wasVisible)
+            {
+                header.parentNode.classList.remove("focused")
+            }
+            else
+            {
+                header.parentNode.classList.add("focused")
+            }
           });
         });
-        div.querySelectorAll('.tool-selection .tool-selection-tools').forEach(header => {
+
+        div.querySelectorAll('.category').forEach(header => {
+          header.tabIndex=0;
+          const toolsDiv = header.querySelector(".tool-selection-tools");
+          header.addEventListener('focusout', (e) => {
+            if(!(e.relatedTarget && e.relatedTarget.className == "category"))
+               toolsDiv.style.display = 'none'
+
+            header.classList.remove("focused")
+          });
+          header.addEventListener('focusin', (e) => {
+            header.classList.add("focused")
+          });
+
+        });
+        /*div.querySelectorAll('.tool-selection .tool-selection-tools').forEach(header => {
           header.parentNode.addEventListener('mouseleave', () => {
             header.style.display = 'none';
           });
-        });
+        });*/
         div.querySelectorAll('.tool').forEach(header => {
             let tool = header.dataset.toolName
             let category = header.parentNode.parentNode.dataset.category
@@ -527,6 +593,7 @@ class CustomToolSelector {
             this.updateParent()
           });
         });
+
         return div
 
     }
@@ -565,6 +632,26 @@ class CustomToolSelector {
 
     }
 
+    updateCategoryView()
+    {
+        for (let cat in this.tools_list)
+        {
+            for (let tool in this.tools_list[cat])
+            {
+                if(!this.tools_list[cat][tool].enabled)
+                {
+                    this.tools_list[cat][tool].node.classList.remove("selected")
+                }
+                else
+                {
+                    this.tools_list[cat][tool].node.classList.add("selected")
+                }
+            }
+            this.updateCategoryCounter(cat)
+        }
+
+    }
+
     setValue(k,v)
     {
         if(this.property && this.property == k && v &&  this.saved_content != v)
@@ -588,17 +675,11 @@ class CustomToolSelector {
                     continue;
                 }
                 this.tools_list[cat][tool].enabled = v[cat][tool].enabled;
-                 if(!this.tools_list[cat][tool].enabled)
-                {
-                    this.tools_list[cat][tool].node.classList.remove("selected")
-                }
-                else
-                {
-                    this.tools_list[cat][tool].node.classList.add("selected")
-                }
+
             }
-            this.updateCategoryCounter(cat)
+
         }
+        this.updateCategoryView()
 
     }
     getMinHeight()

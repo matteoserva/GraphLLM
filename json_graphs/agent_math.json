@@ -212,10 +212,10 @@
                 360,
                 460
             ],
-            "size": [
-                210,
-                180
-            ],
+            "size": {
+                "0": 210,
+                "1": 248
+            },
             "flags": {},
             "order": 3,
             "mode": 0,
@@ -234,7 +234,57 @@
                 "llm": false,
                 "web": false,
                 "filesystem": false,
-                "fake weather": false
+                "fake weather": false,
+                "tools_list": {
+                    "answer": {
+                        "answer": {
+                            "enabled": true
+                        }
+                    },
+                    "eval": {
+                        "eval": {
+                            "enabled": true
+                        },
+                        "python_exec": {
+                            "enabled": false
+                        }
+                    },
+                    "llm": {
+                        "query_file": {
+                            "enabled": false
+                        },
+                        "summarize": {
+                            "enabled": false
+                        }
+                    },
+                    "web": {
+                        "download": {
+                            "enabled": false
+                        },
+                        "web_search": {
+                            "enabled": false
+                        }
+                    },
+                    "filesystem": {
+                        "answer_file": {
+                            "enabled": false
+                        },
+                        "read_file": {
+                            "enabled": false
+                        },
+                        "write_file": {
+                            "enabled": false
+                        }
+                    },
+                    "fake weather": {
+                        "get_current_temperature": {
+                            "enabled": false
+                        },
+                        "get_temperature_date": {
+                            "enabled": false
+                        }
+                    }
+                }
             }
         },
         {
@@ -346,7 +396,9 @@
                 {
                     "name": "llm",
                     "type": "string",
-                    "link": 95
+                    "link": 95,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -368,10 +420,10 @@
                 2310,
                 70
             ],
-            "size": [
-                750,
-                360
-            ],
+            "size": {
+                "0": 750,
+                "1": 360
+            },
             "flags": {},
             "order": 17,
             "mode": 0,
@@ -379,7 +431,9 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 96
+                    "link": 96,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {}
@@ -419,46 +473,6 @@
             ],
             "properties": {
                 "identifier": "tool_result"
-            }
-        },
-        {
-            "id": 27,
-            "type": "graph/variable",
-            "pos": [
-                -30,
-                710
-            ],
-            "size": {
-                "0": 680,
-                "1": 340
-            },
-            "flags": {
-                "collapsed": false
-            },
-            "order": 5,
-            "mode": 0,
-            "properties": {
-                "identifier": "prompt_template",
-                "parameters": "{p:bos}\n\n{p:system}\nYou are a AI task scheduler. Your job is to find the next logical step toward solving the user problem.\n\n## Tools\n{p:tools}\n\n## Objective\n\nUse the following template to process the next logical step:\n```\n<thinking> Your comments about what you achieved so far and what to do next </thinking>\n<action> The action to perform and its parameters. The specific format is described later. </action>\n<result> The result of the action </result>\n```\n\nformat of the action field:\n- The action field is enclosed between <action> and </action> tags.\n- The name of the action is inserted between <action_name> and </action_name> tags.\n- Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n- Only the value of the parameter is specified. The name of the parameter is omitted.\n- The parameters can be multiline strings\n- Example: <action><action_name>eval</action_name><action_parameter name=\"expression\">2+3</action_parameter></action>\n\n## Rules\n- If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n- The input to query_file() should be a very detailed question about what you want from the external agent.\n- Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n- Use query_file() to analyze downloaded web pages\n- use the eval tool or python code to perform math calculations.\n{p:hints}{p:eom}\n\n{p:user}\nYour job is to analyze the trace log and then determine what step should follow next.\n\nTrace log:\n```\nQuestion: {p:question}\n{p:history}\n```\n\nTell me the next step to complete the trace log.\n{p:eom}\n\n{p:assistant}\n{p:eom}"
-            }
-        },
-        {
-            "id": 24,
-            "type": "graph/variable",
-            "pos": [
-                700,
-                710
-            ],
-            "size": {
-                "0": 680,
-                "1": 340
-            },
-            "flags": {},
-            "order": 6,
-            "mode": 0,
-            "properties": {
-                "identifier": "react_deepseek",
-                "parameters": "root ::= (planning? thought action observation)\n\nplanning ::=  \"<think>\\n\" sentencen \"</think>\" \"\\n\"+\nthought ::=   \"<thinking>\" sentencen \"</thinking>\\n\"\n#le parentesi in action per evitare che ce ne siano di innestate\naction  ::= \"<action>\" actionname actionparam* \"</action>\\n\"\nactionname ::= \"<action_name>\" sentence \"</action_name>\"\nactionparam ::= \"<action_parameter name=\\\"\" word \"\\\">\" sentencen \"</action_parameter>\"\nobservation  ::= \"<result>\" sentencen \"</result>\\n\"\n\n\nsentence ::= [^\\n<]+\nsentencep ::= [^\\n.]+ \".\"\nsentencen ::= ([^<] | \"< \")+\nword ::= [^\\n<>\"]+"
             }
         },
         {
@@ -529,29 +543,6 @@
             }
         },
         {
-            "id": 57,
-            "type": "output/watch",
-            "pos": [
-                1430,
-                710
-            ],
-            "size": [
-                680,
-                330
-            ],
-            "flags": {},
-            "order": 10,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 97
-                }
-            ],
-            "properties": {}
-        },
-        {
             "id": 50,
             "type": "agent/execute_tool_call",
             "pos": [
@@ -606,10 +597,10 @@
                 2320,
                 650
             ],
-            "size": [
-                730,
-                210
-            ],
+            "size": {
+                "0": 730,
+                "1": 210
+            },
             "flags": {},
             "order": 16,
             "mode": 0,
@@ -623,6 +614,71 @@
                 }
             ],
             "properties": {}
+        },
+        {
+            "id": 27,
+            "type": "graph/variable",
+            "pos": [
+                -30,
+                760
+            ],
+            "size": {
+                "0": 680,
+                "1": 340
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 5,
+            "mode": 0,
+            "properties": {
+                "identifier": "prompt_template",
+                "parameters": "{p:bos}\n\n{p:system}\nYou are a AI task scheduler. Your job is to find the next logical step toward solving the user problem.\n\n## Tools\n{p:tools}\n\n## Objective\n\nUse the following template to process the next logical step:\n```\n<thinking> Your comments about what you achieved so far and what to do next </thinking>\n<action> The action to perform and its parameters. The specific format is described later. </action>\n<result> The result of the action </result>\n```\n\nformat of the action field:\n- The action field is enclosed between <action> and </action> tags.\n- The name of the action is inserted between <action_name> and </action_name> tags.\n- Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n- Only the value of the parameter is specified. The name of the parameter is omitted.\n- The parameters can be multiline strings\n- Example: <action><action_name>eval</action_name><action_parameter name=\"expression\">2+3</action_parameter></action>\n\n## Rules\n- If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n- The input to query_file() should be a very detailed question about what you want from the external agent.\n- Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n- Use query_file() to analyze downloaded web pages\n- use the eval tool or python code to perform math calculations.\n{p:hints}{p:eom}\n\n{p:user}\nYour job is to analyze the trace log and then determine what step should follow next.\n\nTrace log:\n```\nQuestion: {p:question}\n{p:history}\n```\n\nTell me the next step to complete the trace log.\n{p:eom}\n\n{p:assistant}\n{p:eom}"
+            }
+        },
+        {
+            "id": 57,
+            "type": "output/watch",
+            "pos": [
+                1430,
+                760
+            ],
+            "size": {
+                "0": 680,
+                "1": 330
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 97,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 24,
+            "type": "graph/variable",
+            "pos": [
+                700,
+                760
+            ],
+            "size": {
+                "0": 680,
+                "1": 340
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "properties": {
+                "identifier": "react_deepseek",
+                "parameters": "root ::= (planning? thought action observation)\n\nplanning ::=  \"<think>\\n\" sentencen \"</think>\" \"\\n\"+\nthought ::=   \"<thinking>\" sentencen \"</thinking>\\n\"\n#le parentesi in action per evitare che ce ne siano di innestate\naction  ::= \"<action>\" actionname actionparam* \"</action>\\n\"\nactionname ::= \"<action_name>\" sentence \"</action_name>\"\nactionparam ::= \"<action_parameter name=\\\"\" word \"\\\">\" sentencen \"</action_parameter>\"\nobservation  ::= \"<result>\" sentencen \"</result>\\n\"\n\n\nsentence ::= [^\\n<]+\nsentencep ::= [^\\n.]+ \".\"\nsentencen ::= ([^<] | \"< \")+\nword ::= [^\\n<>\"]+"
+            }
         }
     ],
     "links": [

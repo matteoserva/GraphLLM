@@ -212,20 +212,26 @@ div.div-container div.CustomTextOutput.markdown_on menclose[notation=box] {
 
 
 div.tool-selection .category {
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 10px;
+      border:1px solid gray;
+
+      /* border-radius: 10px; */
+      margin-bottom: 5px;
 
       /* display: flex;
       flex-direction: column; */
     }
 
 div.tool-selection .category-header {
-      /* background: #f0f0f0; */
-      padding: 2px;
+      padding: 4px;
+
       cursor: pointer;
       font-weight: bold;
-      display: flex
+      display: flex;
+      background-color: #202020;
+    }
+
+div.tool-selection .category.focused .category-header {
+      background-color: #404040 !important;
     }
 
 div.tool-selection .category-title {
@@ -235,6 +241,12 @@ div.tool-selection .category-title {
 
 div.tool-selection .tool-selection-tools {
         display: none;
+        background-color: #302020;
+        position: absolute;
+        width: 100%;
+        border:2px solid white;
+        border-radius: 4px;
+
     }
 
 div.tool-selection .category-header input{
@@ -244,8 +256,10 @@ div.tool-selection .category-header input{
 
 div.tool-selection .tool {
       cursor: pointer;
+      border:2px solid white;
+      padding: 4px;
     }
 
 div.tool-selection .tool.selected {
-      background: #008000;
+      background: #008000 !important;
     }
