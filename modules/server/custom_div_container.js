@@ -50,8 +50,9 @@ class TitlebarContainer {
 
         var dialog = document.createElement("div");
         dialog.className = "titlebar-container";
-        dialog.style.position = "absolute";
-        dialog.innerHTML = '<img src="img/circle.png" style="vertical-align: middle; width: 9px; height: 9px"></img>'
+        dialog.style= "position: absolute"
+        dialog.innerHTML = `<div style="float: right; padding: 5px; display:flex; align-items: center; height: ` + LiteGraph.NODE_TITLE_HEIGHT + `px;"><img src="img/circle.png" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
+        <div>ciao</div>`
 
         //dialog.style.height = this.height + "px";
 		
@@ -76,15 +77,15 @@ class TitlebarContainer {
 		var canvas = node.graph.list_of_graphcanvas[0];
 		var scale = canvas.ds.scale
 		var width = this.parent.flags.collapsed? node._collapsed_width-3 :node.size[0]
-        var posX = node.pos[0] + width -4.5  + canvas.ds.offset[0]
-        var posY = node.pos[1] - LiteGraph.NODE_TITLE_HEIGHT/2  + 0.2 + canvas.ds.offset[1]
+        var posX = node.pos[0] + width -2  + canvas.ds.offset[0]
+        var posY = node.pos[1] - LiteGraph.NODE_TITLE_HEIGHT  + 0.2 + canvas.ds.offset[1]
         posX *= scale
         posY *= scale
         this.dialog.style.left = posX + "px";
         this.dialog.style.top  = Math.round(posY) + "px";
         //this.dialog.style.width = (node.size[0]-30) + "px";
 		//this.dialog.style.height = LiteGraph.NODE_TITLE_HEIGHT + "px"
-        this.dialog.style.transform = "scale(" + canvas.ds.scale + ") translateX(-100%) translateY(-50%)"
+        this.dialog.style.transform = "scale(" + canvas.ds.scale + ") translateX(-100%)"
         this.dialog.style.transformOrigin = "top left"
 	}
 	
