@@ -1,6 +1,6 @@
 {
-    "last_node_id": 57,
-    "last_link_id": 97,
+    "last_node_id": 58,
+    "last_link_id": 99,
     "nodes": [
         {
             "id": 40,
@@ -44,7 +44,7 @@
                 "1": 46
             },
             "flags": {},
-            "order": 8,
+            "order": 7,
             "mode": 0,
             "inputs": [
                 {
@@ -133,7 +133,7 @@
                 "1": 58
             },
             "flags": {},
-            "order": 12,
+            "order": 10,
             "mode": 0,
             "inputs": [
                 {
@@ -169,7 +169,7 @@
                 "1": 170
             },
             "flags": {},
-            "order": 11,
+            "order": 9,
             "mode": 0,
             "inputs": [
                 {
@@ -206,26 +206,457 @@
             "bgcolor": "#353"
         },
         {
-            "id": 51,
-            "type": "agent/tools_list",
+            "id": 37,
+            "type": "graph/virtual_source",
             "pos": [
-                360,
+                340,
+                230
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "sink",
+                    "type": "virtual",
+                    "link": null,
+                    "shape": 5,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        52
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "tool_result"
+            }
+        },
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                1040,
+                350
+            ],
+            "size": {
+                "0": 1060,
+                "1": 160
+            },
+            "flags": {},
+            "order": 12,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 69,
+                    "pos": null,
+                    "dir": null,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        86,
+                        95
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"grammar\": \"react_deepseek\", \"stop\": \"<result>\", \"force_system\":True,\"temperature\":0.5, \"print_prompt\":1, \"print_response\":\"partial\"}",
+                "template": "",
+                "subtype": "stateless"
+            }
+        },
+        {
+            "id": 55,
+            "type": "llm/remove_think",
+            "pos": [
+                2130,
+                200
+            ],
+            "size": {
+                "0": 140,
+                "1": 26
+            },
+            "flags": {},
+            "order": 15,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "llm",
+                    "type": "string",
+                    "link": 95,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "clean text",
+                    "type": "string",
+                    "links": [
+                        96
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 56,
+            "type": "output/watch",
+            "pos": [
+                2310,
+                70
+            ],
+            "size": {
+                "0": 750,
+                "1": 360
+            },
+            "flags": {},
+            "order": 18,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 96,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 36,
+            "type": "graph/virtual_sink",
+            "pos": [
+                2480,
+                530
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 16,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 90,
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "source",
+                    "type": "virtual",
+                    "links": null,
+                    "shape": 5,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "tool_result"
+            }
+        },
+        {
+            "id": 46,
+            "type": "agent/agent_prompt_builder",
+            "pos": [
+                650,
+                350
+            ],
+            "size": {
+                "0": 250,
+                "1": 180
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "controller",
+                    "type": "string",
+                    "link": 67,
+                    "pos": null,
+                    "dir": null
+                },
+                {
+                    "name": "tools",
+                    "type": "string",
+                    "link": 99,
+                    "pos": null,
+                    "dir": null,
+                    "slot_index": 1
+                },
+                {
+                    "name": "exec",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "prompt",
+                    "type": "string",
+                    "links": [
+                        69,
+                        97
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "GraphLLM",
+                    "type": "string",
+                    "links": null
+                },
+                {
+                    "name": "variables",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "tools_format": "markdown",
+                "agent_type": "ReAct(xml)",
+                "Tools": "markdown",
+                "Agent": "ReAct(xml)",
+                "template": "{v:prompt_template}"
+            }
+        },
+        {
+            "id": 50,
+            "type": "agent/execute_tool_call",
+            "pos": [
+                2140,
+                570
+            ],
+            "size": {
+                "0": 140,
+                "1": 66
+            },
+            "flags": {},
+            "order": 14,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 86,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "result",
+                    "type": "string",
+                    "links": [
+                        90
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "tool out",
+                    "type": "string",
+                    "links": [
+                        88
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "llm out",
+                    "type": "string",
+                    "links": []
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 32,
+            "type": "output/watch",
+            "pos": [
+                2320,
+                650
+            ],
+            "size": {
+                "0": 730,
+                "1": 210
+            },
+            "flags": {},
+            "order": 17,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 88,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 27,
+            "type": "graph/variable",
+            "pos": [
+                -30,
+                760
+            ],
+            "size": {
+                "0": 680,
+                "1": 340
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 4,
+            "mode": 0,
+            "properties": {
+                "identifier": "prompt_template",
+                "parameters": "{p:bos}\n\n{p:system}\nYou are a AI task scheduler. Your job is to find the next logical step toward solving the user problem.\n\n## Tools\n{p:tools}\n\n## Objective\n\nUse the following template to process the next logical step:\n```\n<thinking> Your comments about what you achieved so far and what to do next </thinking>\n<action> The action to perform and its parameters. The specific format is described later. </action>\n<result> The result of the action </result>\n```\n\nformat of the action field:\n- The action field is enclosed between <action> and </action> tags.\n- The name of the action is inserted between <action_name> and </action_name> tags.\n- Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n- Only the value of the parameter is specified. The name of the parameter is omitted.\n- The parameters can be multiline strings\n- Example: <action><action_name>eval</action_name><action_parameter name=\"expression\">2+3</action_parameter></action>\n\n## Rules\n- If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n- The input to query_file() should be a very detailed question about what you want from the external agent.\n- Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n- Use query_file() to analyze downloaded web pages\n- use the eval tool or python code to perform math calculations.\n{p:hints}{p:eom}\n\n{p:user}\nYour job is to analyze the trace log and then determine what step should follow next.\n\nTrace log:\n```\nQuestion: {p:question}\n{p:history}\n```\n\nTell me the next step to complete the trace log.\n{p:eom}\n\n{p:assistant}\n{p:eom}"
+            }
+        },
+        {
+            "id": 57,
+            "type": "output/watch",
+            "pos": [
+                1430,
+                760
+            ],
+            "size": {
+                "0": 680,
+                "1": 330
+            },
+            "flags": {},
+            "order": 13,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 97,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 24,
+            "type": "graph/variable",
+            "pos": [
+                700,
+                760
+            ],
+            "size": {
+                "0": 680,
+                "1": 340
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "properties": {
+                "identifier": "react_deepseek",
+                "parameters": "root ::= (planning? thought action observation)\n\nplanning ::=  \"<think>\\n\" sentencen \"</think>\" \"\\n\"+\nthought ::=   \"<thinking>\" sentencen \"</thinking>\\n\"\n#le parentesi in action per evitare che ce ne siano di innestate\naction  ::= \"<action>\" actionname actionparam* \"</action>\\n\"\nactionname ::= \"<action_name>\" sentence \"</action_name>\"\nactionparam ::= \"<action_parameter name=\\\"\" word \"\\\">\" sentencen \"</action_parameter>\"\nobservation  ::= \"<result>\" sentencen \"</result>\\n\"\n\n\nsentence ::= [^\\n<]+\nsentencep ::= [^\\n.]+ \".\"\nsentencen ::= ([^<] | \"< \")+\nword ::= [^\\n<>\"]+"
+            }
+        },
+        {
+            "id": 58,
+            "type": "other/repeat",
+            "pos": [
+                355,
                 460
             ],
             "size": {
                 "0": 210,
-                "1": 248
+                "1": 58
             },
             "flags": {},
-            "order": 3,
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 98,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        99
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "repetitions": 0
+            }
+        },
+        {
+            "id": 51,
+            "type": "agent/tools_list",
+            "pos": [
+                20,
+                420
+            ],
+            "size": [
+                260,
+                250
+            ],
+            "flags": {},
+            "order": 6,
             "mode": 0,
             "outputs": [
                 {
                     "name": "tools",
                     "type": "string",
                     "links": [
-                        91
-                    ]
+                        98
+                    ],
+                    "slot_index": 0
                 }
             ],
             "properties": {
@@ -285,399 +716,6 @@
                         }
                     }
                 }
-            }
-        },
-        {
-            "id": 37,
-            "type": "graph/virtual_source",
-            "pos": [
-                340,
-                230
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "sink",
-                    "type": "virtual",
-                    "link": null,
-                    "shape": 5,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        52
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "tool_result"
-            }
-        },
-        {
-            "id": 21,
-            "type": "llm/llm_call",
-            "pos": [
-                1040,
-                350
-            ],
-            "size": {
-                "0": 1060,
-                "1": 160
-            },
-            "flags": {},
-            "order": 9,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 69,
-                    "pos": null,
-                    "dir": null,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        86,
-                        95
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "{\"grammar\": \"react_deepseek\", \"stop\": \"<result>\", \"force_system\":True,\"temperature\":0.5, \"print_prompt\":1, \"print_response\":\"partial\"}",
-                "template": "",
-                "subtype": "stateless"
-            }
-        },
-        {
-            "id": 55,
-            "type": "llm/remove_think",
-            "pos": [
-                2130,
-                200
-            ],
-            "size": {
-                "0": 140,
-                "1": 26
-            },
-            "flags": {},
-            "order": 14,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "llm",
-                    "type": "string",
-                    "link": 95,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "clean text",
-                    "type": "string",
-                    "links": [
-                        96
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 56,
-            "type": "output/watch",
-            "pos": [
-                2310,
-                70
-            ],
-            "size": {
-                "0": 750,
-                "1": 360
-            },
-            "flags": {},
-            "order": 17,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 96,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 36,
-            "type": "graph/virtual_sink",
-            "pos": [
-                2480,
-                530
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 15,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 90,
-                    "slot_index": 0,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "source",
-                    "type": "virtual",
-                    "links": null,
-                    "shape": 5,
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "tool_result"
-            }
-        },
-        {
-            "id": 46,
-            "type": "agent/agent_prompt_builder",
-            "pos": [
-                650,
-                350
-            ],
-            "size": {
-                "0": 250,
-                "1": 180
-            },
-            "flags": {},
-            "order": 7,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "controller",
-                    "type": "string",
-                    "link": 67,
-                    "pos": null,
-                    "dir": null
-                },
-                {
-                    "name": "tools",
-                    "type": "string",
-                    "link": 91,
-                    "pos": null,
-                    "dir": null,
-                    "slot_index": 1
-                },
-                {
-                    "name": "exec",
-                    "type": "string",
-                    "link": null,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "prompt",
-                    "type": "string",
-                    "links": [
-                        69,
-                        97
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "GraphLLM",
-                    "type": "string",
-                    "links": null
-                },
-                {
-                    "name": "variables",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "tools_format": "markdown",
-                "agent_type": "ReAct(xml)",
-                "Tools": "markdown",
-                "Agent": "ReAct(xml)",
-                "template": "{v:prompt_template}"
-            }
-        },
-        {
-            "id": 50,
-            "type": "agent/execute_tool_call",
-            "pos": [
-                2140,
-                570
-            ],
-            "size": {
-                "0": 140,
-                "1": 66
-            },
-            "flags": {},
-            "order": 13,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 86,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "result",
-                    "type": "string",
-                    "links": [
-                        90
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "tool out",
-                    "type": "string",
-                    "links": [
-                        88
-                    ],
-                    "slot_index": 1
-                },
-                {
-                    "name": "llm out",
-                    "type": "string",
-                    "links": []
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 32,
-            "type": "output/watch",
-            "pos": [
-                2320,
-                650
-            ],
-            "size": {
-                "0": 730,
-                "1": 210
-            },
-            "flags": {},
-            "order": 16,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 88,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 27,
-            "type": "graph/variable",
-            "pos": [
-                -30,
-                760
-            ],
-            "size": {
-                "0": 680,
-                "1": 340
-            },
-            "flags": {
-                "collapsed": false
-            },
-            "order": 5,
-            "mode": 0,
-            "properties": {
-                "identifier": "prompt_template",
-                "parameters": "{p:bos}\n\n{p:system}\nYou are a AI task scheduler. Your job is to find the next logical step toward solving the user problem.\n\n## Tools\n{p:tools}\n\n## Objective\n\nUse the following template to process the next logical step:\n```\n<thinking> Your comments about what you achieved so far and what to do next </thinking>\n<action> The action to perform and its parameters. The specific format is described later. </action>\n<result> The result of the action </result>\n```\n\nformat of the action field:\n- The action field is enclosed between <action> and </action> tags.\n- The name of the action is inserted between <action_name> and </action_name> tags.\n- Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n- Only the value of the parameter is specified. The name of the parameter is omitted.\n- The parameters can be multiline strings\n- Example: <action><action_name>eval</action_name><action_parameter name=\"expression\">2+3</action_parameter></action>\n\n## Rules\n- If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n- The input to query_file() should be a very detailed question about what you want from the external agent.\n- Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n- Use query_file() to analyze downloaded web pages\n- use the eval tool or python code to perform math calculations.\n{p:hints}{p:eom}\n\n{p:user}\nYour job is to analyze the trace log and then determine what step should follow next.\n\nTrace log:\n```\nQuestion: {p:question}\n{p:history}\n```\n\nTell me the next step to complete the trace log.\n{p:eom}\n\n{p:assistant}\n{p:eom}"
-            }
-        },
-        {
-            "id": 57,
-            "type": "output/watch",
-            "pos": [
-                1430,
-                760
-            ],
-            "size": {
-                "0": 680,
-                "1": 330
-            },
-            "flags": {},
-            "order": 10,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 97,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 24,
-            "type": "graph/variable",
-            "pos": [
-                700,
-                760
-            ],
-            "size": {
-                "0": 680,
-                "1": 340
-            },
-            "flags": {},
-            "order": 6,
-            "mode": 0,
-            "properties": {
-                "identifier": "react_deepseek",
-                "parameters": "root ::= (planning? thought action observation)\n\nplanning ::=  \"<think>\\n\" sentencen \"</think>\" \"\\n\"+\nthought ::=   \"<thinking>\" sentencen \"</thinking>\\n\"\n#le parentesi in action per evitare che ce ne siano di innestate\naction  ::= \"<action>\" actionname actionparam* \"</action>\\n\"\nactionname ::= \"<action_name>\" sentence \"</action_name>\"\nactionparam ::= \"<action_parameter name=\\\"\" word \"\\\">\" sentencen \"</action_parameter>\"\nobservation  ::= \"<result>\" sentencen \"</result>\\n\"\n\n\nsentence ::= [^\\n<]+\nsentencep ::= [^\\n.]+ \".\"\nsentencen ::= ([^<] | \"< \")+\nword ::= [^\\n<>\"]+"
             }
         }
     ],
@@ -755,14 +793,6 @@
             "string"
         ],
         [
-            91,
-            51,
-            0,
-            46,
-            1,
-            "string"
-        ],
-        [
             95,
             21,
             0,
@@ -784,6 +814,22 @@
             0,
             57,
             0,
+            "string"
+        ],
+        [
+            98,
+            51,
+            0,
+            58,
+            0,
+            "string"
+        ],
+        [
+            99,
+            58,
+            0,
+            46,
+            1,
             "string"
         ]
     ],
@@ -846,6 +892,9 @@
             "rotation": 0
         },
         "57": {
+            "rotation": 0
+        },
+        "58": {
             "rotation": 0
         }
     }
