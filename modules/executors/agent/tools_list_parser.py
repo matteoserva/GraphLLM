@@ -12,8 +12,8 @@ class ToolsListParser(BaseGuiParser):
         old_inputs = old_config.get("inputs", [])
         new_config["exec"] = self._calc_exec(old_inputs)
 
-        tools_dict = old_config["properties"]
-        tools_list = [el for el in tools_dict if tools_dict[el]]
-        new_config["conf"] = {"tools": tools_list}
+        tools_dict = old_config["properties"]["tools_list"]
+        tools_list = tools_dict
+        new_config["conf"] = {"tools_list": tools_list}
         
         return new_config

@@ -8,11 +8,6 @@ class AgentWeb(GenericTool):
     def __init__(self):
         pass
 
-    def eval(self,expression):
-        """Evaluates a mathematical expression in python notation and returns the result."""
-        val = eval(expression)
-        return val
-
     def download(self,url):
         """Downloads the webpage at url {url} and saves its html content to a temporary file"""
         fullargs = ["python3", "extras/scraper/scrape.py", url]

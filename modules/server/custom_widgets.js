@@ -410,6 +410,205 @@ class CustomHtmlCanvas {
 
 }
 
+class CustomToolSelector {
+        constructor(parent,name,options)
+    {
+        this.disabled = false
+        this.name=name
+        this.H = 15
+        this.type = "custom"
+        this.y=0
+        this.tools_list = this.initToolsList(options.tools_list)
+        this.div = this.makeElement(parent)
+
+
+        this.property = options.property
+        this.parent = parent
+        this.options = {multiline:false}
+        this.minHeight = 50
+        this.saved_content = null;
+    }
+
+    initToolsList(tools_list_data)
+    {
+        let tools_list = {}
+        for (let category in tools_list_data)
+        {
+            tools_list[category] = {}
+            for (let i in tools_list_data[category])
+            {
+                let tool_name = tools_list_data[category][i]
+                tools_list[category][tool_name] = {enabled: false}
+            }
+        }
+        return tools_list
+    }
+
+    updateCategoryCounter(category_name)
+    {
+        let category_counter = 0
+
+        for (let tool in this.tools_list[category_name])
+        {
+            if(this.tools_list[category_name][tool].enabled)
+            {
+                category_counter += 1;
+            }
+        }
+        let category_nodes = Array.from(this.div.querySelectorAll(".category"))
+        let filtered_node = category_nodes.filter((c) => c.dataset.category == category_name)[0];
+        filtered_node.querySelector(".category-counter").innerText = category_counter
+    }
+
+    makeElement(parentNode)
+    {
+        var dialog = parentNode
+        var div = document.createElement("div");
+
+
+        div.className = "tool-selection"
+
+
+
+
+        var innerHTML= ""
+        for (let category in this.tools_list) {
+            let tools = this.tools_list[category]
+
+
+            let h = ""
+            for (let tool in tools)
+            {
+                h += '<div class="tool" data-tool-name="' + tool + '">' + tool + '</div>\n';
+            }
+            let html = `
+            <div class="category" data-category="` + category + `">
+                      <div class="category-header"><span class="category-title">` + category + `</span><span class="category-counter">0</span></div>
+                      <div class="tool-selection-tools">` + h + `
+                      </div>
+                </div>
+            `
+            innerHTML += html;
+        }
+
+
+
+
+
+        div.innerHTML = innerHTML
+        div.querySelectorAll('.category-header').forEach(header => {
+          header.addEventListener('click', () => {
+            const toolsDiv = header.nextElementSibling;
+            toolsDiv.style.display = toolsDiv.style.display === 'block' ? 'none' : 'block';
+          });
+        });
+        div.querySelectorAll('.tool-selection .tool-selection-tools').forEach(header => {
+          header.parentNode.addEventListener('mouseleave', () => {
+            header.style.display = 'none';
+          });
+        });
+        div.querySelectorAll('.tool').forEach(header => {
+            let tool = header.dataset.toolName
+            let category = header.parentNode.parentNode.dataset.category
+            this.tools_list[category][tool].node = header
+          header.addEventListener('click', () => {
+            let becomeActive = !header.classList.contains("selected")
+            if(!becomeActive)
+            {
+                header.classList.remove("selected")
+            }
+            else
+            {
+                header.classList.add("selected")
+            }
+
+            this.tools_list[category][tool].enabled = becomeActive
+            this.updateCategoryCounter(category)
+            this.updateParent()
+          });
+        });
+        return div
+
+    }
+
+    appendElement(dialog)
+    {
+        dialog.appendChild(this.div);
+    }
+
+    draw(ctx, node, widget_width, y, H)
+    {
+
+
+    }
+
+    configureSize(aSpace,hSpace)
+    {
+
+
+    }
+
+    updateParent()
+    {
+        let val = {}
+        for(let cat in this.tools_list)
+        {
+            val[cat] = {}
+            for (let tool in this.tools_list[cat])
+            {
+                let el = {}
+                el.enabled = this.tools_list[cat][tool].enabled
+                val[cat][tool] = el
+            }
+        }
+        this.parent.notifyValue(this,this.property,val)
+
+    }
+
+    setValue(k,v)
+    {
+        if(this.property && this.property == k && v &&  this.saved_content != v)
+        {
+            ;
+        }
+        else
+        {
+            return;
+        }
+        for (let cat in v)
+        {
+            if (!(cat in this.tools_list))
+            {
+                continue;
+            }
+            for (let tool in v[cat])
+            {
+                if(!(tool in this.tools_list[cat]))
+                {
+                    continue;
+                }
+                this.tools_list[cat][tool].enabled = v[cat][tool].enabled;
+                 if(!this.tools_list[cat][tool].enabled)
+                {
+                    this.tools_list[cat][tool].node.classList.remove("selected")
+                }
+                else
+                {
+                    this.tools_list[cat][tool].node.classList.add("selected")
+                }
+            }
+            this.updateCategoryCounter(cat)
+        }
+
+    }
+    getMinHeight()
+    {
+        return this.minHeight;
+    }
+
+}
+
+
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }

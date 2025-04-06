@@ -12,7 +12,11 @@ class ToolsListNode(GenericExecutor):
         pass
 
     def __call__(self, *args):
-        tool_classes = self.properties["tools"]
-        operators = self.tools_factory.get_operators(tool_classes)
-        self.properties["free_runs"] = 1
+        tools_list = self.properties["tools_list"]
+        tool_classes = [el for el in tools_list]
+        all_operators = self.tools_factory.get_operators(tool_classes)
+        selected_operators = [op for cat in tools_list for op in tools_list[cat] if tools_list[cat][op]["enabled"]]
+
+        operators = [el for el in all_operators if el["name"] in selected_operators]
+        #self.properties["free_runs"] = 1
         return [operators]

@@ -377,6 +377,11 @@ class DivContainer {
             var elem = new CustomFileDrop(this, name,options)
             this.addElement(elem)
         }
+        else if(type=="tools_selector")
+        {
+            var elem = new CustomToolSelector(this, name,options)
+            this.addElement(elem)
+        }
         else
         {
             var elem = new CustomTextarea(this, name,options)
