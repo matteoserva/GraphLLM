@@ -7,6 +7,7 @@ class GraphHandler {
 
     connect()
     {
+		this.canvas.onMouse = this.processMouseDownPre.bind(this)
         this.canvas.onMouseDown = this.processMouseDown.bind(this)
         this.canvas.onNodeMoved = this.onNodeMoved.bind(this)
 		this.canvas.onRender = this.onRender.bind(this)
@@ -48,6 +49,21 @@ class GraphHandler {
     //console.log("dragged")
   }
 
+  processMouseDownPre(e)
+  {
+	if(this.canvas.pointer_is_double) 
+	{
+		this.canvas.adjustMouseEvent(e);
+		var mouse = [e.clientX, e.clientY];
+		this.canvas.block_click = true;
+		//alert("val1: " + this.canvas.last_mouse + "   val2: " + mouse) 
+
+		this.canvas.pointer_is_double = false;
+		return true;
+	}
+	  
+  }
+
   processMouseDown(e)
   {
     if (this.canvas.selected_group)
@@ -84,8 +100,14 @@ class GraphHandler {
             }
 
     }
+	
+	//workaround on mobile, don't open the context menu while dragging with two fingers
+	/*if(this.canvas.pointer_is_double) 
+	{
+		var ref_window = this.canvas.getCanvasWindow();
+		LiteGraph.closeAllContextMenus(ref_window);
+	}*/
 
-    //this.last_mouse = this.canvas.last_mouse
   }
 
   groupCollapse(group)
@@ -160,7 +182,7 @@ class GraphHandler {
   processMouseUp(e)
   {
 
-          var now = LiteGraph.getTime();
+        var now = LiteGraph.getTime();
         var previousClick = this.previousClick || [0,0]
         this.previousClick = [now,this.canvas.last_mouseclick].concat( [previousClick[0], previousClick[1]])
         var total = this.previousClick[0] - this.previousClick[3]
@@ -179,6 +201,29 @@ class GraphHandler {
                 this.canvas.node_dragged.onDblClick();
             }
         }
+		
+		//workaround on mobile, open the right click menu if tapping with second finger
+		var is_secondary = e.isPrimary === false;
+		if(is_secondary)
+		{
+			// is it hover a node ?
+			var node = null;
+			/*if (node){
+				if(Object.keys(this.selected_nodes).length
+				   && (this.selected_nodes[node.id] || e.shiftKey || e.ctrlKey || e.metaKey)
+				){
+					// is multiselected or using shift to include the now node
+					if (!this.selected_nodes[node.id]) this.selectNodes([node],true); // add this if not present
+				}else{
+					// update selection
+					this.selectNodes([node]);
+				}
+			}
+			*/
+			// show menu on this node
+			this.canvas.processContextMenu(node, e);
+			//alert("is secondary")
+		}
 
         if(this.canvas.selected_group)
         {
