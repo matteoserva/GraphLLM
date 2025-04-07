@@ -51,8 +51,14 @@ class TitlebarContainer {
         var dialog = document.createElement("div");
         dialog.className = "titlebar-container";
         dialog.style= "position: absolute"
-        dialog.innerHTML = `<div class="titlebar-header" style="height: ` + LiteGraph.NODE_TITLE_HEIGHT + `px;"><img src="img/circle.png" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
-        <div class="titlebar-dialog" style="display: none">ciao</div>`
+        dialog.innerHTML = `
+		<div class="titlebar-header" style="height: ` + LiteGraph.NODE_TITLE_HEIGHT + `px;">
+			<div class="titlebar-buttons">
+				<div class="titlebar-rotate">R</div>
+				<div class="titlebar-delete">D</div>
+			</div>
+			<img src="img/circle.png" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
+        <div class="titlebar-dialog">ciao</div>`
 
 
 
@@ -69,6 +75,9 @@ class TitlebarContainer {
 			{
 				dialog.classList.add("focused")
 			}
+        });
+		dialog.querySelector(".titlebar-delete").addEventListener('click', () => {
+            this.parent.graph.remove(this.parent);
         });
 		dialog.tabIndex=0;
 		dialog.addEventListener('focusout', () => {

@@ -278,6 +278,24 @@ div.tool-selection .tool.selected {
 	margin-left: auto;
 }
 
+.titlebar-container > .titlebar-dialog {
+	display: none;
+}
+
+.titlebar-container .titlebar-buttons {
+	display: none;
+}
+
+.titlebar-container .titlebar-buttons > * {
+	padding: 2px;
+	cursor: pointer;
+}
+
+.titlebar-container.focused  .titlebar-buttons {
+	display: flex !important;
+	flex-direction: row;
+}
+
 .titlebar-container.focused > .titlebar-dialog {
 	display: block !important;
 	background-color: black;
