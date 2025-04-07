@@ -263,3 +263,33 @@ div.tool-selection .tool {
 div.tool-selection .tool.selected {
       background: #008000 !important;
     }
+	
+/*
+
+	TITLEBAR container
+
+*/
+
+.titlebar-container > .titlebar-header {
+	float: right;
+	padding: 5px;
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+}
+
+.titlebar-container.focused > .titlebar-dialog {
+	display: block !important;
+	background-color: black;
+	
+	padding: 5px;
+}
+
+.titlebar-container.focused {
+	box-shadow: 0 0 0 2px white;
+}
+
+.titlebar-container{
+	display: flex;
+	flex-direction: column;
+}

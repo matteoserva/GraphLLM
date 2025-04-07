@@ -51,10 +51,31 @@ class TitlebarContainer {
         var dialog = document.createElement("div");
         dialog.className = "titlebar-container";
         dialog.style= "position: absolute"
-        dialog.innerHTML = `<div style="float: right; padding: 5px; display:flex; align-items: center; height: ` + LiteGraph.NODE_TITLE_HEIGHT + `px;"><img src="img/circle.png" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
-        <div>ciao</div>`
+        dialog.innerHTML = `<div class="titlebar-header" style="height: ` + LiteGraph.NODE_TITLE_HEIGHT + `px;"><img src="img/circle.png" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
+        <div class="titlebar-dialog" style="display: none">ciao</div>`
 
-        //dialog.style.height = this.height + "px";
+
+
+		let titledialog = dialog.querySelector(".titlebar-dialog");
+		let titleheader = dialog.querySelector(".titlebar-header");
+		titleheader.addEventListener('click', () => {
+            let wasVisible = dialog.classList.contains("focused")
+            //titledialog.style.display = wasVisible ? 'none' : 'block';
+            if(wasVisible)
+			{
+				dialog.classList.remove("focused")
+			}
+			else
+			{
+				dialog.classList.add("focused")
+			}
+        });
+		dialog.tabIndex=0;
+		dialog.addEventListener('focusout', () => {
+            //titledialog.style.display = "none"; 
+			dialog.classList.remove("focused")
+        });
+		
 		
 		setTimeout(function(){
             if(this.parent.id)
