@@ -110,6 +110,9 @@ class WebBrige {
 
             }
         }
+		else if(event.ctrlKey && event.key == "s") {
+            this.save()
+        }
         else
         {
             input_handled = false
