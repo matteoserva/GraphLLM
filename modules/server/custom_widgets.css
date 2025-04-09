@@ -204,11 +204,33 @@ div.div-container div.CustomTextOutput span[title] > span.katex-display {
 display:inline-block
 }
 
+/*
+   MARKDOWN
+*/
+
 div.div-container div.CustomTextOutput.markdown_on menclose[notation=box] {
     border: 3px solid white;
     padding: 5px;
 }
 
+div.div-container div.CustomTextOutput.markdown_on td{
+    border: 2px solid white !important;
+    padding: 4px;
+}
+
+div.div-container div.CustomTextOutput.markdown_on th{
+    border: 3px solid white !important;
+    padding: 4px;
+}
+
+div.div-container div.CustomTextOutput.markdown_on table{
+    border: 3px solid white;
+}
+
+
+/*
+   TOOL SELECTION
+*/
 
 
 div.tool-selection .category {
