@@ -25,7 +25,8 @@ class FormatterCustom:
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw", "system", "user", "assistant"]
-        elif model_name.lower().find("qwen2") >= 0 or model_name.lower().find("qwq") >= 0:
+        elif (model_name.lower().find("qwen2") >= 0 or model_name.lower().find("qwq") >= 0 or
+              (model_name.lower().find("deepcogito") >= 0) and model_name.lower().find("qwen") >= 0) :
             formatter = {}
             formatter["bos"] = ""
             formatter["bor"] = "<|im_start|>"
