@@ -3,6 +3,8 @@ from modules.executors.common import solve_placeholders,solve_prompt_args
 from modules.formatter import solve_templates
 from modules.formatter import PromptBuilder
 from modules.tool_call.tools_factory import ToolsFactory
+import json
+
 
 class AgentHistoryBuilderNode(GenericExecutor):
     node_type = "agent_prompt_builder"
@@ -67,6 +69,33 @@ class AgentHistoryBuilderNode(GenericExecutor):
         res = "\n".join(textlist)
         return res
 
+    def _format_tools_json(self,tools):
+        {"type": "function", "function": {"name": "get_current_temperature", "description": "Get current temperature at a location.", "parameters": {"type": "object", "properties": {"location": {"type": "string", "description": "The location to get the temperature for, in the format \"City, State, Country\"."}, "unit": {"type": "string", "enum": ["celsius", "fahrenheit"], "description": "The unit to return the temperature in. Defaults to \"celsius\"."}}, "required": ["location"]}}}
+        ops = [el for el in tools]
+        textlist = []
+        for op in ops:
+            row = {"type":"function"}
+            function = {"name": op["name"]}
+            row["function"] = function
+
+            if op["doc"] is not None:
+                function["description"] = op["doc"]
+            parameters = {"type":"object"}
+            function["parameters"] = parameters
+            properties = [el["name"] for el in op["params"]]
+            parameters["properties"] = properties
+            rowstring = json.dumps(row)
+            textlist.append(rowstring)
+        res = "\n".join(textlist)
+        return res
+
+    def _format_tools(self,tools,format="markdown"):
+        if format == "json":
+            res = self._format_tools_json(tools)
+        else:
+            res = self._format_tools_markdown(tools)
+        return res
+
     def __call__(self,prompt_args):
         single_shot = len(prompt_args) == 0 or (prompt_args[0] is None and len(prompt_args)< 3) # no controller and no exec
         if single_shot:
@@ -82,7 +111,8 @@ class AgentHistoryBuilderNode(GenericExecutor):
         if len(history) == 0:
             agent_variables["history"] = "<!-- no action performed yet -->"
 
-        formatted_ops = self._format_tools_markdown(tools_list)
+        tools_format = self.properties.get("tools_format","markdown")
+        formatted_ops = self._format_tools(tools_list,tools_format)
         agent_variables["tools"] = formatted_ops
 
         m = solve_prompt_args(self.current_prompt, prompt_subs)

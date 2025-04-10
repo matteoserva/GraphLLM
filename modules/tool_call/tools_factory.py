@@ -43,8 +43,8 @@ def _load_available_tools():
             d = inspect.getfullargspec(c)
             params = d[0][1:]
             e = len(params)
-
-            params = [{"name": el} for el in params]
+            default_params = d.defaults if d.defaults else []
+            params = [{"name": el, "required": ((i + len(default_params)) < len(params))} for i,el in enumerate(params) ]
             row = {}
             row["name"] = op
             row["params"] = params
