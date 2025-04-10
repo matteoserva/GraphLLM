@@ -267,6 +267,10 @@ div.tool-selection .category-title {
       flex: 1;
     }
 
+div.tool-selection .category-counter {
+      margin-right: 5px;
+    }
+
 div.tool-selection .tool-selection-tools {
         display: none;
         background-color: #302020;
