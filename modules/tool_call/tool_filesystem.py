@@ -8,8 +8,16 @@ class AgentFilesystem(GenericTool):
     def __init__(self):
         pass
 
-    def _ls(self,dirname):
-        """outputs the content of the directory dirname."""
+    def ls(self,dirname):
+        """
+        Lists the content of a specified directory.
+
+        Args:
+            dirname (str): The directory path to list.
+
+        Returns:
+            str: A string containing the directory contents, including ".\n..\nciao.txt\npagina.md".
+        """
         return ".\n..\nciao.txt\npagina.md"
 
     def read_file(self,file_name):

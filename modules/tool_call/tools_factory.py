@@ -48,7 +48,11 @@ def _load_available_tools():
             row = {}
             row["name"] = op
             row["params"] = params
-            row["doc"] = c.__doc__
+            doc = c.__doc__
+            doc = doc.strip().split("\n")[0]
+            if doc[-1] == ".":
+                doc = doc[:-1]
+            row["doc"] = doc
 
             tool_info["operators"].append(row)
 
