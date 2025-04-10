@@ -281,6 +281,15 @@ div.tool-selection .tool-selection-tools {
 
     }
 
+div.tool-selection .category.focused .tool-selection-tools{
+      display: block !important;
+    }
+
+/*div.tool-selection .category.focused .tool-selection-tools-outer{
+      position: relative;
+    }
+    */
+
 div.tool-selection .category-header input{
         right: 4px;
         position: absolute;

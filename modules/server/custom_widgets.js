@@ -538,14 +538,14 @@ class CustomToolSelector {
         div.innerHTML = innerHTML
         div.querySelectorAll('.category-header').forEach(header => {
           header.addEventListener('click', () => {
-            const toolsDiv = header.nextElementSibling;
-            let wasVisible = toolsDiv.style.display === 'block'
+            const toolsDiv = header.parentNode.querySelector(".tool-selection-tools");
+            let wasVisible = header.parentNode.classList.contains("focused")
             if(!wasVisible)
             {
                 this.collapseCategories()
             }
 
-            toolsDiv.style.display = wasVisible ? 'none' : 'block';
+            //toolsDiv.style.display = wasVisible ? 'none' : 'block';
             if(wasVisible)
             {
                 header.parentNode.classList.remove("focused")
@@ -567,7 +567,7 @@ class CustomToolSelector {
             header.classList.remove("focused")
           });
           header.addEventListener('focusin', (e) => {
-            header.classList.add("focused")
+            //header.classList.add("focused")
           });
 
         });
@@ -576,25 +576,27 @@ class CustomToolSelector {
             header.style.display = 'none';
           });
         });*/
-        div.querySelectorAll('.tool').forEach(header => {
-            let tool = header.dataset.toolName
-            let category = header.parentNode.parentNode.dataset.category
-            this.tools_list[category][tool].node = header
-          header.addEventListener('click', () => {
-            let becomeActive = !header.classList.contains("selected")
-            if(!becomeActive)
-            {
-                header.classList.remove("selected")
-            }
-            else
-            {
-                header.classList.add("selected")
-            }
+        div.querySelectorAll('.category').forEach(categoryNode => {
+            categoryNode.querySelectorAll('.tool').forEach(header => {
+                    let tool = header.dataset.toolName
+                    let category = categoryNode.dataset.category
+                    this.tools_list[category][tool].node = header
+                  header.addEventListener('click', () => {
+                    let becomeActive = !header.classList.contains("selected")
+                    if(!becomeActive)
+                    {
+                        header.classList.remove("selected")
+                    }
+                    else
+                    {
+                        header.classList.add("selected")
+                    }
 
-            this.tools_list[category][tool].enabled = becomeActive
-            this.updateCategoryCounter(category)
-            this.updateParent()
-          });
+                    this.tools_list[category][tool].enabled = becomeActive
+                    this.updateCategoryCounter(category)
+                    this.updateParent()
+                  });
+            });
         });
 
         return div
