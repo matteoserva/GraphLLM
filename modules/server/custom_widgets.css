@@ -231,7 +231,13 @@ div.div-container div.CustomTextOutput.markdown_on table{
 /*
    TOOL SELECTION
 */
-
+div.tool-selection {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: auto;
+    height: 105px;
+}
 
 div.tool-selection .category {
       border:1px solid gray;
