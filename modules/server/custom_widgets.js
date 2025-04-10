@@ -420,7 +420,7 @@ class CustomToolSelector {
         this.y=0
         this.tools_list = this.initToolsList(options.tools_list)
         this.div = this.makeElement(parent)
-        this.updateCategoryView()
+
 
 
         this.property = options.property
@@ -428,6 +428,9 @@ class CustomToolSelector {
         this.options = {multiline:false}
         this.minHeight = 50
         this.saved_content = null;
+
+        this.updateCategoryView()
+        this.updateParent()
     }
 
     initToolsList(tools_list_data)
