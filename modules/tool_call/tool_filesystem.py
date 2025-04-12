@@ -4,6 +4,7 @@ import tempfile
 
 class AgentFilesystem(GenericTool):
     tool_name = "filesystem"
+    properties = {"function_priorities": {"answer_file":90}}
 
     def __init__(self):
         pass
