@@ -114,6 +114,10 @@ class FormatterJinja:
             self.optional_system = True
             return True
 
+        if model_name.lower().find("llama-4-") >= 0:
+            self.optional_system = True
+            return True
+
         return False
 
     def build_prompt_j(self, messages, force_system=False,custom_sysprompt = False, **kwargs):

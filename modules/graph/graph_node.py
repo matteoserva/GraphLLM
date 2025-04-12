@@ -1,5 +1,5 @@
 from .executor_factory import ExecutorFactory
-from modules.executors.common import GenericExecutor
+from modules.executors.common import GenericExecutor, ExecutorOutput
 from ..formatter import solve_templates
 import sys
 import threading
@@ -29,9 +29,16 @@ class GraphNode:
         self.executor.graph = graph
 
         if isinstance(self.executor,GenericExecutor):
-            self.executor.graph_data = node_graph_parameters
-            self.executor.properties = {"free_runs": 0, "input_rule":"AND", "input_active": []}
             self.executor.node = self
+            self.executor.graph_data = node_graph_parameters
+
+            default_properties = {"free_runs": 0, "input_rule":"AND", "wrap_input": False, "input_active": []}
+            if not hasattr(self.executor, "properties"):
+                self.executor.properties = {}
+            for el in default_properties:
+                if el not in self.executor.properties:
+                    self.executor.properties[el] = default_properties[el]
+
 
         self.tid = None
         self["last_output"] = [None]
@@ -83,6 +90,11 @@ class GraphNode:
 
     def get_inputs(self):
         inputs = [el for el in self["inputs"]]
+
+        if self.executor.properties["wrap_input"]:
+            inputs = [el if isinstance(el, ExecutorOutput) else ExecutorOutput(el) for el in inputs]
+        else:
+            inputs = [el.data if isinstance(el,ExecutorOutput) else el for el in inputs ]
         return inputs
 
     def get_outputs(self):
@@ -102,6 +114,7 @@ class GraphNode:
 
         if self["free_runs"] > 0:
             self["free_runs"] -= 1
+            self.executor.properties["free_runs"] = self["free_runs"]
             inputs = []
             consume_inputs = [False] * len(inputs)
         elif self.input_rule == "XOR":
@@ -173,7 +186,8 @@ class GraphNode:
         node = self
         input_rule = self._get_input_rule()
 
-        missing_inputs = len([el for el in node["inputs"] if el is None])
+        missing_inputs = [1 if el is None and node["backwards"][i] is not None else 0 for i, el in enumerate(node["inputs"][:len(node["backwards"])])]
+        missing_inputs = sum(missing_inputs)
         blocked_outputs = len([el for el in node["outputs"] if not el is None])
         if ( input_rule == "OR"):
             available_inputs = len([el for el in node["inputs"] if el is not None])

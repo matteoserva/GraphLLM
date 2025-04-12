@@ -8,8 +8,7 @@
     {
     this.addInput("in","string");
 
-    this.addOutput("out","string");
-    this.addOutput("raw","string");
+    this.addOutput("simple","string");
     this.addOutput("GraphLLM","string");
     this.gui_node_config = {connection_limits: {max_outputs:3, min_outputs:3}}
     this.properties = {conf:"",subtype:"stateless",template:""  };

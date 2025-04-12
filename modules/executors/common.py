@@ -16,6 +16,16 @@ from .gui_node_builder import GuiNodeBuilder
 
 #metaclass=metaclass_protect("pre_initialize","set_template")
 
+class ExecutorOutput():
+    def __init__(self,data,meta={}):
+        self.data = data
+        self.meta = meta
+
+    def __str__(self):
+        return str(self.data)
+
+
+
 class GenericExecutor():
     def __init__(self, initial_parameters):
         """ initialize, set_parameters(conf) - set_dependencies(deps) - set_template(init) - setup_complete - execute"""
@@ -59,10 +69,14 @@ class BaseGuiParser:
         new_inputs = old_inputs
         new_inputs = [str(el[1]) + "[" + str(el[2]) + "]" if el else None for el in new_inputs]
         val_exec = []
-        for vel in new_inputs:
-            if not vel:
-                break
+
+        max_arg_pos = -1
+        for arg_pos, vel in enumerate(new_inputs):
+            if vel:
+                max_arg_pos = arg_pos
             val_exec.append(vel)
+        if max_arg_pos > 0:
+            val_exec = val_exec[:max_arg_pos+1]
         return val_exec
 
     def parse_node(self,old_config):
@@ -99,8 +113,19 @@ def solve_placeholders(base, confArgs, confVariables={}):
             base = base.replace(name, val)
         return base
 
+def solve_prompt_args(prompt, prompt_args):
+    annotated_args= [(0,el) for el in prompt_args]
+    annotated_args = [(1,el) if isinstance(el, dict) else (an,el) for an,el in annotated_args]
 
+    dict_args = [el for an,el in annotated_args if an == 1]
+    text_args = [el for an,el in annotated_args if an == 0]
 
+    m = prompt
+    for el in dict_args:
+        m = solve_placeholders(m, [], el)
+    m, _ = solve_templates(m, text_args)
+    m = solve_placeholders(m, text_args)
+    return m
 
 
 

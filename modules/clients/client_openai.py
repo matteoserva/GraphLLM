@@ -43,6 +43,8 @@ class OpenAIClient():
         data = self.get_models(base_url)
         if len(data) == 1:
              self.model_name = data[0]["id"]
+        if len(data) > 1 and data[0]["owned_by"] == "vllm":
+             self.model_name = data[0]["id"]
 
     def tokenize(self, p):
         request_body = {
@@ -96,10 +98,15 @@ class OpenAIClient():
         if "max_tokens" in params and params["max_tokens"] <= 0:
             del params["max_tokens"]
         model_name = self.model_name
+        extra_body = {}
         if messages[-1].get("role","") == "assistant":
-            extra_body = {}
             extra_body["add_generation_prompt"] = False
             extra_body["continue_final_message"] = True
+
+        if user_params and "grammar" in user_params:
+            extra_body["guided_grammar"] = user_params["grammar"]
+
+        if len(extra_body) > 0:
             params["extra_body"] = extra_body
 
         completion = self.client.chat.completions.create(model=self.model_name, messages=messages, **params)
@@ -122,6 +129,7 @@ class OpenAIClient():
     def connect(self):
         if not self.client:
             self.client = OpenAI(**self.extra_client_args)
+            self.client.models.list()
 
     def get_model_name(self):
         return "grok"

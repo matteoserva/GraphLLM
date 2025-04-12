@@ -7,5 +7,9 @@ class RemoveThinkNode(GenericExecutor):
 
     def __call__(self,prompt_args):
         res =prompt_args
-        res[0] = res[0].split("</think>")[-1].lstrip()
-        return res
+        text = res[0]
+        stripped = text.lstrip("\n ")
+        if stripped.startswith("<think>"):
+            text = text.split("</think>")[-1].lstrip()
+
+        return [text]

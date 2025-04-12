@@ -1,6 +1,6 @@
 from modules.formatter import PromptBuilder
 from modules.executors.common import GenericExecutor
-from modules.executors.common import solve_placeholders
+from modules.executors.common import solve_placeholders,solve_prompt_args
 from modules.formatter import solve_templates
 
 from modules.executors.common import BaseGuiParser
@@ -11,9 +11,6 @@ class PromptBuilderNode(GenericExecutor):
         self.current_prompt="{}"
         self.builder = PromptBuilder()
         self.client = node_graph_parameters["client"]
-
-    def initialize(self):
-        self.builder.load_model(self.client.get_model_name())
 
     def set_template(self,cl_args=None):
         for i,el in enumerate(cl_args):
@@ -26,13 +23,13 @@ class PromptBuilderNode(GenericExecutor):
             self.current_prompt = new_prompt
 
     def __call__(self,prompt_args):
-        m ,_ = solve_templates(self.current_prompt,prompt_args)
-        m = solve_placeholders(m,prompt_args)
+        m = solve_prompt_args(self.current_prompt,prompt_args)
+        #m ,_ = solve_templates(self.current_prompt,prompt_args)
+        #m = solve_placeholders(m,prompt_args)
 
         self.builder.reset()
         self.builder.add_request(m)
-        prompt = self.builder._build()
-        res = [m,prompt,self.builder.to_string("graphllm")]
+        res = [m,self.builder.to_string("graphllm")]
 
         return res
 

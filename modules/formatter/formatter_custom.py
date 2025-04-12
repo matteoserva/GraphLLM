@@ -25,7 +25,8 @@ class FormatterCustom:
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw", "system", "user", "assistant"]
-        elif model_name.lower().find("qwen2") >= 0 or model_name.lower().find("qwq") >= 0:
+        elif (model_name.lower().find("qwen2") >= 0 or model_name.lower().find("qwq") >= 0 or
+              (model_name.lower().find("deepcogito") >= 0) and model_name.lower().find("qwen") >= 0) :
             formatter = {}
             formatter["bos"] = ""
             formatter["bor"] = "<|im_start|>"
@@ -38,7 +39,8 @@ class FormatterCustom:
             formatter["assistant_name"] = "assistant"
 
             formatter["enable_system"] = True
-            formatter["roles"] = ["raw", "user", "assistant", "system"]
+            formatter["roles"] = ["raw", "user", "assistant", "system", "tool"]
+            formatter["role_string"] = {"tool": formatter["bor"] + "user" + formatter["eor"]}
 
             if model_name.lower().find("qwq") >= 0:
                 formatter["clean_thinking"] = True
@@ -386,6 +388,8 @@ class FormatterCustom:
             if el["role"] not in formatter["roles"]:
                 if el["role"] == "system" and force_system:
                     pass
+                elif el["role"] == "tool":
+                    el["role"] = "user"
                 else:
                     continue
 
@@ -411,7 +415,7 @@ class FormatterCustom:
                     else:
                         prompt = prompt + formatter["eom"]
         if not skip_final:
-            if "role_string" in formatter and el["role"] in formatter["role_string"]:
+            if "role_string" in formatter and "assistant" in formatter["role_string"]:
                 prompt = prompt + formatter["role_string"]["assistant"]
             else:
                 prompt = prompt + formatter["bor"] + formatter["assistant_name"] + formatter["eor"]

@@ -16,7 +16,11 @@ class GuiNodeBuilder:
 
     def _setPath(self, nodeType):
         self.config["class_name"] = type(self).__name__
-        self.config["node_type"] = nodeType
+        if "/" in nodeType:
+            self.config["node_type"] = nodeType
+        else:
+            module = self.__module__.split(".")[-2]
+            self.config["node_type"] = module + "/" + nodeType
         self.config["title"] = self.node_title
 
     def _setConnectionLimits(self, limits):
@@ -91,7 +95,7 @@ class GuiNodeBuilder:
 
         # add properties
         if len(self.config["properties"]):
-            res += "        this.properties = " + str(self.config["properties"]) + "\n"
+            res += "        this.properties = " + str(json.dumps(self.config["properties"])) + "\n"
             for el in self.config["extra_properties"]:
                 res += "            this.addProperty(" + json.dumps(el)[1:-1] + ");\n"
 

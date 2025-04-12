@@ -2,6 +2,13 @@
 # CHANGELOG for GraphLLM
 #
 
+# 12/04/2025
+- vllm grammar support
+- tool use widgets
+- new models: deepcogito, llama-4
+- new nodes: repeat, agent tools, udp network, agent prompt builder
+- support for multitouch on mobile
+- ctrl-s to save
 
 # 15/3/2025
 - support for gemma 3 and qwq

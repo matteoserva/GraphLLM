@@ -1,178 +1,7 @@
 {
-    "last_node_id": 66,
-    "last_link_id": 66,
+    "last_node_id": 70,
+    "last_link_id": 69,
     "nodes": [
-        {
-            "id": 33,
-            "type": "other/copy_unpack",
-            "pos": [
-                431.9767799999994,
-                65.47294999999998
-            ],
-            "size": {
-                "0": 140,
-                "1": 26
-            },
-            "flags": {},
-            "order": 13,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "vector_in",
-                    "type": "string",
-                    "link": 38,
-                    "slot_index": 0
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        43
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 34,
-            "type": "other/memory",
-            "pos": [
-                711.9767799999994,
-                62.472949999999976
-            ],
-            "size": {
-                "0": 210,
-                "1": 67
-            },
-            "flags": {},
-            "order": 24,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 43
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        44
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "separator": "\"\\n--\\n\""
-            }
-        },
-        {
-            "id": 31,
-            "type": "output/watch",
-            "pos": [
-                1096.976779999999,
-                71.47294999999998
-            ],
-            "size": {
-                "0": 210,
-                "1": 288.9735412597656
-            },
-            "flags": {},
-            "order": 30,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 44
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 35,
-            "type": "input/list",
-            "pos": [
-                62.976779999999344,
-                444.4729499999999
-            ],
-            "size": {
-                "0": 210,
-                "1": 209
-            },
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        45
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": [
-                    "a",
-                    "b",
-                    "{p:eos}"
-                ]
-            }
-        },
-        {
-            "id": 25,
-            "type": "tools/python_sandbox",
-            "pos": [
-                43,
-                67
-            ],
-            "size": {
-                "0": 210,
-                "1": 292.9735412597656
-            },
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        38
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "parameters": "val = [\n\"italy\",\n\"palestine\",\n\"hong kong\",\n\"Taiwan\",\n\"the Uyghurs\",\n\"Tibet\",\n\"USA\"\n]\n\n_O = [val]"
-            }
-        },
         {
             "id": 40,
             "type": "input/text_input",
@@ -185,7 +14,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 2,
+            "order": 0,
             "mode": 0,
             "outputs": [
                 {
@@ -214,7 +43,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 3,
+            "order": 1,
             "mode": 0,
             "outputs": [
                 {
@@ -243,25 +72,31 @@
                 "1": 66
             },
             "flags": {},
-            "order": 14,
+            "order": 13,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in1",
                     "type": "string",
                     "link": 47,
-                    "slot_index": 0
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
                 },
                 {
                     "name": "in2",
                     "type": "string",
                     "link": 48,
-                    "slot_index": 1
+                    "slot_index": 1,
+                    "pos": null,
+                    "dir": null
                 },
                 {
                     "name": "N",
                     "type": "string",
-                    "link": null
+                    "link": null,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -272,6 +107,11 @@
                         49
                     ],
                     "slot_index": 0
+                },
+                {
+                    "name": "sel",
+                    "type": "string",
+                    "links": null
                 }
             ],
             "properties": {}
@@ -294,7 +134,9 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 49
+                    "link": 49,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -323,13 +165,15 @@
                 "1": 88
             },
             "flags": {},
-            "order": 31,
+            "order": 32,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 50
+                    "link": 50,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {}
@@ -352,7 +196,9 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 53
+                    "link": 53,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {}
@@ -369,23 +215,29 @@
                 "1": 66
             },
             "flags": {},
-            "order": 15,
+            "order": 14,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 51
+                    "link": 51,
+                    "pos": null,
+                    "dir": null
                 },
                 {
                     "name": "2",
                     "type": "string",
-                    "link": 52
+                    "link": 52,
+                    "pos": null,
+                    "dir": null
                 },
                 {
                     "name": "N",
                     "type": "string",
-                    "link": null
+                    "link": null,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -396,67 +248,6 @@
                         53
                     ],
                     "slot_index": 0
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 36,
-            "type": "graph/standard_mux",
-            "pos": [
-                380,
-                446
-            ],
-            "size": {
-                "0": 140,
-                "1": 46
-            },
-            "flags": {},
-            "order": 12,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in1",
-                    "type": "string",
-                    "link": 45
-                },
-                {
-                    "name": "in2",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        46
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 37,
-            "type": "output/watch",
-            "pos": [
-                972,
-                447
-            ],
-            "size": {
-                "0": 210,
-                "1": 88
-            },
-            "flags": {},
-            "order": 23,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 46
                 }
             ],
             "properties": {}
@@ -475,14 +266,16 @@
             "flags": {
                 "collapsed": false
             },
-            "order": 17,
+            "order": 16,
             "mode": 0,
             "inputs": [
                 {
                     "name": "send",
                     "type": "string",
                     "link": 54,
-                    "slot_index": 0
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -517,7 +310,9 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 55
+                    "link": 55,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {}
@@ -534,14 +329,16 @@
                 "1": 58
             },
             "flags": {},
-            "order": 16,
+            "order": 15,
             "mode": 0,
             "inputs": [
                 {
                     "name": "send",
                     "type": "string",
                     "link": 56,
-                    "slot_index": 0
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -576,7 +373,9 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 57
+                    "link": 57,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {}
@@ -593,7 +392,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 4,
+            "order": 2,
             "mode": 0,
             "outputs": [
                 {
@@ -620,7 +419,7 @@
                 "1": 88
             },
             "flags": {},
-            "order": 5,
+            "order": 3,
             "mode": 0,
             "outputs": [
                 {
@@ -647,13 +446,15 @@
                 "1": 108
             },
             "flags": {},
-            "order": 6,
+            "order": 4,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": null
+                    "link": null,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -687,13 +488,15 @@
                 "1": 108
             },
             "flags": {},
-            "order": 7,
+            "order": 5,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": null
+                    "link": null,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -727,13 +530,15 @@
                 "1": 88
             },
             "flags": {},
-            "order": 18,
+            "order": 17,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 58
+                    "link": 58,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {}
@@ -750,13 +555,15 @@
                 "1": 88
             },
             "flags": {},
-            "order": 19,
+            "order": 18,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 60
+                    "link": 60,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {}
@@ -779,7 +586,9 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 61
+                    "link": 61,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {}
@@ -796,19 +605,23 @@
                 "1": 108
             },
             "flags": {},
-            "order": 20,
+            "order": 19,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
                     "link": 59,
-                    "slot_index": 0
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
                 },
                 {
                     "name": "N",
                     "type": "string",
-                    "link": null
+                    "link": null,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -840,7 +653,7 @@
                 "1": 89.48770904541016
             },
             "flags": {},
-            "order": 8,
+            "order": 6,
             "mode": 0,
             "outputs": [
                 {
@@ -862,12 +675,12 @@
                 87,
                 1441
             ],
-            "size": [
-                411.50845727539024,
-                112
-            ],
+            "size": {
+                "0": 411.5084533691406,
+                "1": 112
+            },
             "flags": {},
-            "order": 9,
+            "order": 7,
             "mode": 0,
             "properties": {
                 "identifier": "test_output",
@@ -886,13 +699,15 @@
                 "1": 88
             },
             "flags": {},
-            "order": 21,
+            "order": 20,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 62
+                    "link": 62,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {}
@@ -904,12 +719,12 @@
                 553,
                 1449
             ],
-            "size": [
-                254.30045727539004,
-                88
-            ],
+            "size": {
+                "0": 254.3004608154297,
+                "1": 88
+            },
             "flags": {},
-            "order": 10,
+            "order": 8,
             "mode": 0,
             "outputs": [
                 {
@@ -932,12 +747,12 @@
                 1352,
                 1082
             ],
-            "size": [
-                305.64114657315326,
-                253.09421608664752
-            ],
+            "size": {
+                "0": 305.6411437988281,
+                "1": 253.09422302246094
+            },
             "flags": {},
-            "order": 11,
+            "order": 9,
             "mode": 0,
             "outputs": [
                 {
@@ -959,33 +774,353 @@
                 1742,
                 1082
             ],
-            "size": [
-                512.4408785664054,
-                200
-            ],
+            "size": {
+                "0": 512.4408569335938,
+                "1": 200
+            },
             "flags": {},
-            "order": 22,
+            "order": 21,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
                     "link": 66,
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 33,
+            "type": "other/copy_unpack",
+            "pos": [
+                450,
+                130
+            ],
+            "size": {
+                "0": 140,
+                "1": 46
+            },
+            "flags": {},
+            "order": 31,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "vector_in",
+                    "type": "string",
+                    "link": 67,
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        43
+                    ],
                     "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 35,
+            "type": "input/list",
+            "pos": [
+                70,
+                130
+            ],
+            "size": {
+                "0": 210,
+                "1": 209
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        45
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": [
+                    "a",
+                    "b",
+                    "{p:eos}"
+                ]
+            }
+        },
+        {
+            "id": 36,
+            "type": "graph/standard_mux",
+            "pos": [
+                220,
+                470
+            ],
+            "size": {
+                "0": 140,
+                "1": 46
+            },
+            "flags": {},
+            "order": 22,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in1",
+                    "type": "string",
+                    "link": 45,
+                    "pos": null,
+                    "dir": null
+                },
+                {
+                    "name": "in2",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        46,
+                        67
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "sel",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 37,
+            "type": "output/watch",
+            "pos": [
+                480,
+                470
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 30,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 46,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 31,
+            "type": "output/watch",
+            "pos": [
+                1090,
+                130
+            ],
+            "size": {
+                "0": 210,
+                "1": 288.9735412597656
+            },
+            "flags": {},
+            "order": 34,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 44,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 34,
+            "type": "other/memory",
+            "pos": [
+                750,
+                130
+            ],
+            "size": {
+                "0": 210,
+                "1": 67
+            },
+            "flags": {},
+            "order": 33,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 43,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        44
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "separator": "\"\\n--\\n\""
+            }
+        },
+        {
+            "id": 67,
+            "type": "network/udp_sender",
+            "pos": [
+                400,
+                1630
+            ],
+            "size": {
+                "0": 210,
+                "1": 91
+            },
+            "flags": {},
+            "order": 23,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "message",
+                    "type": "string",
+                    "link": 68,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "port": 8765,
+                "ip": "127.0.0.1"
+            }
+        },
+        {
+            "id": 68,
+            "type": "input/text_input",
+            "pos": [
+                120,
+                1630
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        68
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "test1"
+            }
+        },
+        {
+            "id": 69,
+            "type": "network/udp_receiver",
+            "pos": [
+                700,
+                1620
+            ],
+            "size": {
+                "0": 210,
+                "1": 115
+            },
+            "flags": {},
+            "order": 12,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "message",
+                    "type": "string",
+                    "links": [
+                        69
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "port": 8765,
+                "iterations": 1,
+                "ip": "0.0.0.0"
+            }
+        },
+        {
+            "id": 70,
+            "type": "output/watch",
+            "pos": [
+                1020,
+                1620
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 24,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 69
                 }
             ],
             "properties": {}
         }
     ],
     "links": [
-        [
-            38,
-            25,
-            0,
-            33,
-            0,
-            "string"
-        ],
         [
             43,
             33,
@@ -1153,6 +1288,30 @@
             65,
             0,
             "string"
+        ],
+        [
+            67,
+            36,
+            0,
+            33,
+            0,
+            "string"
+        ],
+        [
+            68,
+            68,
+            0,
+            67,
+            0,
+            "string"
+        ],
+        [
+            69,
+            69,
+            0,
+            70,
+            0,
+            "string"
         ]
     ],
     "groups": [],
@@ -1160,5 +1319,112 @@
     "extra": {},
     "version": 0.4,
     "group_states": {},
-    "graph_name": "demo_nodes"
+    "graph_name": "demo_nodes",
+    "node_states": {
+        "31": {
+            "rotation": 0
+        },
+        "33": {
+            "rotation": 0
+        },
+        "34": {
+            "rotation": 0
+        },
+        "35": {
+            "rotation": 1
+        },
+        "36": {
+            "rotation": 0
+        },
+        "37": {
+            "rotation": 0
+        },
+        "38": {
+            "rotation": 0
+        },
+        "39": {
+            "rotation": 0
+        },
+        "40": {
+            "rotation": 0
+        },
+        "41": {
+            "rotation": 0
+        },
+        "42": {
+            "rotation": 0
+        },
+        "43": {
+            "rotation": 0
+        },
+        "44": {
+            "rotation": 0
+        },
+        "45": {
+            "rotation": 0
+        },
+        "46": {
+            "rotation": 0
+        },
+        "47": {
+            "rotation": 0
+        },
+        "48": {
+            "rotation": 0
+        },
+        "49": {
+            "rotation": 0
+        },
+        "50": {
+            "rotation": 0
+        },
+        "51": {
+            "rotation": 0
+        },
+        "52": {
+            "rotation": 0
+        },
+        "53": {
+            "rotation": 0
+        },
+        "54": {
+            "rotation": 0
+        },
+        "55": {
+            "rotation": 0
+        },
+        "56": {
+            "rotation": 0
+        },
+        "57": {
+            "rotation": 0
+        },
+        "58": {
+            "rotation": 0
+        },
+        "59": {
+            "rotation": 0
+        },
+        "60": {
+            "rotation": 0
+        },
+        "65": {
+            "rotation": 0
+        },
+        "66": {
+            "rotation": 0
+        },
+        "67": {
+            "rotation": 0
+        },
+        "68": {
+            "rotation": 0
+        },
+        "69": {
+            "rotation": 0
+        },
+        "70": {
+            "rotation": 0
+        }
+    }
 }

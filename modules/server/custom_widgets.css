@@ -204,7 +204,151 @@ div.div-container div.CustomTextOutput span[title] > span.katex-display {
 display:inline-block
 }
 
+/*
+   MARKDOWN
+*/
+
 div.div-container div.CustomTextOutput.markdown_on menclose[notation=box] {
     border: 3px solid white;
     padding: 5px;
+}
+
+div.div-container div.CustomTextOutput.markdown_on td{
+    border: 2px solid white !important;
+    padding: 4px;
+}
+
+div.div-container div.CustomTextOutput.markdown_on th{
+    border: 3px solid white !important;
+    padding: 4px;
+}
+
+div.div-container div.CustomTextOutput.markdown_on table{
+    border: 3px solid white;
+}
+
+
+/*
+   TOOL SELECTION
+*/
+div.tool-selection {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: auto;
+    height: 105px;
+}
+
+div.tool-selection .category {
+      border:1px solid gray;
+
+      /* border-radius: 10px; */
+      margin-bottom: 5px;
+
+      /* display: flex;
+      flex-direction: column; */
+    }
+
+div.tool-selection .category-header {
+      padding: 4px;
+
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      background-color: #202020;
+    }
+
+div.tool-selection .category.focused .category-header {
+      background-color: #404040 !important;
+    }
+
+div.tool-selection .category-title {
+      display: flex;
+      flex: 1;
+    }
+
+div.tool-selection .category-counter {
+      margin-right: 5px;
+    }
+
+div.tool-selection .tool-selection-tools {
+        display: none;
+        background-color: #302020;
+        position: absolute;
+        width: 100%;
+        border:2px solid white;
+        border-radius: 4px;
+
+    }
+
+div.tool-selection .category.focused .tool-selection-tools{
+      display: block !important;
+    }
+
+/*div.tool-selection .category.focused .tool-selection-tools-outer{
+      position: relative;
+    }
+    */
+
+div.tool-selection .category-header input{
+        right: 4px;
+        position: absolute;
+    }
+
+div.tool-selection .tool {
+      cursor: pointer;
+      border:2px solid white;
+      padding: 4px;
+    }
+
+div.tool-selection .tool.selected {
+      background: #008000 !important;
+    }
+	
+/*
+
+	TITLEBAR container
+
+*/
+
+.titlebar-container > .titlebar-header {
+	float: right;
+	padding: 5px;
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+}
+
+.titlebar-container > .titlebar-dialog {
+	display: none;
+}
+
+.titlebar-container .titlebar-buttons {
+	display: none;
+}
+
+.titlebar-container .titlebar-buttons > * {
+	padding: 2px;
+	cursor: pointer;
+}
+
+.titlebar-container.focused  .titlebar-buttons {
+	display: flex !important;
+	flex-direction: row;
+}
+
+.titlebar-container.focused > .titlebar-dialog {
+	display: block !important;
+	background-color: black;
+	
+	padding: 5px;
+}
+
+.titlebar-container.focused {
+	box-shadow: 0 0 0 2px white;
+}
+
+.titlebar-container{
+	display: flex;
+	flex-direction: column;
 }

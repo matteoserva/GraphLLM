@@ -1,9 +1,9 @@
 from modules.formatter import PromptBuilder
 from modules.formatter import solve_templates
-from modules.executors.common import solve_placeholders
+from modules.executors.common import solve_placeholders,solve_prompt_args
 from modules.common import readfile, merge_params
 from functools import partial
-from modules.executors.common import GenericExecutor
+from modules.executors.common import GenericExecutor,ExecutorOutput
 from modules.grammar import load_grammar,load_grammar_text
 from modules.clients.client import Client
 
@@ -75,7 +75,7 @@ class LlmExecutor(GenericExecutor):
                formatter_config = client.get_formatter_config()
            except:
                formatter_config = client.get_model_name()
-           builder.load_model(formatter_config)
+           #builder.load_model(formatter_config)
            self.client = client
 
 
@@ -114,16 +114,10 @@ class LlmExecutor(GenericExecutor):
         return response
 
     def basic_exec(self,text_prompt):
-        if text_prompt == "{p:eos}":
-            self.builder.reset()
-            return ["{p:eos}"]
+
         m = text_prompt
         client = self.client
         builder = self.builder
-        if isinstance(m,tuple):
-            messages = builder.add_request(m[1],m[0])
-        else:
-            messages = builder.add_request(m)
 
         if bool(self.print_prompt):
             x = self.print_prompt
@@ -134,7 +128,6 @@ class LlmExecutor(GenericExecutor):
         builder.add_response(res["content"], res["role"])
         self.builder.set_serialize_format("last")
         out0 = self.builder.to_string("last")
-        out0.get_inner()["send_chat"] = self.send_chat
         resp = [out0,res]
 
         return resp
@@ -171,31 +164,41 @@ class LlmExecutor(GenericExecutor):
             new_value, _ = solve_templates(self.sysprompt, [], variables)
             self.builder.set_param("sysprompt", new_value)
 
-class StatelessExecutor(LlmExecutor):
-    node_type = "stateless"
-    def __init__(self,client):
-        super().__init__(client)
 
-    def __call__(self,prompt_args):
-        m ,_ = solve_templates(self.current_prompt,prompt_args)
-        m = solve_placeholders(m,prompt_args)
-        self.builder.reset()
+    def __call__(self, prompt_args):
+        builder = self.builder
+
+        if len(prompt_args) > 0 and isinstance(prompt_args[0], str) and prompt_args[0] ==  "{p:eos}":
+            self.builder.reset()
+            return ["{p:eos}"]
+        elif len(prompt_args) > 0 and isinstance(prompt_args[0], dict) and "role" in prompt_args[0]:
+            m = prompt_args[0]
+            self.current_prompt = "{}"
+            builder.add_request(prompt_args[0]["content"], prompt_args[0]["role"])
+
+        elif len(prompt_args) > 0 and isinstance(prompt_args[0], tuple):
+            m = prompt_args[0]
+            self.current_prompt = "{}"
+            builder.add_request(m[1], m[0])
+        elif self.node_type == "stateful":
+            m ,_ = solve_templates(self.current_prompt,prompt_args)
+            m = solve_placeholders(m, prompt_args)
+            self.current_prompt="{}"
+            builder.add_request(m)
+        else:
+            m = solve_prompt_args(self.current_prompt, prompt_args)
+            self.builder.reset()
+            builder.add_request(m)
+
 
         res = self.basic_exec(m)
+        res = [ExecutorOutput(el,{"source_llm":self.node.name}) for el in res]
         return res
+
+
+class StatelessExecutor(LlmExecutor):
+    node_type = "stateless"
 
 class StatefulExecutor(LlmExecutor):
     node_type = "stateful"
-    def __init__(self,client):
-        super().__init__(client)
 
-    def __call__(self,prompt_args):
-        if len(prompt_args) > 0 and isinstance(prompt_args[0],tuple):
-            m = prompt_args[0]
-        else:
-            m ,_ = solve_templates(self.current_prompt,prompt_args)
-            m = solve_placeholders(m, prompt_args)
-        self.current_prompt="{}"
-
-        res = self.basic_exec(m)
-        return res

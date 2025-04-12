@@ -73,7 +73,11 @@
                             maxInput = i
                         }
                     }
-                     for (let i = numInputs-1; i > maxInput+1; i--) {
+                    if( connection_limits.min_inputs)
+                    {
+                        maxInput = Math.max(1+ maxInput, connection_limits.min_inputs-1 )
+                    }
+                     for (let i = numInputs-1; i > maxInput; i--) {
                              var saved_size = this.size
                             this.removeInput(i)
                             this.size[0] = saved_size[0]

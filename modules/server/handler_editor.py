@@ -33,6 +33,7 @@ class EditorHandler():
 
             myuuid = str(uuid.uuid4())
             text_replacement = '<script type="text/javascript" src="/editor/nodes.js?uuid=' + myuuid + '"></script>'
+            text_replacement = '<script type="text/javascript" src="/editor/nodes.js"></script>'
             content = open(filename, "rb").read()
             content = content.replace(b"<!-- NODE_LIST_PLACEHOLDER -->", text_replacement.encode())
 

@@ -32,3 +32,7 @@ T1:
              {p:eom}
     conf: {"temperature":0.01, "top_k":40, "print_prompt":false, "stop":"```"}
     exec: _C[1] _C[2]
+
+T2: 
+    type: remove_think
+    exec: T1

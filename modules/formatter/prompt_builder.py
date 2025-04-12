@@ -67,23 +67,10 @@ class Formatter:
 
 ## questa è la parte che non ha bisongno di conoscere il modello
 
-class FakeString(str):
-    def set_inner(self,value):
-        self.inner_value = value
-
-    def get_inner(self):
-        return self.inner_value
-
-    def regenerate(self,format=None):
-        new_text = self.inner_value["prompt_builder"].to_string(format)
-        res = FakeString(new_text)
-        res.set_inner(self.inner_value)
-        return res
-
 class PromptBuilder:
 
     def __init__(self):
-        self.formatter = Formatter()
+
         self.sysprompt = "You are a helpful assistant"
         self.force_system=False
         self.custom_default_sysprompt =  False
@@ -116,13 +103,8 @@ class PromptBuilder:
         bar = getattr(serialized, attr)
         return bar
 
-    def send_tokenized(self):
-        use_template =  self.formatter.use_template
-        send_tokenized = not use_template
-        return send_tokenized
-
-    def _build(self):
-        text_prompt = self.formatter.build_prompt(self.messages,force_system=self.force_system, custom_sysprompt = self.updated_sysprompt)
+    def _build(self,formatter):
+        text_prompt = formatter.build_prompt(self.messages,force_system=self.force_system, custom_sysprompt = self.updated_sysprompt)
         print(text_prompt, end="")
         return text_prompt
 
@@ -143,13 +125,7 @@ class PromptBuilder:
         else:
             text_prompt = str(self.messages)
 
-        res = FakeString(text_prompt)
-        res.set_inner({"prompt_builder": self})
-        return res
-
-
-    def load_model(self,model_name):
-        self.formatter.load_model(model_name)
+        return text_prompt
 
     def reset(self):
         self.messages = []

@@ -1,6 +1,6 @@
 {
-    "last_node_id": 28,
-    "last_link_id": 30,
+    "last_node_id": 30,
+    "last_link_id": 35,
     "nodes": [
         {
             "id": 22,
@@ -24,69 +24,16 @@
             "bgcolor": "#353"
         },
         {
-            "id": 24,
-            "type": "input/text_input",
-            "pos": [
-                147,
-                333
-            ],
-            "size": [
-                285,
-                234
-            ],
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        25
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": "hello"
-            }
-        },
-        {
             "id": 25,
             "type": "output/watch",
             "pos": [
                 1024,
                 460
             ],
-            "size": [
-                474,
-                222
-            ],
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 26
-                }
-            ],
-            "properties": {
-                "parameters": "<|im_start|>system\nYou are a helpful assistant<|im_end|>\n<|im_start|>user\nhi hello<|im_end|>\n<|im_start|>assistant\n"
-            }
-        },
-        {
-            "id": 26,
-            "type": "output/watch",
-            "pos": [
-                1026,
-                731
-            ],
-            "size": [
-                466,
-                231
-            ],
+            "size": {
+                "0": 474,
+                "1": 222
+            },
             "flags": {},
             "order": 5,
             "mode": 0,
@@ -94,11 +41,13 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 27
+                    "link": 34,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {
-                "parameters": "{p:bos}\n\n{p:system}\nYou are a helpful assistant{p:eom}\n\n{p:user}\nhi hello{p:eom}"
+                "parameters": "<|im_start|>system\nYou are a helpful assistant<|im_end|>\n<|im_start|>user\nhi hello<|im_end|>\n<|im_start|>assistant\n"
             }
         },
         {
@@ -108,19 +57,21 @@
                 1023,
                 172
             ],
-            "size": [
-                474,
-                238
-            ],
+            "size": {
+                "0": 474,
+                "1": 238
+            },
             "flags": {},
-            "order": 3,
+            "order": 4,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 24,
-                    "slot_index": 0
+                    "link": 33,
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {
@@ -128,25 +79,58 @@
             }
         },
         {
-            "id": 23,
-            "type": "text/prompt_builder",
+            "id": 24,
+            "type": "input/text_input",
             "pos": [
-                495,
-                328
+                150,
+                330
             ],
             "size": [
-                420,
-                395
+                330,
+                90
             ],
             "flags": {},
-            "order": 2,
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        32
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "hello"
+            }
+        },
+        {
+            "id": 29,
+            "type": "llm/prompt_builder",
+            "pos": [
+                640,
+                430
+            ],
+            "size": {
+                "0": 210,
+                "1": 128
+            },
+            "flags": {},
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 25,
-                    "slot_index": 0
+                    "link": 32
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 35,
+                    "slot_index": 1
                 },
                 {
                     "name": "N",
@@ -156,73 +140,119 @@
             ],
             "outputs": [
                 {
-                    "name": "out",
+                    "name": "simple",
                     "type": "string",
                     "links": [
-                        24
+                        33
                     ],
                     "slot_index": 0
-                },
-                {
-                    "name": "raw",
-                    "type": "string",
-                    "links": [
-                        26
-                    ],
-                    "slot_index": 1
                 },
                 {
                     "name": "GraphLLM",
                     "type": "string",
                     "links": [
-                        27
+                        34
                     ],
-                    "slot_index": 2
+                    "slot_index": 1
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
                 }
             ],
             "properties": {
                 "conf": "",
                 "subtype": "stateless",
-                "template": "hi {}"
+                "template": "hi: {} {p:exec2}"
+            }
+        },
+        {
+            "id": 30,
+            "type": "input/text_input",
+            "pos": [
+                150,
+                480
+            ],
+            "size": [
+                330,
+                90
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        35
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "world"
             }
         }
     ],
     "links": [
         [
+            32,
             24,
-            23,
+            0,
+            29,
+            0,
+            "string"
+        ],
+        [
+            33,
+            29,
             0,
             16,
             0,
             "string"
         ],
         [
-            25,
-            24,
-            0,
-            23,
-            0,
-            "string"
-        ],
-        [
-            26,
-            23,
+            34,
+            29,
             1,
             25,
             0,
             "string"
         ],
         [
-            27,
-            23,
-            2,
-            26,
+            35,
+            30,
             0,
+            29,
+            1,
             "string"
         ]
     ],
     "groups": [],
     "config": {},
     "extra": {},
-    "version": 0.4
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "prompt_builder",
+    "node_states": {
+        "16": {
+            "rotation": 0
+        },
+        "22": {
+            "rotation": 0
+        },
+        "24": {
+            "rotation": 0
+        },
+        "25": {
+            "rotation": 0
+        },
+        "29": {
+            "rotation": 0
+        },
+        "30": {
+            "rotation": 0
+        }
+    }
 }
