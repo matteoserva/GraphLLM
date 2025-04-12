@@ -43,6 +43,8 @@ class OpenAIClient():
         data = self.get_models(base_url)
         if len(data) == 1:
              self.model_name = data[0]["id"]
+        if len(data) > 1 and data[0]["owned_by"] == "vllm":
+             self.model_name = data[0]["id"]
 
     def tokenize(self, p):
         request_body = {
