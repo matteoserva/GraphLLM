@@ -96,10 +96,15 @@ class OpenAIClient():
         if "max_tokens" in params and params["max_tokens"] <= 0:
             del params["max_tokens"]
         model_name = self.model_name
+        extra_body = {}
         if messages[-1].get("role","") == "assistant":
-            extra_body = {}
             extra_body["add_generation_prompt"] = False
             extra_body["continue_final_message"] = True
+
+        if user_params and "grammar" in user_params:
+            extra_body["guided_grammar"] = user_params["grammar"]
+
+        if len(extra_body) > 0:
             params["extra_body"] = extra_body
 
         completion = self.client.chat.completions.create(model=self.model_name, messages=messages, **params)
