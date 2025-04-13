@@ -4,6 +4,7 @@ import tempfile
 
 class AgentFilesystem(GenericTool):
     tool_name = "filesystem"
+    properties = {"function_priorities": {"answer_file":90}}
 
     def __init__(self):
         pass
@@ -18,7 +19,14 @@ class AgentFilesystem(GenericTool):
         Returns:
             str: A string containing the directory contents, including ".\n..\nciao.txt\npagina.md".
         """
-        return ".\n..\nciao.txt\npagina.md"
+        if not dirname.startswith("/tmp"):
+            return "Error: You only have access to /tmp"
+        try:
+            files = os.listdir(dirname)
+        except OSError as e:
+            return f"Error accessing directory: {str(e)}"
+
+        return "\n".join(files)
 
     def read_file(self,file_name):
         """Reads a file and outputs its content. This function fails if the file is too large."""

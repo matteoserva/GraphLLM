@@ -5,6 +5,8 @@ def print_agent_answer(computed_answer):
 
 class AgentAnswer(GenericTool):
 	tool_name = "answer"
+	properties = {"priority": 100}
+
 	def answer(self, computed_answer):
 		"""outputs the answer to the user request."""
 		print_agent_answer (computed_answer)

@@ -30,8 +30,16 @@ def _load_available_tools():
     for tool in found_tools:
         ops = [el for el in dir(tool) if not el.startswith("_")]
         is_default = tool.properties["default"] if hasattr(tool, "properties") and "default" in tool.properties else True
+        class_priority = 50
+        function_priorities = {}
+        if hasattr(tool, "properties"):
+                class_priority = tool.properties.get("priority", 50)
+                function_priorities = tool.properties.get("function_priorities", {})
+
         tool_object = tool()
-        tool_info = {"name": tool.tool_name, "class":tool, "operators": [], "default": is_default}
+        tool_info = {"name": tool.tool_name, "class":tool, "operators": [], "default": is_default, "priority": class_priority}
+
+
 
         for op in ops:
 
@@ -48,6 +56,13 @@ def _load_available_tools():
             row = {}
             row["name"] = op
             row["params"] = params
+            function_priority = class_priority
+            if op in function_priorities:
+                function_priority = function_priorities[op]
+
+            row["priority"] = function_priority
+
+
             doc = c.__doc__
             doc = doc.strip().split("\n")[0]
             if doc[-1] == ".":
@@ -57,6 +72,9 @@ def _load_available_tools():
             tool_info["operators"].append(row)
 
         _available_tools.append(tool_info)
+
+    # sort by priority
+    _available_tools.sort(key=lambda x: (-x["priority"],))
 
 class ToolRunner():
     def __init__(self,tools_list, node_graph_parameters):
@@ -129,6 +147,7 @@ class ToolsFactory():
     def get_operators(self, tool_classes):
         selected_tools = [el for el in _available_tools if el["name"] in tool_classes]
         operators = [op for el in selected_tools for op in el["operators"]]
+        operators.sort(key=lambda x: (-x["priority"],))
         return operators
 
     def make_tool_runner(self,tools_list, node_graph_parameters={}):

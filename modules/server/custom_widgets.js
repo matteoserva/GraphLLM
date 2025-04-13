@@ -553,6 +553,8 @@ class CustomToolSelector {
             else
             {
                 header.parentNode.classList.add("focused")
+                let top = header.parentNode.parentNode.scrollTop
+                toolsDiv.style.transform = "translate(0,-" + top + "px)"
             }
           });
         });
