@@ -1,6 +1,6 @@
 {
-    "last_node_id": 58,
-    "last_link_id": 99,
+    "last_node_id": 59,
+    "last_link_id": 100,
     "nodes": [
         {
             "id": 40,
@@ -244,59 +244,6 @@
             }
         },
         {
-            "id": 21,
-            "type": "llm/llm_call",
-            "pos": [
-                1040,
-                350
-            ],
-            "size": {
-                "0": 1060,
-                "1": 160
-            },
-            "flags": {},
-            "order": 12,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 69,
-                    "pos": null,
-                    "dir": null,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        86,
-                        95
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "{\"grammar\": \"react_deepseek\", \"stop\": \"<result>\", \"force_system\":True,\"temperature\":0.5, \"print_prompt\":1, \"print_response\":\"partial\"}",
-                "template": "",
-                "subtype": "stateless"
-            }
-        },
-        {
             "id": 55,
             "type": "llm/remove_think",
             "pos": [
@@ -343,7 +290,7 @@
                 "1": 360
             },
             "flags": {},
-            "order": 18,
+            "order": 19,
             "mode": 0,
             "inputs": [
                 {
@@ -368,7 +315,7 @@
                 "1": 58
             },
             "flags": {},
-            "order": 16,
+            "order": 17,
             "mode": 0,
             "inputs": [
                 {
@@ -520,7 +467,7 @@
                 "1": 210
             },
             "flags": {},
-            "order": 17,
+            "order": 18,
             "mode": 0,
             "inputs": [
                 {
@@ -642,10 +589,10 @@
                 20,
                 420
             ],
-            "size": [
-                260,
-                250
-            ],
+            "size": {
+                "0": 260,
+                "1": 260
+            },
             "flags": {},
             "order": 6,
             "mode": 0,
@@ -660,12 +607,6 @@
                 }
             ],
             "properties": {
-                "answer": true,
-                "eval": true,
-                "llm": false,
-                "web": false,
-                "filesystem": false,
-                "fake weather": false,
                 "tools_list": {
                     "answer": {
                         "answer": {
@@ -715,8 +656,93 @@
                             "enabled": false
                         }
                     }
-                }
+                },
+                "answer": true,
+                "eval": true,
+                "llm": false,
+                "web": false,
+                "filesystem": false,
+                "fake weather": false
             }
+        },
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                1040,
+                350
+            ],
+            "size": {
+                "0": 1060,
+                "1": 160
+            },
+            "flags": {},
+            "order": 12,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 69,
+                    "pos": null,
+                    "dir": null,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        86,
+                        95,
+                        100
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"grammar\": \"react_deepseek\", \"stop\": \"<result>\", \"force_system\":True,\"temperature\":0.5, \"print_prompt\":1, \"print_response\":\"partial\"}",
+                "template": "",
+                "subtype": "stateless"
+            }
+        },
+        {
+            "id": 59,
+            "type": "output/watch",
+            "pos": [
+                2220,
+                930
+            ],
+            "size": [
+                480,
+                210
+            ],
+            "flags": {
+                "collapsed": true
+            },
+            "order": 16,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 100
+                }
+            ],
+            "properties": {}
         }
     ],
     "links": [
@@ -831,6 +857,14 @@
             46,
             1,
             "string"
+        ],
+        [
+            100,
+            21,
+            0,
+            59,
+            0,
+            "string"
         ]
     ],
     "groups": [],
@@ -895,6 +929,9 @@
             "rotation": 0
         },
         "58": {
+            "rotation": 0
+        },
+        "59": {
             "rotation": 0
         }
     }
