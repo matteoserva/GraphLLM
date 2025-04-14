@@ -142,7 +142,7 @@ div.div-container div.CustomTextDiv div.CustomTextOutput {
 font-family: monospace;
 overflow: auto;
 resize: none;
-white-space: pre;
+white-space: pre-wrap;
 background-color: black;
 color: white;
 width: 100%;

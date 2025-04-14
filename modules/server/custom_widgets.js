@@ -1017,7 +1017,10 @@ class CustomTextOutput extends CustomTextCommon{
             textarea.style.minWidth = (minWidth+15)  + "px"
             this.textarea.style.whiteSpace="pre-wrap"
         }
-
+        else
+        {
+            this.textarea.style.whiteSpace="pre-wrap"
+        }
     }
 
     configureSize(aSpace,hSpace)
