@@ -3,7 +3,7 @@ import subprocess
 import json
 import tempfile
 
-class AgentWeb(GenericTool):
+class AgentWeb(GenericTool,RunGraphMixin):
     tool_name = "web"
     def __init__(self):
         pass
