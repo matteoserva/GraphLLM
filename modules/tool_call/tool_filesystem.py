@@ -19,8 +19,10 @@ class AgentFilesystem(GenericTool):
         Returns:
             str: A string containing the directory contents, including ".\n..\nciao.txt\npagina.md".
         """
-        if not dirname.startswith("/tmp"):
-            return "Error: You only have access to /tmp"
+
+        if not dirname.startswith(tempfile.gettempdir()):
+            return "Error: You only have access to" + tempfile.gettempdir()
+
         try:
             files = os.listdir(dirname)
         except OSError as e:

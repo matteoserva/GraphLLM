@@ -67,6 +67,7 @@ class FormatterJinja:
         self.multi_turn = "<<<USER2>>>" in rendered
         self.has_bos_token = "<<<BOS>>>" in rendered
         self.has_eos_token = "<<<EOS>>>" in rendered
+        self.generation_prompt_prefix = ""
 
 
     def load_template(self,model_props):
@@ -118,6 +119,11 @@ class FormatterJinja:
             self.optional_system = True
             return True
 
+        if model_name.lower().find("glm-") >= 0 and model_name.lower().find("0414") >= 0:
+            self.generation_prompt_prefix = "\n"
+            #self.optional_system = True
+            return True
+
         return False
 
     def build_prompt_j(self, messages, force_system=False,custom_sysprompt = False, **kwargs):
@@ -145,9 +151,11 @@ class FormatterJinja:
 
         if updated_messages[-1]["role"] == "assistant":
             rendered += self.tokenizer.render(messages=updated_messages[:-1], add_generation_prompt=True)
+            rendered += self.generation_prompt_prefix
             rendered += updated_messages[-1]["content"]
         else:
             rendered += self.tokenizer.render(messages=updated_messages, add_generation_prompt=True)
+            rendered += self.generation_prompt_prefix
 
         if messages[0]["role"] == "raw":
             pos = rendered.find("<<<RAW_TEMPLATE2>>>" ) + len("<<<RAW_TEMPLATE2>>>")

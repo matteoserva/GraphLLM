@@ -58,7 +58,7 @@ class Formatter:
         if self.model_name.lower().startswith("deepseek") and prompt.endswith("Assistant: "):
             prompt = prompt[:-1]
             # workaround per deepseek
-        if self.model_name.lower().startswith("glm") and prompt.endswith("<|assistant|>\n"):
+        if self.model_name.lower().startswith("glm") and prompt.endswith("<|assistant|>\n") and self.model_name.lower().find("0414") < 0:
             prompt = prompt[:-1]
 
 

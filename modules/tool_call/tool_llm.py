@@ -7,7 +7,7 @@ import tempfile
 class AgentLLM(GenericTool,RunGraphMixin):
     tool_name = "llm"
     def __init__(self):
-        pass
+        self.open_files = []
 
     def query_file(self,filename, question):
         """Uses a external agent to answer a {question} about the file saved in {filename}."""
@@ -24,10 +24,13 @@ class AgentLLM(GenericTool,RunGraphMixin):
         """Uses a external agent to generate a plain-text summary of the content of a file."""
         val = self._run_graph("graphs/run_template.txt","templates/summarize_full.txt",filename)
         val = val[0]
-        with open(tempfile.gettempdir() + "/summary.txt","w") as f:
-            f.write(val)
 
-        res = f"Summary of {filename} successfully generated and saved in " + tempfile.gettempdir() +"/summary.txt"
+        f = tempfile.NamedTemporaryFile(prefix="summary_", suffix=".md")
+        self.open_files.append(f)
+        f.write(val.encode())
+        f.flush()
+
+        res = f"Summary of {filename} successfully generated and saved in " + f.name
         if len(val) < 1024:
             res = res + "\n\n" + val
         return res
