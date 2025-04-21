@@ -55,6 +55,32 @@ function removeAds()
 var hostname = window.location.hostname;
 var second_level = hostname.split(".").reverse()[1]
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function fix_reddit_new_post()
+{
+    document.querySelectorAll("faceplate-partial[loading=action]").forEach(el => {el.click()});
+    window.onFetchCompleted = function() {
+        removeAds()
+        document.querySelectorAll("faceplate-partial#top-level-more-comments-partial").forEach(el => {el.parentNode.removeChild(el)});
+        removeNode("shreddit-title")
+        document.querySelectorAll("div[id='next-comment']").forEach(el => {el.parentNode.removeChild(el) });
+        document.querySelectorAll("main > shreddit-post").forEach(el => {replaceWith(el,"div")});
+        document.querySelectorAll("shreddit-comment").forEach(el => {replaceComment(el,"div")});
+        document.querySelectorAll("shreddit-comment").forEach(el => {replaceComment(el,"div")});
+        document.querySelectorAll("shreddit-comment").forEach(el => {replaceComment(el,"div")});
+        document.querySelectorAll("shreddit-comment").forEach(el => {replaceComment(el,"div")});
+        document.querySelectorAll("shreddit-comment-tree").forEach(el => {d = document.createElement("div"); d.innerHTML = el.innerHTML; el.replaceWith(d) });
+        document.querySelectorAll("shreddit-comment-tree").forEach(el => {d = document.createElement("div"); d.innerHTML = el.innerHTML; el.replaceWith(d) });
+        document.querySelectorAll("shreddit-comment-tree").forEach(el => {d = document.createElement("div"); d.innerHTML = el.innerHTML; el.replaceWith(d) });
+        removeAds()
+        
+    }
+}
+
+
 if (second_level == "reddit")
 {
      
@@ -72,11 +98,12 @@ if (second_level == "reddit")
     // new reddit
 
      // remove sidebars from new reddit
-      document.querySelectorAll("div.left-sidebar").forEach(el => {el.remove()});
-      document.querySelectorAll("div.right-sidebar").forEach(el => {el.remove()});
+      document.querySelectorAll(".left-sidebar").forEach(el => {el.remove()});
+      document.querySelectorAll(".right-sidebar").forEach(el => {el.remove()});
       
       // remove header with ads and stuff
-      document.querySelectorAll("div.masthead").forEach(el => {el.remove()});
+      document.querySelectorAll(".masthead").forEach(el => {el.remove()});
+      document.querySelectorAll("reddit-header-large").forEach(el => {el.remove()});
 
     //removeNode("shreddit-post")
 
@@ -86,19 +113,10 @@ if (second_level == "reddit")
     var isPost = document.querySelectorAll("main > shreddit-post").length > 0
     if (isPost)
     {
-        removeAds()
-        document.querySelectorAll("faceplate-partial#top-level-more-comments-partial").forEach(el => {el.parentNode.removeChild(el)});
-        removeNode("shreddit-title")
-        document.querySelectorAll("div[id='next-comment']").forEach(el => {el.parentNode.removeChild(el) });
-        document.querySelectorAll("main > shreddit-post").forEach(el => {replaceWith(el,"div")});
-        document.querySelectorAll("shreddit-comment").forEach(el => {replaceComment(el,"div")});
-        document.querySelectorAll("shreddit-comment").forEach(el => {replaceComment(el,"div")});
-        document.querySelectorAll("shreddit-comment").forEach(el => {replaceComment(el,"div")});
-        document.querySelectorAll("shreddit-comment").forEach(el => {replaceComment(el,"div")});
-        document.querySelectorAll("shreddit-comment-tree").forEach(el => {d = document.createElement("div"); d.innerHTML = el.innerHTML; el.replaceWith(d) });
-        document.querySelectorAll("shreddit-comment-tree").forEach(el => {d = document.createElement("div"); d.innerHTML = el.innerHTML; el.replaceWith(d) });
-        document.querySelectorAll("shreddit-comment-tree").forEach(el => {d = document.createElement("div"); d.innerHTML = el.innerHTML; el.replaceWith(d) });
-        removeAds()
+        
+        fix_reddit_new_post()
+        
+        /**/
     }
     else
     {
