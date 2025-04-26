@@ -133,7 +133,7 @@ class GraphNode:
             node["inputs"] = [None] * len(inputs)
             consume_inputs = [True] * len(inputs)
 
-        if len(inputs) > 0 and len(node["backwards"]) > 0:
+        if len(node["backwards"]) > 0:
             pass
         else:
             self.disable_execution = True
