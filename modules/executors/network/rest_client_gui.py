@@ -10,7 +10,7 @@ class RestClientGui(BaseGuiNode):
     def buildNode(self):
         builder = self
         builder._reset()
-        builder._addInput("data", "string")
+        #builder._addInput("data", "string")
         builder._addOutput("response", "string")
         
         builder._addCustomWidget("text_input", "URL", {"property": "url"})
