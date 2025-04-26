@@ -1,7 +1,7 @@
 from modules.executors.common import GenericExecutor
 import requests
 
-class HttpClientNode(GenericExecutor):
+class RestClientNode(GenericExecutor):
     node_type = "rest_client"
     def __init__(self, node_graph_parameters):
         self.session = None
@@ -21,6 +21,12 @@ class HttpClientNode(GenericExecutor):
             response = self.session.get(self.url)
         elif self.method == "POST":
             response = self.session.post(self.url, data=prompt_args[0] if prompt_args else "")
+        elif self.method == "PUT":
+            response = self.session.put(self.url, data=prompt_args[0] if prompt_args else "")
+        elif self.method == "DELETE":
+            response = self.session.delete(self.url)
+        elif self.method == "PATCH":
+            response = self.session.patch(self.url, data=prompt_args[0] if prompt_args else "")
         else:
             raise ValueError(f"Unsupported HTTP method: {self.method}")
         

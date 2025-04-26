@@ -14,15 +14,15 @@ class RestClientGui(BaseGuiNode):
         builder._addOutput("response", "string")
         
         builder._addCustomWidget("text_input", "URL", {"property": "url"})
-        options = {"values": ["GET","POST"], "property": "method"}
+        options = {"values": ["GET", "POST", "PUT", "DELETE", "PATCH"], "property": "method"}
         cb = RawGuiArg("""function(value, canvas, node, pos, event){
-            if (value=="GET")
+            if (value=="GET" || value=="DELETE")
             {    
-                if( node.inputs.length> 0) {node.removeInput(0)}
+                if( node.inputs.length > 0) {node.removeInput(0)}
             }
             else
             {
-                if( node.inputs.length<1) {node.addInput("data","string")}
+                if( node.inputs.length < 1) {node.addInput("data", "string")}
             }   
         }""")
 

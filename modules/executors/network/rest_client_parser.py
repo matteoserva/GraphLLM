@@ -1,6 +1,6 @@
 from modules.executors.common import BaseGuiParser
 
-class HttpClientNode(BaseGuiParser):
+class RestClientNode(BaseGuiParser):
     node_types = ["rest_client"]
 
     def parse_node(self, old_config):
