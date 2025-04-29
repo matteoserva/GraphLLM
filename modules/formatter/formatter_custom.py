@@ -25,7 +25,7 @@ class FormatterCustom:
 
             formatter["enable_system"] = False
             formatter["roles"] = ["raw", "system", "user", "assistant"]
-        elif (model_name.lower().find("qwen2") >= 0 or model_name.lower().find("qwq") >= 0 or
+        elif (model_name.lower().find("qwen3") >= 0 or model_name.lower().find("qwen2") >= 0 or model_name.lower().find("qwq") >= 0 or
               (model_name.lower().find("deepcogito") >= 0) and model_name.lower().find("qwen") >= 0) :
             formatter = {}
             formatter["bos"] = ""
@@ -42,7 +42,7 @@ class FormatterCustom:
             formatter["roles"] = ["raw", "user", "assistant", "system", "tool"]
             formatter["role_string"] = {"tool": formatter["bor"] + "user" + formatter["eor"]}
 
-            if model_name.lower().find("qwq") >= 0:
+            if model_name.lower().find("qwq") >= 0 or model_name.lower().find("qwen3") >= 0:
                 formatter["clean_thinking"] = True
 
         elif model_name.lower().find("phi-4") >= 0:
