@@ -788,6 +788,7 @@ class CustomTextOutput extends CustomTextCommon{
         inner = inner.replace(/\<ul\>\n/g,"<ul>")*/
         inner = inner.replace(/\<\/([a-zA-Z0-9]+)\>\n/g,"</$1>")
         inner = inner.replace(/\<(hr)\>\n/g,"<$1>")
+        inner = inner.replace(/\<(br)\>\n/g,"<$1>")
 		//inner = inner.replace(/\>[\n\r]+\</g,"><")
 		//inner = inner.replace(/blockquote\>\n(\s+\<)/g,"blockquote>$1") //blockquote\n  <p>
 		//inner = inner.replace(/\>\n\s\s\</g,"><")
