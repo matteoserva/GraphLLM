@@ -62,6 +62,10 @@ class CustomTextCommon{
     textareaUnfocus(textarea)
     {
         console.log("focusout")
+        var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size
+        var totally_scrolled = this.textarea.scrollTop >= 5 &&
+            (Math.abs(this.textarea.scrollHeight - this.textarea.clientHeight - this.textarea.scrollTop) <= 1);
+
         this.div.classList.remove('selected');
         this.div.classList.add('deselected');
         this.inFocus = false
@@ -73,6 +77,11 @@ class CustomTextCommon{
         this.div.style.height = null
         this.textarea.style.whiteSpace="pre"
         this.textChange()
+
+        if(totally_scrolled)
+        {
+            this.textarea.scrollTo(0,this.textarea.scrollHeight)
+        }
     }
 
     computeSize(widget_width)
