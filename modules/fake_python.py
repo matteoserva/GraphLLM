@@ -17,7 +17,7 @@ class fake_method:
         #print(args,kwargs)
         if fname.startswith(tempfile.gettempdir() + "/"):
             return open(fname,mode,*args, **kwargs)
-        if fname.startswith("test/"):
+        if fname.startswith("test/") or fname.startswith("tests/"):
             return open(fname,mode,*args, **kwargs)
         raise Exception("the open() function must be used on files in the " + tempfile.gettempdir() + " directory")
     
