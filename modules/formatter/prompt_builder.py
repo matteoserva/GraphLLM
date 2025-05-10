@@ -137,6 +137,10 @@ class PromptBuilder:
     def set_from_raw(self,message):
         self.messages = parse_raw(message)
 
+    def _parse_message(self,role,content):
+        parsed = [{"role": role, "content": content}]
+        return parsed
+
     def add_request(self, message,role="user"):
         m = message
         is_raw = self._check_special_tokens(m)
@@ -147,7 +151,7 @@ class PromptBuilder:
             except:
                 parsed = [{"role":"raw","content":str(m)}]
         else:
-            parsed = [{"role":role,"content":str(m)}]
+            parsed = self._parse_message(role,m)
 
         for el in parsed:
             if el["role"] == "raw":

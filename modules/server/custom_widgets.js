@@ -352,6 +352,114 @@ class CustomFileDrop {
 
 }
 
+class CustomImageDrop {
+    constructor(parent,name,options)
+    {
+        this.property = options.property
+        this.parent = parent
+        this.image = {}
+        this.div = this.makeElement(parent)
+    }
+
+    makeDropArea()
+    {
+        var that = this
+        var dropArea = document.createElement("div")
+        dropArea.className = "dropArea"
+        dropArea.style="border: 2px dashed #ccc;  border-radius: 2px; padding: 2px; text-align: center;";
+
+        var imageArea = document.createElement("img")
+        dropArea.appendChild(imageArea);
+        imageArea.style="max-width: 100%";
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropArea.style.borderColor="purple"
+        }
+
+        function unhighlight(e) {
+            dropArea.style.borderColor=null
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+
+             ([...files]).forEach(uploadFile)
+        }
+
+        function uploadFile(file) {
+            let reader = new FileReader();
+            reader.onloadend = function(e) {
+                that.addFile(file.name, e.target.result,dropArea)
+                that.image = {name: file.name, content: e.target.result}
+                that.notifyValue(that,that.property,that.image)
+            };
+            reader.readAsDataURL(file);
+        }
+
+        return dropArea;
+    }
+
+    addFile(fileName, fileContent,dropArea) {
+        var imageArea = dropArea.querySelector("img")
+        imageArea.src = fileContent;
+    }
+
+    makeElement(parentNode)
+    {
+        var dialog = parentNode
+        var div = document.createElement("div");
+        div.className = "CustomImageArea"
+        div.style="min-height: 50px; display: flex; flex-direction:column; height:100%; padding-bottom: 2px; /* background-color: black; */"
+
+        div.appendChild(this.makeDropArea());
+
+        return div
+    }
+
+    notifyValue(me, k,val)
+    {
+        this.parent.notifyValue(this,k,val)
+    }
+
+    appendElement(dialog)
+    {
+        dialog.appendChild(this.div);
+    }
+
+    setValue(k,v)
+    {
+        if(this.property && this.property == k)
+        {
+            this.image = v
+            var imageArea = this.div.querySelector("img")
+            imageArea.src = v.content;
+
+        }
+    }
+
+}
+
+
 class CustomHtmlCanvas {
         constructor(parent,name,options)
     {

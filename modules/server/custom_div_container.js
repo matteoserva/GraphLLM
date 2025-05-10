@@ -408,6 +408,11 @@ class DivContainer {
             var elem = new CustomFileDrop(this, name,options)
             this.addElement(elem)
         }
+        else if(type=="image_drop")
+        {
+            var elem = new CustomImageDrop(this, name,options)
+            this.addElement(elem)
+        }
         else if(type=="tools_selector")
         {
             var elem = new CustomToolSelector(this, name,options)
