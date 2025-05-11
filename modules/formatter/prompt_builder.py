@@ -9,6 +9,7 @@ except:
     pass
 
 import copy
+import re
 
 class Formatter:
     def __init__(self):
@@ -67,6 +68,9 @@ class Formatter:
 
 ## questa è la parte che non ha bisongno di conoscere il modello
 
+class MultimodalPrompt(Exception):
+    pass
+
 class PromptBuilder:
 
     def __init__(self):
@@ -104,6 +108,10 @@ class PromptBuilder:
         return bar
 
     def _build(self,formatter):
+        multimodal_inputs = [el for el in self.messages if isinstance(el["content"],list)]
+        if len(multimodal_inputs) > 0:
+            raise MultimodalPrompt("Multimodal input not supported by this client")
+
         text_prompt = formatter.build_prompt(self.messages,force_system=self.force_system, custom_sysprompt = self.updated_sysprompt)
         print(text_prompt, end="")
         return text_prompt
@@ -137,11 +145,30 @@ class PromptBuilder:
     def set_from_raw(self,message):
         self.messages = parse_raw(message)
 
-    def _parse_message(self,role,content):
-        parsed = [{"role": role, "content": content}]
+    def _parse_user_message(self,message_raw, variables):
+        role = message_raw["role"]
+        content_raw = message_raw["content"]
+        content = content_raw
+
+        content_split = re.split(r'({i:[^}]{1,100}})',content_raw)
+        content_split = [{"type": "text", "text": el} for el in content_split]
+        for el in content_split[1::2]:
+            text = el["text"]
+            varname = text[3:-1]
+            if varname in variables:
+                del el["text"]
+                el["type"] = "image_url"
+                el["image_url"] = {"url": variables[varname]["content"]}
+        if len([el for el in content_split if el["type"] != "text"])> 0:
+
+            # TODO merge text blocks
+            # TODO remove empty text blocks
+            content = content_split
+
+        parsed = {"role": role, "content": content}
         return parsed
 
-    def add_request(self, message,role="user"):
+    def add_request(self, message,role="user",variables={}):
         m = message
         is_raw = self._check_special_tokens(m)
 
@@ -151,7 +178,7 @@ class PromptBuilder:
             except:
                 parsed = [{"role":"raw","content":str(m)}]
         else:
-            parsed = self._parse_message(role,m)
+            parsed = [{"role":role,"content":str(m)}]
 
         for el in parsed:
             if el["role"] == "raw":
@@ -160,6 +187,9 @@ class PromptBuilder:
                 if self.messages[0]["role"] == "system":
                     self.updated_sysprompt = True
                     self.messages[0] = el
+            elif el["role"] == "user":
+                message = self._parse_user_message(el,variables)
+                self.messages.append(message)
             else:
                 self.messages.append(el)
 

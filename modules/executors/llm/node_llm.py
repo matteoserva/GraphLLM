@@ -184,11 +184,11 @@ class LlmExecutor(GenericExecutor):
             m ,_ = solve_templates(self.current_prompt,prompt_args)
             m = solve_placeholders(m, prompt_args)
             self.current_prompt="{}"
-            builder.add_request(m)
+            builder.add_request(m,"user",self.node.graph.variables)
         else:
             m = solve_prompt_args(self.current_prompt, prompt_args)
             self.builder.reset()
-            builder.add_request(m)
+            builder.add_request(m,"user",self.node.graph.variables)
 
 
         res = self.basic_exec(m)
