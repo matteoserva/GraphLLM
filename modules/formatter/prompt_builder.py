@@ -68,7 +68,7 @@ class Formatter:
 
 ## questa è la parte che non ha bisongno di conoscere il modello
 
-class MultimodalPrompt(Exception):
+class MultimodalPromptException(Exception):
     pass
 
 class PromptBuilder:
@@ -110,7 +110,7 @@ class PromptBuilder:
     def _build(self,formatter):
         multimodal_inputs = [el for el in self.messages if isinstance(el["content"],list)]
         if len(multimodal_inputs) > 0:
-            raise MultimodalPrompt("Multimodal input not supported by this client")
+            raise MultimodalPromptException("Multimodal input not supported by this client")
 
         text_prompt = formatter.build_prompt(self.messages,force_system=self.force_system, custom_sysprompt = self.updated_sysprompt)
         print(text_prompt, end="")

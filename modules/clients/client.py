@@ -1,4 +1,4 @@
-from modules.formatter import PromptBuilder
+from modules.formatter import PromptBuilder, MultimodalPromptException
 import json
 import requests
 #from . import common
@@ -103,11 +103,23 @@ class ClientWrapper:
             return self.call_client_method(name,*args,**kwargs)
         
         return method_proxy
-        
+       
     def call_client_method(self, method_name,*args,**kwargs):
-        client = self.clients_cache[0]["client"]
-        attr = getattr(client, method_name)
-        return attr(*args,**kwargs)
+        for el in self.clients_cache:
+            try:
+                if el["state"] == "INIT":
+                    client_name = el["name"]
+                    client = ClientFactory._make_client_internal(client_name)
+                    client.connect()
+                    cache_row["client"] = client
+                    cache_row["state"] = "CONNECTED"
+                else:
+                    client = el["client"]
+                attr = getattr(client, method_name)
+                return attr(*args,**kwargs)
+            except Exception as e:
+               last_exc = e
+        raise last_exc from None
 
 class ClientFactory:
 
