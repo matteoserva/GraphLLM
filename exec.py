@@ -10,7 +10,6 @@ from modules.client_api.logger import Logger, stop_logger
 client_config = get_client_config()
 ClientFactory.load_config(client_config)
 client = ClientFactory.get_client()
-client.connect()
 
 def perform_cleaning(message):
     if message.startswith("<think>"):

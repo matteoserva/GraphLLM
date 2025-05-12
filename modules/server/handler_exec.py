@@ -52,7 +52,6 @@ class WebExec():
             client_config = get_client_config()
             ClientFactory.load_config(client_config)
             client = ClientFactory.get_client()
-            client.connect()
             self.executor_config["client"] = client
             self.executor = GraphExecutor(self.executor_config)
             self.executor.load_config(args)

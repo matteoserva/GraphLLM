@@ -70,17 +70,29 @@ class DummyClient:
 
 
 class ClientWrapper:
-    def __init__(self,client_name=None):
-        self.clients_cache = {}
-        if client_name:
-            client = ClientFactory._get_client_internal(client_name)
-        else:
-            client = ClientFactory.make_client_default()
-        self.client = client
+    def __init__(self,client_names):
+        self.clients_cache = [{"name": n, "client": None, "state": "INIT"} for n in client_names]
+
+        for cache_row in self.clients_cache:
+            client_name = cache_row["name"]
+            try:
+               client = ClientFactory._make_client_internal(client_name)
+               client.connect()
+               cache_row["client"] = client
+               cache_row["state"] = "CONNECTED"
+               break
+            except Exception as e:
+               cache_row["state"] = "DEAD"
+               last_exc = e
+        
+        self.clients_cache = [el for el in self.clients_cache if el["state"] == "CONNECTED" or el["state"] == "INIT"]
+        if len (self.clients_cache) < 1:
+            raise last_exc from None
     
     def __getattr__(self, name):
         try:
-            attr = getattr(self.client, name)
+            client = self.clients_cache[0]["client"]
+            attr = getattr(client, name)
         except AttributeError:
             raise
 
@@ -93,7 +105,8 @@ class ClientWrapper:
         return method_proxy
         
     def call_client_method(self, method_name,*args,**kwargs):
-        attr = getattr(self.client, method_name)
+        client = self.clients_cache[0]["client"]
+        attr = getattr(client, method_name)
         return attr(*args,**kwargs)
 
 class ClientFactory:
@@ -102,7 +115,7 @@ class ClientFactory:
     backends = []
     
     @staticmethod
-    def _get_client_internal(client_name):
+    def _make_client_internal(client_name):
         if ":" in client_name:
             client_name, model= client_name.split(":",1)
             client_config = ClientFactory.client_configs[client_name]
@@ -114,8 +127,13 @@ class ClientFactory:
         client.connect()
         return client
 
-    def get_client(client_name=None):
-        return ClientWrapper(client_name)
+    def get_client(client_names=None):
+        if not client_names:
+            client_names = ClientFactory.backends
+        if not isinstance(client_names,list):
+            client_names = [client_names]
+        
+        return ClientWrapper(client_names)
 
     @staticmethod
     def _make_client_simple(client_name, cfg):
@@ -134,26 +152,7 @@ class ClientFactory:
             conf = client_config
             return OpenAIClientWrapper(**conf)
 
-    @staticmethod
-    def _make_client_list(client_names):
-        client_configs = ClientFactory.client_configs
-        for client_name in client_names:
-            client_config = client_configs.get(client_name,{})
-            client_type = client_config.get("type",client_name)
-            try:
-               client = ClientFactory._make_client_simple(client_type,client_config)
-               client.connect()
-               return client
-            except Exception as e:
-               last_exc = e
-        raise last_exc from None
-
-
-    @staticmethod
-    def make_client_default():
-        return ClientFactory._make_client_list(ClientFactory.backends)
-
-            
+   
     @staticmethod
     def load_config(client_config):
         ClientFactory.client_configs = client_config
