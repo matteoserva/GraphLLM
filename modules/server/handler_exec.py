@@ -5,7 +5,7 @@ import traceback
 from threading import Thread, Lock
 
 import yaml
-from modules.clients import get_client_config, Client
+from modules.clients import get_client_config, ClientFactory
 from modules.graph import GraphExecutor, GraphException
 from modules.graph.json_parser import JsonParser
 from modules.client_api.logger import Logger
@@ -50,7 +50,8 @@ class WebExec():
         last_error = None
         try:
             client_config = get_client_config()
-            client = Client.make_client(client_config)
+            ClientFactory.load_config(client_config)
+            client = ClientFactory.get_client()
             client.connect()
             self.executor_config["client"] = client
             self.executor = GraphExecutor(self.executor_config)
