@@ -105,16 +105,16 @@ class ClientWrapper:
         return method_proxy
        
     def call_client_method(self, method_name,*args,**kwargs):
-        for el in self.clients_cache:
+        for cache_row in self.clients_cache:
             try:
-                if el["state"] == "INIT":
-                    client_name = el["name"]
+                if cache_row["state"] == "INIT":
+                    client_name = cache_row["name"]
                     client = ClientFactory._make_client_internal(client_name)
                     client.connect()
                     cache_row["client"] = client
                     cache_row["state"] = "CONNECTED"
                 else:
-                    client = el["client"]
+                    client = cache_row["client"]
                 attr = getattr(client, method_name)
                 return attr(*args,**kwargs)
             except Exception as e:
