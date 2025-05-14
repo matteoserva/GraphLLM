@@ -20,10 +20,11 @@ class WatchNodeGui(BaseGuiNode):
         action = {"type": "widget_action", "target": "set", "property": "parameters", "silent": True}
         builder._subscribe(source_location, eventId, action)
 
-        source_location = {"position": "input", "slot": 0}
-        eventId = {"type": "print"};
-        action = {"type": "widget_action", "target": "append", "property": "parameters"}
-        builder._subscribe(source_location, eventId, action)
+        #source_location = {"position": "input", "slot": 0}
+        #eventId = {"type": "print"};
+        #action = {"type": "widget_action", "target": "append", "property": "parameters"}
+        #builder._subscribe(source_location, eventId, action)
+        builder._setCallback("onExecute", """function(){var val =this.getInputData(0); if(val) this.container.setValue("parameters",""+val)}""")
 
         source_location = {"position": "input", "slot": 0}
         eventId = {"type": "starting"};
