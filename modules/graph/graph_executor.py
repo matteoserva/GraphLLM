@@ -240,8 +240,8 @@ class GraphExecutor:
                     input_nodes.append(i)
             for i in input_nodes:
                 node = self.graph_nodes[i]
-                node["outputs"] = input_data
-                node.disable_execution = True
+                for i, el in enumerate(input_data):
+                    node["inputs"][i] = el
 
         running = []
         max_parallel_jobs = PARALLEL_JOBS
@@ -249,7 +249,7 @@ class GraphExecutor:
         try:
             while not self.force_stop:
                 runnable = [i for i, v in enumerate(self.graph_nodes) if v.is_runnable() and i not in running]
-                
+
                 if len(runnable) == 0 and len(running) == 0:
                     break
                 if len(running) < max_parallel_jobs:
