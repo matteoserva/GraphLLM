@@ -1340,12 +1340,14 @@ class CustomTextarea extends CustomTextCommon{
     
     configureSizeInFocus()
     {
-        var textarea = this.textarea
+        var textarea = this.textarea.cloneNode(true)
+        textarea.style.visibility="hidden"
+        document.querySelector(".litegraph .content").append(textarea)
         if (this.inFocus)
         {
             var oldScrollTop = this.textarea.scrollTop
         
-            this.textarea.style.whiteSpace="pre"
+            textarea.style.whiteSpace="pre"
             textarea.style.width = "1px";
             textarea.style.height = "1px";
             textarea.style.minHeight = ""
@@ -1360,9 +1362,9 @@ class CustomTextarea extends CustomTextCommon{
             
             minWidth = Math.min(minWidth,window.innerWidth*0.7)
             minHeight = Math.min(minHeight,window.innerHeight*0.7)
-            textarea.style.minHeight = (minHeight+10) + "px"
-            textarea.style.minWidth = (minWidth+15)  + "px"
-            this.textarea.style.whiteSpace="pre-wrap";
+            this.textarea.style.minHeight = (minHeight+10) + "px"
+            this.textarea.style.minWidth = (minWidth+15)  + "px"
+            textarea.style.whiteSpace="pre-wrap";
 
             var newScrollTop = this.textarea.scrollTop;
             if (newScrollTop < oldScrollTop)
