@@ -169,7 +169,7 @@ class CustomTextCommon{
 						}
 						else
 						{
-							event.target.focus()
+							event.target.focus({ preventScroll: true })
 							
 						}
 						
