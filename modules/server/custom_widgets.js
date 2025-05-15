@@ -931,7 +931,7 @@ class CustomTextOutput extends CustomTextCommon{
                       displayMode: true,
                       throwOnError: false, // allows katex to fail silently
                       errorColor: '#ff0000',
-                      delimiters: [],
+                      delimiters: [{ left: "$", right: "$", display: false }],
                   }
               )]
               }
