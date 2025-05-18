@@ -2,6 +2,11 @@
 # CHANGELOG for GraphLLM
 #
 
+# 18/05/2025
+- new nodes: subgraph, REST client, image input
+- new models: qwen3
+- graphical and engine fixes
+
 # 12/04/2025
 - vllm grammar support
 - tool use widgets

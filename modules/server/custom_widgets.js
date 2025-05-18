@@ -62,6 +62,10 @@ class CustomTextCommon{
     textareaUnfocus(textarea)
     {
         console.log("focusout")
+        var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size
+        var totally_scrolled = this.textarea.scrollTop >= 5 &&
+            (Math.abs(this.textarea.scrollHeight - this.textarea.clientHeight - this.textarea.scrollTop) <= 1);
+
         this.div.classList.remove('selected');
         this.div.classList.add('deselected');
         this.inFocus = false
@@ -73,6 +77,11 @@ class CustomTextCommon{
         this.div.style.height = null
         this.textarea.style.whiteSpace="pre"
         this.textChange()
+
+        if(totally_scrolled)
+        {
+            this.textarea.scrollTo(0,this.textarea.scrollHeight)
+        }
     }
 
     computeSize(widget_width)
@@ -160,7 +169,7 @@ class CustomTextCommon{
 						}
 						else
 						{
-							event.target.focus()
+							event.target.focus({ preventScroll: true })
 							
 						}
 						
@@ -342,6 +351,114 @@ class CustomFileDrop {
     }
 
 }
+
+class CustomImageDrop {
+    constructor(parent,name,options)
+    {
+        this.property = options.property
+        this.parent = parent
+        this.image = {}
+        this.div = this.makeElement(parent)
+    }
+
+    makeDropArea()
+    {
+        var that = this
+        var dropArea = document.createElement("div")
+        dropArea.className = "dropArea"
+        dropArea.style="border: 2px dashed #ccc;  border-radius: 2px; padding: 2px; text-align: center;";
+
+        var imageArea = document.createElement("img")
+        dropArea.appendChild(imageArea);
+        imageArea.style="max-width: 100%";
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropArea.style.borderColor="purple"
+        }
+
+        function unhighlight(e) {
+            dropArea.style.borderColor=null
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+
+             ([...files]).forEach(uploadFile)
+        }
+
+        function uploadFile(file) {
+            let reader = new FileReader();
+            reader.onloadend = function(e) {
+                that.addFile(file.name, e.target.result,dropArea)
+                that.image = {name: file.name, content: e.target.result}
+                that.notifyValue(that,that.property,that.image)
+            };
+            reader.readAsDataURL(file);
+        }
+
+        return dropArea;
+    }
+
+    addFile(fileName, fileContent,dropArea) {
+        var imageArea = dropArea.querySelector("img")
+        imageArea.src = fileContent;
+    }
+
+    makeElement(parentNode)
+    {
+        var dialog = parentNode
+        var div = document.createElement("div");
+        div.className = "CustomImageArea"
+        div.style="min-height: 50px; display: flex; flex-direction:column; height:100%; padding-bottom: 2px; /* background-color: black; */"
+
+        div.appendChild(this.makeDropArea());
+
+        return div
+    }
+
+    notifyValue(me, k,val)
+    {
+        this.parent.notifyValue(this,k,val)
+    }
+
+    appendElement(dialog)
+    {
+        dialog.appendChild(this.div);
+    }
+
+    setValue(k,v)
+    {
+        if(this.property && this.property == k)
+        {
+            this.image = v
+            var imageArea = this.div.querySelector("img")
+            imageArea.src = v.content;
+
+        }
+    }
+
+}
+
 
 class CustomHtmlCanvas {
         constructor(parent,name,options)
@@ -788,6 +905,7 @@ class CustomTextOutput extends CustomTextCommon{
         inner = inner.replace(/\<ul\>\n/g,"<ul>")*/
         inner = inner.replace(/\<\/([a-zA-Z0-9]+)\>\n/g,"</$1>")
         inner = inner.replace(/\<(hr)\>\n/g,"<$1>")
+        inner = inner.replace(/\<(br)\>\n/g,"<$1>")
 		//inner = inner.replace(/\>[\n\r]+\</g,"><")
 		//inner = inner.replace(/blockquote\>\n(\s+\<)/g,"blockquote>$1") //blockquote\n  <p>
 		//inner = inner.replace(/\>\n\s\s\</g,"><")
@@ -813,7 +931,7 @@ class CustomTextOutput extends CustomTextCommon{
                       displayMode: true,
                       throwOnError: false, // allows katex to fail silently
                       errorColor: '#ff0000',
-                      delimiters: [],
+                      delimiters: [{ left: "$", right: "$", display: false }],
                   }
               )]
               }
@@ -1222,12 +1340,14 @@ class CustomTextarea extends CustomTextCommon{
     
     configureSizeInFocus()
     {
-        var textarea = this.textarea
+        var textarea = this.textarea.cloneNode(true)
+        textarea.style.visibility="hidden"
+        document.querySelector(".litegraph .content").append(textarea)
         if (this.inFocus)
         {
             var oldScrollTop = this.textarea.scrollTop
         
-            this.textarea.style.whiteSpace="pre"
+            textarea.style.whiteSpace="pre"
             textarea.style.width = "1px";
             textarea.style.height = "1px";
             textarea.style.minHeight = ""
@@ -1242,9 +1362,9 @@ class CustomTextarea extends CustomTextCommon{
             
             minWidth = Math.min(minWidth,window.innerWidth*0.7)
             minHeight = Math.min(minHeight,window.innerHeight*0.7)
-            textarea.style.minHeight = (minHeight+10) + "px"
-            textarea.style.minWidth = (minWidth+15)  + "px"
-            this.textarea.style.whiteSpace="pre-wrap";
+            this.textarea.style.minHeight = (minHeight+10) + "px"
+            this.textarea.style.minWidth = (minWidth+15)  + "px"
+            textarea.style.whiteSpace="pre-wrap";
 
             var newScrollTop = this.textarea.scrollTop;
             if (newScrollTop < oldScrollTop)

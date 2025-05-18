@@ -5,7 +5,7 @@ from modules.common import readfile, merge_params
 from functools import partial
 from modules.executors.common import GenericExecutor,ExecutorOutput
 from modules.grammar import load_grammar,load_grammar_text
-from modules.clients.client import Client
+from modules.clients.client import ClientFactory
 
 
 class ClientCallback:
@@ -69,7 +69,7 @@ class LlmExecutor(GenericExecutor):
         if "client" in d:
            client = d["client"]
            if isinstance(client,str): # da conservare in caso il client arrivi dal graph
-               client = Client.get_client(client)
+               client = ClientFactory.get_client(client)
            builder = self.builder
            try:
                formatter_config = client.get_formatter_config()
@@ -184,11 +184,11 @@ class LlmExecutor(GenericExecutor):
             m ,_ = solve_templates(self.current_prompt,prompt_args)
             m = solve_placeholders(m, prompt_args)
             self.current_prompt="{}"
-            builder.add_request(m)
+            builder.add_request(m,"user",self.node.graph.variables)
         else:
             m = solve_prompt_args(self.current_prompt, prompt_args)
             self.builder.reset()
-            builder.add_request(m)
+            builder.add_request(m,"user",self.node.graph.variables)
 
 
         res = self.basic_exec(m)

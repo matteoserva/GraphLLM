@@ -20,7 +20,9 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": null
+                    "link": null,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -63,32 +65,15 @@
                     "name": "in",
                     "type": "string",
                     "link": 23,
-                    "slot_index": 0
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "properties": {
                 "parameters": {
                     "use_markdown": true
                 }
-            }
-        },
-        {
-            "id": 23,
-            "type": "graph/variable",
-            "pos": [
-                867,
-                400
-            ],
-            "size": {
-                "0": 592.7594604492188,
-                "1": 188.98635864257812
-            },
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "properties": {
-                "identifier": "think",
-                "parameters": "# edit the think-text to configure\nthink-text ::= think-token{50,100}\n\n# here is the full grammar\nroot ::= thought answer\nthought ::= \"<think>\\n\" [a-zA-Z] think-text \"\\n</think>\"\nthink-token ::= [^\\n] | (\"\\n\"+ [^<\\n]) | (\"\\n\"+ \"<\" [^\\n/]) \n\nanswer ::= ([^\\n] | \"\\n\")+"
             }
         },
         {
@@ -111,6 +96,25 @@
             },
             "color": "#232",
             "bgcolor": "#353"
+        },
+        {
+            "id": 23,
+            "type": "graph/variable",
+            "pos": [
+                867,
+                400
+            ],
+            "size": [
+                600,
+                260
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "think",
+                "parameters": "# edit the think-text to configure\nthink-text ::= think-token{50,100}\n\n# here is the full grammar\nroot ::= thought answer\nthought ::= \"<think>\\n\" [a-zA-Z] think-text endthink? \"\\n</think>\"\nendthink ::= \"\\n\\nI should now answer the user request.\"\nthink-token ::= [^\\n] | (\"\\n\"+ [^<\\n]) | (\"\\n\"+ \"<\" [^\\n/]) \n\nanswer ::= ([^\\n] | \"\\n\")+"
+            }
         }
     ],
     "links": [

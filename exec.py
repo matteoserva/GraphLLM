@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import sys
-from modules.clients import Client, get_client_config
+from modules.clients import ClientFactory, get_client_config
 from modules.client_api import TextClientAPI
 
 from modules.graph import GraphExecutor
@@ -8,8 +8,8 @@ import json
 from modules.client_api.logger import Logger, stop_logger
 
 client_config = get_client_config()
-client = Client.make_client(client_config)
-client.connect()
+ClientFactory.load_config(client_config)
+client = ClientFactory.get_client()
 
 def perform_cleaning(message):
     if message.startswith("<think>"):

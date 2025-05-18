@@ -1,10 +1,10 @@
 {
-    "last_node_id": 28,
-    "last_link_id": 31,
+    "last_node_id": 29,
+    "last_link_id": 33,
     "nodes": [
         {
             "id": 24,
-            "type": "llm/watch",
+            "type": "output/watch",
             "pos": [
                 1370,
                 64
@@ -30,84 +30,16 @@
             "bgcolor": "#653"
         },
         {
-            "id": 25,
-            "type": "graph/variable",
-            "pos": [
-                37,
-                222
-            ],
-            "size": {
-                "0": 642.4000244140625,
-                "1": 238.6999969482422
-            },
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "title": "Info",
-            "properties": {
-                "identifier": "",
-                "parameters": "This is a hierarchical graph. The article is first downloaded, then\nsummarized using another graph.\n\nThis example requires that extra tools are properly configured.\n\nThe scraped data is shown in the yellow box.\nThe summary is in the blue box"
-            },
-            "color": "#232",
-            "bgcolor": "#353"
-        },
-        {
-            "id": 27,
-            "type": "graph/generic_node",
-            "pos": [
-                50,
-                522
-            ],
-            "size": {
-                "0": 636.2999877929688,
-                "1": 108
-            },
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 31,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        29
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "parameters": "type: graph\ninit: json_graphs/summarize_file.json"
-            }
-        },
-        {
             "id": 28,
             "type": "tools/web_scraper",
             "pos": [
                 51,
                 63
             ],
-            "size": [
-                623.2909949035646,
-                63
-            ],
+            "size": {
+                "0": 623.291015625,
+                "1": 63
+            },
             "flags": {},
             "order": 1,
             "mode": 0,
@@ -117,7 +49,7 @@
                     "type": "string",
                     "links": [
                         30,
-                        31
+                        32
                     ],
                     "slot_index": 0
                 }
@@ -128,15 +60,15 @@
         },
         {
             "id": 16,
-            "type": "llm/watch",
+            "type": "output/watch",
             "pos": [
                 733,
                 69
             ],
-            "size": [
-                601.7469949035647,
-                561.631030029297
-            ],
+            "size": {
+                "0": 601.7470092773438,
+                "1": 561.6310424804688
+            },
             "flags": {},
             "order": 4,
             "mode": 0,
@@ -144,7 +76,7 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 29,
+                    "link": 33,
                     "slot_index": 0
                 }
             ],
@@ -154,17 +86,76 @@
             },
             "color": "#223",
             "bgcolor": "#335"
+        },
+        {
+            "id": 29,
+            "type": "graph/call_subgraph",
+            "pos": [
+                50,
+                180
+            ],
+            "size": [
+                620,
+                80
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 32
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "0ut",
+                    "type": "string",
+                    "links": [
+                        33
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "subgraph_name": "summarize_file"
+            }
+        },
+        {
+            "id": 25,
+            "type": "graph/variable",
+            "pos": [
+                50,
+                330
+            ],
+            "size": [
+                620,
+                290
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "title": "Info",
+            "properties": {
+                "identifier": "",
+                "parameters": "This is a hierarchical graph. The article is first downloaded, then\nsummarized using another graph.\n\nThis example requires that extra tools are properly configured.\n\nThe scraped data is shown in the yellow box.\nThe summary is in the blue box"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
         }
     ],
     "links": [
-        [
-            29,
-            27,
-            0,
-            16,
-            0,
-            "string"
-        ],
         [
             30,
             28,
@@ -174,10 +165,18 @@
             "string"
         ],
         [
-            31,
+            32,
             28,
             0,
-            27,
+            29,
+            0,
+            "string"
+        ],
+        [
+            33,
+            29,
+            0,
+            16,
             0,
             "string"
         ]
@@ -185,5 +184,24 @@
     "groups": [],
     "config": {},
     "extra": {},
-    "version": 0.4
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "summarize_url",
+    "node_states": {
+        "16": {
+            "rotation": 0
+        },
+        "24": {
+            "rotation": 0
+        },
+        "25": {
+            "rotation": 0
+        },
+        "28": {
+            "rotation": 0
+        },
+        "29": {
+            "rotation": 0
+        }
+    }
 }

@@ -17,7 +17,7 @@ class fake_method:
         #print(args,kwargs)
         if fname.startswith(tempfile.gettempdir() + "/"):
             return open(fname,mode,*args, **kwargs)
-        if fname.startswith("test/"):
+        if fname.startswith("test/") or fname.startswith("tests/"):
             return open(fname,mode,*args, **kwargs)
         raise Exception("the open() function must be used on files in the " + tempfile.gettempdir() + " directory")
     
@@ -71,7 +71,7 @@ def my_exec(code, globals, locals):
 class PythonInterpreter:
     def __init__(self):
         self.safe_builtins = ["int", "float","sum", "max", "min", "abs", "range", "str", "print","dir","len","next","enumerate"]
-        self.safe_imports = ["sympy","numpy","datetime","bs4","requests","webbrowser","json","numpy.polynomial.polynomial","math","scipy.optimize"]
+        self.safe_imports = ["re","sympy","numpy","datetime","bs4","requests","webbrowser","json","numpy.polynomial.polynomial","math","scipy.optimize"]
         self.fake_imports = {"os":["listdir","path"]}
         self.fake_subimports = {"os.path":["getsize","isfile"]}
         self.fake_builtins = {"open":fake_method}

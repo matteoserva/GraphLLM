@@ -81,15 +81,15 @@
             "id": 10,
             "type": "llm/llm_call",
             "pos": [
-                135.20820123535174,
-                632.030245166016
+                148.3430787890627,
+                1029.6847267089845
             ],
             "size": {
                 "0": 625.8831787109375,
                 "1": 325.56365966796875
             },
             "flags": {
-                "collapsed": true
+                "collapsed": false
             },
             "order": 4,
             "mode": 0,
@@ -123,23 +123,23 @@
             ],
             "properties": {
                 "conf": "{\"temperature\":0.01, \"top_k\":1,\"stop\":\"```\"}",
-                "subtype": "stateless",
-                "template": "{p:user}\nYou will be given a problem to solve and a set of instructions.\n\n# instructions\n- Write python code that solves the problem.\n- Ignore error checking the validity of the solution.\n- Assume that provided inputs are correct, even if unrealistic.\n- The code should only print the answer in this form: \"The answer is: {your answer}\".\n\n# Here is the problem:\n```\n{p:exec1}\n```{p:eom}\n\n{p:assistant}\nHere is the python code that solves the problem:\n\n```python\n{p:eom}"
+                "template": "{p:user}\nYou will be given a problem to solve and a set of instructions.\n\n# instructions\n- Write python code that solves the problem.\n- Ignore error checking the validity of the solution.\n- Assume that provided inputs are correct, even if unrealistic.\n- The code should only print the answer in this form: \"The answer is: {your answer}\".\n\n# Here is the problem:\n```\n{p:exec1}\n```{p:eom}\n\n{p:assistant}\nHere is the python code that solves the problem:\n\n```python\n{p:eom}",
+                "subtype": "stateless"
             }
         },
         {
             "id": 13,
             "type": "tools/python_sandbox",
             "pos": [
-                135.20820123535174,
-                632.030245166016
+                155.34307878906276,
+                1398.6847267089847
             ],
             "size": {
                 "0": 210,
                 "1": 108
             },
             "flags": {
-                "collapsed": true
+                "collapsed": false
             },
             "order": 6,
             "mode": 0,
@@ -176,15 +176,15 @@
             "id": 15,
             "type": "other/copy_pack",
             "pos": [
-                135.20820123535174,
-                632.030245166016
+                851.3430787890629,
+                1069.6847267089845
             ],
             "size": {
                 "0": 140,
                 "1": 66
             },
             "flags": {
-                "collapsed": true
+                "collapsed": false
             },
             "order": 8,
             "mode": 0,
@@ -221,15 +221,15 @@
             "id": 14,
             "type": "tools/python_sandbox",
             "pos": [
-                135.20820123535174,
-                632.030245166016
+                552.3430787890627,
+                1397.6847267089847
             ],
             "size": {
                 "0": 210,
                 "1": 108
             },
             "flags": {
-                "collapsed": true
+                "collapsed": false
             },
             "order": 7,
             "mode": 0,
@@ -268,15 +268,15 @@
             "id": 1,
             "type": "tools/python_sandbox",
             "pos": [
-                135.20820123535174,
-                632.030245166016
+                127.3430787890627,
+                683.6847267089844
             ],
             "size": {
                 "0": 648.0830688476562,
                 "1": 295.263671875
             },
             "flags": {
-                "collapsed": true
+                "collapsed": false
             },
             "order": 2,
             "mode": 0,
@@ -318,7 +318,7 @@
                 }
             ],
             "properties": {
-                "parameters": "import json\nproblem_id = int(_C[0])\nwith open(\"test/gsm8k_hard.json\",\"r\") as f:\n    fval = f.read()\n    fval = json.loads(fval)\nproblem_row = fval[problem_id]\n_O = [problem_row[\"problem\"],problem_row[\"solution\"]]"
+                "parameters": "import json\nproblem_id = int(_C[0])\nwith open(\"tests/gsm8k_hard.json\",\"r\") as f:\n    fval = f.read()\n    fval = json.loads(fval)\nproblem_row = fval[problem_id]\n_O = [problem_row[\"problem\"],problem_row[\"solution\"]]"
             }
         },
         {
@@ -328,10 +328,10 @@
                 404,
                 63
             ],
-            "size": [
-                1409.3135884423832,
-                126.16716802246106
-            ],
+            "size": {
+                "0": 1409.3135986328125,
+                "1": 126.16716766357422
+            },
             "flags": {},
             "order": 3,
             "mode": 0,
@@ -479,10 +479,10 @@
             "bounding": [
                 115,
                 562,
-                180,
-                110
+                913,
+                984
             ],
-            "color": "#606060",
+            "color": "#3f789e",
             "font_size": 24
         }
     ],
@@ -491,7 +491,7 @@
     "version": 0.4,
     "group_states": {
         "0": {
-            "is_collapsed": true,
+            "is_collapsed": false,
             "node_info": {
                 "1": {
                     "id": 1,
@@ -561,5 +561,37 @@
             "color": "#3f789e"
         }
     },
-    "graph_name": "gsm8k_hard"
+    "graph_name": "gsm8k_hard",
+    "node_states": {
+        "1": {
+            "rotation": 0
+        },
+        "2": {
+            "rotation": 0
+        },
+        "4": {
+            "rotation": 0
+        },
+        "5": {
+            "rotation": 0
+        },
+        "10": {
+            "rotation": 0
+        },
+        "11": {
+            "rotation": 0
+        },
+        "12": {
+            "rotation": 0
+        },
+        "13": {
+            "rotation": 0
+        },
+        "14": {
+            "rotation": 0
+        },
+        "15": {
+            "rotation": 0
+        }
+    }
 }

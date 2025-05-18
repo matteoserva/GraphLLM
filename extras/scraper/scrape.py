@@ -127,7 +127,7 @@ def load_page(url):
   driver.execute_script(fetch_wrapper)
   print("waiting for jquery scripts to terminate", file=sys.stderr)
 
-  #aspetto che jabascript finisca
+  #aspetto che javascript finisca
   while driver.execute_script("return (window.jQuery != null) && (jQuery.active > 0);") :
       time.sleep(.1)
   #sposto in basso per attivare il caricamento di pagine extra
@@ -142,22 +142,39 @@ def load_page(url):
   #aspetto eventuali ajax
   while driver.execute_script("return (window.jQuery != null) && (jQuery.active > 0);") :
       time.sleep(.1)
-  for i in range(20):
-    r = driver.execute_script("return window.running_fetches")
-    if(r == 0):
-      break
-    #print(r, file=sys.stderr)
-    time.sleep(.1)
-    
 
+  if driver.execute_script("return window.running_fetches") > 0:
+    h = [0] * 10
+    for i in range(50):
+      r = driver.execute_script("return window.running_fetches")
+      h = h[1:]
+      h.append(r)
+      if(sum(h) == 0):
+        break
+      #print(r, file=sys.stderr)
+      time.sleep(.1)
+  print("wait complete for dynamic components", file=sys.stderr)
+
+  # trying to avoid special cases
+  driver.execute_script(reddit_fixer)
+
+  if driver.execute_script("return window.running_fetches") > 0:
+    h = [0]*10
+    print("waiting for extra components to load (reddit?)", file=sys.stderr)
+    for i in range(50):
+      r = driver.execute_script("return window.running_fetches")
+      h=h[1:]
+      h.append(r)
+      if(sum(h) == 0):
+        break
+      #print(r, file=sys.stderr)
+      time.sleep(.1)
+    print("after wait, running:",r, file=sys.stderr)
+    
   # cancello i nodi nascosti da ublock
 
   print("deleting nodes identified by ublock origin.", file=sys.stderr)
   driver.execute_script(script_removeHiddenNodes)
-
-
-  # trying to avoid special cases
-  driver.execute_script(reddit_fixer)
 
   print("readability.js", file=sys.stderr)
 

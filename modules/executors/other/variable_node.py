@@ -23,8 +23,6 @@ class VariableNode(GenericExecutor):
             if name not in variables:
                 variables[name] = {}
             variables[name][index] = value
-
-
         else:
             variables[conf["name"]] = conf["value"]
 

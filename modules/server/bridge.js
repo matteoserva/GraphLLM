@@ -217,6 +217,10 @@ class WebBrige {
     lines.forEach((element) => {addDemo(this.select, element, "/graph/load?file="+element); });
     console.log(xhr.responseText)
     this.select.selectedIndex = 0
+
+    let bridge = this.graph.bridge || {}
+    bridge.graphs_list = lines
+    this.graph.bridge = bridge
   }
 
   startWebSocket(data)

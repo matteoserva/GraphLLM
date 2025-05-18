@@ -3,6 +3,10 @@ window.running_fetches = 0
 function reduce_fetch_counter(){
   window.running_fetches = window.running_fetches - 1
   console.log('completed fetch call, now: '+ window.running_fetches);
+  if(window.onFetchCompleted && window.running_fetches == 0 )
+  {
+     window.onFetchCompleted() 
+  }
 }
 
 window.fetch = async function(...args) {

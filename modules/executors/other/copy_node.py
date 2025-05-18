@@ -58,7 +58,9 @@ class CopyNode(GenericExecutor):
             else:
                 return [None]
         res = list(*args)
-        if self._subtype  == "cast":
+        if self._subtype == "input":
+            self.node.disable_execution=True
+        elif self._subtype  == "cast":
             res[0] = str(res[0])
         elif self._subtype == "repeat":
             if self.cache is None:

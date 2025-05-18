@@ -6,6 +6,9 @@ _template_global = """\
 })(this);
 """
 
+class RawGuiArg(str):
+    pass
+
 class GuiNodeBuilder:
     def _reset(self):
         self.config = {"class_name": "", "node_type": "",
@@ -102,7 +105,15 @@ class GuiNodeBuilder:
         # add widgets
 
         for el in self.config["standard_widgets"]:
-            res += "        this.addWidget(" + json.dumps(el)[1:-1] + ")\n"
+            if isinstance(el[3],RawGuiArg):
+                el=list(el)
+                tmp =el[3]
+                el[3] = "<<<PLACEHOLDER>>>"
+                val = "        this.addWidget(" + json.dumps(el)[1:-1] + ")\n"
+                val = val.replace('"<<<PLACEHOLDER>>>"',tmp)
+            else:
+                val = "        this.addWidget(" + json.dumps(el)[1:-1] + ")\n"
+            res += val
 
         if len(self.config["custom_widgets"]) > 0:
             res += "        this.container = new DivContainer(this)\n"
