@@ -372,12 +372,16 @@ class WebBrige {
                 for(let i = 0; i < values.length; i++)
                 {
                       var string = new String(values[i]);
+                      var value = values[i]
                       string.graphllm_type="output"
                       string.text_content=values[i]
-                      n.setOutputData(i,string)
+                      if(value)
+                        n.setOutputData(i,string)
+                      else
+                        n.setOutputData(i,value)
 
                       var eventId = {type: obj.type, source: name, slot: i}
-                      var value = values[i]
+
                       if (value != null)
                       {
                         this.notifyListeners(eventId, values[i])
