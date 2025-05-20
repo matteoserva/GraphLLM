@@ -2,6 +2,7 @@ from modules.formatter import PromptBuilder
 from modules.executors.common import GenericExecutor
 from modules.executors.common import solve_placeholders,solve_prompt_args
 from modules.formatter import solve_templates
+from modules.common import readfile
 
 from modules.executors.common import BaseGuiParser
 
@@ -24,7 +25,7 @@ class PromptBuilderNode(GenericExecutor):
 
     def __call__(self,prompt_args):
         m = solve_prompt_args(self.current_prompt,prompt_args)
-        #m ,_ = solve_templates(self.current_prompt,prompt_args)
+        m ,_ = solve_templates(m,[], self.graph.variables)
         #m = solve_placeholders(m,prompt_args)
 
         self.builder.reset()
