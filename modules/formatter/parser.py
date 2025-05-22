@@ -107,7 +107,7 @@ def readstring_hierarchical(prompt,variables):
         try:
           _=scrape
         except:
-          from scraper import scrape
+          from extras.scraper import scrape
           
         r = scrape.scrape(fnfull)
         prompt = prompt.replace(foundString,r)

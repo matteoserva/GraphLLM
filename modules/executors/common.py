@@ -102,9 +102,4 @@ class BaseGuiNode(GuiNodeBuilder):
     def getNodeString(self):
         return self._getNodeString()
 
-from modules.common.prompt_process import solve_placeholders, solve_prompt_args
-
-
-
-
-        
+from modules.common.prompt_utils import solve_placeholders, solve_prompt_args
