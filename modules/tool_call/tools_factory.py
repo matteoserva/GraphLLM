@@ -98,20 +98,31 @@ class ToolRunner():
                 row["tool"] = tool_object
                 self.ops[op["name"]] = row
 
-    def _get_formatted_ops(self):
+    def _get_formatted_ops(self, format="markdown"):
         ops = [self.ops[el] for el in self.ops]
         textlist = []
-        for op in ops:
-            row = ""
-            row = row + "- " + op["name"]
-            if op["doc"] is not None:
-                row = row + ": " + op["doc"]
-            param_names = [el["name"] for el in op["params"]]
-            params_string = ",".join(param_names)
-            if row[-1] == ".":
-                row = row[:-1]
-            row = row + ". Parameters: " + params_string
-            textlist.append(row)
+        if format == "python":
+            for op in ops:
+                row = ""
+                row += "def " + op["name"]+"("
+                param_names = [el["name"] for el in op["params"]]
+                params_string = ",".join(param_names)
+                row += params_string + ")\n"
+                if op["doc"] is not None:
+                    row += '    """' + op["doc"] + '"""\n'
+                textlist.append(row)
+        else:
+            for op in ops:
+                row = ""
+                row = row + "- " + op["name"]
+                if op["doc"] is not None:
+                    row = row + ": " + op["doc"]
+                param_names = [el["name"] for el in op["params"]]
+                params_string = ",".join(param_names)
+                if row[-1] == ".":
+                    row = row[:-1]
+                row = row + ". Parameters: " + params_string
+                textlist.append(row)
         res = "\n".join(textlist)
         return res
 

@@ -18,7 +18,7 @@ class AgentHistoryBuilderGui(BaseGuiNode):
         builder._addOutput("GraphLLM", "string");
         builder._addOutput("variables", "string");
 
-        builder._addStandardWidget("combo", "Tools", "markdown", None, {"property": "tools_format", "values": ["markdown", "json"]})
+        builder._addStandardWidget("combo", "Tools", "markdown", None, {"property": "tools_format", "values": ["markdown", "json","python"]})
         builder._addStandardWidget("combo", "Agent", "ReAct(xml)", None, {"property": "agent_type", "values": ["ReAct(xml)"]})
         builder._addCustomWidget("textarea", "template", {"property": "template"})
 
