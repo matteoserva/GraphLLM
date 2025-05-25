@@ -58,7 +58,7 @@ class ParseToolCallNode(GenericExecutor):
         result = []
         for data in tool_calls:
             parameters = [el["value"] for el in data["parameters"]]
-            r = self.ops.exec(data["name"], parameters)
+            r = self.ops._exec(data["name"], parameters)
             if not isinstance(r,dict) or "result" not in r:
                 r = {"result": r}
             result.append(r)
@@ -70,7 +70,7 @@ class ParseToolCallNode(GenericExecutor):
         for data in tool_calls:
             parameters = data["parameters"]
             parameters = {el["name"]:el["value"] for el in parameters}
-            r = self.ops.exec(data["name"], **parameters)
+            r = self.ops._exec(data["name"], **parameters)
             if not isinstance(r,dict) or "result" not in r:
                 r = {"result": r}
             result.append(str(r))

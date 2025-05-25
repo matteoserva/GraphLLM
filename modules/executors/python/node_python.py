@@ -1,6 +1,7 @@
 from modules.common import PythonInterpreter
 from modules.common import readfile
 from modules.executors.common import GenericExecutor
+from modules.tool_call.tools_factory import ToolsFactory
 
 class PythonExecutor(GenericExecutor):
     node_type = "python"
@@ -12,6 +13,11 @@ class PythonExecutor(GenericExecutor):
         self.properties = {}
         self.logger = args[0]["logger"]
         self.path = args[0].get("path", "/")
+
+        tools_factory = ToolsFactory()
+        tools_list = tools_factory.get_tool_classes(only_default=False)
+        tool_runner = tools_factory.make_tool_runner(tools_list, args[0])
+        self.tools = tool_runner
         pass
 
     def set_template(self,args):
