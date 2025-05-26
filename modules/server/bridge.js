@@ -19,8 +19,9 @@ class WebBrige {
     this.graph = editor.graph;
     this.canvas = this.editor.graphcanvas;
     this.topBar = document.querySelector("span#LGEditorTopBarSelector")
-    var topbar_html = "Graphs: <span class=\"selector-bar\" style=\"display: inline-block;position:relative;width: 400px; height: 35px;\" >"
-    topbar_html += "<input id='filename' maxlength='50' style='height: 100%; width:370px;position: relative;'/><select class=\"selector-main\" style='height: 100%; width:400px; position: absolute; top:0px; right: 0px'><option>Empty</option></select></span>"
+    var topbar_html = "Graphs: <span class=\"selector-bar\" style=\"display: inline-block;position:relative;width: 550px; height: 35px;\" >"
+    topbar_html += "<select id=\"selector-folder\" style='height: 100%; width:150px; position: absolute; top:0px; left: 0px'><option>.</option></select>"
+    topbar_html += "<input id='filename' maxlength='50' style='height: 100%; width:370px; right: 30px; position: absolute;'/><select class=\"selector-main\" style='height: 100%; width:400px; position: absolute; top:0px; right: 0px'><option>Empty</option></select></span>"
     //topbar_html += "<select class=\"selector-extras\" style='height: 100%; width:460px; position: absolute; top:0px; right: 0px'><option>Empty</option></select>"
     topbar_html += "<span class=\"tool_buttons\"><button class='btn' id='save'>Save</button><button class='btn' id='load'>Load</button><button class='btn' id='delete'>Delete</button><button class='btn' id='new'>New</button><button class='btn' id='download'>Download</button></span>| ";
     this.topBar.innerHTML = topbar_html
@@ -31,7 +32,7 @@ class WebBrige {
     this.newBtn = document.querySelector("div.litegraph span#LGEditorTopBarSelector button#new")
     this.nameSelector = document.querySelector("div.litegraph .selector input#filename")
     this.select = document.querySelector("div.litegraph .selector .selector-main")
-
+    this.select_folder = document.querySelector("div.litegraph .selector-bar #selector-folder")
     this.audio = new Audio();
 
     this.graph_handler = new GraphHandler(this.graph,this.canvas)
@@ -95,6 +96,11 @@ class WebBrige {
             }
 
         }.bind(this));
+    this.select_folder.addEventListener("change", function(e){
+            this.loadList()
+            this.nameSelector.value = ""
+        }.bind(this));
+
     document.addEventListener('keydown', (event) => {
         var input_handled = true;
         if(event.ctrlKey && event.key == "Enter") {
@@ -207,14 +213,40 @@ class WebBrige {
 
   loadList()
   {
-    var data = {};
+
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '/graph/list',false);
+    var response = xhr.send({});
+    var lines = xhr.responseText.split("\n")
 
     this.select.innerHTML = "<option>--select--</option>"
-    var response = xhr.send(data);
-    var lines = xhr.responseText.split("\n")
-    lines.forEach((element) => {addDemo(this.select, element, "/graph/load?file="+element); });
+
+    // extract folder names
+    var folderNames = new Set();
+    var fileData = []
+    lines.forEach(filePath => {
+            const parts = filePath.split('/');
+            if (parts.length > 1) {
+              folderNames.add(parts[0]);
+              fileData.push({folder: parts[0], file: parts[1], path: filePath})
+            } else {
+              folderNames.add(".");
+              fileData.push({folder: ".", file: parts[0], path: filePath})
+            }
+          });
+    folderNames = Array.from(folderNames).sort();
+
+    var selectedFolder = this.select_folder.options[this.select_folder.selectedIndex].text
+    this.select_folder.innerHTML = ""
+    folderNames.forEach((element) => {  var option = document.createElement("option");
+	                                    option.innerHTML = element;
+	                                    this.select_folder.appendChild( option );
+	                                 });
+    let folderIndex = folderNames.indexOf(selectedFolder);
+    this.select_folder.selectedIndex= folderIndex>=0?folderIndex:0;
+    selectedFolder = this.select_folder.options[this.select_folder.selectedIndex].text;
+
+    fileData.forEach((element) => {if (element.folder == selectedFolder) addDemo(this.select, element.file, "/graph/load?file="+element.path); });
     console.log(xhr.responseText)
     this.select.selectedIndex = 0
 
@@ -535,7 +567,8 @@ class WebBrige {
 
     // graph name
     var e = this.nameSelector
-    var value = e.value;
+    var selectedFolder = this.select_folder.options[this.select_folder.selectedIndex].text
+    var value = selectedFolder + "/" + e.value;
     data["graph_name"] = value
 
     //nodes
@@ -609,7 +642,8 @@ class WebBrige {
   
   save() {
     var e = this.nameSelector
-    var value = e.value;
+    var selectedFolder = this.select_folder.options[this.select_folder.selectedIndex].text
+    var value = selectedFolder + "/" + e.value;
    var data = JSON.stringify( graph.serialize() );
    let xhr = new XMLHttpRequest();
    xhr.open('POST', '/graph/save?file=' + value,false);
@@ -640,7 +674,8 @@ class WebBrige {
 
   load() {
     var e = this.nameSelector
-    var value = e.value;
+    var selectedFolder = this.select_folder.options[this.select_folder.selectedIndex].text
+    var value = selectedFolder + "/" + e.value;
 
    let xhr = new XMLHttpRequest();
    xhr.open('GET', '/graph/load?file=' + value,false);
@@ -679,7 +714,19 @@ class WebBrige {
     if ("graph_name" in graph_data)
     {
         var e = this.nameSelector;
-        e. value = graph_data["graph_name"]
+        let path_split = graph_data["graph_name"].split("/")
+        e.value = path_split[path_split.length -1]
+
+        let folder_option = Array.from(this.select_folder.options).filter((el) => el.value==path_split[0]);
+        folder_option = folder_option.length > 0? folder_option[0]: null;
+        if (folder_option == null)
+        {
+            folder_option = document.createElement('option');
+            folder_option.value = path_split[0];
+            folder_option.innerHTML = path_split[0];
+            this.select_folder.appendChild(folder_option);
+        }
+        folder_option.selected = true
     }
   }
 }

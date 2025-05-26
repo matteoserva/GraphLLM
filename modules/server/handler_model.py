@@ -27,9 +27,27 @@ class ModelHandler():
         self.index += 1
 
     def _is_valid_filename(self, filename):
-        if len(filename) > 1 and filename != "Empty" and filename.find("/") < 0 and filename.find(".") < 0:
-             return True
-        return False
+        split_file = filename.split("/")
+        if len(split_file)> 2:
+            return False
+        filename = split_file[-1]
+        foldername = "."
+        if len(split_file) > 1:
+            foldername = split_file[0]
+
+        if filename.find(".") >= 0:
+            return False
+        if filename == "Empty":
+            return False
+        if len(filename) < 2:
+            return False
+        if len(foldername) < 1:
+            return False
+
+        if not os.path.isdir("json_graphs/" + foldername):
+            return False
+
+        return True
 
     def save(self,post_data):
         params = self.server.path.split("?", 1)[-1]
