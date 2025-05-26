@@ -89,32 +89,23 @@ class GraphNode:
             self.executor.graph_stopped()
 
     def get_inputs(self):
-        inputs = [el for el in self["inputs"]]
-
-        if self.executor.properties["wrap_input"]:
-            inputs = [el if isinstance(el, ExecutorOutput) else ExecutorOutput(el) for el in inputs]
-        else:
-            inputs = [el.data if isinstance(el,ExecutorOutput) else el for el in inputs ]
+        inputs = [el.data if isinstance(el, ExecutorOutput) else el for el in self["running_inputs"]]
         return inputs
 
     def get_outputs(self):
         outputs = [el for el in self["outputs"]]
         return outputs
 
-    def _execute(self):
-        node=self
-        inputs = self.get_inputs()
+    def _prepare_inputs(self):
+        node = self
+        inputs = [el for el in self["inputs"]]
 
-        #        m,_ = solve_templates(inputs[0],inputs[1:],self.variables)
-        ex = node["executor"]
-
-
-
-        consume_inputs = [True] * len(inputs)
+        if self.executor.properties["wrap_input"]:
+            inputs = [el if isinstance(el, ExecutorOutput) else ExecutorOutput(el) for el in inputs]
+        else:
+            inputs = [el.data if isinstance(el, ExecutorOutput) else el for el in inputs]
 
         if self["free_runs"] > 0:
-            self["free_runs"] -= 1
-            self.executor.properties["free_runs"] = self["free_runs"]
             inputs = []
             consume_inputs = [False] * len(inputs)
         elif self.input_rule == "XOR":
@@ -124,7 +115,7 @@ class GraphNode:
             inputs[self["input_active"]] = node["inputs"][self["input_active"]]
         elif self.input_rule == "OR":
             consume_inputs = [False] * len(inputs)
-            available_inputs = [ i for i, el in enumerate(node["inputs"]) if el is not None]
+            available_inputs = [i for i, el in enumerate(node["inputs"]) if el is not None]
             input_active = available_inputs[0]
             consume_inputs[input_active] = True
             inputs = [None] * len(inputs)
@@ -133,27 +124,44 @@ class GraphNode:
             node["inputs"] = [None] * len(inputs)
             consume_inputs = [True] * len(inputs)
 
-        if len(node["backwards"]) > 0:
-            pass
-        else:
-            self.disable_execution = True
+        return inputs,consume_inputs
 
-        # consuma gli input
-        for i, el in enumerate(consume_inputs):
-            if el:
-                node["inputs"][i] = None
+    def _execute(self):
+        node=self
 
-        res = ex(inputs)
+        ex = node["executor"]
+
+        inputs, consume_inputs = self._prepare_inputs()
+
+        if self["free_runs"] > 0:
+            self["free_runs"] -= 1
+            self.executor.properties["free_runs"] = self["free_runs"]
+
+        try:
+            self["running_inputs"] = inputs
+            res = ex(inputs)
+        finally:
+            del self.running_inputs
+            # consuma gli input
+            for i, el in enumerate(consume_inputs):
+                if el:
+                    node["inputs"][i] = None
+
+            if len(node["backwards"]) > 0 and self["free_runs"] == 0:
+                pass
+            else:
+                self.disable_execution = True
 
         if not isinstance(res, list):
             res = [res]
 
 
         # salva gli output
-        node["last_output"] = res
-        for i, el in enumerate(res):
-            if i < len(node["outputs"]):
-                node["outputs"][i] = el
+        node["outputs"] = res
+        #node["last_output"] = res
+        #for i, el in enumerate(res):
+        #    if i < len(node["outputs"]):
+        #        node["outputs"][i] = el
 
         return res
 

@@ -152,6 +152,10 @@ class GraphExecutor:
             forwards_list = node["forwards"]
 
             for source_port,current_output in enumerate(source_outputs):
+                if source_port >= len(forwards_list):
+                    node["outputs"][source_port] = None
+                    continue
+
                 forwards = forwards_list[source_port]
                 if isinstance(current_output,ExecutorOutput) and "destination" in current_output.meta:
                     dest_tuple = current_output.meta["destination"]
@@ -205,7 +209,7 @@ class GraphExecutor:
             if isinstance(i,Exception):
                 raise GraphException(i)
         for i in completed:
-            res = self.graph_nodes[i]["last_output"]
+            res = self.graph_nodes[i]["outputs"]
             
             # res = self.graph_nodes[i].execute()
             config = self.node_configs[i]
@@ -213,7 +217,7 @@ class GraphExecutor:
             rname = "r" + name
             self.variables[rname] = res
             self.variables["r"][name] = res
-            self.last_output = res
+            self.outputs = res[:]
             
         return completed
         
@@ -228,7 +232,7 @@ class GraphExecutor:
         self.stop()
 
     def __call__(self, input_data):
-        self.last_output = None
+        self.outputs = None
         self.force_stop = False
         input_node = [el for el in self.graph_nodes if el["name"] == "_I"][0]
         input_node["inputs"] = input_data
@@ -270,4 +274,4 @@ class GraphExecutor:
             raise e from None
         finally:
             self._notify_graph_stopped()
-        return self.last_output
+        return self.outputs
