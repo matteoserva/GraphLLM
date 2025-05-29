@@ -102,7 +102,8 @@ class LLamaCppClient:
                 rendered = self.tokenize("<<<<USER>>>>", add_special=True, with_pieces=True)
                 textval = "".join([el["piece"] for el in rendered])
                 bos_token = textval[:textval.find("<<<<USER>>>>")]
-                resp["bos_token"] = bos_token
+                if len(resp.get("bos_token","")) <= 0:
+                    resp["bos_token"] = bos_token
 
             except:
                 pass
@@ -173,7 +174,7 @@ class LLamaCppClient:
         # print("tokens: ", len(r4))
         return r4
 
-    def apply_template(self, messages):
+    def apply_template(self, messages,*args, **kwargs):
         url = self.base_url + "/apply-template"
         a = {}
         a["messages"] = messages
