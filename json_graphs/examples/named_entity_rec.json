@@ -1,6 +1,6 @@
 {
-    "last_node_id": 35,
-    "last_link_id": 41,
+    "last_node_id": 36,
+    "last_link_id": 45,
     "nodes": [
         {
             "id": 20,
@@ -14,18 +14,13 @@
                 "1": 177
             },
             "flags": {},
-            "order": 4,
+            "order": 5,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 27
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": 31
+                    "link": 45
                 },
                 {
                     "name": "N",
@@ -51,8 +46,8 @@
             ],
             "properties": {
                 "conf": "{\"temperature\":0.01, \"top_k\":40,\"sysprompt\":\"You are an expert and helpful assistant able to identify entitites and their relations from an Italian text\"}",
-                "subtype": "stateful",
-                "template": ""
+                "template": "",
+                "subtype": "stateful"
             }
         },
         {
@@ -101,61 +96,15 @@
             }
         },
         {
-            "id": 30,
-            "type": "graph/generic_node",
+            "id": 28,
+            "type": "input/list",
             "pos": [
-                341,
-                57
+                32,
+                216
             ],
             "size": {
-                "0": 240.91099548339844,
-                "1": 108
-            },
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 34
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        31,
-                        36
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "parameters": "type: copy\nconf: {subtype: repeat}"
-            }
-        },
-        {
-            "id": 29,
-            "type": "tools/file",
-            "pos": [
-                42,
-                57
-            ],
-            "size": {
-                "0": 255.28916931152344,
-                "1": 82
+                "0": 560.8588256835938,
+                "1": 667.7273559570312
             },
             "flags": {},
             "order": 0,
@@ -171,47 +120,7 @@
                 {
                     "name": "out",
                     "type": "string",
-                    "links": [
-                        34
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "filename": "test/ner_podcast.txt",
-                "config": ""
-            },
-            "color": "#432",
-            "bgcolor": "#653"
-        },
-        {
-            "id": 28,
-            "type": "llm/list",
-            "pos": [
-                32,
-                216
-            ],
-            "size": {
-                "0": 560.8588256835938,
-                "1": 667.7273559570312
-            },
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        27
-                    ],
+                    "links": [],
                     "slot_index": 0
                 }
             ],
@@ -225,11 +134,160 @@
             "bgcolor": "#653"
         },
         {
-            "id": 34,
-            "type": "llm/watch",
+            "id": 31,
+            "type": "output/watch",
             "pos": [
-                633,
-                63
+                1410,
+                218
+            ],
+            "size": {
+                "0": 482,
+                "1": 206
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 43
+                }
+            ],
+            "title": "File input preview",
+            "properties": {
+                "parameters": ""
+            }
+        },
+        {
+            "id": 23,
+            "type": "graph/variable",
+            "pos": [
+                1411,
+                57
+            ],
+            "size": {
+                "0": 487.25860595703125,
+                "1": 112
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This graph performs the operation in two steps:\nfirst it extract the entities, then the relations."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 16,
+            "type": "output/watch",
+            "pos": [
+                1415,
+                471
+            ],
+            "size": {
+                "0": 469,
+                "1": 408
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 39,
+                    "slot_index": 0
+                }
+            ],
+            "title": "Output preview",
+            "properties": {
+                "parameters": ""
+            }
+        },
+        {
+            "id": 29,
+            "type": "tools/file",
+            "pos": [
+                42,
+                57
+            ],
+            "size": {
+                "0": 255.28916931152344,
+                "1": 82
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        42
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "filename": "tests/ner_podcast.txt",
+                "config": ""
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 36,
+            "type": "other/repeat",
+            "pos": [
+                350,
+                60
+            ],
+            "size": [
+                220,
+                70
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 42
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        43,
+                        44,
+                        45
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "repetitions": 0
+            }
+        },
+        {
+            "id": 34,
+            "type": "output/watch",
+            "pos": [
+                630,
+                60
             ],
             "size": {
                 "0": 745.5136108398438,
@@ -251,115 +309,9 @@
             },
             "color": "#223",
             "bgcolor": "#335"
-        },
-        {
-            "id": 31,
-            "type": "llm/watch",
-            "pos": [
-                1410,
-                218
-            ],
-            "size": [
-                482,
-                206
-            ],
-            "flags": {},
-            "order": 5,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 36
-                }
-            ],
-            "title": "File input preview",
-            "properties": {
-                "parameters": ""
-            }
-        },
-        {
-            "id": 23,
-            "type": "graph/variable",
-            "pos": [
-                1411,
-                57
-            ],
-            "size": {
-                "0": 487.25860595703125,
-                "1": 112
-            },
-            "flags": {},
-            "order": 2,
-            "mode": 0,
-            "properties": {
-                "identifier": "",
-                "parameters": "This graph performs the operation in two steps:\nfirst it extract the entities, then the relations."
-            },
-            "color": "#232",
-            "bgcolor": "#353"
-        },
-        {
-            "id": 16,
-            "type": "llm/watch",
-            "pos": [
-                1415,
-                471
-            ],
-            "size": [
-                469,
-                408
-            ],
-            "flags": {},
-            "order": 6,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 39,
-                    "slot_index": 0
-                }
-            ],
-            "title": "Output preview",
-            "properties": {
-                "parameters": ""
-            }
         }
     ],
     "links": [
-        [
-            27,
-            28,
-            0,
-            20,
-            0,
-            "string"
-        ],
-        [
-            31,
-            30,
-            0,
-            20,
-            1,
-            "string"
-        ],
-        [
-            34,
-            29,
-            0,
-            30,
-            0,
-            "string"
-        ],
-        [
-            36,
-            30,
-            0,
-            31,
-            0,
-            "string"
-        ],
         [
             39,
             20,
@@ -383,10 +335,73 @@
             34,
             0,
             "string"
+        ],
+        [
+            42,
+            29,
+            0,
+            36,
+            0,
+            "string"
+        ],
+        [
+            43,
+            36,
+            0,
+            31,
+            0,
+            "string"
+        ],
+        [
+            44,
+            36,
+            0,
+            20,
+            1,
+            "string"
+        ],
+        [
+            45,
+            36,
+            0,
+            20,
+            0,
+            "string"
         ]
     ],
     "groups": [],
     "config": {},
     "extra": {},
-    "version": 0.4
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "examples/named_entity_rec",
+    "node_states": {
+        "16": {
+            "rotation": 0
+        },
+        "20": {
+            "rotation": 0
+        },
+        "23": {
+            "rotation": 0
+        },
+        "28": {
+            "rotation": 0
+        },
+        "29": {
+            "rotation": 0
+        },
+        "31": {
+            "rotation": 0
+        },
+        "33": {
+            "rotation": 0
+        },
+        "34": {
+            "rotation": 0
+        },
+        "36": {
+            "rotation": 0
+        }
+    }
 }
