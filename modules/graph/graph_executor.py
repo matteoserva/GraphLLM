@@ -217,7 +217,7 @@ class GraphExecutor:
             rname = "r" + name
             self.variables[rname] = res
             self.variables["r"][name] = res
-            self.outputs = res[:]
+
             
         return completed
         
@@ -247,6 +247,11 @@ class GraphExecutor:
                 for i, el in enumerate(input_data):
                     node["inputs"][i] = el
 
+        output_nodes = []
+        for i, el in enumerate(self.node_configs):
+            if el["type"] == "copy" and el.get("conf", {}).get("subtype", "") == "output":
+                output_nodes.append(i)
+
         running = []
         max_parallel_jobs = PARALLEL_JOBS
         self._notify_graph_started()
@@ -264,6 +269,11 @@ class GraphExecutor:
                     completed = self._get_completions(timeout=1.0)
                     if len(completed) == 0:
                         self.logger.log("keepalive")
+                    if len(completed) > 0 and len(output_nodes) == 0:
+                        self.outputs = self.graph_nodes[completed[-1]]["outputs"][:]
+                    elif len(output_nodes) > 0 and output_nodes[0] in completed:
+                        self.outputs = self.graph_nodes[output_nodes[0]]["outputs"][:]
+
                     running = [i for i in running if i not in completed]
                 self.logger.log("running", running)
                 self._execute_arcs(running)
