@@ -85,7 +85,7 @@ class WebBrige {
 
     //some examples
     //addDemo("rap battle", "/graph/load?file=rap_battle.json");
-    this.loadList()
+
     this.select.addEventListener("change", function(e){
             if(this.select.selectedIndex > 0)
             {
@@ -734,3 +734,4 @@ class WebBrige {
 const web_bridge = new WebBrige();
 web_bridge.connect()
 web_bridge.loadBackup()
+web_bridge.loadList()
