@@ -196,9 +196,9 @@ class GraphExecutor:
         for el in self.graph_nodes:
             el._graph_stopped()
 
-    def _get_completions(self):
+    def _get_completions(self, timeout):
         try:
-            completed = [self.stopped_queue.get(timeout=1.0)]
+            completed = [self.stopped_queue.get(timeout)]
         except queue.Empty:
             completed = []
 
@@ -261,7 +261,7 @@ class GraphExecutor:
                     runnable = runnable[:max_num_launched]
                     running += self._launch_nodes(runnable)
                 if len(running) > 0:
-                    completed = self._get_completions()
+                    completed = self._get_completions(timeout=1.0)
                     if len(completed) == 0:
                         self.logger.log("keepalive")
                     running = [i for i in running if i not in completed]
