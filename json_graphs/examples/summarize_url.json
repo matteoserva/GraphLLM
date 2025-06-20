@@ -21,7 +21,9 @@
                     "name": "in",
                     "type": "string",
                     "link": 30,
-                    "slot_index": 0
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "title": "Downloaded page",
@@ -41,7 +43,7 @@
                 "1": 63
             },
             "flags": {},
-            "order": 1,
+            "order": 0,
             "mode": 0,
             "outputs": [
                 {
@@ -77,7 +79,9 @@
                     "name": "in",
                     "type": "string",
                     "link": 33,
-                    "slot_index": 0
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "title": "Generated summary",
@@ -88,16 +92,38 @@
             "bgcolor": "#335"
         },
         {
+            "id": 25,
+            "type": "graph/variable",
+            "pos": [
+                50,
+                330
+            ],
+            "size": {
+                "0": 620,
+                "1": 290
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "title": "Info",
+            "properties": {
+                "identifier": "",
+                "parameters": "This is a hierarchical graph. The article is first downloaded, then\nsummarized using another graph.\n\nThis example requires that extra tools are properly configured.\n\nThe scraped data is shown in the yellow box.\nThe summary is in the blue box"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
             "id": 29,
             "type": "graph/call_subgraph",
             "pos": [
                 50,
                 180
             ],
-            "size": [
-                620,
-                80
-            ],
+            "size": {
+                "0": 620,
+                "1": 80
+            },
             "flags": {},
             "order": 3,
             "mode": 0,
@@ -105,12 +131,16 @@
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 32
+                    "link": 32,
+                    "pos": null,
+                    "dir": null
                 },
                 {
                     "name": "N",
                     "type": "string",
-                    "link": null
+                    "link": null,
+                    "pos": null,
+                    "dir": null
                 }
             ],
             "outputs": [
@@ -129,30 +159,8 @@
                 }
             ],
             "properties": {
-                "subgraph_name": "summarize_file"
+                "subgraph_name": "examples/summarize_file"
             }
-        },
-        {
-            "id": 25,
-            "type": "graph/variable",
-            "pos": [
-                50,
-                330
-            ],
-            "size": [
-                620,
-                290
-            ],
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "title": "Info",
-            "properties": {
-                "identifier": "",
-                "parameters": "This is a hierarchical graph. The article is first downloaded, then\nsummarized using another graph.\n\nThis example requires that extra tools are properly configured.\n\nThe scraped data is shown in the yellow box.\nThe summary is in the blue box"
-            },
-            "color": "#232",
-            "bgcolor": "#353"
         }
     ],
     "links": [
@@ -186,7 +194,7 @@
     "extra": {},
     "version": 0.4,
     "group_states": {},
-    "graph_name": "summarize_url",
+    "graph_name": "examples/summarize_url",
     "node_states": {
         "16": {
             "rotation": 0
