@@ -22,7 +22,7 @@ with open(tempfile.gettempdir() + "/w2.txt") as f:
 
 val = ""
 
-print("extracting title and author")
+print("extracting title and author", file=sys.stderr)
 
 # add title and author to transcript
 cdata = data[data.find('"videoDetails"')+15:]
@@ -31,7 +31,7 @@ obj,idx = decoder.raw_decode(cdata)
 #print (obj)
 val = "Title: " + obj["title"] + "\nAuthor: " + obj["author"] + "\n\nTranscription:\n" + val
 
-print("fetching trascripts")
+print("fetching trascripts", file=sys.stderr)
 video_id = obj['videoId']
 ytt_api = YouTubeTranscriptApi()
 transcript_list = ytt_api.list(video_id)
