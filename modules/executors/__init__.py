@@ -64,7 +64,7 @@ def get_executors():
 
     executors_map["agent"] = AgentController
     executors_map["tool"] = ToolExecutor
-    executors_map["graph"] = GraphExecutor
+    #executors_map["graph"] = GraphExecutor
     executors_map["llamatool"] = LlamaTool
     return executors_map
     

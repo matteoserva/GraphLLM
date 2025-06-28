@@ -7,12 +7,13 @@ import queue
 from functools import partial
 from .common import GraphException
 from modules.executors.common import ExecutorOutput
+from modules.executors.common import GenericExecutor
 
 PARALLEL_JOBS=2
 
 
 
-class GraphExecutor:
+class GraphExecutor(GenericExecutor):
     properties = {"free_runs": 0, "input_rule":"AND", "wrap_input": False, "input_active": []}
     def __init__(self,executor_config):
         if not isinstance(executor_config, dict):
@@ -32,6 +33,9 @@ class GraphExecutor:
 
     def set_client_parameters(self,p):
         self.client_parameters = p
+
+    def set_template(self,*args,**kwargs):
+        return self.load_config(*args,**kwargs)
 
     def load_config(self,cl_args=None):
         try_solve_files(cl_args)
