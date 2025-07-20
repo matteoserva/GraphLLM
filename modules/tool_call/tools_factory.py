@@ -98,22 +98,31 @@ class ToolRunner():
                 row["tool"] = tool_object
                 self.ops[op["name"]] = row
 
-
-
-    def get_formatted_ops(self):
+    def _get_formatted_ops(self, format="markdown"):
         ops = [self.ops[el] for el in self.ops]
         textlist = []
-        for op in ops:
-            row = ""
-            row = row + "- " + op["name"]
-            if op["doc"] is not None:
-                row = row + ": " + op["doc"]
-            param_names = [el["name"] for el in op["params"]]
-            params_string = ",".join(param_names)
-            if row[-1] == ".":
-                row = row[:-1]
-            row = row + ". Parameters: " + params_string
-            textlist.append(row)
+        if format == "python":
+            for op in ops:
+                row = ""
+                row += "def " + op["name"]+"("
+                param_names = [el["name"] for el in op["params"]]
+                params_string = ",".join(param_names)
+                row += params_string + ")\n"
+                if op["doc"] is not None:
+                    row += '    """' + op["doc"] + '"""\n'
+                textlist.append(row)
+        else:
+            for op in ops:
+                row = ""
+                row = row + "- " + op["name"]
+                if op["doc"] is not None:
+                    row = row + ": " + op["doc"]
+                param_names = [el["name"] for el in op["params"]]
+                params_string = ",".join(param_names)
+                if row[-1] == ".":
+                    row = row[:-1]
+                row = row + ". Parameters: " + params_string
+                textlist.append(row)
         res = "\n".join(textlist)
         return res
 
@@ -127,13 +136,27 @@ class ToolRunner():
         result = op_info["function"](**named_parameters)
         return result
 
-    def exec(self,*args,**kwargs):
+    def _exec_name_args(self, function_name, *args,**kwargs):
+        op_info = self.ops[function_name]
+        result = op_info["function"](*args,**kwargs)
+        return result
+
+    def _exec(self,*args,**kwargs):
         result = ""
         if len(args) == 2 and isinstance(args[0],str) and isinstance(args[1],list):
             result = self._exec_name_list(args[0],args[1])
         if len(args) == 1 and isinstance(args[0],str) and len(kwargs) > 0:
             result = self._exec_name_dict(args[0],kwargs)
         return result
+
+    def __getattr__(self, function_name):
+        if function_name in self.ops:
+            def function_wrapper(*args,**kwargs):
+                return self._exec_name_args(function_name,*args,**kwargs)
+            return function_wrapper
+        else:
+            raise AttributeError
+
 
 class ToolsFactory():
     def __init__(self):

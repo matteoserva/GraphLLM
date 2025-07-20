@@ -89,9 +89,26 @@ class AgentHistoryBuilderNode(GenericExecutor):
         res = "\n".join(textlist)
         return res
 
+    def _format_tools_python(self,tools):
+        ops = [el for el in tools]
+        textlist = []
+        for op in ops:
+            row = ""
+            row += "def " + op["name"] + "("
+            param_names = [el["name"] for el in op["params"]]
+            params_string = ",".join(param_names)
+            row += params_string + ")\n"
+            if op["doc"] is not None:
+                row += '    """' + op["doc"] + '"""\n'
+            textlist.append(row)
+        res = "\n".join(textlist)
+        return res
+
     def _format_tools(self,tools,format="markdown"):
         if format == "json":
             res = self._format_tools_json(tools)
+        elif format == "python":
+            res = self._format_tools_python(tools)
         else:
             res = self._format_tools_markdown(tools)
         return res

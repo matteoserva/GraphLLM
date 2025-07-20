@@ -24,7 +24,7 @@ class OpenAIClient():
         self.client = None
         self.prompt_metadata = {}
         
-        self.default_params = {"temperature": 0.1, "max_tokens": 1024 // 2, "stream": True, "stop": None}
+        self.default_params = {"temperature": 0.1, "max_tokens": -1, "stream": True, "stop": None}
 
     def get_models(self,base_url):
         try:

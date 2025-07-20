@@ -7,12 +7,13 @@ import queue
 from functools import partial
 from .common import GraphException
 from modules.executors.common import ExecutorOutput
+from modules.executors.common import GenericExecutor
 
 PARALLEL_JOBS=2
 
 
 
-class GraphExecutor:
+class GraphExecutor(GenericExecutor):
     properties = {"free_runs": 0, "input_rule":"AND", "wrap_input": False, "input_active": []}
     def __init__(self,executor_config):
         if not isinstance(executor_config, dict):
@@ -32,6 +33,9 @@ class GraphExecutor:
 
     def set_client_parameters(self,p):
         self.client_parameters = p
+
+    def set_template(self,*args,**kwargs):
+        return self.load_config(*args,**kwargs)
 
     def load_config(self,cl_args=None):
         try_solve_files(cl_args)
@@ -152,6 +156,10 @@ class GraphExecutor:
             forwards_list = node["forwards"]
 
             for source_port,current_output in enumerate(source_outputs):
+                if source_port >= len(forwards_list):
+                    node["outputs"][source_port] = None
+                    continue
+
                 forwards = forwards_list[source_port]
                 if isinstance(current_output,ExecutorOutput) and "destination" in current_output.meta:
                     dest_tuple = current_output.meta["destination"]
@@ -192,9 +200,9 @@ class GraphExecutor:
         for el in self.graph_nodes:
             el._graph_stopped()
 
-    def _get_completions(self):
+    def _get_completions(self, timeout):
         try:
-            completed = [self.stopped_queue.get(timeout=1.0)]
+            completed = [self.stopped_queue.get(timeout)]
         except queue.Empty:
             completed = []
 
@@ -205,7 +213,7 @@ class GraphExecutor:
             if isinstance(i,Exception):
                 raise GraphException(i)
         for i in completed:
-            res = self.graph_nodes[i]["last_output"]
+            res = self.graph_nodes[i]["outputs"]
             
             # res = self.graph_nodes[i].execute()
             config = self.node_configs[i]
@@ -213,7 +221,7 @@ class GraphExecutor:
             rname = "r" + name
             self.variables[rname] = res
             self.variables["r"][name] = res
-            self.last_output = res
+
             
         return completed
         
@@ -228,7 +236,7 @@ class GraphExecutor:
         self.stop()
 
     def __call__(self, input_data):
-        self.last_output = None
+        self.outputs = None
         self.force_stop = False
         input_node = [el for el in self.graph_nodes if el["name"] == "_I"][0]
         input_node["inputs"] = input_data
@@ -242,6 +250,11 @@ class GraphExecutor:
                 node = self.graph_nodes[i]
                 for i, el in enumerate(input_data):
                     node["inputs"][i] = el
+
+        output_nodes = []
+        for i, el in enumerate(self.node_configs):
+            if el["type"] == "copy" and el.get("conf", {}).get("subtype", "") == "output":
+                output_nodes.append(i)
 
         running = []
         max_parallel_jobs = PARALLEL_JOBS
@@ -257,9 +270,14 @@ class GraphExecutor:
                     runnable = runnable[:max_num_launched]
                     running += self._launch_nodes(runnable)
                 if len(running) > 0:
-                    completed = self._get_completions()
+                    completed = self._get_completions(timeout=1.0)
                     if len(completed) == 0:
                         self.logger.log("keepalive")
+                    if len(completed) > 0 and len(output_nodes) == 0:
+                        self.outputs = self.graph_nodes[completed[-1]]["outputs"][:]
+                    elif len(output_nodes) > 0 and output_nodes[0] in completed:
+                        self.outputs = self.graph_nodes[output_nodes[0]]["outputs"][:]
+
                     running = [i for i in running if i not in completed]
                 self.logger.log("running", running)
                 self._execute_arcs(running)
@@ -270,4 +288,4 @@ class GraphExecutor:
             raise e from None
         finally:
             self._notify_graph_stopped()
-        return self.last_output
+        return self.outputs

@@ -133,5 +133,6 @@ class CopyNode(GenericExecutor):
             v = res[0]
             base = self._json_parse(v)
             res[0] = base[attr_name]
-        return res
+
+        return [el for el in res]
 
