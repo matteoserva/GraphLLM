@@ -34,3 +34,8 @@ openai:
     type: openai
     api_key: XXX
     base_url: http://localhost:8080/v1
+    
+ollama:
+    type: openai
+    api_key: XXX
+    base_url: http://localhost:11434/v1
