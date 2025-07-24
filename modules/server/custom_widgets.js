@@ -940,19 +940,30 @@ class CustomTextOutput extends CustomTextCommon{
         var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size
         var totally_scrolled = this.textarea.scrollTop >= 5 &&
             (Math.abs(this.textarea.scrollHeight - this.textarea.clientHeight - this.textarea.scrollTop) <= 1);
+        if(this.old_content === this.saved_content && this.old_markdown === this.config.use_markdown )
+        {
+            return;
+        }
+        else
+        {
+            this.old_content = this.saved_content
+            this.old_markdown = this.config.use_markdown
+        }
+
         if(this.config.use_markdown)
         {
             var text = this.saved_content;
-            var converter = new showdown.Converter({
-            extensions: [
-              showdownKatex(
+            let katex = showdownKatex(
                   {
                       displayMode: true,
-                      throwOnError: false, // allows katex to fail silently
+                      throwOnError: true, // allows katex to fail silently
                       errorColor: '#ff0000',
-                      delimiters: [{ left: "$ ", right: " $", display: false }, { left: "$$\n", right: "$$", display: true }],
+                      delimiters: [{ left: "¨D ", right: " ¨D", display: false }, { left: "¨D¨D\n", right: "¨D¨D", display: true }],
                   }
-              )]
+              )()
+            katex[0].type = "lang"
+            var converter = new showdown.Converter({
+            extensions: [katex]
               }
 
             );
@@ -1203,6 +1214,7 @@ class CustomTextOutput extends CustomTextCommon{
         } else if (action.target == "reset")
         {
             this.saved_content = ""
+            this.old_content = ""
 
         } else if (action.target == "append")
         {
