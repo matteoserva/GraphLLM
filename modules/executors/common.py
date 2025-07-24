@@ -94,7 +94,9 @@ class BaseGuiNode(GuiNodeBuilder):
         
     #def _addWidget(self, type, title, parameterName, options):
     #    self.config["outputs"].append((name,type))
-
+    def _getBuilder(self):
+        builder = self
+        return builder
 
     def buildNode(self):
         pass
