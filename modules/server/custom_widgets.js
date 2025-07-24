@@ -891,12 +891,30 @@ class CustomTextOutput extends CustomTextCommon{
 		return 0;
 	}
 
+    cleanKatexBlocks(katexSpan)
+    {
+        var prevSibling = katexSpan.previousSibling
+        var nextSibling = katexSpan.nextSibling
+        var parentCount = katexSpan.parentElement.childElementCount
+        if(parentCount == 1 && nextSibling && prevSibling)
+        {
+            if(prevSibling.textContent.trim() == "$$" && nextSibling.textContent.trim() == "$$")
+            {
+                prevSibling.remove()
+                nextSibling.remove()
+            }
+            console.log("clean?")
+        }
+    }
+
     cleanHtml(textarea)
     {
 		
 		var children = textarea.childNodes;
-		var inner = textarea.innerHTML
+        var katexNodes = textarea.querySelectorAll("span > span[class=katex-display]")
+        katexNodes.forEach((element) => this.cleanKatexBlocks(element.parentNode));
 
+        var inner = textarea.innerHTML
 		inner = inner.replace(/\<blockquote\>\n(\s+\<)/g,"<blockquote>$1") //blockquote\n  <p>
         //inner = inner.replace(/\n(\s*)\<\/blockquote\>/g,"$1</blockquote>") //blockquote\n  <p>
        /* inner = inner.replace(/\<\/li\>\n/g,"</li>")
@@ -931,7 +949,7 @@ class CustomTextOutput extends CustomTextCommon{
                       displayMode: true,
                       throwOnError: false, // allows katex to fail silently
                       errorColor: '#ff0000',
-                      delimiters: [{ left: "$", right: "$", display: false }],
+                      delimiters: [{ left: "$ ", right: " $", display: false }, { left: "$$\n", right: "$$", display: true }],
                   }
               )]
               }
