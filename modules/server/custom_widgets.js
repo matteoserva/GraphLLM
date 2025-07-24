@@ -893,10 +893,11 @@ class CustomTextOutput extends CustomTextCommon{
 
     cleanKatexBlocks(katexSpan)
     {
-        var prevSibling = katexSpan.previousSibling
-        var nextSibling = katexSpan.nextSibling
+        var prevSibling = katexSpan.previousSibling || {}
+        var nextSibling = katexSpan.nextSibling || {}
         var parentCount = katexSpan.parentElement.childElementCount
-        if(parentCount == 1 && nextSibling && prevSibling)
+
+        if(prevSibling.nodeType == Node.TEXT_NODE  && nextSibling.nodeType == Node.TEXT_NODE  )
         {
             if(prevSibling.textContent.trim() == "$$" && nextSibling.textContent.trim() == "$$")
             {
@@ -911,7 +912,7 @@ class CustomTextOutput extends CustomTextCommon{
     {
 		
 		var children = textarea.childNodes;
-        var katexNodes = textarea.querySelectorAll("span > span[class=katex-display]")
+        var katexNodes = textarea.querySelectorAll("span > span.katex-display")
         katexNodes.forEach((element) => this.cleanKatexBlocks(element.parentNode));
 
         var inner = textarea.innerHTML
