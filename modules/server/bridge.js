@@ -656,7 +656,8 @@ class WebBrige {
   deleteFile() {
    //this.graph.clear()
     var e = this.nameSelector
-    var value = e.value;
+    var selectedFolder = this.select_folder.options[this.select_folder.selectedIndex].text
+    var value = selectedFolder + "/" + e.value;
    var data = JSON.stringify( graph.serialize() );
    let xhr = new XMLHttpRequest();
    xhr.open('POST', '/graph/delete?file=' + value,false);
