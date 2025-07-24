@@ -61,7 +61,12 @@ def _load_available_tools():
             params = d[0][1:]
             e = len(params)
             default_params = d.defaults if d.defaults else []
-            params = [{"name": el, "required": ((i + len(default_params)) < len(params))} for i,el in enumerate(params) ]
+            params = [{"name": el, "required": False} for i, el in enumerate(params)]
+            for i, el in enumerate(default_params[::-1]):
+                parPos = len(params) -1 - i
+                params[parPos]["required"] = True
+                params[parPos]["default"] = el
+
             row = {}
             row["name"] = op
             row["params"] = params

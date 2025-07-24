@@ -84,6 +84,8 @@ class AgentHistoryBuilderNode(GenericExecutor):
             function["parameters"] = parameters
             properties = [el["name"] for el in op["params"]]
             parameters["properties"] = properties
+            required = [el["name"] for el in op["params"] if el["required"]]
+            parameters["required"] = required
             rowstring = json.dumps(row)
             textlist.append(rowstring)
         res = "\n".join(textlist)
@@ -95,8 +97,8 @@ class AgentHistoryBuilderNode(GenericExecutor):
         for op in ops:
             row = ""
             row += "def " + op["name"] + "("
-            param_names = [el["name"] for el in op["params"]]
-            params_string = ",".join(param_names)
+            param_names = [el["name"] if not el["required"] else el["name"] + "=" + el["default"] for el in op["params"]]
+            params_string = ", ".join(param_names)
             row += params_string + ")\n"
             if op["doc"] is not None:
                 row += '    """' + op["doc"] + '"""\n'
