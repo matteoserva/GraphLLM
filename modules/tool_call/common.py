@@ -23,8 +23,6 @@ class GenericTool():
 	def __init__(self):
 		pass
 
-
-
 	def _parse_inputs(self,fname, text_params):
 		if isinstance(text_params,list):
 			return text_params,{}
