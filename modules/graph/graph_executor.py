@@ -248,6 +248,8 @@ class GraphExecutor(GenericExecutor):
                     input_nodes.append(i)
             for i in input_nodes:
                 node = self.graph_nodes[i]
+                while len(node["inputs"]) < len(input_data):
+                    node["inputs"].append(None)
                 for i, el in enumerate(input_data):
                     node["inputs"][i] = el
 

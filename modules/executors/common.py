@@ -1,20 +1,4 @@
-from ..formatter import solve_templates
 from .gui_node_builder import GuiNodeBuilder
-# def metaclass_protect(*protected):
-#     """Returns a metaclass that protects all attributes given as strings"""
-#     class Protect(type):
-#         has_base = False
-#         def __new__(meta, name, bases, attrs):
-#             if meta.has_base:
-#                 for attribute in attrs:
-#                     if attribute in protected:
-#                         raise AttributeError('Overriding of attribute "%s" not allowed.'%attribute)
-#             meta.has_base = True
-#             klass = super().__new__(meta, name, bases, attrs)
-#             return klass
-#     return Protect
-
-#metaclass=metaclass_protect("pre_initialize","set_template")
 
 class ExecutorOutput():
     def __init__(self,data,meta={}):
@@ -23,8 +7,6 @@ class ExecutorOutput():
 
     def __str__(self):
         return str(self.data)
-
-
 
 class GenericExecutor():
     def __init__(self, initial_parameters):
@@ -98,11 +80,7 @@ class BaseGuiParser:
         pass
 
 
-
-
 class BaseGuiNode(GuiNodeBuilder):
-
-
         
     #def _addWidget(self, type, title, parameterName, options):
     #    self.config["outputs"].append((name,type))
