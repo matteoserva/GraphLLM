@@ -44,7 +44,15 @@ class TitlebarContainer {
 		
 		this.parent_visible = false
     }
-	
+
+	addWidget(type,data)
+	{
+	    let titledialog = this.dialog.querySelector(".titlebar-dialog");
+	    let newDiv = document.createElement("div");
+	    newDiv.innerText = data
+	    titledialog.appendChild(newDiv);
+	}
+
 	makeElement()
     {
 
@@ -54,15 +62,17 @@ class TitlebarContainer {
         dialog.innerHTML = `
 		<div class="titlebar-header" style="height: ` + LiteGraph.NODE_TITLE_HEIGHT + `px;">
 			<div class="titlebar-buttons">
+			    <div><img src="img/rotation.jpg" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
 				<div class="titlebar-rotate">R</div>
 				<div class="titlebar-delete">D</div>
+
 			</div>
 			<img src="img/circle.png" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
-        <div class="titlebar-dialog">ciao</div>`
+        <div class="titlebar-dialog"></div>`
 
 
 
-		let titledialog = dialog.querySelector(".titlebar-dialog");
+
 		let titleheader = dialog.querySelector(".titlebar-header");
 		titleheader.addEventListener('click', () => {
             let wasVisible = dialog.classList.contains("focused")

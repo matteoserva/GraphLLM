@@ -22,6 +22,9 @@ class GuiNodeBuilder:
         builder._reset()
         if hasattr(self, "node_type"):
             builder._setPath(self.node_type)
+        if hasattr(self, "__doc__") and self.__doc__:
+            docstring = self.__doc__.strip().split("\n")[0]
+            builder._addTitlebarWidget("__doc__", docstring)
         return builder
 
     def getNodeString(self):
@@ -140,7 +143,11 @@ class GuiNodeBuilder:
             res += "        this.container.addWidget" + str(el) + "\n"
 
         if len(self.config["titlebar_widgets"]) > 0:
-            res += "        this.addCustomWidget( new TitlebarContainer(this));\n"
+            res += "        let titlebar_container = new TitlebarContainer(this);\n"
+            res += "        this.addCustomWidget( titlebar_container);\n"
+
+        for titlebar_widget in self.config["titlebar_widgets"]:
+            res += "        titlebar_container.addWidget(" + json.dumps(titlebar_widget)[1:-1] + ")\n"
 
         res = "\n".join([" "*12 + el.strip() for el in res.split("\n")])
         res = """
