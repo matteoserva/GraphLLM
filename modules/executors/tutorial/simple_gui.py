@@ -3,12 +3,10 @@ from modules.executors.common import BaseGuiNode
 class SimpleGui(BaseGuiNode):
     node_type="simple_gui"
 
-    def __init__(self):
-        pass
-
     def buildNode(self):
         builder = self._initBuilder()
 
         builder._addOutput("out", "string");
-
         builder._addCustomWidget("textarea", "widget name", {"property": "textarea_identifier"})
+
+        return builder

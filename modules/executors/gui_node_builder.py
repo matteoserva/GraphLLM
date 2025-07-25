@@ -17,6 +17,16 @@ class GuiNodeBuilder:
                        "standard_widgets": [], "custom_widgets": [], "titlebar_widgets" : [],
                        "properties": {}, "subscriptions" : [], "extra_properties": []}
 
+    def _initBuilder(self):
+        builder = self
+        builder._reset()
+        if hasattr(self, "node_type"):
+            builder._setPath(self.node_type)
+        return builder
+
+    def getNodeString(self):
+        return self._getNodeString()
+
     def _setPath(self, nodeType):
         self.config["class_name"] = type(self).__name__
         if "/" in nodeType:

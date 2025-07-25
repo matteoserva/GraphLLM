@@ -1,4 +1,5 @@
 from .gui_node_builder import GuiNodeBuilder
+from modules.common.prompt_utils import solve_placeholders, solve_prompt_args
 
 class ExecutorOutput():
     def __init__(self,data,meta={}):
@@ -38,6 +39,10 @@ class GenericExecutor():
         
     def graph_stopped(self):
         pass
+
+    def __call__(self, inputs, *args):
+        outputs = inputs
+        return outputs
 
     def __getattr__(self,name):
         return getattr(self.node,name)
@@ -81,20 +86,8 @@ class BaseGuiParser:
 
 
 class BaseGuiNode(GuiNodeBuilder):
-        
-    #def _addWidget(self, type, title, parameterName, options):
-    #    self.config["outputs"].append((name,type))
-    def _initBuilder(self):
-        builder = self
-        builder._reset()
-        if hasattr(self, "node_type"):
-            builder._setPath(self.node_type)
-        return builder
 
     def buildNode(self):
-        pass
+        builder = self._initBuilder()
+        return builder
 
-    def getNodeString(self):
-        return self._getNodeString()
-
-from modules.common.prompt_utils import solve_placeholders, solve_prompt_args
