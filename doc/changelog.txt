@@ -2,6 +2,17 @@
 # CHANGELOG for GraphLLM
 #
 
+# ???
+- Refactoring the engine
+- Documentation for custom nodes
+- Tutorial examples
+
+# 20/07/2025
+- Added graph examples
+- Bugfixes
+- Support native and custom template for tool calling
+- Initial support for multimodal input
+
 # 18/05/2025
 - new nodes: subgraph, REST client, image input
 - new models: qwen3
