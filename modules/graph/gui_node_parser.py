@@ -1,5 +1,6 @@
 import yaml
 from modules.executors import get_gui_parsers
+import inspect
 
 class GuiNodeParser:
 
@@ -103,8 +104,20 @@ class GuiNodeParser:
             new_inputs = [str(el["link"]) if el["link"] else None for el in old_inputs]
             new_inputs = [links[el] if el else None for el in new_inputs]
             old_config["inputs"] = new_inputs
-            
-            res = self.parsers_map[node_type].parse_node(old_config)
+
+
+
+            parser_args = {"old_config": old_config, "frontend_config": old_config, "backend_config": {}}
+            parser_node = self.parsers_map[node_type]
+            parser_function = parser_node.parse_node
+
+            parser_args["backend_config"] = parser_node._make_default_config(old_config)
+
+            sig = inspect.signature(parser_function)
+            filter_keys = [param.name for param in sig.parameters.values() if param.kind == param.POSITIONAL_OR_KEYWORD]
+            parser_args = {filter_key: parser_args[filter_key] for filter_key in filter_keys}
+
+            res = parser_function(**parser_args)
             
             return res
         if node_type in ["generic_node"]:

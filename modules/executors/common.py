@@ -64,6 +64,17 @@ class GenericExecutor():
 class BaseGuiParser:
     node_types = []
 
+    def _make_default_config(self,old_config):
+        new_config = {}
+        new_config["type"] = old_config["type"].split("/")[-1]
+
+        old_inputs = old_config.get("inputs", [])
+        new_config["exec"] = self._calc_exec(old_inputs)
+
+        new_config["conf"] = old_config["properties"]
+
+        return new_config
+
     def _calc_exec(self ,old_inputs ):
 
         new_inputs = old_inputs
@@ -80,7 +91,8 @@ class BaseGuiParser:
         return val_exec
 
     def parse_node(self,old_config):
-        return None
+        new_config = self._make_default_config(old_config)
+        return new_config
 
     def postprocess_nodes(self,new_nodes):
         pass
