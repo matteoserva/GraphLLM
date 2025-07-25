@@ -105,8 +105,6 @@ class GuiNodeParser:
             new_inputs = [links[el] if el else None for el in new_inputs]
             old_config["inputs"] = new_inputs
 
-
-
             parser_args = {"old_config": old_config, "frontend_config": old_config, "backend_config": {}}
             parser_node = self.parsers_map[node_type]
             parser_function = parser_node.parse_node

@@ -24,7 +24,14 @@ class GuiNodeBuilder:
         else:
             module = self.__module__.split(".")[-2]
             self.config["node_type"] = module + "/" + nodeType
-        self.config["title"] = self.node_title
+        if hasattr(self,"node_title"):
+            self.config["title"] = self.node_title
+        else:
+            node_title = " ".join(x.capitalize() for x in nodeType.lower().split("_"))
+            self.config["title"] = node_title
+
+    def _setTitle(self, title):
+            self.config["title"] = title
 
     def _setConnectionLimits(self, limits):
         self.config["gui_node_config"]["connection_limits"] = limits
