@@ -62,8 +62,8 @@ class TitlebarContainer {
         dialog.innerHTML = `
 		<div class="titlebar-header" style="height: ` + LiteGraph.NODE_TITLE_HEIGHT + `px;">
 			<div class="titlebar-buttons">
-			    <div><img src="img/rotation.jpg" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
-				<div class="titlebar-rotate">R</div>
+
+				<div class="titlebar-rotate"><img src="img/rotation.jpg" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
 				<div class="titlebar-delete">D</div>
 
 			</div>
