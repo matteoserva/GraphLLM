@@ -21,8 +21,8 @@ class TTSNode(GenericExecutor):
         phonemized = self.engine.phonemize(text)
         for phonemes in phonemized:
             display_val = "".join(phonemes)
-            self.node.rpc_call("display", display_val)
+            self.gui.rpc_call("display", display_val)
             audio_data = self.engine.read_phonemized_to_buffer(phonemes)
-            self.api.play_audio(audio_data)
+            self.gui.play_audio(audio_data)
         self.node.log("call", "display", text)
         return []

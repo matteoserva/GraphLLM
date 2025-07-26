@@ -475,7 +475,38 @@ class WebBrige {
 
               }
 
+              if(obj.subtype == "call")
+              {
+                  var name = obj.data[0].substr(1)
+                  var node = this.graph.getNodeById(name)
+                  var result = {}
+                  if (node)
+                  {
+                     try {
 
+                         const keys = obj.data[1].split('.');
+                         let func = keys.reduce(
+                                        (current,key) => { return current[key] },
+                                        node
+                                        )
+                         let parent = keys.slice(0, -1).reduce(
+                                        (current,key) => { return current[key] },
+                                        node
+                                        )
+
+
+                         result = func.apply(parent,obj.data[2])
+
+                     } catch (error) {
+                         console.error(error);
+                         alert(error)
+                         this.stopGraph()
+                     }
+                  }
+                  this.socket.send( JSON.stringify({type: "response", subtype: "audio", id: obj.id, data: result}))
+                  //
+
+              }
 
       }
 
@@ -505,25 +536,17 @@ class WebBrige {
 		  }
           
       }
-      if(obj.type == "call")
-      {
-		  var name = obj.data[0].substr(1)
-		  var node = this.graph.getNodeById(name)
-		  if (node)
-		  {
-			 var func = obj.data[1]
-			 var val = obj.data[2]
-			 node[func](val)
-		  }
 
-      }
       if(obj.type == "update_property")
       {
 		  var name = obj.data[0].substr(1)
 		  var node = this.graph.getNodeById(name)
 		  if (node)
 		  {
-			 node.container.setValue(obj.data[1],obj.data[2])
+		     node.setProperty(obj.data[1],obj.data[2])
+			 if (node.onPropertyChanged) {
+                node.onPropertyChanged(obj.data[1],obj.data[2]);
+            }
 		  }
 
       }

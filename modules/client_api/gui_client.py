@@ -77,7 +77,7 @@ class GuiClientAPI:
         print(*args, **kwargs)
         self._send_text(text)
 
-    def play_audio(self,audio_data):
+    def play_audio(self,source_node, audio_data):
         binary_data = audio_data
 
         data_index = self.blob.add_binary_data(binary_data)
@@ -85,13 +85,13 @@ class GuiClientAPI:
         self._remote_call(res)
 
 
-    def rpc_call(self,node_name,function_name, function_args):
-        myuuid = str(uuid.uuid4())
-        data = [node_name] + [function_name] + list(function_args)
-        res = {"type": "call", "id":myuuid, "data": data}
-        resp = json.dumps(res)
-        encoded = resp
-        el = self._send_text(encoded)
+    def rpc_call(self,node_name,function_name, *function_args):
+        data = [node_name] + [function_name] + [function_args]
+        res = {"subtype": "call",  "data": data}
+        res = self._remote_call(res)
+        if "data" in res:
+            return res["data"]
+        return None
 
     def update_property(self,node_name,property_name, property_value):
         myuuid = str(uuid.uuid4())

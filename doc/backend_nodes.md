@@ -15,3 +15,8 @@
 - **graph_started()**: Called once when the graph is started
 - **\_\_call\_\_()**: Called every time inputs are available
 - **graph_stopped()**: Called once when the graph is stopped
+
+
+### gui
+self.gui.update_property("textarea_identifier","value")
+self.gui.rpc_call("getTitle")
