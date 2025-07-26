@@ -517,6 +517,16 @@ class WebBrige {
 		  }
 
       }
+      if(obj.type == "update_property")
+      {
+		  var name = obj.data[0].substr(1)
+		  var node = this.graph.getNodeById(name)
+		  if (node)
+		  {
+			 node.container.setValue(obj.data[1],obj.data[2])
+		  }
+
+      }
 	  if(obj.type == "stopping")
       {
           var name = obj.data[0].substr(1)

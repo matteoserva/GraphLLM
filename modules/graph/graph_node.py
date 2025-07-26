@@ -53,6 +53,9 @@ class GraphNode:
     def rpc_call(self,function_name, *args):
         self.api.rpc_call(self.path, function_name, args)
 
+    def update_property(self, *args):
+        self.api.update_property(self.path, *args)
+
     def initialize(self):
         if isinstance(self.executor, GenericExecutor):
             self.executor.initialize()
