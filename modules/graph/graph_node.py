@@ -5,6 +5,21 @@ import sys
 import threading
 from .common import GraphException
 
+class GuiApiWrapper:
+    def __init__(self, path, client_api):
+        self.path = path
+        self.client_api = client_api
+
+    def __getattr__(self, name):
+        original_attr = getattr(self.client_api, name)
+
+        if callable(original_attr):
+            def wrapper(*args, **kwargs):
+                return original_attr(self.path, *args, **kwargs)
+            return wrapper
+        return None
+
+
 class GraphNode:
 
     @staticmethod
@@ -30,6 +45,7 @@ class GraphNode:
 
         if isinstance(self.executor,GenericExecutor):
             self.executor.node = self
+            self.executor.gui = GuiApiWrapper(self.path, self.api)
             self.executor.graph_data = node_graph_parameters
 
             default_properties = {"free_runs": 0, "input_rule":"AND", "wrap_input": False, "input_active": []}
