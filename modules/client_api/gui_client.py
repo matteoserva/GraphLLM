@@ -40,7 +40,7 @@ class RequestsTracker:
         with self.requests_lock:
             for el in self.pending_requests:
                 self.set_response(el,None)
-            self.pending_requests = None
+            #self.pending_requests = None
     
 
 class GuiClientAPI:
