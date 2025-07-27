@@ -60,7 +60,7 @@ class HttpDispatcher:
             elif re.match(r"^/blob/.+$", http_path):
                 return self.blob.do_GET(server)
             else:
-                raise HandlerException(code=404)
+                raise HandlerException(url="", msg="", hdrs="", fp="", code=404)
 
         except HandlerException as e:
             server.send_response(e.code)

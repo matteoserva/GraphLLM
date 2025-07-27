@@ -111,7 +111,7 @@ class WebBrige {
             for (var i in selectedNodes) {
                 var node = this.canvas.selected_nodes[i];
                 var nodeRotation = node.node_rotation || 0
-                nodeRotation = (nodeRotation + 1) % 2;
+                nodeRotation = (nodeRotation + 1) % 4;
                 this.setNodeRotation(node,nodeRotation)
 
             }
@@ -140,28 +140,24 @@ class WebBrige {
  setNodeRotation(node, r)
   {
         var offset = LiteGraph.NODE_SLOT_HEIGHT * 0.5
-        switch (r) {
+        node.horizontal = (r%2);
+        node.flipped = r >= 2;
+
+        if(false) switch (r) {
             case 1:
             {
-                if (node.inputs) {
-                   for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
-
-                                /*node.inputs[j].pos = null;
-                                node.inputs[j].dir = null;
-                                node.inputs[j].shape = null;*/
-                                }}
-                                node.horizontal = true;
+                node.horizontal = true;
+                node.flipped = false;
             }
             break;
 
             case 2:
             {
-                   if (node.inputs) {
-                        for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
+                   let inputs = node.inputs || []
+                   for ( var j = 0, l = inputs.length; j < l; ++j ) {
                                 let y = (j + 0.7) * LiteGraph.NODE_SLOT_HEIGHT ;
                                 Object.defineProperty(node.inputs[j], "pos", {
                                     get: function() {
-
                                         let x =  node.size[0] + 1 - offset;
                                         return [x, y]
                                     },
@@ -171,10 +167,23 @@ class WebBrige {
                                          this.pos = v
                                       },
                                 });
-                                //node.inputs[j].pos = [x,y]
                                 node.inputs[j].dir = LiteGraph.RIGHT;
-                                node.inputs[j].shape = LiteGraph.ARROW_SHAPE;
-                        }
+                   }
+                   let outputs = node.outputs || []
+                   for ( var j = 0, l = outputs.length; j < l; ++j ) {
+                                let y = (j + 0.7) * LiteGraph.NODE_SLOT_HEIGHT ;
+                                Object.defineProperty(node.outputs[j], "pos", {
+                                    get: function() {
+                                        let x = offset;
+                                        return [x, y]
+                                    },
+                                    configurable: true,
+                                      set: function(v) {
+                                          delete this.pos;
+                                         this.pos = v
+                                      },
+                                });
+                                node.outputs[j].dir = LiteGraph.LEFT;
                    }
                    node.horizontal = false;
             }
@@ -182,24 +191,54 @@ class WebBrige {
 
             case 3:
             {
-                if (node.inputs) {
-                    for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
-                                /*node.inputs[j].pos = null;
-                                node.inputs[j].dir = null;
-                                node.inputs[j].shape = null;*/
-                    }
-                }
-                node.horizontal = true;
+                   let inputs = node.inputs || []
+                   for ( var j = 0, l = inputs.length; j < l; ++j ) {
+                                let x = (j + 0.5) * (node.size[0] / inputs.length);
+
+                                Object.defineProperty(node.inputs[j], "pos", {
+                                    get: function() {
+                                        let y =  node.size[1];
+                                        return [x, y]
+                                    },
+                                    configurable: true,
+                                      set: function(v) {
+                                          delete this.pos;
+                                         this.pos = v
+                                      },
+                                });
+                                node.inputs[j].dir = LiteGraph.DOWN;
+                   }
+                   let outputs = node.outputs || []
+                   for ( var j = 0, l = outputs.length; j < l; ++j ) {
+                                let x = (j + 0.5) * (node.size[0] / outputs.length);
+                                Object.defineProperty(node.outputs[j], "pos", {
+                                    get: function() {
+                                        let y = - LiteGraph.NODE_TITLE_HEIGHT;
+                                        return [x, y]
+                                    },
+                                    configurable: true,
+                                      set: function(v) {
+                                          delete this.pos;
+                                         this.pos = v
+                                      },
+                                });
+                                node.outputs[j].dir = LiteGraph.LEFT;
+                   }
+                   node.horizontal = true;
             }
             break;
 
             default:
             {
-                   if (node.inputs) {
+                   if (node.outputs) {
                    for ( var j = 0, l = node.inputs.length; j < l; ++j ) {
                             node.inputs[j].pos = null;
                             node.inputs[j].dir = null;
-                            //node.inputs[j].shape = null;
+                   }}
+                   if (node.inputs) {
+                   for ( var j = 0, l = node.outputs.length; j < l; ++j ) {
+                            node.outputs[j].pos = null;
+                            node.outputs[j].dir = null;
                    }}
                    node.horizontal = false
             }

@@ -13,8 +13,13 @@ class GraphHandler {
 		this.canvas.onRender = this.onRender.bind(this)
 		this.canvas.onDrawForeground = this.onDrawForeground.bind(this)
         LiteGraph.pointerListenerAdd(document,"up", this.processMouseUp.bind(this),true);
+        LiteGraph.addNodeMethod("getConnectionPos",this.over_getConnectionPos)
+        //LiteGraph.addNodeMethod("addInput" ,this.over_addInput)
+        let that = this
+        LiteGraph.addNodeMethod("onInputAdded" , function(connection){return that.onConnectionAdded(this,connection,LiteGraph.LEFT)})
+        LiteGraph.addNodeMethod("onOutputAdded" , function(connection){return that.onConnectionAdded(this,connection,LiteGraph.RIGHT)})
 
-        var that = this
+
         var orig = LGraphGroup.prototype.recomputeInsideNodes
         LGraphGroup.prototype.recomputeInsideNodes = function() {
             var group = this
@@ -23,7 +28,48 @@ class GraphHandler {
 
 
     }
-	
+
+  onConnectionAdded(node,connection, default_value)
+  {
+     let dir = connection.dir || default_value
+        /*UP: 1,
+        DOWN: 2,
+        LEFT: 3,
+        RIGHT: 4,
+        CENTER: 5,*/
+     Object.defineProperty(connection, "dir", {
+                                    get: function() {
+                                        let x = dir
+                                        if(node.horizontal) x = [1,4,3,1,2][x]
+                                        if(node.flipped) x = [4,2,1,4,3][x]
+                                        return x
+                                    },
+                                    configurable: true,
+                                    set: function(v) {
+                                         dir = v
+                                    },
+                                });
+
+     return connection;
+  }
+
+  over_getConnectionPos(is_input,       slot_number,        out)
+  {
+    let o = this._getConnectionPos(is_input,       slot_number,        out);
+    if(this.flipped)
+    {
+        if(this.horizontal)
+        {
+            o[1] = this.pos[1] + this.size[1] - (o[1] + LiteGraph.NODE_TITLE_HEIGHT - this.pos[1])
+        }
+        else
+        {
+            o[0] = this.pos[0] + this.size[0] + 1 - ( o[0] - this.pos[0])
+        }
+    }
+    return o
+  }
+
   onRender(canvas, ctx){ // after background, before nodes
 	//console.log("onrender")
 	
