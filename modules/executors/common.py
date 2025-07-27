@@ -1,7 +1,7 @@
 
-from modules.common.base_executor import BaseExecutor as GenericExecutor
-from modules.common.base_gui_parser import BaseGuiParser as BaseGuiParser
-from modules.common.base_gui_node import BaseGuiNode as BaseGuiNode
+from modules.common.base_node import BaseExecutor as GenericExecutor
+from modules.common.base_node import BaseGuiParser as BaseGuiParser
+from modules.common.base_node import BaseGuiNode as BaseGuiNode
 
 from modules.common.prompt_utils import solve_placeholders, solve_prompt_args
 

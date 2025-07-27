@@ -5,8 +5,7 @@ import os
 from pkgutil import iter_modules
 from importlib import import_module
 
-from modules.common.base_executor import BaseExecutor
-from modules.executors.common import BaseGuiParser, BaseGuiNode
+from modules.common.base_node import BaseExecutor, BaseGuiParser, BaseGuiNode
 
 _search_directories = [os.path.dirname(__file__), os.path.dirname(__file__) + "/../custom_nodes"]
 _class_cache = None
