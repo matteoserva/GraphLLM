@@ -89,6 +89,9 @@ class TitlebarContainer {
 		dialog.querySelector(".titlebar-delete").addEventListener('click', () => {
             this.parent.graph.remove(this.parent);
         });
+        dialog.querySelector(".titlebar-rotate").addEventListener('click', () => {
+            this.parent.rotateClockwise();
+        });
 		dialog.tabIndex=0;
 		dialog.addEventListener('focusout', () => {
             //titledialog.style.display = "none"; 

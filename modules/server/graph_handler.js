@@ -18,7 +18,7 @@ class GraphHandler {
         let that = this
         LiteGraph.addNodeMethod("onInputAdded" , function(connection){return that.onConnectionAdded(this,connection,LiteGraph.LEFT)})
         LiteGraph.addNodeMethod("onOutputAdded" , function(connection){return that.onConnectionAdded(this,connection,LiteGraph.RIGHT)})
-
+        LiteGraph.addNodeMethod("rotateClockwise" , this.rotateClockwise)
 
         var orig = LGraphGroup.prototype.recomputeInsideNodes
         LGraphGroup.prototype.recomputeInsideNodes = function() {
@@ -28,6 +28,17 @@ class GraphHandler {
 
 
     }
+
+  rotateClockwise()
+  {
+      let node = this
+      let rotation = this.node_rotation || 0
+      rotation = (rotation+1) % 4
+      this.horizontal = (rotation%2);
+      this.flipped = rotation >= 2;
+      this.node_rotation =rotation
+      node.setDirtyCanvas(true,true)
+  }
 
   onConnectionAdded(node,connection, default_value)
   {
