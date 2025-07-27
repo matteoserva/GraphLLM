@@ -4,7 +4,7 @@ class FakeWeather(GenericTool):
 	tool_name = "fake weather"
 	properties = {"default": False, "priority": 10}
 
-	def get_current_temperature(self, location, unit="celsius"):
+	def get_current_temperature(self, location: str, unit: str = "celsius") -> str:
 		"""Get current temperature at a location."""
 		res = {"temperature": 26.1, "location": "San Francisco, CA, USA", "unit": "celsius"}
 		return res

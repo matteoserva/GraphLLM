@@ -67,9 +67,15 @@ def _load_available_tools():
                 params[parPos]["required"] = True
                 params[parPos]["default"] = el
 
+            for annotated in [el for el in params if el["name"] in d.annotations]:
+                typehint = d.annotations[annotated["name"]]
+                annotated["type"] = typehint.__name__
+
             row = {}
             row["name"] = op
             row["params"] = params
+            if "return" in d.annotations:
+                row["type"] = d.annotations["return"].__name__
             function_priority = class_priority
             if op in function_priorities:
                 function_priority = function_priorities[op]
