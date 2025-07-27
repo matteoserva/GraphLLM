@@ -26,7 +26,7 @@ class HttpDispatcher:
         server.send_header('Location', '/editor/')
         server.end_headers()
 
-    def _graph_GET(self,server):
+    def _do_graph_GET(self,server):
         http_path = server.path.split("?", 1)[0]
         split_path = http_path.split("/", 2)
 
@@ -54,7 +54,7 @@ class HttpDispatcher:
             if   re.match(r"^/$", http_path):
                 return self._returnRedirect(server)
             elif re.match(r"^/graph/.+$", http_path):
-                return self._graph_GET(server)
+                return self._do_graph_GET(server)
             elif endpoint in ["editor","src","external","css","js","imgs","style.css","examples"]:
                 return self.editor.do_GET(server)
             elif re.match(r"^/blob/.+$", http_path):

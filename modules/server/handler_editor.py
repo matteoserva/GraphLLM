@@ -13,8 +13,18 @@ class EditorHandler():
     def __init__(self):
         gui_nodes = [el() for el in get_gui_nodes()]
         _ = [el.buildNode() for el in gui_nodes]
-        node_strings = [el.getNodeString() for el in gui_nodes]
-        self.gui_node_string = "\n\n".join(node_strings)
+        generated_nodes = [{"name": el.config["node_type"], "value": el.getNodeString()} for el in gui_nodes]
+
+        raw_nodes = []
+        node_files = glob(EXECUTORS_PATH + "/*.js")
+        node_files.extend(glob(EXECUTORS_PATH + "/*/*.js"))
+        for el in node_files:
+            with open(el, "r") as f:
+                res = f.read()
+                raw_nodes.append({"name": el, "value":res})
+
+        self.raw_node_files = "\n\n".join([el["value"] for el in raw_nodes])
+        self.gui_node_string = "\n\n".join([el["value"] for el in generated_nodes])
 
 
     def do_GET(self, server):
@@ -49,14 +59,7 @@ class EditorHandler():
             server.send_header('Content-type', 'text/javascript')
             server.end_headers()
 
-            res = b""
-            node_files = glob(EXECUTORS_PATH + "/*.js")
-            node_files.extend(glob(EXECUTORS_PATH + "/*/*.js"))
-            for el in node_files:
-                with open(el,"rb") as f:
-                    res += f.read()
-                    res += b"\n\n"
-            server.wfile.write(res)
+            server.wfile.write(self.raw_node_files.encode())
             server.wfile.write(self.gui_node_string.encode())
 
         elif endpoint in ["editor"]:
