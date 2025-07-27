@@ -5,7 +5,8 @@ import os
 from pkgutil import iter_modules
 from importlib import import_module
 
-from modules.executors.common import GenericExecutor, BaseGuiParser, BaseGuiNode
+from modules.common.base_executor import BaseExecutor
+from modules.executors.common import BaseGuiParser, BaseGuiNode
 
 _cached_classes = None
 
@@ -41,7 +42,7 @@ def _get_all_classes():
     _cached_classes = found_classes
     return found_classes
 
-def _get_all_submodules(node_class=GenericExecutor):
+def _get_all_submodules(node_class=BaseExecutor):
 
     found_classes = _get_all_classes()
     # now filter
@@ -58,7 +59,7 @@ def get_executors():
     from modules.executors.utils.node_tools import ToolExecutor, LlamaTool
     from ..graph.graph_executor import GraphExecutor
 
-    found_executors = _get_all_submodules(GenericExecutor)
+    found_executors = _get_all_submodules(BaseExecutor)
     found_executors = [el for el in found_executors if hasattr(el,"node_type")]
     executors_map = {el.node_type:el for el in found_executors }
 
