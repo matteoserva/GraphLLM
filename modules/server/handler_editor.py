@@ -1,6 +1,7 @@
 import os
 from glob import glob
 import uuid
+import re
 
 from modules.executors import get_gui_nodes
 
@@ -13,7 +14,7 @@ class EditorHandler():
     def __init__(self):
         gui_nodes = [el() for el in get_gui_nodes()]
         _ = [el.buildNode() for el in gui_nodes]
-        generated_nodes = [{"name": el.config["node_type"], "value": el.getNodeString()} for el in gui_nodes]
+        generated_nodes = [{"name": "generated/" + el.config["node_type"] + ".js", "value": el.getNodeString()} for el in gui_nodes]
 
         raw_nodes = []
         node_files = glob(EXECUTORS_PATH + "/*.js")
@@ -21,10 +22,24 @@ class EditorHandler():
         for el in node_files:
             with open(el, "r") as f:
                 res = f.read()
-                raw_nodes.append({"name": el, "value":res})
+                base_name = "raw" + el[len(EXECUTORS_PATH):]
+                raw_nodes.append({"name": base_name, "value":res})
 
-        self.raw_node_files = "\n\n".join([el["value"] for el in raw_nodes])
-        self.gui_node_string = "\n\n".join([el["value"] for el in generated_nodes])
+        self.node_files = raw_nodes + generated_nodes
+        self.nodes_map = {el["name"]:el["value"] for el in self.node_files}
+
+    def _returnRedirect(self,server):
+        server.send_response(301)
+        server.send_header('Location', '/editor/')
+        server.end_headers()
+
+    def _do_GET_node(self,server,node_key):
+        server.send_response(200)
+        server.send_header('Connection', 'close')
+        server.send_header('Content-type', 'text/javascript')
+        server.end_headers()
+
+        server.wfile.write(self.nodes_map[node_key].encode())
 
 
     def do_GET(self, server):
@@ -32,11 +47,12 @@ class EditorHandler():
         http_path = server.path.split("?", 1)[0]
         split_path = http_path.split("/", 2)
         endpoint = split_path[1]
-        if endpoint in ["editor"] and len(split_path) < 3:
-            server.send_response(301)
-            server.send_header('Location', '/editor/')
-            server.end_headers()
-            return
+
+        if re.match(r"^/editor$", http_path):
+            return self._returnRedirect(server)
+        elif re.match(r"^/editor/node/.*\.js$", http_path):
+            return self._do_GET_node(server,http_path[13:])
+
 
         if endpoint in ["editor"] and len(split_path[2]) == 0:  # index
             filename = SOURCES_PATH + "/" + "index.html"
@@ -44,6 +60,9 @@ class EditorHandler():
             myuuid = str(uuid.uuid4())
             text_replacement = '<script type="text/javascript" src="/editor/nodes.js?uuid=' + myuuid + '"></script>'
             text_replacement = '<script type="text/javascript" src="/editor/nodes.js"></script>'
+
+            text_replacement = [f'<script type="text/javascript" src="/editor/node/{el["name"]}"></script>' for el in self.node_files]
+            text_replacement = "\n".join(text_replacement)
             content = open(filename, "rb").read()
             content = content.replace(b"<!-- NODE_LIST_PLACEHOLDER -->", text_replacement.encode())
 
@@ -52,15 +71,6 @@ class EditorHandler():
             server.send_header('Content-type', 'text/html')
             server.end_headers()
             server.wfile.write(content)
-
-        elif endpoint in ["editor"] and split_path[2] == "nodes.js":
-            server.send_response(200)
-            server.send_header('Connection', 'close')
-            server.send_header('Content-type', 'text/javascript')
-            server.end_headers()
-
-            server.wfile.write(self.raw_node_files.encode())
-            server.wfile.write(self.gui_node_string.encode())
 
         elif endpoint in ["editor"]:
             remaining = "index.html" if len(split_path[2]) == 0 else split_path[2]
