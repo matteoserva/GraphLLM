@@ -1,5 +1,5 @@
 from modules.executors.common import BaseGuiParser
 
-class SimpleParser():
+class SimpleParser(BaseGuiParser):
     node_types = ["simple_gui"]
 

@@ -8,16 +8,16 @@ from importlib import import_module
 from modules.common.base_executor import BaseExecutor
 from modules.executors.common import BaseGuiParser, BaseGuiNode
 
-_cached_classes = None
+_search_directories = [os.path.dirname(__file__), os.path.dirname(__file__) + "/../custom_nodes"]
+_class_cache = None
 
-def _get_all_classes():
-    global _cached_classes
-    if _cached_classes:
-        return _cached_classes
+def _search_classes(folder):
 
     # retrieves the name and location of this file
-    module_path = os.path.relpath(os.path.dirname(__file__)) # modules/executors
-    module_name = __name__  # modules.executors
+    module_path = os.path.relpath(folder) # modules/executors
+    #module_name = __name__  # modules.executors
+
+    module_name = module_path.replace("/",".")
     sub_path = module_path
     
     # now locates all classes
@@ -39,21 +39,29 @@ def _get_all_classes():
         except Exception as e:
             print("Exception while loading module",m, " : ", e,file=sys.stderr)
 
-    _cached_classes = found_classes
+    # filter imported classes
+    found_classes = [el for el in found_classes if el.__module__.startswith(module_name)]
+
     return found_classes
+
+def _load_classes(search_directories):
+    global _class_cache
+    if _class_cache is None:
+        found_classes = [el for _dir in search_directories for el in _search_classes(_dir)]
+        found_classes = list(dict.fromkeys(found_classes))
+        _class_cache = found_classes
+    return _class_cache
 
 def _get_all_submodules(node_class=BaseExecutor):
 
-    found_classes = _get_all_classes()
+    found_classes = _load_classes(_search_directories)
+
     # now filter
     found_executors = [el for el in found_classes if issubclass(el, node_class) ]
 
     return found_executors
 
 def get_executors():
-    #from modules.executors import *
-
-
 
     from modules.executors.agent.agent_node import AgentController
     from modules.executors.utils.node_tools import ToolExecutor, LlamaTool
