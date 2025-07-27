@@ -61,10 +61,10 @@ def _load_available_tools():
             params = d[0][1:]
             e = len(params)
             default_params = d.defaults if d.defaults else []
-            params = [{"name": el, "required": False} for i, el in enumerate(params)]
+            params = [{"name": el, "required": True} for i, el in enumerate(params)]
             for i, el in enumerate(default_params[::-1]):
                 parPos = len(params) -1 - i
-                params[parPos]["required"] = True
+                params[parPos]["required"] = False
                 params[parPos]["default"] = el
 
             for annotated in [el for el in params if el["name"] in d.annotations]:

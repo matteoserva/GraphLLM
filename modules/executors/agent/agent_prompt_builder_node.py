@@ -97,9 +97,20 @@ class AgentHistoryBuilderNode(GenericExecutor):
         for op in ops:
             row = ""
             row += "def " + op["name"] + "("
-            param_names = [el["name"] if not el["required"] else el["name"] + "=" + el["default"] for el in op["params"]]
-            params_string = ", ".join(param_names)
-            row += params_string + ")\n"
+            param_elements = []
+            for el in op["params"]:
+                param_elem = el["name"]
+                if "type" in el:
+                    param_elem += ": " + el["type"]
+                if not el["required"]:
+                    param_elem += " = " + el["default"]
+                param_elements.append(param_elem)
+
+            params_string = ", ".join(param_elements)
+            row += params_string + ")"
+            if "type" in op:
+                row += " -> " + op["type"]
+            row += ":\n"
             if op["doc"] is not None:
                 row += '    """' + op["doc"] + '"""\n'
             textlist.append(row)
