@@ -16,8 +16,8 @@ def _load_available_tools():
     modules = [el[len(sub_path) + 1:-3] for el in glob(sub_path + "/*.py")]
     modules1 = [base_module + "." + el for el in modules if el.startswith("tool_")]
 
-    module_path = os.path.relpath(os.path.dirname(__file__)+"/../user_tools")  # modules/executors
-    base_module = ".".join(base_module.split(".")[:-1] + ["user_tools"])
+    module_path = os.path.relpath(os.path.dirname(__file__)+"/../custom_tools")  # modules/executors
+    base_module = ".".join(base_module.split(".")[:-1] + ["custom_tools"])
     sub_path = module_path
     # now locates all classes
     modules = [el[len(sub_path) + 1:-3] for el in glob(sub_path + "/*.py")]
