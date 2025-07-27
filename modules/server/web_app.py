@@ -9,6 +9,9 @@ from modules.server.handler_editor import EditorHandler
 from modules.server.handler_blob import BlobHandler
 from threading import Lock
 
+from .common import HandlerException
+import re
+
 class HttpDispatcher:
 
     def __init__(self, *args, **kwargs):
@@ -18,57 +21,52 @@ class HttpDispatcher:
         self.model = ModelHandler(self.blob)
         self.model_lock = Lock()
 
+    def _returnRedirect(self,server):
+        server.send_response(301)
+        server.send_header('Location', '/editor/')
+        server.end_headers()
+
+    def _graph_GET(self,server):
+        http_path = server.path.split("?", 1)[0]
+        split_path = http_path.split("/", 2)
+
+        operation = split_path[2]
+        if server.headers.get("Upgrade", None) == "websocket":
+            wsExec = ExecHandler(server, self.blob)
+            op = getattr(wsExec, operation)
+            res = op()
+        elif hasattr(self.model, operation):
+            op = getattr(self.model, operation)
+            with self.model_lock:
+                self.model.server = server
+                res = op()
+        else:
+            raise HandlerException(code=404)
+
     def do_GET(self,server):
         
         server.close_connection = True
         http_path = server.path.split("?",1)[0]
-
-        if http_path == "/":
-            server.send_response(301)
-            server.send_header('Location','/editor/')
-            server.end_headers()
-            return
-        split_path = http_path.split("/",2)
-
+        split_path = http_path.split("/", 2)
         endpoint = split_path[1]
 
-        if endpoint in ["graph"]:
-            http_path = server.path.split("?", 1)[0]
-            split_path = http_path.split("/", 2)
-            if len(split_path) < 3 or len(split_path[2]) < 1:
-                server.send_response(404)
-                server.send_header('Content-type', 'text/html')
-                server.end_headers()
-                server.wfile.write(b'404 - Not Found')
-
-            operation = split_path[2]
-            if server.headers.get("Upgrade", None) == "websocket":
-                wsExec = ExecHandler(server,self.blob)
-                op = getattr(wsExec,operation)
-                res = op()
-            elif hasattr(self.model, operation):
-                op = getattr(self.model, operation)
-                with self.model_lock:
-                    self.model.server = server
-                    res = op()
-
+        try:
+            if   re.match(r"^/$", http_path):
+                return self._returnRedirect(server)
+            elif re.match(r"^/graph/.+$", http_path):
+                return self._graph_GET(server)
+            elif endpoint in ["editor","src","external","css","js","imgs","style.css","examples"]:
+                return self.editor.do_GET(server)
+            elif re.match(r"^/blob/.+$", http_path):
+                return self.blob.do_GET(server)
             else:
-                server.send_response(404)
-                server.send_header('Content-type', 'text/html')
-                server.end_headers()
-                server.wfile.write(b'404 - Not Found')
-            pass
+                raise HandlerException(code=404)
 
-        elif endpoint in ["editor","src","external","css","js","imgs","style.css","examples"]:
-            handler = self.editor
-            return handler.do_GET(server)
-        elif endpoint in ["blob"] and len(split_path) >= 3 and len(split_path[2]) > 0:
-            return self.blob.do_GET(server)
-        else:
-             server.send_response(404)
-             server.send_header('Content-type', 'text/html')
-             server.end_headers()
-             server.wfile.write(b'404 - Not Found')
+        except HandlerException as e:
+            server.send_response(e.code)
+            server.send_header('Content-type', 'text/html')
+            server.end_headers()
+            server.wfile.write(b'404 - Not Found')
 
     def do_POST(self,server):
         #self.model.server = server
