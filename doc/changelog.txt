@@ -6,6 +6,9 @@
 - Refactoring the engine
 - Documentation for custom nodes
 - Tutorial examples
+- node rotation improvement
+- titlebar container
+- typehints in tool definition
 
 # 20/07/2025
 - Added graph examples
