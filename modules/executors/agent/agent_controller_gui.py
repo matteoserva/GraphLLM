@@ -12,7 +12,7 @@ class AgentControllerGui(BaseGuiNode):
 
         builder.addInput("in", "string");
         builder.addOutput("out", "string");
-        builder.addInput("tool result", "string");
+        builder.addInput("tool raw", "string");
         builder.addOutput("tool params", "string");
 
         builder.setPath("agent/agent_controller")

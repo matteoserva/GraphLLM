@@ -1,88 +1,7 @@
 {
-    "last_node_id": 59,
-    "last_link_id": 100,
+    "last_node_id": 62,
+    "last_link_id": 110,
     "nodes": [
-        {
-            "id": 40,
-            "type": "input/text_input",
-            "pos": [
-                40,
-                80
-            ],
-            "size": {
-                "0": 510,
-                "1": 100
-            },
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        51
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "parameters": "solve 2+2 "
-            },
-            "color": "#2a363b",
-            "bgcolor": "#3f5159"
-        },
-        {
-            "id": 39,
-            "type": "agent/agent_controller",
-            "pos": [
-                700,
-                80
-            ],
-            "size": {
-                "0": 194.8000030517578,
-                "1": 46
-            },
-            "flags": {},
-            "order": 7,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 51,
-                    "slot_index": 0,
-                    "pos": null,
-                    "dir": null
-                },
-                {
-                    "name": "tool result",
-                    "type": "string",
-                    "link": 52,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        44
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "tool params",
-                    "type": "string",
-                    "links": [
-                        54
-                    ],
-                    "slot_index": 1
-                }
-            ],
-            "properties": {}
-        },
         {
             "id": 43,
             "type": "graph/virtual_source",
@@ -95,7 +14,7 @@
                 "1": 58
             },
             "flags": {},
-            "order": 1,
+            "order": 0,
             "mode": 0,
             "inputs": [
                 {
@@ -104,7 +23,7 @@
                     "link": null,
                     "shape": 5,
                     "pos": null,
-                    "dir": null
+                    "dir": 3
                 }
             ],
             "outputs": [
@@ -133,15 +52,15 @@
                 "1": 58
             },
             "flags": {},
-            "order": 10,
+            "order": 11,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 54,
+                    "link": 110,
                     "pos": null,
-                    "dir": null
+                    "dir": 1
                 }
             ],
             "outputs": [
@@ -169,15 +88,15 @@
                 "1": 170
             },
             "flags": {},
-            "order": 9,
+            "order": 10,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 44,
+                    "link": 107,
                     "pos": null,
-                    "dir": null
+                    "dir": 3
                 }
             ],
             "properties": {},
@@ -196,7 +115,7 @@
                 "1": 140
             },
             "flags": {},
-            "order": 2,
+            "order": 1,
             "mode": 0,
             "properties": {
                 "identifier": "",
@@ -204,44 +123,6 @@
             },
             "color": "#232",
             "bgcolor": "#353"
-        },
-        {
-            "id": 37,
-            "type": "graph/virtual_source",
-            "pos": [
-                340,
-                230
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "sink",
-                    "type": "virtual",
-                    "link": null,
-                    "shape": 5,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        52
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "tool_result"
-            }
         },
         {
             "id": 55,
@@ -255,7 +136,7 @@
                 "1": 26
             },
             "flags": {},
-            "order": 15,
+            "order": 14,
             "mode": 0,
             "inputs": [
                 {
@@ -263,7 +144,7 @@
                     "type": "string",
                     "link": 95,
                     "pos": null,
-                    "dir": null
+                    "dir": 3
                 }
             ],
             "outputs": [
@@ -290,7 +171,7 @@
                 "1": 360
             },
             "flags": {},
-            "order": 19,
+            "order": 16,
             "mode": 0,
             "inputs": [
                 {
@@ -298,47 +179,10 @@
                     "type": "string",
                     "link": 96,
                     "pos": null,
-                    "dir": null
+                    "dir": 3
                 }
             ],
             "properties": {}
-        },
-        {
-            "id": 36,
-            "type": "graph/virtual_sink",
-            "pos": [
-                2480,
-                530
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 17,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 90,
-                    "slot_index": 0,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "source",
-                    "type": "virtual",
-                    "links": null,
-                    "shape": 5,
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "identifier": "tool_result"
-            }
         },
         {
             "id": 46,
@@ -352,7 +196,7 @@
                 "1": 180
             },
             "flags": {},
-            "order": 11,
+            "order": 9,
             "mode": 0,
             "inputs": [
                 {
@@ -360,14 +204,14 @@
                     "type": "string",
                     "link": 67,
                     "pos": null,
-                    "dir": null
+                    "dir": 3
                 },
                 {
                     "name": "tools",
                     "type": "string",
                     "link": 99,
                     "pos": null,
-                    "dir": null,
+                    "dir": 3,
                     "slot_index": 1
                 },
                 {
@@ -375,7 +219,7 @@
                     "type": "string",
                     "link": null,
                     "pos": null,
-                    "dir": null
+                    "dir": 3
                 }
             ],
             "outputs": [
@@ -408,79 +252,6 @@
             }
         },
         {
-            "id": 50,
-            "type": "agent/execute_tool_call",
-            "pos": [
-                2140,
-                570
-            ],
-            "size": {
-                "0": 140,
-                "1": 66
-            },
-            "flags": {},
-            "order": 14,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 86,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "result",
-                    "type": "string",
-                    "links": [
-                        90
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "tool out",
-                    "type": "string",
-                    "links": [
-                        88
-                    ],
-                    "slot_index": 1
-                },
-                {
-                    "name": "llm out",
-                    "type": "string",
-                    "links": []
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 32,
-            "type": "output/watch",
-            "pos": [
-                2320,
-                650
-            ],
-            "size": {
-                "0": 730,
-                "1": 210
-            },
-            "flags": {},
-            "order": 18,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 88,
-                    "pos": null,
-                    "dir": null
-                }
-            ],
-            "properties": {}
-        },
-        {
             "id": 27,
             "type": "graph/variable",
             "pos": [
@@ -494,7 +265,7 @@
             "flags": {
                 "collapsed": false
             },
-            "order": 4,
+            "order": 2,
             "mode": 0,
             "properties": {
                 "identifier": "prompt_template",
@@ -521,7 +292,7 @@
                     "type": "string",
                     "link": 97,
                     "pos": null,
-                    "dir": null
+                    "dir": 3
                 }
             ],
             "properties": {}
@@ -538,7 +309,7 @@
                 "1": 340
             },
             "flags": {},
-            "order": 5,
+            "order": 3,
             "mode": 0,
             "properties": {
                 "identifier": "react_deepseek",
@@ -557,7 +328,7 @@
                 "1": 58
             },
             "flags": {},
-            "order": 8,
+            "order": 7,
             "mode": 0,
             "inputs": [
                 {
@@ -565,7 +336,7 @@
                     "type": "string",
                     "link": 98,
                     "pos": null,
-                    "dir": null
+                    "dir": 3
                 }
             ],
             "outputs": [
@@ -594,7 +365,7 @@
                 "1": 260
             },
             "flags": {},
-            "order": 6,
+            "order": 4,
             "mode": 0,
             "outputs": [
                 {
@@ -666,6 +437,31 @@
             }
         },
         {
+            "id": 32,
+            "type": "output/watch",
+            "pos": [
+                2440,
+                510
+            ],
+            "size": {
+                "0": 730,
+                "1": 210
+            },
+            "flags": {},
+            "order": 17,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 102,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "properties": {}
+        },
+        {
             "id": 21,
             "type": "llm/llm_call",
             "pos": [
@@ -685,7 +481,7 @@
                     "type": "string",
                     "link": 69,
                     "pos": null,
-                    "dir": null,
+                    "dir": 3,
                     "slot_index": 0
                 },
                 {
@@ -693,7 +489,7 @@
                     "type": "string",
                     "link": null,
                     "pos": null,
-                    "dir": null
+                    "dir": 3
                 }
             ],
             "outputs": [
@@ -701,9 +497,8 @@
                     "name": "out",
                     "type": "string",
                     "links": [
-                        86,
                         95,
-                        100
+                        104
                     ],
                     "slot_index": 0
                 },
@@ -720,64 +515,204 @@
             }
         },
         {
-            "id": 59,
-            "type": "output/watch",
+            "id": 61,
+            "type": "agent/execute_tool_call",
             "pos": [
                 2220,
-                930
+                490
             ],
-            "size": [
-                480,
-                210
-            ],
-            "flags": {
-                "collapsed": true
+            "size": {
+                "0": 140,
+                "1": 66
             },
-            "order": 16,
+            "flags": {},
+            "order": 15,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 100
+                    "link": 104
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "final result",
+                    "type": "string",
+                    "links": null
+                },
+                {
+                    "name": "tool out",
+                    "type": "string",
+                    "links": [
+                        102
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "tool raw",
+                    "type": "string",
+                    "links": [
+                        103
+                    ],
+                    "slot_index": 2
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 36,
+            "type": "graph/virtual_sink",
+            "pos": [
+                2150,
+                620
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 18,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 103,
+                    "slot_index": 0,
+                    "pos": null,
+                    "dir": 4
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "source",
+                    "type": "virtual",
+                    "links": null,
+                    "shape": 5,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "tool_result"
+            }
+        },
+        {
+            "id": 40,
+            "type": "input/text_input",
+            "pos": [
+                40,
+                80
+            ],
+            "size": {
+                "0": 510,
+                "1": 100
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        105
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "solve 2+2 "
+            },
+            "color": "#2a363b",
+            "bgcolor": "#3f5159"
+        },
+        {
+            "id": 37,
+            "type": "graph/virtual_source",
+            "pos": [
+                340,
+                230
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "sink",
+                    "type": "virtual",
+                    "link": null,
+                    "shape": 5,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        109
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "tool_result"
+            }
+        },
+        {
+            "id": 62,
+            "type": "agent/agent_controller",
+            "pos": [
+                720,
+                80
+            ],
+            "size": {
+                "0": 169.60000610351562,
+                "1": 46
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 105
+                },
+                {
+                    "name": "tool raw",
+                    "type": "string",
+                    "link": 109
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        107
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "tool params",
+                    "type": "string",
+                    "links": [
+                        110
+                    ],
+                    "slot_index": 1
                 }
             ],
             "properties": {}
         }
     ],
     "links": [
-        [
-            44,
-            39,
-            0,
-            41,
-            0,
-            "string"
-        ],
-        [
-            51,
-            40,
-            0,
-            39,
-            0,
-            "string"
-        ],
-        [
-            52,
-            37,
-            0,
-            39,
-            1,
-            "string"
-        ],
-        [
-            54,
-            39,
-            1,
-            42,
-            0,
-            "string"
-        ],
         [
             67,
             43,
@@ -791,30 +726,6 @@
             46,
             0,
             21,
-            0,
-            "string"
-        ],
-        [
-            86,
-            21,
-            0,
-            50,
-            0,
-            "string"
-        ],
-        [
-            88,
-            50,
-            1,
-            32,
-            0,
-            "string"
-        ],
-        [
-            90,
-            50,
-            0,
-            36,
             0,
             "string"
         ],
@@ -859,10 +770,58 @@
             "string"
         ],
         [
-            100,
+            102,
+            61,
+            1,
+            32,
+            0,
+            "string"
+        ],
+        [
+            103,
+            61,
+            2,
+            36,
+            0,
+            "string"
+        ],
+        [
+            104,
             21,
             0,
-            59,
+            61,
+            0,
+            "string"
+        ],
+        [
+            105,
+            40,
+            0,
+            62,
+            0,
+            "string"
+        ],
+        [
+            107,
+            62,
+            0,
+            41,
+            0,
+            "string"
+        ],
+        [
+            109,
+            37,
+            0,
+            62,
+            1,
+            "string"
+        ],
+        [
+            110,
+            62,
+            1,
+            42,
             0,
             "string"
         ]
@@ -872,7 +831,7 @@
     "extra": {},
     "version": 0.4,
     "group_states": {},
-    "graph_name": "agent_math",
+    "graph_name": "examples/tool_call_react",
     "node_states": {
         "21": {
             "rotation": 0
@@ -890,12 +849,9 @@
             "rotation": 0
         },
         "36": {
-            "rotation": 0
+            "rotation": 2
         },
         "37": {
-            "rotation": 0
-        },
-        "39": {
             "rotation": 0
         },
         "40": {
@@ -913,9 +869,6 @@
         "46": {
             "rotation": 0
         },
-        "50": {
-            "rotation": 0
-        },
         "51": {
             "rotation": 0
         },
@@ -931,7 +884,10 @@
         "58": {
             "rotation": 0
         },
-        "59": {
+        "61": {
+            "rotation": 0
+        },
+        "62": {
             "rotation": 0
         }
     }

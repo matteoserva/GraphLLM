@@ -1,0 +1,522 @@
+{
+    "last_node_id": 22,
+    "last_link_id": 36,
+    "nodes": [
+        {
+            "id": 20,
+            "type": "output/watch",
+            "pos": [
+                840,
+                450
+            ],
+            "size": {
+                "0": 430,
+                "1": 230
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 33
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 14,
+            "type": "agent/agent_prompt_builder",
+            "pos": [
+                180,
+                100
+            ],
+            "size": {
+                "0": 600,
+                "1": 550
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "controller",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": 3
+                },
+                {
+                    "name": "tools",
+                    "type": "string",
+                    "link": 31,
+                    "pos": null,
+                    "dir": 3
+                },
+                {
+                    "name": "exec",
+                    "type": "string",
+                    "link": 32,
+                    "pos": null,
+                    "dir": 3,
+                    "slot_index": 2
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "prompt",
+                    "type": "string",
+                    "links": [
+                        26,
+                        33
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "GraphLLM",
+                    "type": "string",
+                    "links": null
+                },
+                {
+                    "name": "variables",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "tools_format": "json",
+                "agent_type": "ReAct(xml)",
+                "Tools": "markdown",
+                "Agent": "ReAct(xml)",
+                "template": "{p:system}\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.\n\nCurrent Date: 2024-09-30\n\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{p:tools}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call>{p:end}\n{p:user}\n{p:exec1}{p:end}"
+            }
+        },
+        {
+            "id": 2,
+            "type": "llm/llm_call",
+            "pos": [
+                860,
+                120
+            ],
+            "size": {
+                "0": 380,
+                "1": 260
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 26,
+                    "pos": null,
+                    "dir": 3
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        10,
+                        34
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "json",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "template": "",
+                "subtype": "stateless"
+            }
+        },
+        {
+            "id": 3,
+            "type": "output/watch",
+            "pos": [
+                1320,
+                560
+            ],
+            "size": {
+                "0": 590,
+                "1": 250
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 10,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 5,
+            "type": "output/watch",
+            "pos": [
+                1410,
+                110
+            ],
+            "size": {
+                "0": 680,
+                "1": 240
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 35,
+                    "pos": null,
+                    "dir": 2
+                }
+            ],
+            "properties": {},
+            "color": "#2a363b",
+            "bgcolor": "#3f5159"
+        },
+        {
+            "id": 21,
+            "type": "agent/execute_tool_call",
+            "pos": [
+                1340,
+                420
+            ],
+            "size": {
+                "0": 140,
+                "1": 66
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 34
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "final result",
+                    "type": "string",
+                    "links": [
+                        35
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "tool out",
+                    "type": "string",
+                    "links": [
+                        36
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "tool raw",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 9,
+            "type": "output/watch",
+            "pos": [
+                1940,
+                560
+            ],
+            "size": [
+                650,
+                250
+            ],
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 36,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 15,
+            "type": "agent/tools_list",
+            "pos": [
+                -90,
+                120
+            ],
+            "size": {
+                "0": 220,
+                "1": 300
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "tools",
+                    "type": "string",
+                    "links": [
+                        31
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "tools_list": {
+                    "answer": {
+                        "answer": {
+                            "enabled": false
+                        }
+                    },
+                    "eval": {
+                        "eval": {
+                            "enabled": false
+                        },
+                        "python_exec": {
+                            "enabled": false
+                        }
+                    },
+                    "filesystem": {
+                        "answer_file": {
+                            "enabled": false
+                        },
+                        "ls": {
+                            "enabled": false
+                        },
+                        "read_file": {
+                            "enabled": false
+                        },
+                        "write_file": {
+                            "enabled": false
+                        }
+                    },
+                    "llm": {
+                        "query_file": {
+                            "enabled": false
+                        },
+                        "summarize": {
+                            "enabled": false
+                        }
+                    },
+                    "web": {
+                        "download": {
+                            "enabled": false
+                        },
+                        "web_search": {
+                            "enabled": false
+                        }
+                    },
+                    "fake weather": {
+                        "get_current_temperature": {
+                            "enabled": true
+                        },
+                        "get_humidity": {
+                            "enabled": false
+                        },
+                        "get_precipitation_probability": {
+                            "enabled": false
+                        },
+                        "get_temperature_date": {
+                            "enabled": true
+                        },
+                        "get_weather_forecast": {
+                            "enabled": false
+                        },
+                        "get_wind_speed": {
+                            "enabled": false
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 19,
+            "type": "input/text_input",
+            "pos": [
+                170,
+                -50
+            ],
+            "size": {
+                "0": 660,
+                "1": 90
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        32
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "What's the temperature in San Francisco now? How about tomorrow?"
+            },
+            "color": "#322",
+            "bgcolor": "#533"
+        },
+        {
+            "id": 22,
+            "type": "graph/variable",
+            "pos": [
+                960,
+                -50
+            ],
+            "size": [
+                590,
+                110
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "Native tool calling for Qwen LLM"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        }
+    ],
+    "links": [
+        [
+            10,
+            2,
+            0,
+            3,
+            0,
+            "string"
+        ],
+        [
+            26,
+            14,
+            0,
+            2,
+            0,
+            "string"
+        ],
+        [
+            31,
+            15,
+            0,
+            14,
+            1,
+            "string"
+        ],
+        [
+            32,
+            19,
+            0,
+            14,
+            2,
+            "string"
+        ],
+        [
+            33,
+            14,
+            0,
+            20,
+            0,
+            "string"
+        ],
+        [
+            34,
+            2,
+            0,
+            21,
+            0,
+            "string"
+        ],
+        [
+            35,
+            21,
+            0,
+            5,
+            0,
+            "string"
+        ],
+        [
+            36,
+            21,
+            1,
+            9,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "examples/tool_call_native",
+    "node_states": {
+        "2": {
+            "rotation": 0
+        },
+        "3": {
+            "rotation": 0
+        },
+        "5": {
+            "rotation": 3
+        },
+        "9": {
+            "rotation": 0
+        },
+        "14": {
+            "rotation": 0
+        },
+        "15": {
+            "rotation": 0
+        },
+        "19": {
+            "rotation": 0
+        },
+        "20": {
+            "rotation": 0
+        },
+        "21": {
+            "rotation": 0
+        },
+        "22": {
+            "rotation": 0
+        }
+    }
+}

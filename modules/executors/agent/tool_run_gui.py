@@ -11,9 +11,9 @@ class ParseToolCallGui(BaseGuiNode):
         builder = self._initBuilder()
 
         builder.addInput("in", "string");
-        builder.addOutput("result", "string");
+        builder.addOutput("final result", "string");
         builder.addOutput("tool out", "string");
-        builder.addOutput("llm out", "string");
+        builder.addOutput("tool raw", "string");
 
         builder.setPath("execute_tool_call")
 
