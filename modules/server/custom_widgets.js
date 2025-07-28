@@ -984,7 +984,7 @@ class CustomTextOutput extends CustomTextCommon{
                           displayMode: true,
                           throwOnError: true, // allows katex to fail silently
                           errorColor: '#ff0000',
-                          delimiters: [{ left: "¨D ", right: " ¨D", display: false }, { left: "¨D¨D\n", right: "¨D¨D", display: true }],
+                          delimiters: [{ left: "¨D¨D\n", right: "¨D¨D", display: true }, { left: "¨D ", right: " ¨D", display: false } ],
                       }
                   )()
                 katex[0].type = "lang"
@@ -1014,6 +1014,8 @@ class CustomTextOutput extends CustomTextCommon{
                 text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
                 text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
 
+                // replace inline $$...$$ with $...$
+                text = text.replace(/\$\$ ([^\n]+) \$\$/g,'$ $1 $')
 
                 var d = document.createElement("div")
                 d.innerHTML = text
