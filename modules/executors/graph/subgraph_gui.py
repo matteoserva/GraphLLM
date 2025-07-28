@@ -8,7 +8,7 @@ class SubgraphGui(BaseGuiNode):
         pass
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         builder._addInput("in", "string");
 
@@ -24,3 +24,5 @@ class SubgraphGui(BaseGuiNode):
         builder._setCallback("onAdded", onNodeAdded)
 
         builder._setPath("call_subgraph")
+
+        return builder

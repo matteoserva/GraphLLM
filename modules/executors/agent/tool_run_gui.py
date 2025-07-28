@@ -8,7 +8,7 @@ class ParseToolCallGui(BaseGuiNode):
         pass
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         builder._addInput("in", "string");
         builder._addOutput("result", "string");
@@ -16,3 +16,5 @@ class ParseToolCallGui(BaseGuiNode):
         builder._addOutput("llm out", "string");
 
         builder._setPath("execute_tool_call")
+
+        return builder

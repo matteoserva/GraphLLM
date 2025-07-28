@@ -8,7 +8,7 @@ class AgentHistoryBuilderGui(BaseGuiNode):
         pass
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         builder._addInput("controller", "string");
         builder._addInput("tools", "string");
@@ -26,3 +26,5 @@ class AgentHistoryBuilderGui(BaseGuiNode):
         builder._setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")
 
         builder._setPath("agent/agent_prompt_builder")
+
+        return builder

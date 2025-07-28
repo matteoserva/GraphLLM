@@ -8,7 +8,7 @@ class WatchNodeGui(BaseGuiNode):
         pass
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         builder._addInput("in", "string");
 
@@ -30,3 +30,4 @@ class WatchNodeGui(BaseGuiNode):
         eventId = {"type": "starting"};
         action = {"type": "widget_action", "target": "reset", "property": "parameters"}
         builder._subscribe(source_location, eventId, action)
+        return builder

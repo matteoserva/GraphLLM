@@ -8,7 +8,7 @@ class SimpleCopyGui(BaseGuiNode):
 
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         builder._addInput("in","string");
         builder._addOutput("out","string");
@@ -17,3 +17,5 @@ class SimpleCopyGui(BaseGuiNode):
         builder._setCallback("onConnectionsChange","MyGraphNode.prototype.onConnectionsChange")
         
         builder._setPath("other/simple_copy")
+
+        return builder

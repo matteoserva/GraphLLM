@@ -17,28 +17,30 @@ class GuiNodeBuilder:
                        "standard_widgets": [], "custom_widgets": [], "titlebar_widgets" : [],
                        "properties": {}, "subscriptions" : [], "extra_properties": []}
 
-    def _initBuilder(self):
+    def _initBuilder(self,node):
+        self.node = node
         builder = self
         builder._reset()
-        if hasattr(self, "node_type"):
-            builder._setPath(self.node_type)
-        if hasattr(self, "__doc__") and self.__doc__:
-            docstring = self.__doc__.strip().split("\n")[0]
-            builder._addTitlebarWidget("__doc__", docstring)
+        if hasattr(node, "node_type"):
+            builder._setPath(node.node_type)
+        if hasattr(node, "__doc__") and node.__doc__:
+            docstring = node.__doc__.strip().split("\n")[0]
+            builder._addTitlebarWidget("brief", docstring)
         return builder
 
     def getNodeString(self):
         return self._getNodeString()
 
     def _setPath(self, nodeType):
-        self.config["class_name"] = type(self).__name__
+        node = self.node
+        self.config["class_name"] = type(node).__name__
         if "/" in nodeType:
             self.config["node_type"] = nodeType
         else:
-            module = self.__module__.split(".")[-2]
+            module = node.__module__.split(".")[-2]
             self.config["node_type"] = module + "/" + nodeType
-        if hasattr(self,"node_title"):
-            self.config["title"] = self.node_title
+        if hasattr(node,"node_title"):
+            self.config["title"] = node.node_title
         else:
             node_title = " ".join(x.capitalize() for x in nodeType.lower().split("_"))
             self.config["title"] = node_title

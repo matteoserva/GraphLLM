@@ -50,3 +50,5 @@ source_location = {"position": "input", "slot": 0}
         action = {"type": "widget_action", "target": "reset", "property": "parameters"}
         builder._subscribe(source_location, eventId, action)
 ```
+
+builder._addSimpleProperty("template", "")

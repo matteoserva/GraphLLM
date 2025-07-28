@@ -11,7 +11,7 @@ class ToolsListGui(BaseGuiNode):
 
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         builder._addOutput("tools", "string");
 
@@ -27,3 +27,5 @@ class ToolsListGui(BaseGuiNode):
         builder._addCustomWidget("tools_selector", "tools_list", {"property": "tools_list", "tools_list":tools_list})
 
         builder._setPath("tools_list")
+
+        return builder

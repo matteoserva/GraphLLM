@@ -9,7 +9,7 @@ class StandardMuxGui(BaseGuiNode):
 
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         builder._addInput("in1","string");
         builder._addInput("in2", "string");
@@ -20,6 +20,8 @@ class StandardMuxGui(BaseGuiNode):
         builder._setPath("graph/standard_mux")
         builder._setCallback("onConnectionsChange","MyGraphNode.prototype.onConnectionsChange")
 
+        return builder
+
 class DemuxGui(BaseGuiNode):
     node_title="Demux"
 
@@ -28,7 +30,7 @@ class DemuxGui(BaseGuiNode):
 
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         builder._addInput("in","string");
         builder._addInput("sel", "string");
@@ -38,3 +40,5 @@ class DemuxGui(BaseGuiNode):
         builder._setConnectionLimits ({"max_inputs": 1, "min_inputs": 1, "min_outputs": 2})
         builder._setPath("graph/demux")
         builder._setCallback("onConnectionsChange","MyGraphNode.prototype.onConnectionsChange")
+
+        return builder

@@ -8,7 +8,7 @@ class WebsocketClientGui(BaseGuiNode):
         pass
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         #builder._addInput("send", "string");
         builder._addOutput("LLM", "string");
@@ -32,3 +32,5 @@ class WebsocketClientGui(BaseGuiNode):
         eventId = {"type": "output", "slot": 0};
         action = {"type": "widget_action", "target": "set", "property": "files"}
         builder._subscribe(source_location, eventId, action)
+
+        return builder

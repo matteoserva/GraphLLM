@@ -8,7 +8,7 @@ class RestClientGui(BaseGuiNode):
         pass
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         #builder._addInput("data", "string")
         builder._addOutput("response", "string")
@@ -29,3 +29,4 @@ class RestClientGui(BaseGuiNode):
         builder._addStandardWidget("combo", "Method", "GET", cb, options)
 
         builder._setPath("network/rest_client")
+        return builder

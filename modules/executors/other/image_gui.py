@@ -8,10 +8,12 @@ class ImageGui(BaseGuiNode):
         pass
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         builder._addOutput("image", "string");
         builder._addCustomWidget("text_input", "name", {"property": "name", "default": ""})
         builder._addCustomWidget("image_drop", "image", {"property": "image"})
 
         builder._setPath("image_input")
+
+        return builder

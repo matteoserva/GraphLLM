@@ -9,7 +9,7 @@ class PackGui(BaseGuiNode):
 
 
     def buildNode(self):
-        builder = self
+        builder = self._initBuilder()
         builder._reset()
         builder._addInput("in","string");
         builder._addInput("2", "string");
@@ -17,3 +17,5 @@ class PackGui(BaseGuiNode):
         builder._setConnectionLimits ({"max_outputs": 1, "min_outputs": 1, "min_inputs": 2})
         builder._setPath("other/copy_pack")
         builder._setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")
+
+        return builder

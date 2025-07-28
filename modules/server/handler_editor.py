@@ -4,6 +4,7 @@ import uuid
 import re
 
 from modules.executors import get_gui_nodes
+from modules.executors.gui_node_builder import GuiNodeBuilder
 
 SOURCES_PATH="modules/server"
 NODES_PATH="modules/gui_nodes"
@@ -13,8 +14,10 @@ LITEGRAPH_PATH = "extras/litegraph.js"
 class EditorHandler():
     def __init__(self):
         gui_nodes = [el() for el in get_gui_nodes()]
-        _ = [el.buildNode() for el in gui_nodes]
-        generated_nodes = [{"name": "generated/" + el.config["node_type"] + ".js", "value": el.getNodeString()} for el in gui_nodes]
+        for el in gui_nodes:
+            setattr(el,"builder",GuiNodeBuilder())
+        builders = [el.buildNode() for el in gui_nodes]
+        generated_nodes = [{"name": "generated/" + el.config["node_type"] + ".js", "value": el.getNodeString()} for el in builders]
 
         raw_nodes = []
         node_files = glob(EXECUTORS_PATH + "/*.js")
