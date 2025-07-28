@@ -100,7 +100,7 @@ class CustomTextCommon{
         if(this.property && this.property == k && this.textarea.value!=v)
         {
             var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size
-            var totally_scrolled = this.textarea.scrollTop >= 5 &&
+            var totally_scrolled = this.textarea.scrollTop >= 0 &&
                 (Math.abs(this.textarea.scrollHeight - this.textarea.clientHeight - this.textarea.scrollTop) <= 1);
 
             if(this.textarea.tagName.toLowerCase() == "div")
@@ -918,19 +918,13 @@ class CustomTextOutput extends CustomTextCommon{
         katexNodes.forEach((element) => this.cleanKatexBlocks(element.parentNode));
 
         var inner = textarea.innerHTML
+
+        // remove newlines after some html tags, they break <pre> formatting
 		inner = inner.replace(/\<blockquote\>\n(\s+\<)/g,"<blockquote>$1") //blockquote\n  <p>
-        //inner = inner.replace(/\n(\s*)\<\/blockquote\>/g,"$1</blockquote>") //blockquote\n  <p>
-       /* inner = inner.replace(/\<\/li\>\n/g,"</li>")
-        inner = inner.replace(/\<\/p\>\n/g,"</p>")
-        inner = inner.replace(/\<\/blockquote\>\n/g,"</blockquote>")
-        inner = inner.replace(/\<ul\>\n/g,"<ul>")*/
         inner = inner.replace(/\<\/([a-zA-Z0-9]+)\>\n/g,"</$1>")
         inner = inner.replace(/\<(hr)\>\n/g,"<$1>")
         inner = inner.replace(/\<(br)\>\n/g,"<$1>")
-		//inner = inner.replace(/\>[\n\r]+\</g,"><")
-		//inner = inner.replace(/blockquote\>\n(\s+\<)/g,"blockquote>$1") //blockquote\n  <p>
-		//inner = inner.replace(/\>\n\s\s\</g,"><")
-		//inner = inner.replace(/\<blockquote>[\n\r\s]+\</g,"<blockquote><")
+
 		textarea.innerHTML = inner
 		//this.cleanHtmlEmptyNodes(children)
 		this.cleanHtmlCodeBlocks(textarea)
@@ -1010,12 +1004,18 @@ class CustomTextOutput extends CustomTextCommon{
                 );
                 converter.setOption('tables', true);
                 converter.setOption('disableForced4SpacesIndentedSublists', true)
+
+                /* WORKAROUND not needed anymore?
                 text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\](\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
                 text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
                 text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
+                */
 
-                // replace inline $$...$$ with $...$
+                // replace inline $$ ... $$ with $ ... $
                 text = text.replace(/\$\$ ([^\n]+) \$\$/g,'$ $1 $')
+
+                // replace inline $...$ with $ ... $   offender: - $H = 16 \text{ cm}$
+                text = text.replace(/\$(\S[^\n]+(\\text\{|\\boxed\{)[^\n]+\S)\$/g,'$ $1 $')
 
                 var d = document.createElement("div")
                 d.innerHTML = text
