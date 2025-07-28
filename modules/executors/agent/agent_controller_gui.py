@@ -9,12 +9,12 @@ class AgentControllerGui(BaseGuiNode):
 
     def buildNode(self):
         builder = self._initBuilder()
-        builder._reset()
-        builder._addInput("in", "string");
-        builder._addOutput("out", "string");
-        builder._addInput("tool result", "string");
-        builder._addOutput("tool params", "string");
 
-        builder._setPath("agent/agent_controller")
+        builder.addInput("in", "string");
+        builder.addOutput("out", "string");
+        builder.addInput("tool result", "string");
+        builder.addOutput("tool params", "string");
+
+        builder.setPath("agent/agent_controller")
 
         return builder

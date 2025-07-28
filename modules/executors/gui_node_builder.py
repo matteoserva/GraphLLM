@@ -17,12 +17,12 @@ class GuiNodeBuilder:
                        "standard_widgets": [], "custom_widgets": [], "titlebar_widgets" : [],
                        "properties": {}, "subscriptions" : [], "extra_properties": []}
 
-    def _initBuilder(self,node):
+    def initBuilder(self,node):
         self.node = node
         builder = self
         builder._reset()
         if hasattr(node, "node_type"):
-            builder._setPath(node.node_type)
+            builder.setPath(node.node_type)
         if hasattr(node, "__doc__") and node.__doc__:
             docstring = node.__doc__.strip().split("\n",1)
             brief = docstring[0]
@@ -37,7 +37,7 @@ class GuiNodeBuilder:
     def getNodeString(self):
         return self._getNodeString()
 
-    def _setPath(self, nodeType):
+    def setPath(self, nodeType):
         node = self.node
         self.config["class_name"] = type(node).__name__
         if "/" in nodeType:
@@ -51,27 +51,27 @@ class GuiNodeBuilder:
             node_title = " ".join(x.capitalize() for x in nodeType.lower().split("_"))
             self.config["title"] = node_title
 
-    def _setTitle(self, title):
+    def setTitle(self, title):
             self.config["title"] = title
 
-    def _setConnectionLimits(self, limits):
+    def setConnectionLimits(self, limits):
         self.config["gui_node_config"]["connection_limits"] = limits
-        self._setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")
+        self.setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")
 
-    def _setCallback(self, cbName, cbString):
+    def setCallback(self, cbName, cbString):
         if cbName in ["onConnectionsChange"]:
             cb_names = [el[0] for el in self.config["callbacks"]]
             if cbName in cb_names:
                 self.config["callbacks"] = [el for el in self.config["callbacks"] if el[0] != cbName]
         self.config["callbacks"].append((cbName, cbString))
 
-    def _addInput(self, name, type="string"):
+    def addInput(self, name, type="string"):
         self.config["inputs"].append((name, type))
 
-    def _addOutput(self, name, type="string"):
+    def addOutput(self, name, type="string"):
         self.config["outputs"].append((name, type))
 
-    def _addCustomWidget(self, *args):
+    def addCustomWidget(self, *args):
         # print("custom widget:",args)
         self.config["custom_widgets"].append(args)
 
@@ -79,17 +79,17 @@ class GuiNodeBuilder:
         # print("custom widget:",args)
         self.config["titlebar_widgets"].append(args)
 
-    def _addSimpleProperty(self,property_name,default_value):
+    def addSimpleProperty(self,property_name,default_value):
         self.config["properties"][property_name] = default_value
 
-    def _addStandardWidget(self, *args):
+    def addStandardWidget(self, *args):
         # print("standard widget:",args)
         if len(args) > 4 and isinstance(args[4], dict):
             options = args[4]
             if "property" in options and len(options["property"]) > 0:
                 property_name = options["property"]
                 default_value = args[2]
-                self._addSimpleProperty(property_name,default_value)
+                self.addSimpleProperty(property_name,default_value)
 
             if args[0] == "combo" and "property" in options and len(options["property"]) >0 and len(options.get("values",[])) > 0:
                 extra_property = [args[1], args[2], "enum", {"values": options["values"]} ]
@@ -97,11 +97,11 @@ class GuiNodeBuilder:
 
         self.config["standard_widgets"].append(args)
 
-    def _subscribe(self, *args):
+    def subscribe(self, *args):
         self.config["subscriptions"].append(args)
 
 
-
+    # private methods
 
     def _makeHeader(self):
 
@@ -212,4 +212,3 @@ class GuiNodeBuilder:
 
 
         return final
-

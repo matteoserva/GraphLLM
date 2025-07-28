@@ -1,7 +1,7 @@
 class BaseGuiNode():
 
     def _initBuilder(self):
-        return self.builder._initBuilder(self)
+        return self.builder.initBuilder(self)
 
     def buildNode(self):
         builder = self._initBuilder()

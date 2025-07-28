@@ -12,8 +12,8 @@ class ToolsListGui(BaseGuiNode):
 
     def buildNode(self):
         builder = self._initBuilder()
-        builder._reset()
-        builder._addOutput("tools", "string");
+
+        builder.addOutput("tools", "string");
 
         #for el in self.tools_list:
         #    builder._addStandardWidget("toggle",el, el == "answer", None, {"property":el, "on": "enabled", "off":"disabled"} )
@@ -24,8 +24,8 @@ class ToolsListGui(BaseGuiNode):
             l = [el["name"] for el in l]
             tools_list[el] = l
 
-        builder._addCustomWidget("tools_selector", "tools_list", {"property": "tools_list", "tools_list":tools_list})
+        builder.addCustomWidget("tools_selector", "tools_list", {"property": "tools_list", "tools_list":tools_list})
 
-        builder._setPath("tools_list")
+        builder.setPath("tools_list")
 
         return builder

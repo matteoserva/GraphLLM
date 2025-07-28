@@ -9,11 +9,10 @@ class RestClientGui(BaseGuiNode):
 
     def buildNode(self):
         builder = self._initBuilder()
-        builder._reset()
-        #builder._addInput("data", "string")
-        builder._addOutput("response", "string")
+
+        builder.addOutput("response", "string")
         
-        builder._addCustomWidget("text_input", "URL", {"property": "url"})
+        builder.addCustomWidget("text_input", "URL", {"property": "url"})
         options = {"values": ["GET", "POST", "PUT", "DELETE", "PATCH"], "property": "method"}
         cb = RawGuiArg("""function(value, canvas, node, pos, event){
             if (value=="GET" || value=="DELETE")
@@ -26,7 +25,7 @@ class RestClientGui(BaseGuiNode):
             }   
         }""")
 
-        builder._addStandardWidget("combo", "Method", "GET", cb, options)
+        builder.addStandardWidget("combo", "Method", "GET", cb, options)
 
-        builder._setPath("network/rest_client")
+        builder.setPath("network/rest_client")
         return builder

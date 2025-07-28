@@ -10,11 +10,11 @@ class RepeatGui(BaseGuiNode):
 
     def buildNode(self):
         builder = self._initBuilder()
-        builder._reset()
-        builder._addInput("in","string");
-        builder._addOutput("out", "string");
-        builder._setPath("repeat")
+
+        builder.addInput("in","string");
+        builder.addOutput("out", "string");
+        builder.setPath("repeat")
         options = {"min": 0, "step": 10, "precision": 0, "property": "repetitions"}
-        builder._addStandardWidget("number", "repetitions", 0, None, options)
+        builder.addStandardWidget("number", "repetitions", 0, None, options)
 
         return builder

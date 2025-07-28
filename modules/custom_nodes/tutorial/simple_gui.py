@@ -6,7 +6,7 @@ class SimpleGui(BaseGuiNode):
     def buildNode(self):
         builder = self._initBuilder()
 
-        builder._addOutput("out", "string");
-        builder._addCustomWidget("textarea", "widget name", {"property": "textarea_identifier"})
+        builder.addOutput("out", "string");
+        builder.addCustomWidget("textarea", "widget name", {"property": "textarea_identifier"})
 
         return builder

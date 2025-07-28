@@ -9,22 +9,22 @@ class AgentHistoryBuilderGui(BaseGuiNode):
 
     def buildNode(self):
         builder = self._initBuilder()
-        builder._reset()
-        builder._addInput("controller", "string");
-        builder._addInput("tools", "string");
-        builder._addInput("exec", "string");
 
-        builder._addOutput("prompt", "string");
-        builder._addOutput("GraphLLM", "string");
-        builder._addOutput("variables", "string");
+        builder.addInput("controller", "string");
+        builder.addInput("tools", "string");
+        builder.addInput("exec", "string");
 
-        builder._addStandardWidget("combo", "Tools", "markdown", None, {"property": "tools_format", "values": ["markdown", "json","python"]})
-        builder._addStandardWidget("combo", "Agent", "ReAct(xml)", None, {"property": "agent_type", "values": ["ReAct(xml)"]})
-        builder._addCustomWidget("textarea", "template", {"property": "template"})
+        builder.addOutput("prompt", "string");
+        builder.addOutput("GraphLLM", "string");
+        builder.addOutput("variables", "string");
 
-        builder._setConnectionLimits({"max_outputs": 3, "min_outputs": 3, "min_inputs": 3})
-        builder._setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")
+        builder.addStandardWidget("combo", "Tools", "markdown", None, {"property": "tools_format", "values": ["markdown", "json","python"]})
+        builder.addStandardWidget("combo", "Agent", "ReAct(xml)", None, {"property": "agent_type", "values": ["ReAct(xml)"]})
+        builder.addCustomWidget("textarea", "template", {"property": "template"})
 
-        builder._setPath("agent/agent_prompt_builder")
+        builder.setConnectionLimits({"max_outputs": 3, "min_outputs": 3, "min_inputs": 3})
+        builder.setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")
+
+        builder.setPath("agent/agent_prompt_builder")
 
         return builder

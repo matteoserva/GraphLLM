@@ -9,9 +9,9 @@ class RemoveThinkGui(BaseGuiNode):
 
     def buildNode(self):
         builder = self._initBuilder()
-        builder._reset()
-        builder._addInput("llm", "string");
-        builder._addOutput("clean text", "string");
-        builder._setPath("llm/remove_think")
+
+        builder.addInput("llm", "string");
+        builder.addOutput("clean text", "string");
+        builder.setPath("llm/remove_think")
 
         return builder

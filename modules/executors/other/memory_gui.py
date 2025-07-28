@@ -9,11 +9,11 @@ class MemoryGui(BaseGuiNode):
 
     def buildNode(self):
         builder = self._initBuilder()
-        builder._reset()
-        builder._addInput("in", "string");
-        builder._addOutput("out", "string");
 
-        builder._addCustomWidget("text_input", "separator", {"property": "separator","default":"\"\\n\""})
-        builder._setPath("other/memory")
+        builder.addInput("in", "string");
+        builder.addOutput("out", "string");
+
+        builder.addCustomWidget("text_input", "separator", {"property": "separator","default":"\"\\n\""})
+        builder.setPath("other/memory")
 
         return builder
