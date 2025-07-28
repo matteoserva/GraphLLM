@@ -988,8 +988,23 @@ class CustomTextOutput extends CustomTextCommon{
                       }
                   )()
                 katex[0].type = "lang"
+
+                let katexFixer = [
+                    {
+                      type: 'lang',
+                      filter(html = '') {
+                        let  d = document.createElement("div")
+                        d.innerHTML = html
+                        // fixes #### Second Term: $ 2\pi H \sqrt{\frac{V}{\pi H}} $
+                        d.querySelectorAll("path").forEach( (element) => {element.remove()})
+                        let r = d.innerHTML
+                        return r;
+                      },
+                    },
+                ];
+
                 var converter = new showdown.Converter({
-                extensions: [katex]
+                extensions: [katex,katexFixer]
                   }
 
                 );
