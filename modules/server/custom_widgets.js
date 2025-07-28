@@ -1439,7 +1439,7 @@ class CustomTextarea extends CustomTextCommon{
 
         }
 
-        
+        textarea.remove();
     }
     
     configureSize(aSpace,hSpace)
