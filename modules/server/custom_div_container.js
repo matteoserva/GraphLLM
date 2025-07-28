@@ -48,9 +48,19 @@ class TitlebarContainer {
 	addWidget(type,data)
 	{
 	    let titledialog = this.dialog.querySelector(".titlebar-dialog");
-	    let newDiv = document.createElement("div");
-	    newDiv.innerText = data
-	    titledialog.appendChild(newDiv);
+	    if (type == "brief" || type == "fulldoc")
+	    {
+	        let newDiv = document.createElement("div");
+	        newDiv.className = type;
+	        newDiv.innerText = data
+	        titledialog.appendChild(newDiv);
+	        if (type == "fulldoc")
+            {
+                newDiv.style.display="none";
+                this.dialog.querySelector(".titlebar-header .titlebar-question").style.display=null;
+            }
+	    }
+
 	}
 
 	makeElement()
@@ -64,7 +74,7 @@ class TitlebarContainer {
 			<div class="titlebar-buttons">
 
 				<div class="titlebar-rotate">🔃<!--<img src="img/rotation.jpg" style="vertical-align: middle; width: 10px; height: 10px"></img>--></div>
-				<div class="titlebar-question">❓</div>
+				<div class="titlebar-question" style="display: none;">❓</div>
 				<div class="titlebar-delete">❌</div>
 
 
@@ -95,6 +105,9 @@ class TitlebarContainer {
             this.parent.rotateClockwise();
             /*event.stopPropagation();
             event.preventDefault();*/
+        });
+        dialog.querySelector(".titlebar-question").addEventListener('click', () => {
+            dialog.querySelector(".titlebar-dialog > .fulldoc").style.display = "block"
         });
 		dialog.tabIndex=0;
 		dialog.addEventListener('focusout', () => {
