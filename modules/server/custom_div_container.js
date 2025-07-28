@@ -63,17 +63,19 @@ class TitlebarContainer {
 		<div class="titlebar-header" style="height: ` + LiteGraph.NODE_TITLE_HEIGHT + `px;">
 			<div class="titlebar-buttons">
 
-				<div class="titlebar-rotate"><img src="img/rotation.jpg" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
-				<div class="titlebar-delete">D</div>
+				<div class="titlebar-rotate">🔃<!--<img src="img/rotation.jpg" style="vertical-align: middle; width: 10px; height: 10px"></img>--></div>
+				<div class="titlebar-question">❓</div>
+				<div class="titlebar-delete">❌</div>
+
 
 			</div>
-			<img src="img/circle.png" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
+			<img class="titlebar-toggle" src="img/circle.png" style="vertical-align: middle; width: 10px; height: 10px"></img></div>
         <div class="titlebar-dialog"></div>`
 
 
 
 
-		let titleheader = dialog.querySelector(".titlebar-header");
+		let titleheader = dialog.querySelector(".titlebar-toggle");
 		titleheader.addEventListener('click', () => {
             let wasVisible = dialog.classList.contains("focused")
             //titledialog.style.display = wasVisible ? 'none' : 'block';
@@ -89,8 +91,10 @@ class TitlebarContainer {
 		dialog.querySelector(".titlebar-delete").addEventListener('click', () => {
             this.parent.graph.remove(this.parent);
         });
-        dialog.querySelector(".titlebar-rotate").addEventListener('click', () => {
+        dialog.querySelector(".titlebar-rotate").addEventListener('click', (event) => {
             this.parent.rotateClockwise();
+            /*event.stopPropagation();
+            event.preventDefault();*/
         });
 		dialog.tabIndex=0;
 		dialog.addEventListener('focusout', () => {
