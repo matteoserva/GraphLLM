@@ -829,7 +829,9 @@ class CustomTextOutput extends CustomTextCommon{
         this.options = {multiline:false}
         this.minHeight = 50
         this.saved_content = "";
+        this.old_content = "";
         this.config={use_markdown: false}
+        this.lastRedrawTimestamp = 0;
     }
 
     setDisplayValue(value)
@@ -940,96 +942,110 @@ class CustomTextOutput extends CustomTextCommon{
         var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size
         var totally_scrolled = this.textarea.scrollTop >= 5 &&
             (Math.abs(this.textarea.scrollHeight - this.textarea.clientHeight - this.textarea.scrollTop) <= 1);
-        if(this.old_content === this.saved_content && this.old_markdown === this.config.use_markdown )
+
+        if(this.needsRefresh)
+        {
+            this.needsRefresh = false
+            this.old_content = ""
+        }
+
+        if( this.old_content === this.saved_content && this.old_markdown === this.config.use_markdown )
         {
             return;
         }
         else
         {
+
+            // TEST
+            if(this.old_content.length > 100 && this.saved_content.length > this.old_content.length)
+            {
+                var diffContent =  this.saved_content.substring(this.old_content.length)
+            }
+
             this.old_content = this.saved_content
             this.old_markdown = this.config.use_markdown
         }
 
-        if(this.config.use_markdown)
+        const now = Date.now();
+
+        if(diffContent && this.config.use_markdown && (now-this.lastRedrawTimestamp)< 500 && this.saved_content.startsWith(this.old_content))
         {
-            var text = this.saved_content;
-            let katex = showdownKatex(
-                  {
-                      displayMode: true,
-                      throwOnError: true, // allows katex to fail silently
-                      errorColor: '#ff0000',
-                      delimiters: [{ left: "¨D ", right: " ¨D", display: false }, { left: "¨D¨D\n", right: "¨D¨D", display: true }],
+            const newText = document.createTextNode(diffContent);
+            this.textarea.appendChild(newText);
+        }
+        else if(this.config.use_markdown)
+        {
+                this.lastRedrawTimestamp = now
+
+
+                var text = this.saved_content;
+                let katex = showdownKatex(
+                      {
+                          displayMode: true,
+                          throwOnError: true, // allows katex to fail silently
+                          errorColor: '#ff0000',
+                          delimiters: [{ left: "¨D ", right: " ¨D", display: false }, { left: "¨D¨D\n", right: "¨D¨D", display: true }],
+                      }
+                  )()
+                katex[0].type = "lang"
+                var converter = new showdown.Converter({
+                extensions: [katex]
                   }
-              )()
-            katex[0].type = "lang"
-            var converter = new showdown.Converter({
-            extensions: [katex]
-              }
 
-            );
-			converter.setOption('tables', true);
-			converter.setOption('disableForced4SpacesIndentedSublists', true)
-			text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\](\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
-			text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
-			text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
-
-			/*
-                \[
-                a
-                b
-                \]
-			*/
-			text = text.replace(/(\s|^)\\\[\n(([^\n]+\n){1,5})\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
+                );
+                converter.setOption('tables', true);
+                converter.setOption('disableForced4SpacesIndentedSublists', true)
+                text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\](\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
+                text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
+                text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
 
 
-			// \boxed{\int_{\Omega} f \, d\mu = \int_{\Omega} f^+ \, d\mu - \int_{\Omega} f^- \, d\mu}
-			text = text.replace(/(^|\n)(\\boxed{[^\n]+})(\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>$3')
-            var d = document.createElement("div")
-			d.innerHTML = text
-			var t = d.querySelector("think")
-			if(t)
-			{
-				
-				var d2 = document.createElement("div")
-				d2.className = "thinking"
-				d2.innerHTML = t.innerHTML.trim()
-				
-				
-				var dc = document.createElement("div")
-				dc.className = "thinking-container"
-				dc.style = "background-color: #202020"
-				dc.style.marginTop = "4px"
-				dc.style.marginBottom = "4px"
-				dc.style.paddingTop = "4px"
-				dc.style.paddingBottom = "4px"
-				dc.style.position = "relative"
-				
-				
-				var p = document.createElement("p");
-				p.style="position: absolute; margin: 0px; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
-				p.innerHTML = "Think"
-				
-				dc.appendChild(d2)
-				dc.appendChild(p)
-				
-				t.replaceWith(dc)
-				
-				text = unEscape(d.innerHTML)
+                var d = document.createElement("div")
+                d.innerHTML = text
+                var t = d.querySelector("think")
+                if(t)
+                {
 
-				function unEscape(htmlStr) {
-                    htmlStr = htmlStr.replace(/&lt;/g , "<");
-                    htmlStr = htmlStr.replace(/&gt;/g , ">");
-                    htmlStr = htmlStr.replace(/&quot;/g , "\"");
-                    htmlStr = htmlStr.replace(/&#39;/g , "\'");
-                    htmlStr = htmlStr.replace(/&amp;/g , "&");
-                    return htmlStr;
+                    var d2 = document.createElement("div")
+                    d2.className = "thinking"
+                    d2.innerHTML = t.innerHTML.trim()
+
+
+                    var dc = document.createElement("div")
+                    dc.className = "thinking-container"
+                    dc.style = "background-color: #202020"
+                    dc.style.marginTop = "4px"
+                    dc.style.marginBottom = "4px"
+                    dc.style.paddingTop = "4px"
+                    dc.style.paddingBottom = "4px"
+                    dc.style.position = "relative"
+
+
+                    var p = document.createElement("p");
+                    p.style="position: absolute; margin: 0px; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+                    p.innerHTML = "Think"
+
+                    dc.appendChild(d2)
+                    dc.appendChild(p)
+
+                    t.replaceWith(dc)
+
+                    text = unEscape(d.innerHTML)
+
+                    function unEscape(htmlStr) {
+                        htmlStr = htmlStr.replace(/&lt;/g , "<");
+                        htmlStr = htmlStr.replace(/&gt;/g , ">");
+                        htmlStr = htmlStr.replace(/&quot;/g , "\"");
+                        htmlStr = htmlStr.replace(/&#39;/g , "\'");
+                        htmlStr = htmlStr.replace(/&amp;/g , "&");
+                        return htmlStr;
+                    }
+
                 }
 
-			}
-			
-			var html = converter.makeHtml(text);
-            this.textarea.innerHTML = html
-            this.cleanHtml(this.textarea)
+                var html = converter.makeHtml(text);
+                this.textarea.innerHTML = html
+                this.cleanHtml(this.textarea)
 
         }
         else
@@ -1209,6 +1225,7 @@ class CustomTextOutput extends CustomTextCommon{
         if (action.target == "set")
         {
             this.saved_content = data
+            this.needsRefresh = true
             this.redrawContent()
 
         } else if (action.target == "reset")
