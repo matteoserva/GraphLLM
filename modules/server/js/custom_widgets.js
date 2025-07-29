@@ -965,7 +965,15 @@ class CustomTextOutput extends CustomTextCommon{
         if(diffContent && this.config.use_markdown && (now-this.lastRedrawTimestamp)< 500 && this.saved_content.startsWith(this.old_content))
         {
             const newText = document.createTextNode(diffContent);
-            this.textarea.appendChild(newText);
+			let lastChild = this.textarea.lastElementChild
+			if(lastChild)
+			{
+				lastChild.appendChild(newText);
+			}
+			else
+			{
+				this.textarea.lastElementChild.appendChild(newText);
+			}
         }
         else if(this.config.use_markdown)
         {
