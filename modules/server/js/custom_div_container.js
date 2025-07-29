@@ -14,6 +14,7 @@ class DivContainer {
         this.options = {}
         this.parent = parent
         this.attached = false
+		this.properties = {}
 
         var oldRemoved = this.parent.onRemoved
         this.parent.onRemoved = function()
@@ -26,11 +27,9 @@ class DivContainer {
         var that = this
         this.parent.onPropertyChanged= function( k, val )
         {
-			if(this.blockDownstreamValues)
+			if(that.properties[k] === val)
 				return;
-            /*var numArgs = arguments.length
-            if(numArgs == 2)*/
-                that.setValue(k,val)
+            that.setValue(k,val)
 
         }
         var oldCollapse = this.parent.collapse.bind(this.parent)
@@ -272,9 +271,8 @@ class DivContainer {
 
     notifyValue(me, k,val)
     {
-		this.blockDownstreamValues = true
+		this.properties[k] = val
         this.parent.setProperty(k,val)
-		this.blockDownstreamValues = false
         this.parent.setDirtyCanvas(true, true);
         this.saved_values[k] = JSON.parse(JSON.stringify(val))
         this.saved_diff[k] = ""
@@ -282,7 +280,7 @@ class DivContainer {
 
     setValue(k,val,save=true)
     {
-
+		this.properties[k] = val
         if(save)
         {
             this.saved_values[k] = JSON.parse(JSON.stringify(val))
