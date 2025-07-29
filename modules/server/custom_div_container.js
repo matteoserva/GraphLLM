@@ -214,8 +214,10 @@ class DivContainer {
         var that = this
         this.parent.onPropertyChanged= function( k, val )
         {
-            var numArgs = arguments.length
-            if(numArgs == 2)
+			if(this.blockDownstreamValues)
+				return;
+            /*var numArgs = arguments.length
+            if(numArgs == 2)*/
                 that.setValue(k,val)
 
         }
@@ -458,7 +460,9 @@ class DivContainer {
 
     notifyValue(me, k,val)
     {
+		this.blockDownstreamValues = true
         this.parent.setProperty(k,val)
+		this.blockDownstreamValues = false
         this.parent.setDirtyCanvas(true, true);
         this.saved_values[k] = JSON.parse(JSON.stringify(val))
         this.saved_diff[k] = ""
