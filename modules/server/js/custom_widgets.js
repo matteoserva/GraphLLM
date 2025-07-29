@@ -744,57 +744,11 @@ class CustomTextOutput extends CustomTextCommon{
         return 0;
     }
 
-    redrawContent(markdown)
-    {
-        var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size
-        var totally_scrolled = this.textarea.scrollTop >= 5 &&
-            (Math.abs(this.textarea.scrollHeight - this.textarea.clientHeight - this.textarea.scrollTop) <= 1);
 
-        if(this.needsRefresh)
-        {
-            this.needsRefresh = false
-            this.old_content = ""
-        }
-
-        if( this.old_content === this.saved_content && this.old_markdown === this.config.use_markdown )
-        {
-            return;
-        }
-        else
-        {
-
-            // TEST
-            if(this.old_content.length > 100 && this.saved_content.length > this.old_content.length)
-            {
-                var diffContent =  this.saved_content.substring(this.old_content.length)
-            }
-
-            this.old_content = this.saved_content
-            this.old_markdown = this.config.use_markdown
-        }
-
-        const now = Date.now();
-
-        if(diffContent && this.config.use_markdown && (now-this.lastRedrawTimestamp)< 500 && this.saved_content.startsWith(this.old_content))
-        {
-            const newText = document.createTextNode(diffContent);
-			let lastChild = this.textarea.lastElementChild
-			if(lastChild)
-			{
-				lastChild.appendChild(newText);
-			}
-			else
-			{
-				this.textarea.lastElementChild.appendChild(newText);
-			}
-        }
-        else if(this.config.use_markdown)
-        {
-                this.lastRedrawTimestamp = now
-
-
-                var text = this.saved_content;
-                let katex = showdownKatex(
+	convertToMarkdown(original_text)
+	{
+		var text = original_text
+		let katex = showdownKatex(
                       {
                           displayMode: true,
                           throwOnError: true, // allows katex to fail silently
@@ -886,6 +840,50 @@ class CustomTextOutput extends CustomTextCommon{
                 }
 
                 var html = converter.makeHtml(text);
+				return html
+	}
+
+    redrawContent(forceRedraw = false)
+    {
+        var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size
+        var totally_scrolled = this.textarea.scrollTop >= 5 &&
+            (Math.abs(this.textarea.scrollHeight - this.textarea.clientHeight - this.textarea.scrollTop) <= 1);
+
+        if( this.old_content === this.saved_content && this.old_markdown === this.config.use_markdown && !forceRedraw )
+        {
+            return;
+        }
+		
+        if(this.old_content.length > 100 && this.saved_content.length > this.old_content.length && this.saved_content.startsWith(this.old_content))
+        {
+                var diffContent =  this.saved_content.substring(this.old_content.length)
+        }
+
+        this.old_content = this.saved_content
+        this.old_markdown = this.config.use_markdown
+        
+
+        const now = Date.now();
+
+        if(diffContent && this.config.use_markdown && (now-this.lastRedrawTimestamp)< 500)
+        {
+            const newText = document.createTextNode(diffContent);
+			let lastChild = this.textarea.lastElementChild
+			if(lastChild)
+			{
+				lastChild.appendChild(newText);
+			}
+			else
+			{
+				this.textarea.lastElementChild.appendChild(newText);
+			}
+        }
+        else if(this.config.use_markdown)
+        {
+                this.lastRedrawTimestamp = now
+
+                var text = this.saved_content;
+                var html = this.convertToMarkdown(text)
                 this.textarea.innerHTML = html
                 this.cleanHtml(this.textarea)
 
@@ -1067,8 +1065,8 @@ class CustomTextOutput extends CustomTextCommon{
         if (action.target == "set")
         {
             this.saved_content = data
-            this.needsRefresh = true
-            this.redrawContent()
+            
+            this.redrawContent(true)
 
         } else if (action.target == "reset")
         {
