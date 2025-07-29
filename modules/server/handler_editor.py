@@ -78,12 +78,20 @@ class EditorHandler():
             return self._returnRedirect(server)
         elif re.match(r"^/editor/node/.*\.js$", http_path):
             return self._do_GET_node(server,http_path[13:])
+        elif re.match(r"^/editor/litegraph/editor/.*$", http_path): #editor/imgs
+            return self._do_GET_litegraph(server,http_path[18:])
         elif re.match(r"^/editor/litegraph/js/.*\.js$", http_path):
             return self._do_GET_litegraph(server,"editor/js/" + http_path[21:])
         elif re.match(r"^/editor/litegraph/src/.*\.js$", http_path):
             return self._do_GET_litegraph(server,"src/" + http_path[22:])
-        elif re.match(r"^/editor/js/.*\.js(\.map)?$", http_path):
+        elif re.match(r"^/editor/litegraph/.*\.css$", http_path):
+            return self._do_GET_litegraph(server, http_path[18:])
+        elif re.match(r"^/editor/js/.*\.js$", http_path):
+            return self._do_GET_editorFile(server,http_path[8:],content_type='text/javascript')
+        elif re.match(r"^/editor/js/.*\.js\.map$", http_path):
             return self._do_GET_editorFile(server,http_path[8:],content_type='text/plain')
+        elif re.match(r"^/editor/css/.*\.css$", http_path):
+            return self._do_GET_editorFile(server,http_path[8:],content_type='text/css')
 
         if endpoint in ["editor"] and len(split_path[2]) == 0:  # index
             filename = SOURCES_PATH + "/" + "index.html"
