@@ -1025,8 +1025,8 @@ class CustomTextOutput extends CustomTextCommon{
                 // replace inline $...$ with $ ... $   offender: - $H = 16 \text{ cm}$
                 text = text.replace(/\$(\S[^\n]+(\\text\{|\\boxed\{)[^\n]+\S)\$/g,'$ $1 $')
 
-				text = text.replace(/\$ ([^\n]+) \$/g,(match,p1) => katex[0].filter(match) )
-				text = text.replace(/\$\$\n([^\n]+\n)+\s*\$\$(\n|$)/g,(match,p1) => katex[0].filter(match) )
+				text = text.replace(/\$ ([^\n]+) \$/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
+				text = text.replace(/\$\$\n([^\n]+\n)+\s*\$\$(\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
 
                 var d = document.createElement("div")
                 d.innerHTML = text
