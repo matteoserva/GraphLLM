@@ -866,8 +866,9 @@ class CustomTextOutput extends CustomTextCommon{
                     p.style="position: absolute; margin: 0px; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
                     p.innerHTML = "Think"
 
+					dc.appendChild(p)
                     dc.appendChild(d2)
-                    dc.appendChild(p)
+                    
 
                     t.replaceWith(dc)
 
