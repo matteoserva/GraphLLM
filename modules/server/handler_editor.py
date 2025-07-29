@@ -55,6 +55,18 @@ class EditorHandler():
         server.send_response(200)
         server.end_headers()
         server.wfile.write(content)
+        
+    def _do_GET_editorFile(self,server,endpoint,content_type='text/javascript'):
+        filename = SOURCES_PATH + "/" + endpoint
+        if not os.path.isfile(filename):
+            raise HandlerException(code=404)
+        with open(filename, "rb") as f:
+            content = f.read()
+
+        server.send_response(200)
+        server.send_header('Content-type', content_type + "; charset=utf-8")
+        server.end_headers()
+        server.wfile.write(content)
 
     def do_GET(self, server):
         server.close_connection = True
@@ -70,6 +82,8 @@ class EditorHandler():
             return self._do_GET_litegraph(server,"editor/js/" + http_path[21:])
         elif re.match(r"^/editor/litegraph/src/.*\.js$", http_path):
             return self._do_GET_litegraph(server,"src/" + http_path[22:])
+        elif re.match(r"^/editor/js/.*\.js(\.map)?$", http_path):
+            return self._do_GET_editorFile(server,http_path[8:],content_type='text/plain')
 
         if endpoint in ["editor"] and len(split_path[2]) == 0:  # index
             filename = SOURCES_PATH + "/" + "index.html"
@@ -108,6 +122,8 @@ class EditorHandler():
                 if content is None and os.path.exists(filename):
                     content = open(filename, "rb").read()
 
+            if not content:
+                print("-.-----",server.path)
             server.send_response(200)
             server.send_header('Connection', 'close')
             if remaining.endswith(".js"):
