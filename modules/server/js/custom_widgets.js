@@ -766,6 +766,8 @@ class CustomTextOutput extends CustomTextCommon{
                         d.innerHTML = html
                         // fixes #### Second Term: $ 2\pi H \sqrt{\frac{V}{\pi H}} $
                         d.querySelectorAll("path").forEach( (element) => {element.remove()})
+						d.querySelectorAll("annotation").forEach( (element) => {element.remove()})
+						d.querySelectorAll("span.katex-html").forEach( (element) => {element.remove()})
                         let r = d.innerHTML
                         return r;
                       },
@@ -780,11 +782,6 @@ class CustomTextOutput extends CustomTextCommon{
                 converter.setOption('tables', true);
                 converter.setOption('disableForced4SpacesIndentedSublists', true)
 
-                /* WORKAROUND not needed anymore?
-                text = text.replace(/(\s*)\\\[\n([^\n]+)\n\s*\\\](\n|$)/g,'$1<span><code class="latex language-latex">$2</code></span>\n')
-                text = text.replace(/(\s|^)\\\(([^\n]+?)\\\)/g,'$1<span><code class="latex language-latex">$2</code></span>')
-                text = text.replace(/(\s|^)\\\[([^\n]+?)\\\]/g,'$1<span><code class="latex language-latex">$2</code></span>')
-                */
 
                 // replace inline $$ ... $$ with $ ... $
                 text = text.replace(/\$\$ ([^\n]+) \$\$/g,'$ $1 $')
@@ -793,7 +790,7 @@ class CustomTextOutput extends CustomTextCommon{
                 text = text.replace(/\$(\S[^\n]+(\\text\{|\\boxed\{)[^\n]+\S)\$/g,'$ $1 $')
 
 				text = text.replace(/\$ ([^\n]+) \$/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
-				text = text.replace(/\$\$\n([^\n]+\n)+\s*\$\$(\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
+				text = text.replace(/\$\$\n([^\n]+\n)+?\s*\$\$(\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
 
                 var d = document.createElement("div")
                 d.innerHTML = text
@@ -867,17 +864,35 @@ class CustomTextOutput extends CustomTextCommon{
 
         if(diffContent && this.config.use_markdown && (now-this.lastRedrawTimestamp)< 500)
         {
-            const newText = document.createTextNode(diffContent);
-			let lastChild = this.textarea.lastElementChild
-			if(lastChild)
+			let currentNode = this.textarea
+			let lastTextNode = currentNode;
+			while ((currentNode = currentNode.lastChild)) {
+				  lastTextNode = currentNode;
+			}
+			if (lastTextNode.nodeType == Node.TEXT_NODE)
 			{
-				lastChild.appendChild(newText);
+				lastTextNode.nodeValue += diffContent;
 			}
 			else
 			{
-				this.textarea.lastElementChild.appendChild(newText);
+				lastTextNode.innerHTML += diffContent;
 			}
+
         }
+		/*else if(false && this.config.use_markdown && !forceRedraw)
+        {
+                this.lastRedrawTimestamp = now
+
+				let st = this.saved_content.split("\n")
+				let after = st.pop();
+				let before = st.join("\n") + "\n"
+                var text = this.saved_content;
+                var html = this.convertToMarkdown(before)
+                this.textarea.innerHTML = html
+                this.cleanHtml(this.textarea)
+				this.textarea.innerHTML += after
+
+        }*/
         else if(this.config.use_markdown)
         {
                 this.lastRedrawTimestamp = now
