@@ -785,6 +785,9 @@ class CustomTextOutput extends CustomTextCommon{
 
                 // replace inline $$ ... $$ with $ ... $
                 text = text.replace(/\$\$ ([^\n]+) \$\$/g,'$ $1 $')
+				
+				// replace $r$ with $ r $
+				text = text.replace(/\$(\w)\$/g,'$ $1 $')
 
                 // replace inline $...$ with $ ... $   offender: - $H = 16 \text{ cm}$
                 text = text.replace(/\$(\S[^\n]+(\\text\{|\\boxed\{)[^\n]+\S)\$/g,'$ $1 $')
@@ -879,20 +882,6 @@ class CustomTextOutput extends CustomTextCommon{
 			}
 
         }
-		/*else if(false && this.config.use_markdown && !forceRedraw)
-        {
-                this.lastRedrawTimestamp = now
-
-				let st = this.saved_content.split("\n")
-				let after = st.pop();
-				let before = st.join("\n") + "\n"
-                var text = this.saved_content;
-                var html = this.convertToMarkdown(before)
-                this.textarea.innerHTML = html
-                this.cleanHtml(this.textarea)
-				this.textarea.innerHTML += after
-
-        }*/
         else if(this.config.use_markdown)
         {
                 this.lastRedrawTimestamp = now
