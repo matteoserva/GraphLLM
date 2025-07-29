@@ -56,7 +56,7 @@ class EditorHandler():
         server.end_headers()
         server.wfile.write(content)
         
-    def _do_GET_editorFile(self,server,endpoint,content_type='text/javascript'):
+    def _do_GET_editorFile(self,server,endpoint,content_type=None):
         filename = SOURCES_PATH + "/" + endpoint
         if not os.path.isfile(filename):
             raise HandlerException(code=404)
@@ -64,7 +64,26 @@ class EditorHandler():
             content = f.read()
 
         server.send_response(200)
-        server.send_header('Content-type', content_type + "; charset=utf-8")
+        if content_type:
+            server.send_header('Content-type', content_type + "; charset=utf-8")
+        server.end_headers()
+        server.wfile.write(content)
+        
+    def _do_GET_index(self,server):
+        filename = SOURCES_PATH + "/" + "index.html"
+
+        myuuid = str(uuid.uuid4())
+        text_replacement = '<script type="text/javascript" src="/editor/nodes.js?uuid=' + myuuid + '"></script>'
+        text_replacement = '<script type="text/javascript" src="/editor/nodes.js"></script>'
+
+        text_replacement = [f'<script type="text/javascript" src="/editor/node/{el["name"]}"></script>' for el in self.node_files]
+        text_replacement = "\n".join(text_replacement)
+        content = open(filename, "rb").read()
+        content = content.replace(b"<!-- NODE_LIST_PLACEHOLDER -->", text_replacement.encode())
+
+        server.send_response(200)
+        server.send_header('Connection', 'close')
+        server.send_header('Content-type', 'text/html')
         server.end_headers()
         server.wfile.write(content)
 
@@ -78,8 +97,13 @@ class EditorHandler():
             return self._returnRedirect(server)
         elif re.match(r"^/editor/node/.*\.js$", http_path):
             return self._do_GET_node(server,http_path[13:])
-        elif re.match(r"^/editor/litegraph/editor/.*$", http_path): #editor/imgs
+        elif re.match(r"^/editor/litegraph/(editor|external)/.*$", http_path): #editor/imgs
             return self._do_GET_litegraph(server,http_path[18:])
+        elif re.match(r"^(/editor/imgs|/external)/.*$", http_path): #editor/imgs -> litegraph.js/editor/imgs
+            server.send_response(302)
+            server.send_header('Location', "/editor/litegraph" + http_path)
+            server.end_headers()
+            return
         elif re.match(r"^/editor/litegraph/js/.*\.js$", http_path):
             return self._do_GET_litegraph(server,"editor/js/" + http_path[21:])
         elif re.match(r"^/editor/litegraph/src/.*\.js$", http_path):
@@ -92,6 +116,13 @@ class EditorHandler():
             return self._do_GET_editorFile(server,http_path[8:],content_type='text/plain')
         elif re.match(r"^/editor/css/.*\.css$", http_path):
             return self._do_GET_editorFile(server,http_path[8:],content_type='text/css')
+        elif re.match(r"^/editor/img/.*$", http_path):
+            return self._do_GET_editorFile(server,http_path[8:])
+        elif re.match(r"^/editor/(index.html?)?$", http_path):
+            return self._do_GET_index(server)
+        else:
+            print(server.path)
+            raise HandlerException(code=404)
 
         if endpoint in ["editor"] and len(split_path[2]) == 0:  # index
             filename = SOURCES_PATH + "/" + "index.html"
