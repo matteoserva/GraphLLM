@@ -156,17 +156,17 @@ class GraphExecutor(GenericExecutor):
             forwards_list = node["forwards"]
 
             for source_port,current_output in enumerate(source_outputs):
-                if source_port >= len(forwards_list):
-                    node["outputs"][source_port] = None
-                    continue
-
-                forwards = forwards_list[source_port]
                 if isinstance(current_output,ExecutorOutput) and "destination" in current_output.meta:
                     dest_tuple = current_output.meta["destination"]
                     dest_node = [i for i,el in enumerate(self.graph_nodes) if el.name == dest_tuple[0]][0]
                     dest_tuple = (dest_node,dest_tuple[1])
                     forwards = [dest_tuple]
-                    pass
+                elif source_port < len(forwards_list):
+                    forwards = forwards_list[source_port]
+                else:
+                    node["outputs"][source_port] = None
+                    continue
+
             #for source_port,forwards in enumerate(forwards_list):
                 current_output = source_outputs[source_port]
                 destinations_busy = len([i for i,p in forwards if i in running]) > 0
