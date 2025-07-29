@@ -5,6 +5,7 @@ import re
 
 from modules.executors import get_gui_nodes
 from modules.executors.gui_node_builder import GuiNodeBuilder
+from .common import HandlerException
 
 SOURCES_PATH="modules/server"
 NODES_PATH="modules/gui_nodes"
@@ -44,6 +45,16 @@ class EditorHandler():
 
         server.wfile.write(self.nodes_map[node_key].encode())
 
+    def _do_GET_litegraph(self,server,endpoint):
+        filename = LITEGRAPH_PATH + "/" + endpoint
+        if not os.path.isfile(filename):
+            raise HandlerException(code=404)
+        with open(filename, "rb") as f:
+            content = f.read()
+            
+        server.send_response(200)
+        server.end_headers()
+        server.wfile.write(content)
 
     def do_GET(self, server):
         server.close_connection = True
@@ -55,7 +66,10 @@ class EditorHandler():
             return self._returnRedirect(server)
         elif re.match(r"^/editor/node/.*\.js$", http_path):
             return self._do_GET_node(server,http_path[13:])
-
+        elif re.match(r"^/editor/litegraph/js/.*\.js$", http_path):
+            return self._do_GET_litegraph(server,"editor/js/" + http_path[21:])
+        elif re.match(r"^/editor/litegraph/src/.*\.js$", http_path):
+            return self._do_GET_litegraph(server,"src/" + http_path[22:])
 
         if endpoint in ["editor"] and len(split_path[2]) == 0:  # index
             filename = SOURCES_PATH + "/" + "index.html"
