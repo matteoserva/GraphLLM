@@ -978,7 +978,7 @@ class CustomTextOutput extends CustomTextCommon{
                           displayMode: true,
                           throwOnError: true, // allows katex to fail silently
                           errorColor: '#ff0000',
-                          delimiters: [{ left: "¨D¨D\n", right: "¨D¨D", display: true }, { left: "¨D ", right: " ¨D", display: false } ],
+                          delimiters: [{ left: "$$\n", right: "$$", display: true }, { left: "$ ", right: " $", display: false } ],
                       }
                   )()
                 katex[0].type = "lang"
@@ -998,7 +998,7 @@ class CustomTextOutput extends CustomTextCommon{
                 ];
 
                 var converter = new showdown.Converter({
-                extensions: [katex,katexFixer]
+                extensions: [] //[katex,katexFixer]
                   }
 
                 );
@@ -1016,6 +1016,9 @@ class CustomTextOutput extends CustomTextCommon{
 
                 // replace inline $...$ with $ ... $   offender: - $H = 16 \text{ cm}$
                 text = text.replace(/\$(\S[^\n]+(\\text\{|\\boxed\{)[^\n]+\S)\$/g,'$ $1 $')
+
+				text = text.replace(/\$ ([^\n]+) \$/g,(match,p1) => katex[0].filter(match) )
+				text = text.replace(/\$\$\n([^\n]+\n)+\s*\$\$(\n|$)/g,(match,p1) => katex[0].filter(match) )
 
                 var d = document.createElement("div")
                 d.innerHTML = text
