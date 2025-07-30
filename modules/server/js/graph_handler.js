@@ -25,9 +25,75 @@ class GraphHandler {
             var group = this
             that.recomputeInsideNodes(group,orig)
         };
-
+		
+		//this.rebindMouseEvents()
+		
 
     }
+
+
+  pointerUp(e)
+  {
+	  if (e.button >= 3)
+		  return;
+	  console.log("pointer up",e.button,this.pointerStates)
+	  if (e.button < 3)
+	  {
+		  this.pointerStates[e.button] = 0
+		  
+	  }
+	  this.canvas.processMouseUp(e)
+	  e.preventDefault();
+      e.stopPropagation();
+  }
+  
+  pointerDown(e)
+  {
+	  if (e.button >= 3)
+		  return;
+	  console.log("pointer down",e.button)
+	  if (e.button < 3)
+	  {
+		  this.pointerStates[e.button] = 1
+	  }
+	  
+	  this.canvas.processMouseDown(e)
+	  e.preventDefault();
+      e.stopPropagation();
+  }
+  
+  pointerCancel(e)
+  {
+	  console.log("pointercancel")
+  }
+  
+  pointerMove(e)
+  {
+	  /*if (this.pointerStates[0] != 1)
+		  return;*/
+	  console.log("pointer move")
+	  this.canvas.processMouseMove(e)
+	  e.preventDefault();
+      e.stopPropagation();
+  }
+
+  rebindMouseEvents()
+  {
+		LiteGraph.pointerListenerRemove(this.canvas.canvas,"move", this.canvas._mousemove_callback,false);
+		LiteGraph.pointerListenerRemove(this.canvas.canvas,"down", this.canvas._mousedown_callback,true);
+		LiteGraph.pointerListenerRemove(this.canvas.canvas,"up", this.canvas._mouseup_callback,true);
+		this.canvas.unbindEvents();
+		this.canvas.options.skip_events = true;
+		
+		
+		document.addEventListener("pointerup", this.pointerUp.bind(this))
+		this.canvas.canvas.addEventListener("pointerup", this.pointerUp.bind(this))
+		this.canvas.canvas.addEventListener("pointerdown", this.pointerDown.bind(this))
+		this.canvas.canvas.addEventListener("pointercancel", this.pointerCancel.bind(this))
+		this.canvas.canvas.addEventListener("pointermove", this.pointerMove.bind(this),true)
+		this.canvas.canvas.addEventListener("contextmenu", (e) => e.preventDefault())
+		this.pointerStates = [0,0,0]
+  }
 
   rotateClockwise()
   {
