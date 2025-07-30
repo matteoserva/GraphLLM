@@ -173,11 +173,12 @@
                     if(!node.flags.collapsed)
                     {
                         node.collapse(force)
-                        graph.sendActionToCanvas("sendToBack", [node])
                     }
+					
                     node.pos = new_pos
                     node.onDrawCollapsed = function(){return true;}
                 }
+				graph.sendActionToCanvas("sendToBack", this._nodes)
 				LGraphNode.prototype.collapse.apply(this,force)
             }
             else
