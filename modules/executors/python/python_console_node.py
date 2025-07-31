@@ -17,7 +17,7 @@ class PythonConsoleNode(GenericExecutor):
         
         
     def graph_started(self):
-        scriptContext = {"self":self}
+        scriptContext = {"self":self,"tools": self.tools}
         self._interpreter.reset(scriptContext)
 
     def __call__(self, inputs, *args):

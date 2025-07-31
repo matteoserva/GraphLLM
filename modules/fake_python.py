@@ -1,5 +1,5 @@
 from io import StringIO
-from contextlib import redirect_stdout
+from contextlib import redirect_stdout, redirect_stderr
 import builtins
 from functools import partial
 import importlib
@@ -70,7 +70,7 @@ def _my_exec(code, globals, locals):
 
 class FakePython:
     def __init__(self):
-        self.safe_builtins = ["int", "float","sum", "max", "min", "abs", "range", "str", "print","dir","len","next","enumerate"]
+        self.safe_builtins = ["type","int", "float","sum", "max", "min", "abs", "range", "str", "print","dir","len","next","enumerate"]
         self.safe_imports = ["re","sympy","numpy","datetime","bs4","requests","webbrowser","json","numpy.polynomial.polynomial","math","scipy.optimize"]
         self.fake_imports = {"os":["listdir","path"]}
         self.fake_subimports = {"os.path":["getsize","isfile"]}
@@ -128,34 +128,82 @@ class PythonInterpreter:
 
 import code
 import io
+from contextlib import contextmanager
 class PythonConsole:
     def __init__(self):
         self.fake_python = FakePython()
         self._console = None
         self._stdout_capture = io.StringIO()
         self._stderr_capture = io.StringIO()
+        
     
     def __pprint(self, *args,**kwargs):
         kwargs["file"] = self._stdout_capture
         print(*args,**kwargs)
+
+    def _capture_displayhook(self, value):
+        if value is not None:
+            self.__pprint(value)
+            
+    @contextmanager
+    def _redirected_displayhook(self):
+        original_hook = sys.displayhook
+        try:
+            sys.displayhook = self._capture_displayhook
+            yield
+        finally:
+            # Crucially, always restore the original hook.
+            # This 'finally' block ensures it happens even if the code
+            # inside the 'with' statement raises an exception.
+            sys.displayhook = original_hook    
     
+    def _checkFirstInstruction(self, code):
+        if code.startswith(">>> ") or code.startswith("... "):
+            self.userSendsPS1 = True
+        elif code.startswith(">>>") or code.startswith("..."):
+            self.userSendsPS1 = True
+        
+        self.waitingFirstInstruction = False
+            
+    def _cleanUserInput(self, code):
+        if self.userSendsPS1:
+            if code.startswith(">>> ") or code.startswith("... "):
+                code = code[4:]
+            elif code.startswith(">>>") or code.startswith("..."):
+                code = code[3:]
+            else:
+                self.terminated = True
+        return code
     
     def reset(self, extraContext = {}):
         globalsParameter = self.fake_python.makeGlobals()
         globalsParameter['__builtins__']["print"] = self.__pprint
+        globalsParameter['__builtins__']["sys"] = self.__pprint
         for el in extraContext:
             if el not in globalsParameter:
                 globalsParameter[el] = extraContext[el]
         self._console = code.InteractiveConsole(locals=globalsParameter)
         self._console.write = self._stderr_capture.write
         self._last_retval = False
+        self.userSendsPS1 = False
+        self.waitingFirstInstruction = True
+        self.terminated = False
     
+    def isTerminated(self):
+        return self.terminated
+        
     def _pushline(self, code):
-        if code.startswith(">>> ") or code.startswith("... "):
-            code = code[4:]
-        elif code.startswith(">>>") or code.startswith("..."):
-            code = code[3:]
-        retval = self._console.push(code)
+    
+        if (self.waitingFirstInstruction):
+            self._checkFirstInstruction(code)
+    
+        code = self._cleanUserInput(code)
+
+        if self.terminated:
+            return ""
+        #with redirect_stdout(self._stdout_capture), redirect_stderr(self._stderr_capture):
+        with self._redirected_displayhook():
+            retval = self._console.push(code)
         
         output = self._stdout_capture.getvalue()
         error = self._stderr_capture.getvalue()
@@ -168,9 +216,8 @@ class PythonConsole:
         
         prompt = "... " if self._last_retval else ">>> "
         self._last_retval = retval
-            
         
-        combined_output = prompt + code + "\n" + error + output
+        combined_output = prompt + code + "\n" + output + error
         
         return combined_output
         
@@ -178,6 +225,8 @@ class PythonConsole:
         results = [self._pushline(el) for el in code.split("\n")]
         textout = "".join(results)
         print(textout,end="")
+        if self.isTerminated():
+            return None
         return textout
             
         
@@ -188,6 +237,9 @@ for i in range(4):
     pricnt(i)
 
 print('ciao',end="")
+var = "print variable"
+var
+2+2
 """
 
 console = PythonConsole()
