@@ -20,6 +20,7 @@ class AgentHistoryBuilderGui(BaseGuiNode):
 
         builder.addStandardWidget("combo", "Tools", "markdown", None, {"property": "tools_format", "values": ["markdown", "json","python"]})
         builder.addStandardWidget("combo", "Agent", "ReAct(xml)", None, {"property": "agent_type", "values": ["ReAct(xml)"]})
+        builder.addCustomWidget("text_input","Namespace",{ "property": "namespace"})
         builder.addCustomWidget("textarea", "template", {"property": "template"})
 
         builder.setConnectionLimits({"max_outputs": 3, "min_outputs": 3, "min_inputs": 3})

@@ -52,12 +52,12 @@ class AgentHistoryBuilderNode(GenericExecutor):
             res += "</result>\n"
         return res
 
-    def _format_tools_markdown(self,tools):
+    def _format_tools_markdown(self,tools,namespace):
         ops = [el for el in tools]
         textlist = []
         for op in ops:
             row = ""
-            row = row + "- " + op["name"]
+            row = row + "- " + namespace + op["name"]
             if op["doc"] is not None:
                 row = row + ": " + op["doc"]
             param_names = [el["name"] for el in op["params"]]
@@ -69,13 +69,13 @@ class AgentHistoryBuilderNode(GenericExecutor):
         res = "\n".join(textlist)
         return res
 
-    def _format_tools_json(self,tools):
+    def _format_tools_json(self,tools,namespace):
         {"type": "function", "function": {"name": "get_current_temperature", "description": "Get current temperature at a location.", "parameters": {"type": "object", "properties": {"location": {"type": "string", "description": "The location to get the temperature for, in the format \"City, State, Country\"."}, "unit": {"type": "string", "enum": ["celsius", "fahrenheit"], "description": "The unit to return the temperature in. Defaults to \"celsius\"."}}, "required": ["location"]}}}
         ops = [el for el in tools]
         textlist = []
         for op in ops:
             row = {"type":"function"}
-            function = {"name": op["name"]}
+            function = {"name": namespace + op["name"]}
             row["function"] = function
 
             if op["doc"] is not None:
@@ -91,12 +91,12 @@ class AgentHistoryBuilderNode(GenericExecutor):
         res = "\n".join(textlist)
         return res
 
-    def _format_tools_python(self,tools):
+    def _format_tools_python(self,tools,namespace):
         ops = [el for el in tools]
         textlist = []
         for op in ops:
             row = ""
-            row += "def " + op["name"] + "("
+            row += "def " + namespace + op["name"] + "("
             param_elements = []
             for el in op["params"]:
                 param_elem = el["name"]
@@ -117,13 +117,13 @@ class AgentHistoryBuilderNode(GenericExecutor):
         res = "\n".join(textlist)
         return res
 
-    def _format_tools(self,tools,format="markdown"):
+    def _format_tools(self,tools,format="markdown", namespace=""):
         if format == "json":
-            res = self._format_tools_json(tools)
+            res = self._format_tools_json(tools,namespace)
         elif format == "python":
-            res = self._format_tools_python(tools)
+            res = self._format_tools_python(tools,namespace)
         else:
-            res = self._format_tools_markdown(tools)
+            res = self._format_tools_markdown(tools,namespace)
         return res
 
     def __call__(self,prompt_args):
@@ -142,7 +142,11 @@ class AgentHistoryBuilderNode(GenericExecutor):
             agent_variables["history"] = "<!-- no action performed yet -->"
 
         tools_format = self.properties.get("tools_format","markdown")
-        formatted_ops = self._format_tools(tools_list,tools_format)
+        namespace = self.properties.get("namespace","")
+        if len(namespace) > 0:
+            namespace = namespace + "."
+        
+        formatted_ops = self._format_tools(tools_list,tools_format,namespace)
         agent_variables["tools"] = formatted_ops
 
         m = solve_prompt_args(self.current_prompt, prompt_subs)

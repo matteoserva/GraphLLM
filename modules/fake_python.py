@@ -140,9 +140,12 @@ class PythonConsole:
         print(*args,**kwargs)
     
     
-    def reset(self):
+    def reset(self, extraContext = {}):
         globalsParameter = self.fake_python.makeGlobals()
         globalsParameter['__builtins__']["print"] = self.__pprint
+        for el in extraContext:
+            if el not in globalsParameter:
+                globalsParameter[el] = extraContext[el]
         self._console = code.InteractiveConsole(locals=globalsParameter)
         self._console.write = self._stderr_capture.write
         self._last_retval = False

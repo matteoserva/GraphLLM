@@ -14,7 +14,11 @@ class AgentHistoryBuilderParser(BaseGuiParser):
         properties = old_config.get("properties", {})
         template = properties.get("template", "")
         new_config["init"] = [template]
-        new_config["conf"] = {"agent_type": properties.get("agent_type", ""), "tools_format":properties.get("tools_format", "")}
+        namespace = properties.get("namespace", "")
+        new_config["conf"] = {  "namespace":namespace, 
+                                "agent_type": properties.get("agent_type", ""),
+                                "tools_format":properties.get("tools_format", "")
+                             }
 
 
         old_inputs = old_config.get("inputs", [])
