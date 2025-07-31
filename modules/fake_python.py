@@ -241,9 +241,9 @@ var = "print variable"
 var
 2+2
 """
-
-console = PythonConsole()
-console.reset()
-console.push(code1)
-console.push("a = 3")
-console.push("print(a)")
+if __name__ == "__main__":
+    console = PythonConsole()
+    console.reset()
+    console.push(code1)
+    console.push("a = 3")
+    console.push("print(a)")
