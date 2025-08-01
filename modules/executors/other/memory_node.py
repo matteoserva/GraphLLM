@@ -21,22 +21,9 @@ class MemoryNode(GenericExecutor):
     def set_parameters(self,args):
         self.parameters = args
 
-    def _json_parse(self,text):
-        val = None
-        try:
-            val = json.loads(text)
-        except:
-            val = json.loads("{" + text + "}")
-        val = json.dumps(val, indent=4).strip()
-        return val
-
     def __call__(self,*args):
         res = list(*args)
-        try:
-            val = self._json_parse(res[0])
-            self._stack.append(val)
-        except:
-            self._stack.append(res[0])
+        self._stack.append(res[0])
         separator = self.parameters.get("separator","\n")
         outval = separator.join(self._stack)
         out = [outval]
