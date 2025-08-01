@@ -1,31 +1,7 @@
 {
-    "last_node_id": 12,
-    "last_link_id": 11,
+    "last_node_id": 15,
+    "last_link_id": 16,
     "nodes": [
-        {
-            "id": 6,
-            "type": "output/watch",
-            "pos": [
-                533,
-                499
-            ],
-            "size": {
-                "0": 634.8662719726562,
-                "1": 88
-            },
-            "flags": {},
-            "order": 8,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 9
-                }
-            ],
-            "title": "Result",
-            "properties": {}
-        },
         {
             "id": 8,
             "type": "graph/variable",
@@ -69,39 +45,46 @@
             "bgcolor": "#353"
         },
         {
-            "id": 10,
-            "type": "graph/variable",
+            "id": 7,
+            "type": "input/text_input",
             "pos": [
-                1196,
-                461
+                180,
+                120
             ],
             "size": {
-                "0": 297.14385986328125,
-                "1": 112
+                "0": 800,
+                "1": 90
             },
             "flags": {},
-            "order": 2,
+            "order": 3,
             "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        10
+                    ],
+                    "slot_index": 0
+                }
+            ],
             "properties": {
-                "identifier": "",
-                "parameters": "solution"
-            },
-            "color": "#232",
-            "bgcolor": "#353"
+                "parameters": "Compute the cube of the sum of the first 10 even natural numbers."
+            }
         },
         {
             "id": 4,
             "type": "output/watch",
             "pos": [
-                537,
-                252
+                540,
+                250
             ],
-            "size": {
-                "0": 632.7130737304688,
-                "1": 203.89187622070312
-            },
+            "size": [
+                630,
+                200
+            ],
             "flags": {},
-            "order": 6,
+            "order": 8,
             "mode": 0,
             "inputs": [
                 {
@@ -114,18 +97,67 @@
             "properties": {}
         },
         {
-            "id": 11,
-            "type": "tools/python_sandbox",
+            "id": 12,
+            "type": "graph/connection",
             "pos": [
-                187,
-                477
+                1000,
+                190
             ],
             "size": {
-                "0": 295,
-                "1": 108
+                "0": 210,
+                "1": 78
             },
+            "flags": {
+                "collapsed": true
+            },
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 10
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        14
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "input",
+                "template": ""
+            }
+        },
+        {
+            "id": 11,
+            "type": "python/python_sandbox",
+            "pos": [
+                190,
+                490
+            ],
+            "size": [
+                300,
+                110
+            ],
             "flags": {},
-            "order": 7,
+            "order": 9,
             "mode": 0,
             "inputs": [
                 {
@@ -157,79 +189,30 @@
             "properties": {}
         },
         {
-            "id": 12,
-            "type": "graph/connection",
-            "pos": [
-                1000,
-                200
-            ],
-            "size": {
-                "0": 210,
-                "1": 78
-            },
-            "flags": {
-                "collapsed": true
-            },
-            "order": 4,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 10
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        11
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "",
-                "subtype": "input",
-                "template": ""
-            }
-        },
-        {
             "id": 3,
             "type": "llm/llm_call",
             "pos": [
-                180,
+                190,
                 260
             ],
             "size": {
-                "0": 300.718505859375,
-                "1": 161
+                "0": 290,
+                "1": 180
             },
             "flags": {},
-            "order": 5,
+            "order": 7,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 11,
+                    "link": 16,
                     "slot_index": 0
                 },
                 {
                     "name": "N",
                     "type": "string",
-                    "link": null
+                    "link": 14
                 }
             ],
             "outputs": [
@@ -249,38 +232,116 @@
                 }
             ],
             "properties": {
-                "conf": "{\"stop\":\"```\",\"force_system\":True,\"temperature\":0.01, \"top_k\":40, \"n_predict\":512}",
-                "template": "templates/python_gen.txt",
+                "conf": "{\"stop\":\"```\"}",
+                "template": "",
                 "subtype": "stateless"
             }
         },
         {
-            "id": 7,
-            "type": "input/text_input",
+            "id": 15,
+            "type": "tools/file",
             "pos": [
-                180,
-                120
+                190,
+                660
             ],
             "size": [
-                800,
-                90
+                300,
+                80
             ],
             "flags": {},
-            "order": 3,
+            "order": 4,
             "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null
+                }
+            ],
             "outputs": [
                 {
                     "name": "out",
                     "type": "string",
                     "links": [
-                        10
+                        15,
+                        16
                     ],
                     "slot_index": 0
                 }
             ],
             "properties": {
-                "parameters": "Compute the cube of the sum of the first 10 even natural numbers."
+                "filename": "templates/python_gen.txt",
+                "config": ""
             }
+        },
+        {
+            "id": 14,
+            "type": "output/watch",
+            "pos": [
+                540,
+                800
+            ],
+            "size": [
+                630,
+                410
+            ],
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 15
+                }
+            ],
+            "title": "Template",
+            "properties": {}
+        },
+        {
+            "id": 6,
+            "type": "output/watch",
+            "pos": [
+                540,
+                500
+            ],
+            "size": [
+                630,
+                240
+            ],
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 9
+                }
+            ],
+            "title": "Result",
+            "properties": {}
+        },
+        {
+            "id": 10,
+            "type": "graph/variable",
+            "pos": [
+                1200,
+                510
+            ],
+            "size": {
+                "0": 297.14385986328125,
+                "1": 112
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "solution"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
         }
     ],
     "links": [
@@ -317,8 +378,24 @@
             "string"
         ],
         [
-            11,
+            14,
             12,
+            0,
+            3,
+            1,
+            "string"
+        ],
+        [
+            15,
+            15,
+            0,
+            14,
+            0,
+            "string"
+        ],
+        [
+            16,
+            15,
             0,
             3,
             0,
@@ -330,7 +407,7 @@
     "extra": {},
     "version": 0.4,
     "group_states": {},
-    "graph_name": "python_coder",
+    "graph_name": "examples/python_coder",
     "node_states": {
         "3": {
             "rotation": 0
@@ -358,6 +435,12 @@
         },
         "12": {
             "rotation": 1
+        },
+        "14": {
+            "rotation": 0
+        },
+        "15": {
+            "rotation": 0
         }
     }
 }
