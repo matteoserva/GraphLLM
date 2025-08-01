@@ -11,6 +11,7 @@ SOURCES_PATH="modules/server"
 NODES_PATH="modules/gui_nodes"
 EXECUTORS_PATH="modules/executors"
 LITEGRAPH_PATH = "extras/litegraph.js"
+COMMON_PATH="modules/common"
 
 class EditorHandler():
     def __init__(self):
@@ -21,12 +22,12 @@ class EditorHandler():
         generated_nodes = [{"name": "generated/" + el.config["node_type"] + ".js", "value": el.getNodeString()} for el in builders]
 
         raw_nodes = []
-        node_files = glob(EXECUTORS_PATH + "/*.js")
+        node_files = glob(COMMON_PATH + "/*.js")
         node_files.extend(glob(EXECUTORS_PATH + "/*/*.js"))
         for el in node_files:
             with open(el, "r") as f:
                 res = f.read()
-                base_name = "raw" + el[len(EXECUTORS_PATH):]
+                base_name = "raw/" + el.split("/")[-1]
                 raw_nodes.append({"name": base_name, "value":res})
 
         self.node_files = raw_nodes + generated_nodes
