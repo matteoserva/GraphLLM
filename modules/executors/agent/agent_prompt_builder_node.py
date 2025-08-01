@@ -3,7 +3,7 @@ from modules.executors.common import solve_placeholders,solve_prompt_args
 from modules.formatter import solve_templates
 from modules.formatter import PromptBuilder
 from modules.tool_call.tools_factory import ToolsFactory
-import json
+from modules.common.tools_list_container import ToolsListContainer
 
 
 class AgentHistoryBuilderNode(GenericExecutor):
@@ -74,7 +74,10 @@ class AgentHistoryBuilderNode(GenericExecutor):
         if len(namespace) > 0:
             namespace = namespace + "."
 
-        if type(tools_list).__name__ == "ToolsListContainer":
+        if not isinstance(tools_list, ToolsListContainer):
+            tools_list = ToolsListContainer(tools_list)
+            formatted_ops = tools_list.getFormattedOps(tools_format, namespace)
+        else:
             formatted_ops = tools_list.getFormattedOps(tools_format,namespace)
         agent_variables["tools"] = formatted_ops
 
