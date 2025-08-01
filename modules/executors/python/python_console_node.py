@@ -22,8 +22,17 @@ class PythonConsoleNode(GenericExecutor):
             echo = False
         else:
             echo = True
+        s_strip = self.properties.get("strip","AUTO")
+        if s_strip == "YES":
+            strip = True
+        elif s_strip == "NO":
+            strip = False
+        else:
+            strip = None
+
         self._interpreter.reset(scriptContext)
         self._interpreter.setEchoMode(echo)
+        self._interpreter.setPromptStrip(strip)
 
     def __call__(self, inputs, *args):
         user_prompt = inputs[0]

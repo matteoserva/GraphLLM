@@ -141,9 +141,14 @@ class PythonConsole:
         self._stdout_capture = io.StringIO()
         self._stderr_capture = io.StringIO()
         self._echo_input = False
+        self.default_prompt_strip = None
 
     def setEchoMode(self,mode):
         self._echo_input = mode
+
+    def setPromptStrip(self,strip):
+        self.default_prompt_strip = strip
+        self.userSendsPS1 = strip
 
     def __pprint(self, *args,**kwargs):
         kwargs["file"] = self._stdout_capture
@@ -170,8 +175,8 @@ class PythonConsole:
             self.userSendsPS1 = True
         elif code.startswith(">>>") or code.startswith("..."):
             self.userSendsPS1 = True
-        
-        self.waitingFirstInstruction = False
+        else:
+            self.userSendsPS1 = False
             
     def _cleanUserInput(self, code):
         if self.userSendsPS1:
@@ -183,7 +188,7 @@ class PythonConsole:
                 self.terminated = True
         return code
 
-    def _showtraceback(self):
+    def _showtraceback(self,filename=None):
         ei = sys.exc_info()
 
         last_tb = ei[2]
@@ -201,9 +206,9 @@ class PythonConsole:
         self._console = code.InteractiveConsole(locals=globalsParameter)
         self._console.write = self._stderr_capture.write
         self._console.showtraceback = self._showtraceback
+        self._console.showsyntaxerror = self._showtraceback
         self._last_retval = False
-        self.userSendsPS1 = False
-        self.waitingFirstInstruction = True
+        self.userSendsPS1 = self.default_prompt_strip
         self.terminated = False
     
     def isTerminated(self):
@@ -211,7 +216,7 @@ class PythonConsole:
         
     def _pushline(self, code):
     
-        if (self.waitingFirstInstruction):
+        if (self.userSendsPS1 is None ):
             self._checkFirstInstruction(code)
     
         code = self._cleanUserInput(code)

@@ -10,4 +10,5 @@ class PythonConsoleGui(BaseGuiNode):
         builder.addOutput("out", "string");
 
         builder.addStandardWidget("combo", "Echo", "YES", None, {"property": "echo", "values": ["NO","YES"]})
+        builder.addStandardWidget("combo", "Strip sysPS", "AUTO", None, {"property": "strip", "values": ["NO", "AUTO", "YES"]})
         return builder
