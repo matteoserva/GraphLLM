@@ -1,6 +1,4 @@
 from modules.executors.common import BaseGuiParser
-import ast
-
 
 class JsonParser(BaseGuiParser):
     node_types = ["json_parser"]

@@ -1,6 +1,6 @@
 import json
 from modules.executors.common import GenericExecutor
-
+from modules.executors.common import ExecutorOutput
 
 class JsonNode(GenericExecutor):
     node_type = "json_parser"
@@ -10,22 +10,14 @@ class JsonNode(GenericExecutor):
     def __init__(self,*args):
         self.parameters = {}
 
-
-    def _json_parse(self,text):
-        val = None
+    def __call__(self,*args):
+        res = list(*args)
+        text = res[0]
         try:
             val = json.loads(text)
         except:
-            val = json.loads("{" + text + "}")
-        val = json.dumps(val, indent=4).strip()
-        return val
-
-    def __call__(self,*args):
-        res = list(*args)
-        try:
-            val = self._json_parse(res[0])
-        except:
-            val = res[0]
-
-        out = [val]
+            val = text
+        valstring = json.dumps(val, indent=4).strip()
+        outval = valstring
+        out = [outval]
         return out
