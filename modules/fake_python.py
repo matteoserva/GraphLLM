@@ -9,6 +9,11 @@ import sys
 import ast
 import tempfile
 
+# python repl captures exception to stderr
+# tool run captures exception to tool return value
+# python interpreter raises exception to the client and stops the graph
+
+
 class _fake_method:
     def __init__(self,method_name):
         self.method_name = method_name
@@ -177,7 +182,15 @@ class PythonConsole:
             else:
                 self.terminated = True
         return code
-    
+
+    def _showtraceback(self):
+        ei = sys.exc_info()
+
+        last_tb = ei[2]
+        lines = traceback.format_exception(ei[0], ei[1], None)
+        retval = ''.join(lines)
+        self._stderr_capture.write(retval)
+
     def reset(self, extraContext = {}):
         globalsParameter = self.fake_python.makeGlobals()
         globalsParameter['__builtins__']["print"] = self.__pprint
@@ -187,6 +200,7 @@ class PythonConsole:
                 globalsParameter[el] = extraContext[el]
         self._console = code.InteractiveConsole(locals=globalsParameter)
         self._console.write = self._stderr_capture.write
+        self._console.showtraceback = self._showtraceback
         self._last_retval = False
         self.userSendsPS1 = False
         self.waitingFirstInstruction = True
@@ -207,6 +221,8 @@ class PythonConsole:
         #with redirect_stdout(self._stdout_capture), redirect_stderr(self._stderr_capture):
         with self._redirected_displayhook():
             retval = self._console.push(code)
+
+
         
         output = self._stdout_capture.getvalue()
         error = self._stderr_capture.getvalue()

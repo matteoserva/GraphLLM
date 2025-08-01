@@ -9,6 +9,8 @@
 - node rotation improvement
 - titlebar container
 - typehints in tool definition
+- new nodes: python REPL, Head, JSON parser...
+-
 
 # 20/07/2025
 - Added graph examples
