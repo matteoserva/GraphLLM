@@ -13,7 +13,7 @@
      *  Python node
      *
      */
-
+/*
     function MyPythonNode()
     {
     this.addInput("in","string");
@@ -34,7 +34,7 @@
 
     //register in the system
     LiteGraph.registerNodeType("tools/python_sandbox", MyPythonNode );
-
+*/
 
 
     /* ********************** ******************* */
