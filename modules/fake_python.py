@@ -135,8 +135,11 @@ class PythonConsole:
         self._console = None
         self._stdout_capture = io.StringIO()
         self._stderr_capture = io.StringIO()
-        
-    
+        self._echo_input = False
+
+    def setEchoMode(self,mode):
+        self._echo_input = mode
+
     def __pprint(self, *args,**kwargs):
         kwargs["file"] = self._stdout_capture
         print(*args,**kwargs)
@@ -216,14 +219,17 @@ class PythonConsole:
         
         prompt = "... " if self._last_retval else ">>> "
         self._last_retval = retval
-        
-        combined_output = prompt + code + "\n" + output + error
+
+        user_input = prompt + code + "\n" if self._echo_input else ""
+        combined_output = user_input + output + error
         
         return combined_output
         
     def push(self, code):
         results = [self._pushline(el) for el in code.split("\n")]
         textout = "".join(results)
+        if not self._last_retval:
+            textout = textout
         print(textout,end="")
         if self.isTerminated():
             return None

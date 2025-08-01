@@ -18,7 +18,12 @@ class PythonConsoleNode(GenericExecutor):
         
     def graph_started(self):
         scriptContext = {"self":self,"tools": self.tools}
+        if self.properties.get("echo","NO") == "NO":
+            echo = False
+        else:
+            echo = True
         self._interpreter.reset(scriptContext)
+        self._interpreter.setEchoMode(echo)
 
     def __call__(self, inputs, *args):
         user_prompt = inputs[0]

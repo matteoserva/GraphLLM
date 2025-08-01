@@ -9,4 +9,5 @@ class PythonConsoleGui(BaseGuiNode):
         builder.addInput("in", "string");
         builder.addOutput("out", "string");
 
+        builder.addStandardWidget("combo", "Echo", "YES", None, {"property": "echo", "values": ["NO","YES"]})
         return builder

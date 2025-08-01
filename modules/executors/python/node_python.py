@@ -42,7 +42,7 @@ class PythonExecutor(GenericExecutor):
             for el in scr:
                 script = script.replace(self.base_subst,el,1)
 
-        scriptContext = {"_C":scr,"self":self}
+        scriptContext = {"_C":scr,"self":self, "tools": self.tools}
         for el in self.saved_variables:
             if el not in scriptContext:
                 scriptContext[el] = self.saved_variables[el]
