@@ -91,6 +91,9 @@ class CustomToolSelector {
     makeElement(parentNode)
     {
         var dialog = parentNode
+        var topdiv = document.createElement("div");
+        topdiv.className = "tools-top"
+
         var div = document.createElement("div");
 
 
@@ -175,22 +178,79 @@ class CustomToolSelector {
                     let becomeActive = !header.classList.contains("selected")
                     if(!becomeActive)
                     {
-                        header.classList.remove("selected")
+                        this.toolDisable(category,tool)
                     }
                     else
                     {
-                        header.classList.add("selected")
+                        this.toolEnable(category,tool)
                     }
-
-                    this.tools_list[category][tool].enabled = becomeActive
-                    this.updateCategoryCounter(category)
-                    this.updateParent()
                   });
             });
         });
+        topdiv.appendChild(div)
 
-        return div
+        var activeToolsDiv = document.createElement("div");
+        activeToolsDiv.className = "active-tools-container"
+        topdiv.appendChild(activeToolsDiv)
 
+        return topdiv
+
+    }
+
+    toolEnable(category, tool_name)
+    {
+        this.toolSelectorAdd(category,tool_name)
+        this.activeToolsAdd(category,tool_name)
+        this.tools_list[category][tool_name].enabled = true;
+        this.updateCategoryCounter(category)
+        this.updateParent()
+    }
+
+    toolDisable(category, tool_name)
+    {
+        this.toolSelectorRemove(category,tool_name)
+        this.activeToolsRemove(category,tool_name)
+        this.tools_list[category][tool_name].enabled =false;
+        this.updateCategoryCounter(category)
+        this.updateParent()
+    }
+
+    toolSelectorAdd(category, tool_name)
+    {
+        var node = this.tools_list[category][tool_name].node
+        node.classList.add("selected")
+    }
+
+    toolSelectorRemove(category, tool_name)
+    {
+        var node = this.tools_list[category][tool_name].node
+        node.classList.remove("selected")
+    }
+
+    activeToolsAdd(category, tool_name)
+    {
+        if(this.tools_list[category][tool_name].active_node)
+        {
+            return;
+        }
+        var activeToolDiv = document.createElement("div");
+        activeToolDiv.className = "active-tool"
+        activeToolDiv.innerHTML = category + "." + tool_name + "()";
+        this.tools_list[category][tool_name].active_node = activeToolDiv
+
+        activeToolDiv.addEventListener('click', () => { this.toolDisable(category,tool_name)})
+
+        var toolsDiv = this.div.querySelector(".active-tools-container")
+        toolsDiv.appendChild(activeToolDiv)
+    }
+
+    activeToolsRemove(category, tool_name)
+    {
+        if(this.tools_list[category][tool_name].active_node)
+        {
+            this.tools_list[category][tool_name].active_node.remove();
+            this.tools_list[category][tool_name].active_node = null;
+        }
     }
 
     appendElement(dialog)
@@ -235,11 +295,14 @@ class CustomToolSelector {
             {
                 if(!this.tools_list[cat][tool].enabled)
                 {
+
                     this.tools_list[cat][tool].node.classList.remove("selected")
+                    this.activeToolsRemove(cat,tool)
                 }
                 else
                 {
                     this.tools_list[cat][tool].node.classList.add("selected")
+                    this.activeToolsAdd(cat,tool)
                 }
             }
             this.updateCategoryCounter(cat)
