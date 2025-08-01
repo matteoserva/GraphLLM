@@ -60,7 +60,7 @@
                     "type": "string",
                     "link": 110,
                     "pos": null,
-                    "dir": 1
+                    "dir": 4
                 }
             ],
             "outputs": [
@@ -193,7 +193,7 @@
             ],
             "size": {
                 "0": 250,
-                "1": 180
+                "1": 205
             },
             "flags": {},
             "order": 9,
@@ -252,32 +252,11 @@
             }
         },
         {
-            "id": 27,
-            "type": "graph/variable",
-            "pos": [
-                -30,
-                760
-            ],
-            "size": {
-                "0": 680,
-                "1": 340
-            },
-            "flags": {
-                "collapsed": false
-            },
-            "order": 2,
-            "mode": 0,
-            "properties": {
-                "identifier": "prompt_template",
-                "parameters": "{p:bos}\n\n{p:system}\nYou are a AI task scheduler. Your job is to find the next logical step toward solving the user problem.\n\n## Tools\n{p:tools}\n\n## Objective\n\nUse the following template to process the next logical step:\n```\n<thinking> Your comments about what you achieved so far and what to do next </thinking>\n<action> The action to perform and its parameters. The specific format is described later. </action>\n<result> The result of the action </result>\n```\n\nformat of the action field:\n- The action field is enclosed between <action> and </action> tags.\n- The name of the action is inserted between <action_name> and </action_name> tags.\n- Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n- Only the value of the parameter is specified. The name of the parameter is omitted.\n- The parameters can be multiline strings\n- Example: <action><action_name>eval</action_name><action_parameter name=\"expression\">2+3</action_parameter></action>\n\n## Rules\n- If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n- The input to query_file() should be a very detailed question about what you want from the external agent.\n- Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n- Use query_file() to analyze downloaded web pages\n- use the eval tool or python code to perform math calculations.\n{p:hints}{p:eom}\n\n{p:user}\nYour job is to analyze the trace log and then determine what step should follow next.\n\nTrace log:\n```\nQuestion: {p:question}\n{p:history}\n```\n\nTell me the next step to complete the trace log.\n{p:eom}\n\n{p:assistant}\n{p:eom}"
-            }
-        },
-        {
             "id": 57,
             "type": "output/watch",
             "pos": [
-                1430,
-                760
+                1433.3,
+                798.5
             ],
             "size": {
                 "0": 680,
@@ -301,8 +280,8 @@
             "id": 24,
             "type": "graph/variable",
             "pos": [
-                700,
-                760
+                703.3000000000001,
+                798.5
             ],
             "size": {
                 "0": 680,
@@ -351,89 +330,6 @@
             ],
             "properties": {
                 "repetitions": 0
-            }
-        },
-        {
-            "id": 51,
-            "type": "agent/tools_list",
-            "pos": [
-                20,
-                420
-            ],
-            "size": {
-                "0": 260,
-                "1": 260
-            },
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "tools",
-                    "type": "string",
-                    "links": [
-                        98
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "tools_list": {
-                    "answer": {
-                        "answer": {
-                            "enabled": true
-                        }
-                    },
-                    "eval": {
-                        "eval": {
-                            "enabled": true
-                        },
-                        "python_exec": {
-                            "enabled": false
-                        }
-                    },
-                    "llm": {
-                        "query_file": {
-                            "enabled": false
-                        },
-                        "summarize": {
-                            "enabled": false
-                        }
-                    },
-                    "web": {
-                        "download": {
-                            "enabled": false
-                        },
-                        "web_search": {
-                            "enabled": false
-                        }
-                    },
-                    "filesystem": {
-                        "answer_file": {
-                            "enabled": false
-                        },
-                        "read_file": {
-                            "enabled": false
-                        },
-                        "write_file": {
-                            "enabled": false
-                        }
-                    },
-                    "fake weather": {
-                        "get_current_temperature": {
-                            "enabled": false
-                        },
-                        "get_temperature_date": {
-                            "enabled": false
-                        }
-                    }
-                },
-                "answer": true,
-                "eval": true,
-                "llm": false,
-                "web": false,
-                "filesystem": false,
-                "fake weather": false
             }
         },
         {
@@ -581,7 +477,7 @@
                     "link": 103,
                     "slot_index": 0,
                     "pos": null,
-                    "dir": 4
+                    "dir": 3
                 }
             ],
             "outputs": [
@@ -710,6 +606,110 @@
                 }
             ],
             "properties": {}
+        },
+        {
+            "id": 27,
+            "type": "graph/variable",
+            "pos": [
+                -30,
+                800
+            ],
+            "size": {
+                "0": 680,
+                "1": 340
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "prompt_template",
+                "parameters": "{p:bos}\n\n{p:system}\nYou are a AI task scheduler. Your job is to find the next logical step toward solving the user problem.\n\n## Tools\n{p:tools}\n\n## Objective\n\nUse the following template to process the next logical step:\n```\n<thinking> Your comments about what you achieved so far and what to do next </thinking>\n<action> The action to perform and its parameters. The specific format is described later. </action>\n<result> The result of the action </result>\n```\n\nformat of the action field:\n- The action field is enclosed between <action> and </action> tags.\n- The name of the action is inserted between <action_name> and </action_name> tags.\n- Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n- Only the value of the parameter is specified. The name of the parameter is omitted.\n- The parameters can be multiline strings\n- Example: <action><action_name>eval</action_name><action_parameter name=\"expression\">2+3</action_parameter></action>\n\n## Rules\n- If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n- The input to query_file() should be a very detailed question about what you want from the external agent.\n- Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n- Use query_file() to analyze downloaded web pages\n- use the eval tool or python code to perform math calculations.\n{p:hints}{p:eom}\n\n{p:user}\nYour job is to analyze the trace log and then determine what step should follow next.\n\nTrace log:\n```\nQuestion: {p:question}\n{p:history}\n```\n\nTell me the next step to complete the trace log.\n{p:eom}\n\n{p:assistant}\n{p:eom}"
+            }
+        },
+        {
+            "id": 51,
+            "type": "agent/tools_list",
+            "pos": [
+                -20,
+                420
+            ],
+            "size": [
+                310,
+                330
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "tools",
+                    "type": "string",
+                    "links": [
+                        98
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "tools_list": {
+                    "answer": {
+                        "answer": {
+                            "enabled": true
+                        }
+                    },
+                    "eval": {
+                        "eval": {
+                            "enabled": true
+                        },
+                        "python_exec": {
+                            "enabled": false
+                        }
+                    },
+                    "llm": {
+                        "query_file": {
+                            "enabled": false
+                        },
+                        "summarize": {
+                            "enabled": false
+                        }
+                    },
+                    "web": {
+                        "download": {
+                            "enabled": false
+                        },
+                        "web_search": {
+                            "enabled": false
+                        }
+                    },
+                    "filesystem": {
+                        "answer_file": {
+                            "enabled": false
+                        },
+                        "read_file": {
+                            "enabled": false
+                        },
+                        "write_file": {
+                            "enabled": false
+                        }
+                    },
+                    "fake weather": {
+                        "get_current_temperature": {
+                            "enabled": false
+                        },
+                        "get_temperature_date": {
+                            "enabled": false
+                        }
+                    }
+                },
+                "answer": true,
+                "eval": true,
+                "llm": false,
+                "web": false,
+                "filesystem": false,
+                "fake weather": false
+            }
         }
     ],
     "links": [

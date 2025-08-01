@@ -194,7 +194,7 @@
                     "type": "string",
                     "link": 35,
                     "pos": null,
-                    "dir": 2
+                    "dir": 4
                 }
             ],
             "properties": {},
@@ -254,10 +254,10 @@
                 1940,
                 560
             ],
-            "size": [
-                650,
-                250
-            ],
+            "size": {
+                "0": 650,
+                "1": 250
+            },
             "flags": {},
             "order": 9,
             "mode": 0,
@@ -273,16 +273,66 @@
             "properties": {}
         },
         {
+            "id": 19,
+            "type": "input/text_input",
+            "pos": [
+                170,
+                -50
+            ],
+            "size": {
+                "0": 660,
+                "1": 90
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        32
+                    ]
+                }
+            ],
+            "properties": {
+                "parameters": "What's the temperature in San Francisco now? How about tomorrow?"
+            },
+            "color": "#322",
+            "bgcolor": "#533"
+        },
+        {
+            "id": 22,
+            "type": "graph/variable",
+            "pos": [
+                960,
+                -50
+            ],
+            "size": {
+                "0": 590,
+                "1": 110
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "Native tool calling for Qwen LLM"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
             "id": 15,
             "type": "agent/tools_list",
             "pos": [
-                -90,
+                -210,
                 120
             ],
-            "size": {
-                "0": 220,
-                "1": 300
-            },
+            "size": [
+                320,
+                380
+            ],
             "flags": {},
             "order": 0,
             "mode": 0,
@@ -363,56 +413,6 @@
                     }
                 }
             }
-        },
-        {
-            "id": 19,
-            "type": "input/text_input",
-            "pos": [
-                170,
-                -50
-            ],
-            "size": {
-                "0": 660,
-                "1": 90
-            },
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        32
-                    ]
-                }
-            ],
-            "properties": {
-                "parameters": "What's the temperature in San Francisco now? How about tomorrow?"
-            },
-            "color": "#322",
-            "bgcolor": "#533"
-        },
-        {
-            "id": 22,
-            "type": "graph/variable",
-            "pos": [
-                960,
-                -50
-            ],
-            "size": [
-                590,
-                110
-            ],
-            "flags": {},
-            "order": 2,
-            "mode": 0,
-            "properties": {
-                "identifier": "",
-                "parameters": "Native tool calling for Qwen LLM"
-            },
-            "color": "#432",
-            "bgcolor": "#653"
         }
     ],
     "links": [
