@@ -27,7 +27,7 @@ class GuiNodeBuilder:
             docstring = node.__doc__.strip().split("\n",1)
             brief = docstring[0]
             builder._addTitlebarWidget("brief", brief)
-            if len(docstring) > 0:
+            if len(docstring) > 1:
                 fulldoc = docstring[1].strip()
                 if len(fulldoc) > 0:
                     builder._addTitlebarWidget("fulldoc", fulldoc)
