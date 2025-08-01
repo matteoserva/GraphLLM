@@ -30,6 +30,7 @@ class EditorHandler():
                 raw_nodes.append({"name": base_name, "value":res})
 
         self.node_files = raw_nodes + generated_nodes
+        self.css_files = [el[len(SOURCES_PATH) + 1:] for el in glob(SOURCES_PATH + "/css/*.css")]
         self.nodes_map = {el["name"]:el["value"] for el in self.node_files}
 
     def _returnRedirect(self,server):
@@ -78,9 +79,12 @@ class EditorHandler():
 
         text_replacement = [f'<script type="text/javascript" src="/editor/node/{el["name"]}"></script>' for el in self.node_files]
         text_replacement = "\n".join(text_replacement)
+        css_replacement = [f'<link rel="stylesheet" type="text/css" href="{el}">' for el in self.css_files]
+        css_replacement = "\n".join(css_replacement)
+
         content = open(filename, "rb").read()
         content = content.replace(b"<!-- NODE_LIST_PLACEHOLDER -->", text_replacement.encode())
-
+        content = content.replace(b"<!-- CSS_LIST_PLACEHOLDER -->", css_replacement.encode())
         server.send_response(200)
         server.send_header('Connection', 'close')
         server.send_header('Content-type', 'text/html')
@@ -124,71 +128,3 @@ class EditorHandler():
             print(server.path)
             raise HandlerException(code=404)
 
-        if endpoint in ["editor"] and len(split_path[2]) == 0:  # index
-            filename = SOURCES_PATH + "/" + "index.html"
-
-            myuuid = str(uuid.uuid4())
-            text_replacement = '<script type="text/javascript" src="/editor/nodes.js?uuid=' + myuuid + '"></script>'
-            text_replacement = '<script type="text/javascript" src="/editor/nodes.js"></script>'
-
-            text_replacement = [f'<script type="text/javascript" src="/editor/node/{el["name"]}"></script>' for el in self.node_files]
-            text_replacement = "\n".join(text_replacement)
-            content = open(filename, "rb").read()
-            content = content.replace(b"<!-- NODE_LIST_PLACEHOLDER -->", text_replacement.encode())
-
-            server.send_response(200)
-            server.send_header('Connection', 'close')
-            server.send_header('Content-type', 'text/html')
-            server.end_headers()
-            server.wfile.write(content)
-
-        elif endpoint in ["editor"]:
-            remaining = "index.html" if len(split_path[2]) == 0 else split_path[2]
-            #print(remaining)
-            content = None
-
-            if remaining.startswith("nodes/"):
-                filename = EXECUTORS_PATH + "/" + split_path[2].split("/",1)[-1]
-                content = open(filename, "rb").read()
-
-            if not content:
-                filename = SOURCES_PATH + "/" + remaining
-                if os.path.exists(filename):
-                    content = open(filename, "rb").read()
-
-            if not content:
-                filename = LITEGRAPH_PATH + "/editor/" + remaining
-                if content is None and os.path.exists(filename):
-                    content = open(filename, "rb").read()
-
-            if not content:
-                print("-.-----",server.path)
-            server.send_response(200)
-            server.send_header('Connection', 'close')
-            if remaining.endswith(".js"):
-                server.send_header('Content-type', 'text/plain; charset=utf-8')
-            server.end_headers()
-            server.wfile.write(content)
-        elif endpoint in ["src", "external", "css", "js", "imgs", "style.css", "examples"]:
-            remaining = "/index.html" if len(split_path) < 3 else "/" + split_path[2]
-
-            content = None
-            filename = LITEGRAPH_PATH + "/" + endpoint + remaining
-            #print(filename)
-            if content is None and os.path.isfile(filename):
-                content = open(filename, "rb").read()
-            if content:
-                server.send_response(200)
-                # self.send_header('Content-type', 'text/html')
-                server.end_headers()
-                server.wfile.write(content)
-            else:
-                server.send_response(404)
-                server.send_header('Content-type', 'text/html')
-                server.end_headers()
-                server.wfile.write(b'404 - Not Found')
-        else:
-            server.send_response(404)
-            server.send_header('Content-type', 'text/html')
-            server.end_headers()
-            server.wfile.write(b'404 - Not Found')
