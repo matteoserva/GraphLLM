@@ -4,7 +4,7 @@ import uuid
 import re
 
 from modules.executors import get_gui_nodes
-from modules.executors.gui_node_builder import GuiNodeBuilder
+from modules.common.gui_node_builder import GuiNodeBuilder
 from .common import HandlerException
 
 SOURCES_PATH="modules/server"

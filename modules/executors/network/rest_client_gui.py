@@ -1,5 +1,5 @@
 from modules.executors.common import BaseGuiNode
-from modules.executors.gui_node_builder import RawGuiArg
+from modules.common.gui_node_builder import RawGuiArg
 
 class RestClientGui(BaseGuiNode):
     node_title = "REST Client"
