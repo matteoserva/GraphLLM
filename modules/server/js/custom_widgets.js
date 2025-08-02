@@ -450,7 +450,7 @@ class CustomTextOutput extends CustomTextCommon{
 
         // remove newlines after some html tags, they break <pre> formatting
 		inner = inner.replace(/\<blockquote\>\n(\s+\<)/g,"<blockquote>$1") //blockquote\n  <p>
-        inner = inner.replace(/\<\/([a-zA-Z0-9]+)\>\n/g,"</$1>")
+        inner = inner.replace(/\<\/(?!strong)([a-zA-Z0-9]+)\>\n/g,"</$1>") //negative lookahead
         inner = inner.replace(/\<(hr)\>\n/g,"<$1>")
         inner = inner.replace(/\<(br)\>\n/g,"<$1>")
 
