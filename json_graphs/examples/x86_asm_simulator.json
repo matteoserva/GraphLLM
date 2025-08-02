@@ -27,7 +27,7 @@
                 }
             ],
             "properties": {
-                "parameters": "# registers\n\neax: 00000000\nebx: 00000000\necx: 00000000\nedx: 00000000\n\nesi: 00000000\nedi: 00000000\nesp: 00000000\nebp: 00000000\n\n\n# memory\n\n00: 00000000\n04: 00000000\n08: 00000000\n0C: 00000000\n\n10: 00000000\n14: 00000000\n18: 00000000\n1C: 00000000"
+                "parameters": "### registers\n\neax: 00000000\nebx: 00000000\necx: 00000000\nedx: 00000000\n\nesi: 00000000\nedi: 00000000\nesp: 00000000\nebp: 00000000\n\n\n### memory\n\n00: 00000000\n04: 00000000\n08: 00000000\n0C: 00000000\n\n10: 00000000\n14: 00000000\n18: 00000000\n1C: 00000000"
             },
             "color": "#432",
             "bgcolor": "#653"
@@ -201,7 +201,7 @@
             ],
             "properties": {
                 "parameters": {
-                    "use_markdown": false
+                    "use_markdown": true
                 }
             },
             "color": "#2a363b",
@@ -227,7 +227,7 @@
                     "type": "string",
                     "link": 4,
                     "pos": null,
-                    "dir": 2
+                    "dir": 3
                 }
             ],
             "properties": {
@@ -252,7 +252,7 @@
             "mode": 0,
             "properties": {
                 "identifier": "gthink",
-                "parameters": "# here is the full grammar\nroot ::= thought? answer\nthought ::= \"<think>\\n\" ([a-zA-Z] think-token+)? \"\\n</think>\\n\\n\"\nthink-token ::= [^\\n] | (\"\\n\"+ [^<\\n]) | (\"\\n\"+ \"<\" [^\\n/]) \n\nanswer ::= last-instruction? registers \"\\n\\n\" memory\nlast-instruction ::= \"# last instruction\\n\" [^\\n]+ \"\\n\\n\"\nhex-digit ::= [0-9A-Fa-f]\nregisters ::= \"# registers\\n\\n\" register{4} \"\\n\" register{4}\nregister ::= [a-z]{3} \": \" hex-digit{8} \"\\n\"\nmemory ::= \"# memory\\n\\n\" mem-location{4} \"\\n\" mem-location{4}\nmem-location ::= hex-digit{2} \": \" hex-digit{8} \"\\n\""
+                "parameters": "# here is the full grammar\nroot ::= thought? answer\nthought ::= \"<think>\\n\" ([a-zA-Z] think-token+)? \"\\n</think>\\n\\n\"\nthink-token ::= [^\\n] | (\"\\n\"+ [^<\\n]) | (\"\\n\"+ \"<\" [^\\n/]) \n\nanswer ::= last-instruction? registers \"\\n\\n\" memory\nlast-instruction ::= \"### last instruction\\n\" [^\\n]+ \"\\n\\n\"\nhex-digit ::= [0-9A-Fa-f]\nregisters ::= \"### registers\\n\\n\" register{4} \"\\n\" register{4}\nregister ::= [a-z]{3} \": \" \"**\"? hex-digit{8} \"**\"? \"\\n\"\nmemory ::= \"### memory\\n\\n\" mem-location{4} \"\\n\" mem-location{4}\nmem-location ::= hex-digit{2} \": \" \"**\"? hex-digit{8} \"**\"? \"\\n\""
             }
         },
         {
@@ -310,7 +310,7 @@
             "properties": {
                 "conf": "",
                 "subtype": "stateless",
-                "template": "Your job is to emulate a simplified x86 machine.\n\nThere are 8 registers and 32 bytes of memory.\n\nFrom the current state of the machine, execute the provided instruction.\n\n{}\n\n# instruction\n\n{}"
+                "template": "Your job is to emulate a simplified x86 machine.\n\nThere are 8 registers and 32 bytes of memory.\n\nFrom the current state of the machine, execute the provided instruction.\nHighlight the modified registers in bold, **like this**.\n\n# current state\n\n{}\n\n# instruction\n\n{}"
             }
         },
         {
