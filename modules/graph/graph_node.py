@@ -20,7 +20,35 @@ class GuiApiWrapper:
         return None
 
 
-class GraphNode:
+class GraphNodeApi:
+    def get_inputs(self):
+        inputs = [el.data if isinstance(el, ExecutorOutput) else el for el in self["running_inputs"]]
+        return inputs
+
+    def get_outputs(self):
+        outputs = [el for el in self["outputs"]]
+        return outputs
+
+    def get_parameters(self):
+        if isinstance(self.executor, GenericExecutor):
+            props = self.executor.get_properties()
+        else:
+            props = None
+            if hasattr(self.executor, "get_properties"):
+                props = self.executor.get_properties()
+            elif hasattr(self.executor, "properties"):
+                props = self.executor.properties
+        return props
+
+    def get_parameter(self,param_name):
+        params = self.get_parameters()
+        return params[param_name]
+
+    def set_parameter(self,param_name,value):
+        params = self.get_parameters()
+        params[param_name] = value
+
+class GraphNode(GraphNodeApi):
 
     @staticmethod
     def make_graph_node(graph, node_config):
@@ -71,15 +99,7 @@ class GraphNode:
             self.executor.initialize()
 
     def _get_input_rule(self):
-        if isinstance(self.executor, GenericExecutor):
-            props = self.executor.get_properties()
-        else:
-            self.input_rule = "AND"
-            props = None
-            if hasattr(self.executor, "get_properties"):
-                props = self.executor.get_properties()
-            elif hasattr(self.executor, "properties"):
-                props = self.executor.properties
+        props = self.get_parameters()
 
         if props is not None:
             self.input_rule = props.get("input_rule","AND")
@@ -87,6 +107,8 @@ class GraphNode:
                 self["free_runs"] = props["free_runs"]
             if "input_active" in props:
                 self["input_active"] = props["input_active"]
+        else:
+            self.input_rule = "AND"
         return self.input_rule
 
     def setup_complete(self):
@@ -101,13 +123,7 @@ class GraphNode:
         if hasattr(self.executor,"graph_stopped"):
             self.executor.graph_stopped()
 
-    def get_inputs(self):
-        inputs = [el.data if isinstance(el, ExecutorOutput) else el for el in self["running_inputs"]]
-        return inputs
 
-    def get_outputs(self):
-        outputs = [el for el in self["outputs"]]
-        return outputs
 
     def _prepare_inputs(self):
         node = self
