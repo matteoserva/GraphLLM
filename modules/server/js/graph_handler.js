@@ -137,11 +137,13 @@ class GraphHandler {
     {
         if(this.horizontal)
         {
-            o[1] = this.pos[1] + this.size[1] - (o[1] + LiteGraph.NODE_TITLE_HEIGHT - this.pos[1])
+            let h = this.flags.collapsed?0:this.size[1]
+            o[1] = this.pos[1] + h - (o[1] + LiteGraph.NODE_TITLE_HEIGHT - this.pos[1])
         }
         else
         {
-            o[0] = this.pos[0] + this.size[0] + 1 - ( o[0] - this.pos[0])
+            let w = this.flags.collapsed?this._collapsed_width || LiteGraph.NODE_COLLAPSED_WIDTH: this.size[0]
+            o[0] = this.pos[0] + w + 1 - ( o[0] - this.pos[0])
         }
     }
     return o
