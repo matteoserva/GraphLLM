@@ -28,11 +28,11 @@ class EditorHandler():
             with open(el, "r") as f:
                 res = f.read()
                 base_name = "raw/" + el.split("/")[-1]
-                raw_nodes.append({"name": base_name, "value":res})
+                raw_nodes.append({"name": base_name, "filename": el, "value": res})
 
         self.node_files = raw_nodes + generated_nodes
         self.css_files = [el[len(SOURCES_PATH) + 1:] for el in glob(SOURCES_PATH + "/css/*.css")]
-        self.nodes_map = {el["name"]:el["value"] for el in self.node_files}
+        self.nodes_map = {el["name"]:el for el in self.node_files}
 
     def _returnRedirect(self,server):
         server.send_response(301)
@@ -45,7 +45,13 @@ class EditorHandler():
         server.send_header('Content-type', 'text/javascript')
         server.end_headers()
 
-        server.wfile.write(self.nodes_map[node_key].encode())
+        obj = self.nodes_map[node_key]
+        value = obj["value"]
+        if "filename" in obj:
+            with open(obj["filename"], "r") as f:
+                value = f.read()
+
+        server.wfile.write(value.encode())
 
     def _do_GET_litegraph(self,server,endpoint):
         filename = LITEGRAPH_PATH + "/" + endpoint

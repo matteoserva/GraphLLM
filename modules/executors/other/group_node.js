@@ -90,6 +90,19 @@
             //this.graph = graph
 
         }
+
+        function setCollapsedWidth(group, child)
+        {
+                try {
+                       Object.defineProperty(child, "_collapsed_width", {
+                        configurable: true,
+                        set : function (value) {child.__collapsed_width = value},
+                        get : function () {return group._collapsed_width}
+                        });
+                    } catch {}
+
+        }
+
         GroupNodeGui.prototype.onConfigure = function(info)
         {
             this._nodes = []
@@ -102,7 +115,8 @@
                 for(let el in this.collapse_state.node_info)
                 {
                     var node = this.graph.getNodeById(el)
-                    node.onDrawCollapsed = function(){return true;}
+
+                    setCollapsedWidth(this,node)
                     graph.sendActionToCanvas("sendToBack", [node])
                     node.parent_group = this
                     this._nodes.push(node);
@@ -161,25 +175,30 @@
 
         GroupNodeGui.prototype.collapse = function(force) {
             var group = this;
-
+            console.log("group collapsed",this.flags.collapsed)
             if(!this.flags.collapsed)
             {
                 group.collapse_state.node_info = {};
                 for (var i = 0; i < this._nodes.length; ++i) {
                     var node = this._nodes[i]
                     var delta_pos = [ node.pos[0] - group.pos[0],  node.pos[1] - group.pos[1]]
-                    var new_pos = [ group.pos[0] + 0,   group.pos[1] + 0]
+                    let offset_y = LiteGraph.NODE_TITLE_HEIGHT * (1+i)
+                    var new_pos = [ group.pos[0] + 0,   group.pos[1] + offset_y]
                     group.collapse_state.node_info[node.id] = {id: node.id, size: node.size, pos: delta_pos, collapsed: node.flags.collapsed}
                     if(!node.flags.collapsed)
                     {
                         node.collapse(force)
                     }
 					
+                    console.log("add collapse: ", node.getTitle())
+                    setCollapsedWidth(this,node)
+
                     node.pos = new_pos
-                    node.onDrawCollapsed = function(){return true;}
+                    //node.onDrawCollapsed = function(){return true;}
                 }
-				graph.sendActionToCanvas("sendToBack", this._nodes)
+
 				LGraphNode.prototype.collapse.apply(this,force)
+				graph.sendActionToCanvas("bringToFront", [this])
             }
             else
             {
@@ -196,7 +215,11 @@
                         }
 
                     }
-                    node.onDrawCollapsed = null
+
+                    //node.onDrawCollapsed = function(){return true;}
+                    delete node._collapsed_width
+                    console.log("detete collapse: ", node.getTitle())
+                    //node.onDrawCollapsed = null
                 }
 				
 
@@ -208,7 +231,7 @@
 				
                 graph.sendActionToCanvas("sendToBack", [this])
             }
-            
+            console.log("now collapsed",this.flags.collapsed)
         }
 
         function push_away(group, center_pos, graph)
@@ -288,6 +311,24 @@
 				}
         }
 
+
+        GroupNodeGui.prototype.isPointInside = function(x, y, margin, skip_title) {
+            if(!this.flags.collapsed)
+            {
+                return  LGraphNode.prototype.isPointInside.call(this, x, y, margin, skip_title);
+            }
+
+            return LiteGraph.isInsideRectangle(
+                    x,
+                    y,
+                    this.pos[0] - margin,
+                    this.pos[1] - LiteGraph.NODE_TITLE_HEIGHT - margin,
+                    (this._collapsed_width || LiteGraph.NODE_COLLAPSED_WIDTH) +
+                        2 * margin,
+                    LiteGraph.NODE_TITLE_HEIGHT + 2 * margin + LiteGraph.NODE_TITLE_HEIGHT*this._nodes.length
+                )
+        };
+
         GroupNodeGui.prototype.getExtraMenuOptions = function (canvas,options)
         {
             var menu_info = canvas.getCanvasMenuOptions();
@@ -311,6 +352,45 @@
         {
             console.log("dir: " +dir + "  slot: " + slot + "  connected: "  + connected )
 
+        }
+
+        GroupNodeGui.prototype.onDrawCollapsed = function(ctx,canvas)
+        {
+            let node = this;
+            var color = node.color || node.constructor.color || LiteGraph.NODE_DEFAULT_COLOR;
+            var bgcolor = node.bgcolor || node.constructor.bgcolor || LiteGraph.NODE_DEFAULT_BGCOLOR;
+
+            let size = new Float32Array(2);
+
+
+            size.set(node.size)
+            {
+                ctx.font = this.inner_text_font;
+                var title = node.getTitle ? node.getTitle() : node.title;
+                {
+                    let maxWidths= node._nodes.map((el) => el.__collapsed_width)
+
+                    let _collapsed_width = Math.min(
+                        node.size[0],
+                        ctx.measureText(title).width +
+                            LiteGraph.NODE_TITLE_HEIGHT * 2
+                    ); //LiteGraph.NODE_COLLAPSED_WIDTH;
+                    maxWidths.push(_collapsed_width)
+                    node._collapsed_width = Math.max(...maxWidths)
+                    size[0] = node._collapsed_width;
+                    size[1] = LiteGraph.NODE_TITLE_HEIGHT*this._nodes.length;
+                }
+            }
+            canvas.drawNodeShape(
+                node,
+                ctx,
+                size,
+                color,
+                bgcolor,
+                node.is_selected,
+                node.mouseOver
+            );
+            return true;
         }
 
         GroupNodeGui.title = "Group"
