@@ -43,130 +43,27 @@
 
     }
 
-    MyGraphNode.prototype.onConnectionsChange = function(dir,slot,connected,d,e)
+    function connectionChangeInner ( node, dir,slot,connected,d,e)
     {
         console.log("dir: " +dir + "  slot: " + slot + "  connected: "  + connected )
-		let gui_node_config = this.gui_node_config || {}
+		let gui_node_config = node.gui_node_config || {}
 		let connection_limits = gui_node_config.connection_limits || {}
+		var saved_size = node.size
         if(dir == LiteGraph.INPUT)
         {
               if(connected)
               {
-                  let numInputs = this.inputs.length
-                  if(slot +1 == numInputs && !!d)
+                  if( node.inputs.length <= (slot +1) && !!d)
                   {
-                    var saved_size = this.size
-                    this.addInput("N","string");
-                    this.size[0] = saved_size[0]
-                    this.size[1] = Math.max(this.size[1],saved_size[1])
-                    //this.setSize( this.computeSize() );
+                    node.addInput("N","string");
                   }
-
               }
               else
               {
-                    let numInputs = this.inputs.length
+                    let numInputs = node.inputs.length
                     let maxInput = 0;
                     for (let i = 1; i < numInputs; i++) {
-                        if(!!this.inputs[i].link)
-                        {
-                            maxInput = i
-                        }
-                    }
-                    maxInput = 1+ maxInput
-                    if( connection_limits.min_inputs)
-                    {
-                        maxInput = Math.max(maxInput, connection_limits.min_inputs-1 )
-                    }
-                     for (let i = numInputs-1; i > maxInput; i--) {
-                             var saved_size = this.size
-                            this.removeInput(i)
-                            this.size[0] = saved_size[0]
-                            this.size[1] = Math.max(this.size[1],saved_size[1])
-                            //this.setSize( this.computeSize() );
-
-                    }
-                }
-        }
-        if(dir == LiteGraph.OUTPUT)
-        {
-              if(connected)
-              {
-                  let numElements = this.outputs.length
-                  let should_add = true
-                  if( connection_limits.max_outputs && numElements >= connection_limits.max_outputs)
-                    should_add = false
-
-                  if(slot +1 == numElements && !!d && should_add)
-                  {
-                    var saved_size = this.size
-                    this.addOutput("N","string");
-                    this.size[0] = saved_size[0]
-                    this.size[1] = Math.max(this.size[1],saved_size[1])
-
-                    //this.setSize( this.computeSize() );
-                  }
-                  //this.graph.change() //TODO reposition the connection in input/output node when minimized
-
-              }
-              else
-              {
-                setTimeout(function(){ // in case the disconnect is immediately followed by a connect
-                    let numElements = this.outputs.length
-                    let maxInput = 0;
-                    for (let i = 1; i < numElements; i++) {
-                        if((!!this.outputs[i].links) && this.outputs[i].links.length > 0)
-                        {
-                            maxInput = i
-                        }
-                    }
-                     for (let i = numElements-1; i > maxInput+1; i--) {
-                            var saved_size = this.size
-                            this.removeOutput(i)
-                            this.size[0] = saved_size[0]
-                            this.size[1] = Math.max(this.size[1],saved_size[1])
-                            //this.setSize( this.computeSize() );
-
-                    }
-               }.bind(this))
-               }
-        }
-    }
-
-    MyGraphNode.prototype.mirrorInputs = function(dir,slot,connected,d,e)
-    {
-        console.log("dir: " +dir + "  slot: " + slot + "  connected: "  + connected )
-		let gui_node_config = this.gui_node_config || {}
-		let connection_limits = gui_node_config.connection_limits || {}
-        if(dir == LiteGraph.INPUT)
-        {
-              if(connected)
-              {
-                  while( this.inputs.length <= (slot +1)  && !!d)
-                  {
-                    var saved_size = this.size
-                    this.addInput("N","string");
-                    this.size[0] = saved_size[0]
-                    this.size[1] = Math.max(this.size[1],saved_size[1])
-                    //this.setSize( this.computeSize() );
-                  }
-
-                  while( this.outputs.length <= (slot)  && !!d)
-                  {
-                    var saved_size = this.size
-                    this.addOutput("N","string");
-                    this.size[0] = saved_size[0]
-                    this.size[1] = Math.max(this.size[1],saved_size[1])
-                    //this.setSize( this.computeSize() );
-                  }
-
-              }
-              else
-              {
-                    let numInputs = this.inputs.length
-                    let maxInput = 0;
-                    for (let i = 1; i < numInputs; i++) {
-                        if(!!this.inputs[i].link)
+                        if(!!node.inputs[i].link)
                         {
                             maxInput = i
                         }
@@ -177,25 +74,106 @@
                         maxInput = Math.max(maxInput, connection_limits.min_inputs-1 )
                     }
                     for (let i = numInputs-1; i > maxInput; i--) {
-                            var saved_size = this.size
-                            this.removeInput(i)
-                            this.size[0] = saved_size[0]
-                            this.size[1] = Math.max(this.size[1],saved_size[1])
-                            //this.setSize( this.computeSize() );
+                            node.removeInput(i)
+                    }
+                }
+        }
+        if(dir == LiteGraph.OUTPUT)
+        {
+              if(connected)
+              {
+                  let numElements = node.outputs.length
+                  let should_add = true
+                  if( connection_limits.max_outputs && numElements >= connection_limits.max_outputs)
+                    should_add = false
 
+                  if(slot +1 == numElements && !!d && should_add)
+                  {
+                    node.addOutput("N","string");
+                  }
+              }
+              else
+              {
+                    let numElements = node.outputs.length
+                    let maxInput = 0;
+                    for (let i = 1; i < numElements; i++) {
+                        if((!!node.outputs[i].links) && node.outputs[i].links.length > 0)
+                        {
+                            maxInput = i
+                        }
+                    }
+                     for (let i = numElements-1; i > maxInput+1; i--) {
+                            node.removeOutput(i)
+                    }
+
+               }
+        }
+        node.size[0] = saved_size[0]
+        node.size[1] = Math.max(node.size[1],saved_size[1])
+    }
+
+    function inputMirrorInner(node, dir,slot,connected,d,e)
+    {
+        console.log("dir: " +dir + "  slot: " + slot + "  connected: "  + connected )
+		let gui_node_config = node.gui_node_config || {}
+		let connection_limits = gui_node_config.connection_limits || {}
+		var saved_size = node.size
+        if(dir == LiteGraph.INPUT)
+        {
+              if(connected)
+              {
+                  while( node.inputs.length <= (slot +1)  && !!d)
+                  {
+                    node.addInput("N","string");
+                  }
+
+                  while( node.outputs.length <= (slot)  && !!d)
+                  {
+                    node.addOutput("N","string");
+                  }
+              }
+              else
+              {
+                    let numInputs = node.inputs.length
+                    let maxInput = 0;
+                    for (let i = 1; i < numInputs; i++) {
+                        if(!!node.inputs[i].link)
+                        {
+                            maxInput = i
+                        }
+                    }
+                    maxInput = 1+ maxInput
+                    if( connection_limits.min_inputs)
+                    {
+                        maxInput = Math.max(maxInput, connection_limits.min_inputs-1 )
+                    }
+                    for (let i = numInputs-1; i > maxInput; i--) {
+                            node.removeInput(i)
                     }
                     maxOutput = maxInput - 1
-                    for (let i = this.outputs.length-1; i > maxOutput; i--) {
-                            var saved_size = this.size
-                            this.removeOutput(i)
-                            this.size[0] = saved_size[0]
-                            this.size[1] = Math.max(this.size[1],saved_size[1])
-                            //this.setSize( this.computeSize() );
-
+                    for (let i = node.outputs.length-1; i > maxOutput; i--) {
+                            node.removeOutput(i)
                     }
                 }
         }
 
+        node.size[0] = saved_size[0]
+        node.size[1] = Math.max(node.size[1],saved_size[1])
+    }
+
+    MyGraphNode.prototype.onConnectionsChange = function(dir,slot,connected,d,e)
+    {
+        let node = this
+        setTimeout(function(){
+                        return connectionChangeInner(node, dir,slot,connected,d,e)
+                    }
+                  );
+    }
+
+    MyGraphNode.prototype.mirrorInputs = function(dir,slot,connected,d,e)
+    {
+        let node = this
+        return inputMirrorInner(node, dir,slot,connected,d,e)
     }
 
 
