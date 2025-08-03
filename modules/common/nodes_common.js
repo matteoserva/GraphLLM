@@ -73,9 +73,10 @@
                             maxInput = i
                         }
                     }
+                    maxInput = 1+ maxInput
                     if( connection_limits.min_inputs)
                     {
-                        maxInput = Math.max(1+ maxInput, connection_limits.min_inputs-1 )
+                        maxInput = Math.max(maxInput, connection_limits.min_inputs-1 )
                     }
                      for (let i = numInputs-1; i > maxInput; i--) {
                              var saved_size = this.size
@@ -132,6 +133,70 @@
         }
     }
 
+    MyGraphNode.prototype.mirrorInputs = function(dir,slot,connected,d,e)
+    {
+        console.log("dir: " +dir + "  slot: " + slot + "  connected: "  + connected )
+		let gui_node_config = this.gui_node_config || {}
+		let connection_limits = gui_node_config.connection_limits || {}
+        if(dir == LiteGraph.INPUT)
+        {
+              if(connected)
+              {
+                  while( this.inputs.length <= (slot +1)  && !!d)
+                  {
+                    var saved_size = this.size
+                    this.addInput("N","string");
+                    this.size[0] = saved_size[0]
+                    this.size[1] = Math.max(this.size[1],saved_size[1])
+                    //this.setSize( this.computeSize() );
+                  }
+
+                  while( this.outputs.length <= (slot)  && !!d)
+                  {
+                    var saved_size = this.size
+                    this.addOutput("N","string");
+                    this.size[0] = saved_size[0]
+                    this.size[1] = Math.max(this.size[1],saved_size[1])
+                    //this.setSize( this.computeSize() );
+                  }
+
+              }
+              else
+              {
+                    let numInputs = this.inputs.length
+                    let maxInput = 0;
+                    for (let i = 1; i < numInputs; i++) {
+                        if(!!this.inputs[i].link)
+                        {
+                            maxInput = i
+                        }
+                    }
+                    maxInput = 1+ maxInput
+                    if( connection_limits.min_inputs)
+                    {
+                        maxInput = Math.max(maxInput, connection_limits.min_inputs-1 )
+                    }
+                    for (let i = numInputs-1; i > maxInput; i--) {
+                            var saved_size = this.size
+                            this.removeInput(i)
+                            this.size[0] = saved_size[0]
+                            this.size[1] = Math.max(this.size[1],saved_size[1])
+                            //this.setSize( this.computeSize() );
+
+                    }
+                    maxOutput = maxInput - 1
+                    for (let i = this.outputs.length-1; i > maxOutput; i--) {
+                            var saved_size = this.size
+                            this.removeOutput(i)
+                            this.size[0] = saved_size[0]
+                            this.size[1] = Math.max(this.size[1],saved_size[1])
+                            //this.setSize( this.computeSize() );
+
+                    }
+                }
+        }
+
+    }
 
 
     window.MyGraphNode = MyGraphNode
