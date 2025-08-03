@@ -100,7 +100,11 @@
                         get : function () {return group._collapsed_width}
                         });
                     } catch {}
+        }
 
+        function clearCollapsedWidth(group,child)
+        {
+            delete child._collapsed_width
         }
 
         GroupNodeGui.prototype.onConfigure = function(info)
@@ -217,7 +221,8 @@
                     }
 
                     //node.onDrawCollapsed = function(){return true;}
-                    delete node._collapsed_width
+                    clearCollapsedWidth(this,node)
+
                     console.log("detete collapse: ", node.getTitle())
                     //node.onDrawCollapsed = null
                 }
