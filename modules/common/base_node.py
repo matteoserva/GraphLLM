@@ -12,6 +12,7 @@ class BaseGuiParser:
 
     def _make_default_config(self,old_config):
         new_config = {}
+        new_config["id"] = str(old_config["id"])
         new_config["type"] = old_config["type"].split("/")[-1]
 
         old_inputs = old_config.get("inputs", [])

@@ -42,7 +42,8 @@ class GuiNodeParser:
             parser_node = self.parsers_map[node_type]
             parser_function = parser_node.parse_node
 
-            parser_args["backend_config"] = parser_node._make_default_config(old_config)
+            backend_config = parser_node._make_default_config(old_config)
+            parser_args["backend_config"] = backend_config
 
             sig = inspect.signature(parser_function)
             filter_keys = [param.name for param in sig.parameters.values() if param.kind == param.POSITIONAL_OR_KEYWORD]
