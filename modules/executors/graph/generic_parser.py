@@ -4,7 +4,7 @@ import yaml
 class GenericParser(BaseGuiParser):
     node_types = ["generic_node"]
 
-    def parse_generic(self, old_config):
+    def parse_node(self, old_config):
         new_config = {}
         new_config["type"] = old_config["type"]
         properties = old_config.get("properties", {})
