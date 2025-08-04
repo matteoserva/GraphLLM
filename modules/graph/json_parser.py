@@ -28,18 +28,20 @@ class JsonParser():
         links = {str(el[0]):el for el in jval.get("links",[])}
         #valid_sections = ["graph","llm","tools"]
 
-        nodes = { str(el["id"]):el for el in jval.get("nodes",[]) if el["type"].split("/")[0]}
+        gui_nodes = { str(el["id"]):el for el in jval.get("nodes",[]) if el["type"].split("/")[0]}
         #print(jval)
 
-        self._solve_links(nodes,links)
+        self._solve_links(gui_nodes,links)
 
         gui_node_parser = GuiNodeParser()
         new_nodes = {}
-        for el in nodes:
-                old_config = nodes[el]
+        for el in gui_nodes:
+                old_config = gui_nodes[el]
                 new_config = gui_node_parser.parse_node(old_config,links)
-                if new_config:
-                    new_nodes[el] = new_config
+                for new_node in new_config:
+                    node_id = new_node["id"]
+                    del new_node["id"]
+                    new_nodes[node_id] = new_node
 
         gui_node_parser.postprocess_nodes(new_nodes)
 

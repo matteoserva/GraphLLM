@@ -30,7 +30,8 @@ class GuiNodeParser:
         new_config = {}
         new_config["type"] = old_config["type"]
         node_type = old_config["type"].split("/")[-1]
-        
+
+        res = []
         if node_type in self.parsers_map:
             old_inputs = old_config.get("inputs", [])
             new_inputs = [str(el["link"]) if el["link"] else None for el in old_inputs]
@@ -48,10 +49,17 @@ class GuiNodeParser:
             parser_args = {filter_key: parser_args[filter_key] for filter_key in filter_keys}
 
             res = parser_function(**parser_args)
-            
-            return res
 
-        return None
+            if not res:
+                res = []
+            elif not isinstance(res,list):
+                res = [res]
+
+            if len(res) > 0:
+                res[-1]["id"] = str(old_config["id"])
+
+
+        return res
 
     def postprocess_nodes(self,new_nodes):
 
