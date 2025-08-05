@@ -55,7 +55,7 @@ class WebBrige {
     this.canvas.allow_searchbox = false
     this.canvas.align_to_grid = true
     this.graph.config.align_to_grid = true
-
+    this.graph.bridge = {}
 
     this.cb_as = this.graph.onAfterStep;
     let cb_bs = this.graph.onBeforeStep;
@@ -289,9 +289,9 @@ class WebBrige {
     console.log(xhr.responseText)
     this.select.selectedIndex = 0
 
-    let bridge = this.graph.bridge || {}
+    let bridge = this.graph.bridge
     bridge.graphs_list = lines
-    this.graph.bridge = bridge
+
   }
 
   startWebSocket(data)
@@ -564,11 +564,14 @@ class WebBrige {
       }
 	  if(obj.type == "starting")
       {
-		  var name = obj.data[0].substr(1)
+		  var name = obj.data[0].split("/")[1]
 		  var node = this.graph.getNodeById(name)
 		  if (node)
 		  {
-			 this.canvas.selectNode(node,true);
+		     if(!node.is_selected)
+		     {
+			    this.canvas.selectNode(node,true);
+			 }
 			 if(node.outputs && node.outputs.length > 0) { node.print_log = ""}
 			 var eventId = {type: obj.type, source: name}
              this.notifyListeners(eventId)

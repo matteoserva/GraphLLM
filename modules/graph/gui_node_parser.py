@@ -59,6 +59,9 @@ class GuiNodeParser:
             if len(res) > 0:
                 res[-1]["id"] = str(old_config["id"])
 
+            for i, new_node in enumerate(res[:-1]):
+                new_node["id"] = str(old_config["id"]) + "/" + str(i)
+
 
         return res
 
