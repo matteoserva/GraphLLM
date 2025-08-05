@@ -28,7 +28,7 @@ class FormatterJinja:
         self.transitions["system"]["user"] = t
 
         messages = [{"role": "user", "content": placeholder_user}]
-        r2 = self.tokenizer.render(messages=messages, add_generation_prompt=True)
+        r2 = self.tokenizer.render(messages=messages, add_generation_prompt=True,strftime_now = lambda x: "2025-08-05")
         posu = r2.find(placeholder_user)
         t = r2[:posu]
         self.transitions["init"]["user"] = t
@@ -63,7 +63,7 @@ class FormatterJinja:
             {"role": "assistant", "content": placeholder_assistant},
             {"role": "user", "content": placeholder_user2},
         ]
-        rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True,bos_token = "<<<BOS>>>",eos_token = "<<<EOS>>>")
+        rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True,bos_token = "<<<BOS>>>",eos_token = "<<<EOS>>>",strftime_now = lambda x: "2025-08-05")
         self.has_system = placeholder_system in rendered
         self.multi_turn = "<<<USER2>>>" in rendered
         self.has_bos_token = "<<<BOS>>>" in rendered
@@ -85,7 +85,7 @@ class FormatterJinja:
                 {"role": "assistant", "content": placeholder_assistant},
                 {"role": "user", "content": placeholder_user2},
             ]
-            rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True)
+            rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True,strftime_now = lambda x: "2025-08-05")
 
             if self.has_system:
                 self.load_template_with_system(rendered)
@@ -104,7 +104,10 @@ class FormatterJinja:
         if not self.has_system:
             pass
 
-        if (len(model_props.get("bos_token","")) > 0) != self.has_bos_token :
+        if model_name.lower().find("gpt-oss") >= 0:
+            self.has_bos_token = False
+            pass
+        elif (len(model_props.get("bos_token","")) > 0) != self.has_bos_token :
             return False
 
         if self.has_bos_token:
@@ -125,8 +128,10 @@ class FormatterJinja:
             #self.optional_system = True
             return True
 
-        if model_name.lower().find("deepseek-r1") >= 0 >= 0:
+        if model_name.lower().find("deepseek-r1") >= 0:
+            return True
 
+        if model_name.lower().find("gpt-oss") >= 0:
             return True
 
         return False
