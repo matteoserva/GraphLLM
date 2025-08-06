@@ -160,9 +160,16 @@ class PromptBuilder:
                 el["type"] = "image_url"
                 el["image_url"] = {"url": variables[varname]["content"]}
         if len([el for el in content_split if el["type"] != "text"])> 0:
+            # merge text_blocks
+            for i, el in enumerate(content_split):
+                if i == 0:
+                    continue
+                if content_split[i]["type"] == "text" and content_split[i-1]["type"] == "text":
+                    content_split[i]["content"] = content_split[i-1]["content"] + content_split[i]["content"]
+                    content_split[i - 1]["content"] = ""
 
-            # TODO merge text blocks
-            # TODO remove empty text blocks
+            # remove empty text blocks
+            content_split = [el for el in content_split if el["type"] != "text" or el["text"] != "" ]
             content = content_split
 
         parsed = {"role": role, "content": content}
