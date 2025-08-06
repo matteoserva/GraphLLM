@@ -46,6 +46,31 @@ def parse_raw(message):
          raise Exception("parser exception")
     return res
 
+def parse_graphllm(message):
+    token = ""
+    res = []
+
+    while True:
+        m1 = -1
+        for el in ["{p:raw}\n", "{p:system}\n","{p:user}\n","{p:assistant}\n"]:
+            a = message.find(el)
+            if a >= 0 and (m1 < 0 or a < m1):
+                m1 = a
+                token = el
+        if m1 < 0:
+            break;
+        role = token[3:-2]
+        message = message[m1+len(token):]
+        m2 = message.split("{p:eom}",1)
+        content = m2[0]
+        res.append({"role":role,"content":content})
+        if(len(m2) < 2):
+            break;
+        message = m2[1]
+    if len(res) == 0:
+         raise Exception("parser exception")
+    return res
+
 import re
 
 def find_matching_parenthesis(test, start):
