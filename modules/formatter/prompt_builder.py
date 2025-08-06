@@ -1,4 +1,4 @@
-from .parser import parse_raw, check_special_tokens
+from .parser import parse_raw, check_special_tokens, parse_graphllm
 from transformers import AutoTokenizer
 from .formatter_hf import FormatterHF
 from .formatter_custom import FormatterCustom
@@ -171,8 +171,11 @@ class PromptBuilder:
     def add_request(self, message,role="user",variables={}):
         m = message
         is_raw = self._check_special_tokens(m)
+        is_graphllm = message.lstrip().startswith("{p:") or message.lstrip().startswith("{r:")
 
-        if is_raw:
+        if is_graphllm:
+            parsed = parse_graphllm(message)
+        elif is_raw:
             try:
                 parsed = parse_raw(message)
             except:

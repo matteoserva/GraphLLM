@@ -28,7 +28,7 @@ class FormatterJinja:
         self.transitions["system"]["user"] = t
 
         messages = [{"role": "user", "content": placeholder_user}]
-        r2 = self.tokenizer.render(messages=messages, add_generation_prompt=True,strftime_now = lambda x: "2025-08-05")
+        r2 = self.tokenizer.render(messages=messages, add_generation_prompt=True,strftime_now = self._strftime)
         posu = r2.find(placeholder_user)
         t = r2[:posu]
         self.transitions["init"]["user"] = t
@@ -63,13 +63,15 @@ class FormatterJinja:
             {"role": "assistant", "content": placeholder_assistant},
             {"role": "user", "content": placeholder_user2},
         ]
-        rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True,bos_token = "<<<BOS>>>",eos_token = "<<<EOS>>>",strftime_now = lambda x: "2025-08-05")
+        rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True,bos_token = "<<<BOS>>>",eos_token = "<<<EOS>>>",strftime_now = self._strftime)
         self.has_system = placeholder_system in rendered
         self.multi_turn = "<<<USER2>>>" in rendered
         self.has_bos_token = "<<<BOS>>>" in rendered
         self.has_eos_token = "<<<EOS>>>" in rendered
         self.generation_prompt_prefix = ""
 
+    def _strftime(self,x):
+        return "2025-08-05"
 
     def load_template(self,model_props):
         model_name = model_props["model_name"]
@@ -85,7 +87,7 @@ class FormatterJinja:
                 {"role": "assistant", "content": placeholder_assistant},
                 {"role": "user", "content": placeholder_user2},
             ]
-            rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True,strftime_now = lambda x: "2025-08-05")
+            rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True,strftime_now = self._strftime)
 
             if self.has_system:
                 self.load_template_with_system(rendered)
@@ -104,10 +106,7 @@ class FormatterJinja:
         if not self.has_system:
             pass
 
-        if model_name.lower().find("gpt-oss") >= 0:
-            self.has_bos_token = False
-            pass
-        elif (len(model_props.get("bos_token","")) > 0) != self.has_bos_token :
+        if self.has_bos_token and len(model_props.get("bos_token","")) == 0 :
             return False
 
         if self.has_bos_token:
@@ -115,29 +114,7 @@ class FormatterJinja:
             self.transitions["init"]["user"] = model_props["bos_token"] + self.transitions["init"]["user"]
             self.bos_token = model_props["bos_token"]
 
-        if model_name.lower().find("deepseek-r1") == 0:
-            self.optional_system = True
-            return True
-
-        if model_name.lower().find("llama-4-") >= 0:
-            self.optional_system = True
-            return True
-
-        if model_name.lower().find("glm-") >= 0 and model_name.lower().find("0414") >= 0:
-            self.generation_prompt_prefix = "\n"
-            #self.optional_system = True
-            return True
-
-        if model_name.lower().find("deepseek-r1") >= 0:
-            return True
-
-        if model_name.lower().find("gpt-oss") >= 0:
-            return True
-
-        return False
-
-
-
+        return True
 
     def build_prompt_sm(self, messages, force_system=False,**kwargs):
         builder_state="init"
