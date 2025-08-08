@@ -124,7 +124,11 @@ class CustomTextOutput extends CustomTextCommon{
                           displayMode: true,
                           throwOnError: true, // allows katex to fail silently
                           errorColor: '#ff0000',
-                          delimiters: [{ left: "$$\n", right: "$$", display: true }, { left: "$ ", right: " $", display: false } ],
+                          delimiters: [{ left: "$$", right: "$$", display: true },
+                                       { left: "$", right: "$", display: false },
+                                       { left: "\\[", right: "\\]", display: true },
+                                       { left: "\\(", right: "\\)", display: false },
+                                       ],
                       }
                   )()
                 katex[0].type = "lang"
@@ -165,6 +169,10 @@ class CustomTextOutput extends CustomTextCommon{
 
 				text = text.replace(/\$ ([^\n]+) \$/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
 				text = text.replace(/\$\$\n([^\n]+\n)+?\s*\$\$(\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
+
+                // replace multiline \[ \]  and inline \( ... \)
+				text = text.replace(/\\\[\n([^\n]+\n)+?\s*\\\](\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
+                text = text.replace(/\\\( ([^\n]+) \\\)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
 
                 var d = document.createElement("div")
                 d.innerHTML = text
