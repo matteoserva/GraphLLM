@@ -373,7 +373,7 @@ class CustomTextOutput extends CustomTextCommon{
     configureSizeInFocus()
     {
         var textarea = this.textarea
-        if (this.inFocus)
+        /*if (this.inFocus)
         {
 
 
@@ -399,7 +399,7 @@ class CustomTextOutput extends CustomTextCommon{
         else
         {
             this.textarea.style.whiteSpace="pre-wrap"
-        }
+        }*/
     }
 
     configureSize(aSpace,hSpace)
