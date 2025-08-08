@@ -210,6 +210,7 @@ class PythonConsole:
             if el not in globalsParameter:
                 globalsParameter[el] = extraContext[el]
         self._console = code.InteractiveConsole(locals=globalsParameter)
+        self._console.resetbuffer()
         self._console.write = self._stderr_capture.write
         self._console.showtraceback = self._showtraceback
         self._console.showsyntaxerror = self._showtraceback
