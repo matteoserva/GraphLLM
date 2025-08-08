@@ -30,9 +30,16 @@ class PythonConsoleNode(GenericExecutor):
         else:
             strip = None
 
+        if self.properties.get("stop_exception","NO") == "NO":
+            stopException = False
+        else:
+            stopException = True
+
+
         self._interpreter.reset(scriptContext)
         self._interpreter.setEchoMode(echo)
         self._interpreter.setPromptStrip(strip)
+        self._interpreter.setStopAtException(stopException)
 
     def __call__(self, inputs, *args):
         user_prompt = inputs[0]

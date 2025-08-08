@@ -142,6 +142,7 @@ class PythonConsole:
         self._stderr_capture = io.StringIO()
         self._echo_input = False
         self.default_prompt_strip = None
+        self.stopAtException = False
 
     def setEchoMode(self,mode):
         self._echo_input = mode
@@ -149,6 +150,9 @@ class PythonConsole:
     def setPromptStrip(self,strip):
         self.default_prompt_strip = strip
         self.userSendsPS1 = strip
+
+    def setStopAtException(self,stopException):
+        self.stopAtException = stopException
 
     def __pprint(self, *args,**kwargs):
         kwargs["file"] = self._stdout_capture
@@ -195,6 +199,8 @@ class PythonConsole:
         lines = traceback.format_exception(ei[0], ei[1], None)
         retval = ''.join(lines)
         self._stderr_capture.write(retval)
+        if self.stopAtException:
+            raise ei[1] from None
 
     def reset(self, extraContext = {}):
         globalsParameter = self.fake_python.makeGlobals()
@@ -209,6 +215,7 @@ class PythonConsole:
         self._console.showsyntaxerror = self._showtraceback
         self._last_retval = False
         self.userSendsPS1 = self.default_prompt_strip
+        self.stopAtException = False
         self.terminated = False
     
     def isTerminated(self):
