@@ -373,7 +373,7 @@ class CustomTextInput extends CustomTextCommon{
 
         textarea.addEventListener("focusout", function(e){ this.handleFocusOutEvent(e,textarea)}.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
-        textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
+        textarea.addEventListener("input", function(event){this.textChange()}.bind(this))
         return div
 
     }
@@ -476,7 +476,7 @@ class CustomTextarea extends CustomTextCommon{
 
         textarea.addEventListener("focusout", function(e){ this.handleFocusOutEvent(e,textarea)}.bind(this))
         textarea.addEventListener("focusin", function(event){this.textareaFocus(textarea)}.bind(this))
-        textarea.addEventListener("keyup", function(event){this.textChange()}.bind(this))
+        textarea.addEventListener("input", function(event){this.textChange()}.bind(this))
         return div
         
 		
