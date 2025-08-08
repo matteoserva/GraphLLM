@@ -24,9 +24,9 @@ class CustomTextOutput extends CustomTextCommon{
         this.redrawContent()
     }
 
-	cleanHtmlEmptyNodes(children)
-	{
-		   /* if the node contains only one real child and two empty text nodes,
+    cleanHtmlEmptyNodes(children)
+    {
+           /* if the node contains only one real child and two empty text nodes,
            then it is a formatting issue in showdownjs. remove the empty nodes.
            The empty texts are incompatible with the white-space: pre property */
 
@@ -52,30 +52,30 @@ class CustomTextOutput extends CustomTextCommon{
             textChildren.map((el) => el.remove())
         }
 
-	}
+    }
 
-	cleanHtmlCodeBlocks(textarea)
-	{
-		//<p style="position: absolute; top: 0px; right:0px">ciao</p>
-		var codeBlocks = textarea.querySelectorAll("pre > code[class*='language-']")
-		codeBlocks.forEach((element) => appendType(element));
+    cleanHtmlCodeBlocks(textarea)
+    {
+        //<p style="position: absolute; top: 0px; right:0px">ciao</p>
+        var codeBlocks = textarea.querySelectorAll("pre > code[class*='language-']")
+        codeBlocks.forEach((element) => appendType(element));
 
-		function appendType(el)
-		{
-			var p = document.createElement("p");
-			p.style="position: absolute; margin: 0px; top: -0px; right:10px; transform: translateY(-50%); background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
-			var className = el.className.match("language-(.*)")[1]
-			p.innerHTML = className;
-			el.parentElement.appendChild(p)
-			el.parentElement.style.marginTop = "4px"
-			el.parentElement.style.marginBottom = "4px"
-			el.parentElement.style.paddingTop = "4px"
-			el.parentElement.style.paddingBottom = "4px"
-			el.parentElement.style.position = "relative"
-		}
+        function appendType(el)
+        {
+            var p = document.createElement("p");
+            p.style="position: absolute; margin: 0px; top: -0px; right:10px; transform: translateY(-50%); background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+            var className = el.className.match("language-(.*)")[1]
+            p.innerHTML = className;
+            el.parentElement.appendChild(p)
+            el.parentElement.style.marginTop = "4px"
+            el.parentElement.style.marginBottom = "4px"
+            el.parentElement.style.paddingTop = "4px"
+            el.parentElement.style.paddingBottom = "4px"
+            el.parentElement.style.position = "relative"
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
     cleanKatexBlocks(katexSpan)
     {
@@ -97,29 +97,29 @@ class CustomTextOutput extends CustomTextCommon{
     cleanHtml(textarea)
     {
 
-		var children = textarea.childNodes;
+        var children = textarea.childNodes;
         var katexNodes = textarea.querySelectorAll("span > span.katex-display")
         katexNodes.forEach((element) => this.cleanKatexBlocks(element.parentNode));
 
         var inner = textarea.innerHTML
 
         // remove newlines after some html tags, they break <pre> formatting
-		inner = inner.replace(/\<blockquote\>\n(\s+\<)/g,"<blockquote>$1") //blockquote\n  <p>
+        inner = inner.replace(/\<blockquote\>\n(\s+\<)/g,"<blockquote>$1") //blockquote\n  <p>
         inner = inner.replace(/\<\/(?!strong)([a-zA-Z0-9]+)\>\n/g,"</$1>") //negative lookahead
         inner = inner.replace(/\<(hr)\>\n/g,"<$1>")
         inner = inner.replace(/\<(br)\>\n/g,"<$1>")
 
-		textarea.innerHTML = inner
-		//this.cleanHtmlEmptyNodes(children)
-		this.cleanHtmlCodeBlocks(textarea)
+        textarea.innerHTML = inner
+        //this.cleanHtmlEmptyNodes(children)
+        this.cleanHtmlCodeBlocks(textarea)
         return 0;
     }
 
 
-	convertToMarkdown(original_text)
-	{
-		var text = original_text
-		let katex = showdownKatex(
+    convertToMarkdown(original_text)
+    {
+        var text = original_text
+        let katex = showdownKatex(
                       {
                           displayMode: true,
                           throwOnError: true, // allows katex to fail silently
@@ -141,8 +141,8 @@ class CustomTextOutput extends CustomTextCommon{
                         d.innerHTML = html
                         // fixes #### Second Term: $ 2\pi H \sqrt{\frac{V}{\pi H}} $
                         d.querySelectorAll("path").forEach( (element) => {element.remove()})
-						d.querySelectorAll("annotation").forEach( (element) => {element.remove()})
-						d.querySelectorAll("span.katex-html").forEach( (element) => {element.remove()})
+                        d.querySelectorAll("annotation").forEach( (element) => {element.remove()})
+                        d.querySelectorAll("span.katex-html").forEach( (element) => {element.remove()})
                         let r = d.innerHTML
                         return r;
                       },
@@ -161,17 +161,17 @@ class CustomTextOutput extends CustomTextCommon{
                 // replace inline $$ ... $$ with $ ... $
                 text = text.replace(/\$\$ ([^\n]+) \$\$/g,'$ $1 $')
 
-				// replace $r$ with $ r $
-				text = text.replace(/\$(\w)\$/g,'$ $1 $')
+                // replace $r$ with $ r $
+                text = text.replace(/\$(\w)\$/g,'$ $1 $')
 
                 // replace inline $...$ with $ ... $   offender: - $H = 16 \text{ cm}$
                 text = text.replace(/\$(\S[^\n]+(\\text\{|\\boxed\{)[^\n]+\S)\$/g,'$ $1 $')
 
-				text = text.replace(/\$ ([^\n]+) \$/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
-				text = text.replace(/\$\$\n([^\n]+\n)+?\s*\$\$(\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
+                text = text.replace(/\$ ([^\n]+) \$/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
+                text = text.replace(/\$\$\n([^\n]+\n)+?\s*\$\$(\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
 
                 // replace multiline \[ \]  and inline \( ... \)
-				text = text.replace(/\\\[\n([^\n]+\n)+?\s*\\\](\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
+                text = text.replace(/\\\[\n([^\n]+\n)+?\s*\\\](\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
                 text = text.replace(/\\\( ([^\n]+) \\\)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
 
                 var d = document.createElement("div")
@@ -199,7 +199,7 @@ class CustomTextOutput extends CustomTextCommon{
                     p.style="position: absolute; margin: 0px; top: -8px; right:10px; background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
                     p.innerHTML = "Think"
 
-					dc.appendChild(p)
+                    dc.appendChild(p)
                     dc.appendChild(d2)
 
 
@@ -219,8 +219,8 @@ class CustomTextOutput extends CustomTextCommon{
                 }
 
                 var html = converter.makeHtml(text);
-				return html
-	}
+                return html
+    }
 
     redrawContent(forceRedraw = false)
     {
@@ -246,19 +246,19 @@ class CustomTextOutput extends CustomTextCommon{
 
         if(diffContent && this.config.use_markdown && (now-this.lastRedrawTimestamp)< 500)
         {
-			let currentNode = this.textarea
-			let lastTextNode = currentNode;
-			while ((currentNode = currentNode.lastChild)) {
-				  lastTextNode = currentNode;
-			}
-			if (lastTextNode.nodeType == Node.TEXT_NODE)
-			{
-				lastTextNode.nodeValue += diffContent;
-			}
-			else
-			{
-				lastTextNode.innerHTML += diffContent;
-			}
+            let currentNode = this.textarea
+            let lastTextNode = currentNode;
+            while ((currentNode = currentNode.lastChild)) {
+                  lastTextNode = currentNode;
+            }
+            if (lastTextNode.nodeType == Node.TEXT_NODE)
+            {
+                lastTextNode.nodeValue += diffContent;
+            }
+            else
+            {
+                lastTextNode.innerHTML += diffContent;
+            }
 
         }
         else if(this.config.use_markdown)
@@ -294,14 +294,14 @@ class CustomTextOutput extends CustomTextCommon{
             this.config.use_markdown = config.use_markdown
             if(config.use_markdown)
             {
-		this.textarea.classList.remove("markdown_off")
-		this.textarea.classList.add("markdown_on")
-	    }
+        this.textarea.classList.remove("markdown_off")
+        this.textarea.classList.add("markdown_on")
+        }
             else
             {
-		this.textarea.classList.remove("markdown_on")
-		this.textarea.classList.add("markdown_off")
-	    }
+        this.textarea.classList.remove("markdown_on")
+        this.textarea.classList.add("markdown_off")
+        }
             this.redrawContent()
 
         }
@@ -324,8 +324,8 @@ class CustomTextOutput extends CustomTextCommon{
         div.appendChild(text)
 
         var control= document.createElement("div")
-		control.style="color:DarkGray;position:fixed; top:0px; transform: translateY(-100%); right: 0px"
-		control.className = "TextControl";
+        control.style="color:DarkGray;position:fixed; top:0px; transform: translateY(-100%); right: 0px"
+        control.className = "TextControl";
         control.innerHTML = 'Markdown<input type="checkbox"/>'
         var checkbox = control.querySelector("input")
         var that = this
@@ -370,12 +370,12 @@ class CustomTextOutput extends CustomTextCommon{
 
     }
 
-	textareaUnfocus(textarea)
-	{
-		super.textareaUnfocus(textarea)
-		if (window.getSelection) {window.getSelection().removeAllRanges();}
+    textareaUnfocus(textarea)
+    {
+        super.textareaUnfocus(textarea)
+        if (window.getSelection) {window.getSelection().removeAllRanges();}
              else if (document.selection) {document.selection.empty();}
-	}
+    }
 
 
     configureSizeInFocus()
