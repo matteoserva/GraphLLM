@@ -49,56 +49,6 @@ div.litegraph > div.header > div.tools-left .selector-extras
 }
 
 
-div.div-container div.CustomTextOutput a:link { color: lightskyblue; }
-div.div-container div.CustomTextOutput a:visited { color: #6d4b8d; }
-div.div-container div.CustomTextOutput a:hover { color: #ffffff; }
-div.div-container div.CustomTextOutput a:active { color: #ff4040; text-decoration:none; font-weight:normal; }
-div.div-container div.CustomTextOutput pre {
-border: 1px solid gray;
-background-color: #202020;
-}
-
-/* div.div-container div.CustomTextOutput * {
-margin: 0px;
-}*/
-
-div.div-container div.CustomTextOutput p {
-margin-top: 0.5em;
-margin-bottom: 0.5em;
-}
-
-div.div-container div.CustomTextOutput blockquote {
-margin-left: 10px;
-}
-
-div.div-container div.CustomTextOutput table,
-div.div-container div.CustomTextOutput th,
-div.div-container div.CustomTextOutput td {
-  border: 1px solid white;
-  border-collapse: collapse;
-}
-
-div.div-container div.CustomTextOutput ul ,
-div.div-container div.CustomTextOutput ol {
-  display: grid
-}
-
-div.div-container div.CustomTextOutput blockquote {
-    white-space: pre-line;
-    background-color: #404040;
-    border-left: 5px solid white;
-    padding-left: 5px;
-    border-radius: 5px;
-}
-
-div.div-container div.CustomTextOutput pre > code {
-
-}
-
-div.div-container div.CustomTextOutput p > code {
-    background-color: #202020;
-}
-
 div.div-container textarea.CustomTextarea::selection {
   /*color: gold;	*/
   background-color: gray;
