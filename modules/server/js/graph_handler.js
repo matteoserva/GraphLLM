@@ -36,11 +36,12 @@ class GraphHandler {
   {
 	  if (e.button >= 3)
 		  return;
+      if(!this.pointerStates[e.button])
+        return;
 	  console.log("pointer up",e.button,this.pointerStates)
 	  if (e.button < 3)
 	  {
 		  this.pointerStates[e.button] = 0
-		  
 	  }
 	  this.canvas.processMouseUp(e)
 	  e.preventDefault();
@@ -56,7 +57,7 @@ class GraphHandler {
 	  {
 		  this.pointerStates[e.button] = 1
 	  }
-	  
+
 	  this.canvas.processMouseDown(e)
 	  e.preventDefault();
       e.stopPropagation();
@@ -69,12 +70,23 @@ class GraphHandler {
   
   pointerMove(e)
   {
-	  /*if (this.pointerStates[0] != 1)
-		  return;*/
+	  if (this.pointerStates[0] != 1)
+		  return;
 	  console.log("pointer move")
 	  this.canvas.processMouseMove(e)
 	  e.preventDefault();
       e.stopPropagation();
+  }
+
+  mouseWheel(e)
+  {
+    this.canvas.processMouseWheel(e)
+    console.log("wheel")
+  }
+
+  mouseScroll(e)
+  {
+    console.log("scroll")
   }
 
   rebindMouseEvents()
@@ -90,8 +102,10 @@ class GraphHandler {
 		this.canvas.canvas.addEventListener("pointerup", this.pointerUp.bind(this))
 		this.canvas.canvas.addEventListener("pointerdown", this.pointerDown.bind(this))
 		this.canvas.canvas.addEventListener("pointercancel", this.pointerCancel.bind(this))
-		this.canvas.canvas.addEventListener("pointermove", this.pointerMove.bind(this),true)
+		document.addEventListener("pointermove", this.pointerMove.bind(this),true)
 		this.canvas.canvas.addEventListener("contextmenu", (e) => e.preventDefault())
+		this.canvas.canvas.addEventListener("wheel", this.mouseWheel.bind(this),true)
+		this.canvas.canvas.addEventListener("scroll", this.mouseScroll.bind(this),true)
 		this.pointerStates = [0,0,0]
   }
 
