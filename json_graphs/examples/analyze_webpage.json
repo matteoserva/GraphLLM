@@ -1,62 +1,17 @@
 {
-    "last_node_id": 33,
-    "last_link_id": 42,
+    "last_node_id": 34,
+    "last_link_id": 44,
     "nodes": [
         {
-            "id": 30,
-            "type": "graph/generic_node",
-            "pos": [
-                435,
-                239
-            ],
-            "size": {
-                "0": 240.91099548339844,
-                "1": 108
-            },
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 41
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        31
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "parameters": "type: copy\nconf: {subtype: repeat}"
-            }
-        },
-        {
             "id": 28,
-            "type": "llm/list",
+            "type": "input/list",
             "pos": [
                 51,
                 51
             ],
             "size": {
                 "0": 625,
-                "1": 139
+                "1": 163
             },
             "flags": {},
             "order": 0,
@@ -88,37 +43,6 @@
             "bgcolor": "#653"
         },
         {
-            "id": 33,
-            "type": "tools/web_scraper",
-            "pos": [
-                51,
-                260
-            ],
-            "size": {
-                "0": 292,
-                "1": 63
-            },
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        41,
-                        42
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "address": "https://news.ycombinator.com/"
-            },
-            "color": "#432",
-            "bgcolor": "#653"
-        },
-        {
             "id": 20,
             "type": "llm/llm_call",
             "pos": [
@@ -141,7 +65,7 @@
                 {
                     "name": "N",
                     "type": "string",
-                    "link": 31
+                    "link": 44
                 },
                 {
                     "name": "N",
@@ -166,13 +90,13 @@
             ],
             "properties": {
                 "conf": "{\"temperature\":0.01, \"top_k\":40,\"n_predict\":4096}",
-                "subtype": "stateful",
-                "template": "{p:bos}\n\n{p:system}\nYour job is to answer the user questions about the file.\n\nHere is the content of the file:\n```\n{p:exec2}\n```\n{p:eom}\n\n{p:user}\n{p:exec1}{p:eom}\n\n{p:assistant}\n{p:eom}"
+                "template": "{p:bos}\n\n{p:system}\nYour job is to answer the user questions about the file.\n\nHere is the content of the file:\n```\n{p:exec2}\n```\n{p:eom}\n\n{p:user}\n{p:exec1}{p:eom}\n\n{p:assistant}\n{p:eom}",
+                "subtype": "stateful"
             }
         },
         {
             "id": 16,
-            "type": "llm/watch",
+            "type": "output/watch",
             "pos": [
                 711,
                 258
@@ -200,7 +124,7 @@
         },
         {
             "id": 31,
-            "type": "llm/watch",
+            "type": "output/watch",
             "pos": [
                 1408,
                 253
@@ -210,7 +134,7 @@
                 "1": 586.5
             },
             "flags": {},
-            "order": 4,
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
@@ -220,7 +144,9 @@
                 }
             ],
             "properties": {
-                "parameters": ""
+                "parameters": {
+                    "use_markdown": true
+                }
             }
         },
         {
@@ -235,7 +161,7 @@
                 "1": 134.6999969482422
             },
             "flags": {},
-            "order": 2,
+            "order": 1,
             "mode": 0,
             "properties": {
                 "identifier": "",
@@ -243,6 +169,72 @@
             },
             "color": "#232",
             "bgcolor": "#353"
+        },
+        {
+            "id": 33,
+            "type": "tools/web_scraper",
+            "pos": [
+                51,
+                260
+            ],
+            "size": [
+                300,
+                70
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        42,
+                        43
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "address": "https://news.ycombinator.com/"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 34,
+            "type": "other/repeat",
+            "pos": [
+                420,
+                260
+            ],
+            "size": [
+                210,
+                70
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 43
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        44
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "repetitions": 0
+            }
         }
     ],
     "links": [
@@ -255,26 +247,10 @@
             "string"
         ],
         [
-            31,
-            30,
-            0,
-            20,
-            1,
-            "string"
-        ],
-        [
             39,
             20,
             0,
             16,
-            0,
-            "string"
-        ],
-        [
-            41,
-            33,
-            0,
-            30,
             0,
             "string"
         ],
@@ -285,10 +261,51 @@
             31,
             0,
             "string"
+        ],
+        [
+            43,
+            33,
+            0,
+            34,
+            0,
+            "string"
+        ],
+        [
+            44,
+            34,
+            0,
+            20,
+            1,
+            "string"
         ]
     ],
     "groups": [],
     "config": {},
     "extra": {},
-    "version": 0.4
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "examples/analyze_webpage",
+    "node_states": {
+        "16": {
+            "rotation": 0
+        },
+        "20": {
+            "rotation": 0
+        },
+        "23": {
+            "rotation": 0
+        },
+        "28": {
+            "rotation": 0
+        },
+        "31": {
+            "rotation": 0
+        },
+        "33": {
+            "rotation": 0
+        },
+        "34": {
+            "rotation": 0
+        }
+    }
 }
