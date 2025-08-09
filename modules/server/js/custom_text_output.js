@@ -63,7 +63,7 @@ class CustomTextOutput extends CustomTextCommon{
         function appendType(el)
         {
             var p = document.createElement("p");
-            p.style="position: absolute; margin: 0px; top: -0px; right:10px; transform: translateY(-50%); background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
+            p.style="position: absolute; margin: 0px; top: -0px; right:10px; transform: translateY(-70%); background-color: #202020; border-radius: 4px; padding: 1px; color: darkgray; user-select:none"
             var className = el.className.match("language-(.*)")[1]
             p.innerHTML = className;
             el.parentElement.appendChild(p)

@@ -9,7 +9,7 @@
 - node rotation improvement
 - titlebar container
 - typehints in tool definition
-- new nodes: python REPL, Head, JSON parser, time nodes(delay, metronome)...
+- new nodes: python REPL, Head, JSON parser, time nodes(delay, metronome), text nodes(append)...
 -
 
 # 20/07/2025

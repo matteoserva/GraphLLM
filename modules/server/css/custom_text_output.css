@@ -10,6 +10,7 @@ div.div-container div.CustomTextOutput a:active { color: #ff4040; text-decoratio
 div.div-container div.CustomTextOutput pre {
 border: 1px solid gray;
 background-color: #202020;
+min-width: min-content;
 }
 
 /* div.div-container div.CustomTextOutput * {
@@ -82,7 +83,6 @@ padding-right: 12px;
 
 }
 
-
 div.div-container div.CustomTextDiv.deselected div.CustomTextOutput {
 width: 100%;
 height: 100%;
@@ -144,4 +144,8 @@ div.div-container div.CustomTextOutput.markdown_on table{
 div.div-container div.CustomTextOutput.markdown_on p{
     margin-top: 0px;
     margin-bottom: 1.0em;
+}
+
+div.div-container div.CustomTextDiv.deselected div.CustomTextOutput.markdown_on code{
+    text-wrap: wrap;
 }
