@@ -11,5 +11,5 @@ class PythonConsoleGui(BaseGuiNode):
 
         builder.addStandardWidget("combo", "Echo", "YES", None, {"property": "echo", "values": ["NO","YES"]})
         builder.addStandardWidget("combo", "Strip sysPS", "AUTO", None, {"property": "strip", "values": ["NO", "AUTO", "YES"]})
-        builder.addStandardWidget("combo", "Stop at Exception", "NO", None, {"property": "stop_exception", "values": ["NO", "YES"]})
+        builder.addStandardWidget("combo", "Stop at Error", "NO", None, {"property": "stop_exception", "values": ["NO", "YES"]})
         return builder
