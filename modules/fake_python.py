@@ -193,7 +193,6 @@ class PythonConsole:
                 code = code[3:]
             else:
                 self.terminated = True
-                raise Exception("Python console: sys PS not found. expected >>> or ...")
         return code
 
     def _showtraceback(self,filename=None):
@@ -234,7 +233,10 @@ class PythonConsole:
         code = self._cleanUserInput(code)
 
         if self.terminated:
-            raise Exception("Python console: The console is already closed")
+            if len(code) > 0:
+                raise Exception("Python console: The console is already closed. Received: " + code)
+            else:
+                return ""
         #with redirect_stdout(self._stdout_capture), redirect_stderr(self._stderr_capture):
         with self._redirected_displayhook():
             retval = self._console.push(code)

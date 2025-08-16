@@ -126,7 +126,7 @@ class PromptBuilder:
             decorated_messages = ["{p:" + el["role"] + "}\n" + el["content"] + "{p:eom}" for el in self.messages]
             text_prompt = "{p:bos}\n\n" + "\n\n".join(decorated_messages)
         elif serialize_format == "text" or serialize_format == "last":
-            if self.messages[-1]["role"] == "assistant" and self.last_message:
+            if self.messages[-1]["role"] == "assistant" and self.last_message is not None:
                 text_prompt = self.last_message
             else:
                 text_prompt = self.messages[-1]["content"]
