@@ -92,7 +92,7 @@
                 }
             ],
             "properties": {
-                "conf": "{stop: [\"\\n\"]}",
+                "conf": "{stop: [\"\\n\",\"```\"]}",
                 "template": "",
                 "subtype": "stateless"
             }
@@ -132,42 +132,6 @@
             ],
             "properties": {
                 "separator": "\"\""
-            }
-        },
-        {
-            "id": 38,
-            "type": "python/python_console",
-            "pos": [
-                40,
-                470
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {},
-            "order": 7,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 56
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        58
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "echo": "YES",
-                "Echo": "YES"
             }
         },
         {
@@ -279,10 +243,10 @@
                 710,
                 50
             ],
-            "size": [
-                780,
-                150
-            ],
+            "size": {
+                "0": 780,
+                "1": 150
+            },
             "flags": {},
             "order": 1,
             "mode": 0,
@@ -292,6 +256,46 @@
             },
             "color": "#232",
             "bgcolor": "#353"
+        },
+        {
+            "id": 38,
+            "type": "python/python_console",
+            "pos": [
+                40,
+                470
+            ],
+            "size": [
+                210,
+                110
+            ],
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 56
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        58
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "echo": "YES",
+                "strip": "YES",
+                "stop_exception": "NO",
+                "Echo": "YES",
+                "Strip sysPS": "AUTO",
+                "Stop at Error": "NO"
+            }
         }
     ],
     "links": [
