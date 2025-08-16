@@ -143,6 +143,9 @@ class PythonConsole:
         self._echo_input = False
         self.default_prompt_strip = None
         self.stopAtException = False
+        # when input is multiline, starts with normal prompt and then ends with continuation,
+        # then send a double newline
+        self.tryTerminateContinuation = True
 
     def setEchoMode(self,mode):
         self._echo_input = mode
@@ -231,7 +234,7 @@ class PythonConsole:
         code = self._cleanUserInput(code)
 
         if self.terminated:
-            return ""
+            raise Exception("Python console: The console is already closed")
         #with redirect_stdout(self._stdout_capture), redirect_stderr(self._stderr_capture):
         with self._redirected_displayhook():
             retval = self._console.push(code)
@@ -256,7 +259,20 @@ class PythonConsole:
         return combined_output
         
     def push(self, code):
-        results = [self._pushline(el) for el in code.split("\n")]
+        code_lines = code.split("\n")
+        results = []
+        continuations = [self._last_retval]
+        for el in code_lines:
+            line_result = self._pushline(el)
+            results.append(line_result)
+            continuations.append(self._last_retval)
+
+        if self.tryTerminateContinuation and len(code_lines)> 2 and (not continuations[0]) and continuations[-1]:
+            if self.userSendsPS1:
+                results.append(self._pushline("... "))
+            else:
+                results.append(self._pushline(""))
+
         textout = "".join(results)
         if not self._last_retval:
             textout = textout
