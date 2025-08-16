@@ -190,6 +190,7 @@ class PythonConsole:
                 code = code[3:]
             else:
                 self.terminated = True
+                raise Exception("Python console: sys PS not found. expected >>> or ...")
         return code
 
     def _showtraceback(self,filename=None):
