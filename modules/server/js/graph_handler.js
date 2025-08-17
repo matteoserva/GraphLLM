@@ -17,8 +17,8 @@ class GraphHandler {
         LiteGraph.addNodeMethod("getConnectionPos",this.over_getConnectionPos)
         //LiteGraph.addNodeMethod("addInput" ,this.over_addInput)
         let that = this
-        LiteGraph.addNodeMethod("onInputAdded" , function(connection){return that.onConnectionAdded(this,connection,LiteGraph.LEFT)})
-        LiteGraph.addNodeMethod("onOutputAdded" , function(connection){return that.onConnectionAdded(this,connection,LiteGraph.RIGHT)})
+        LiteGraph.addNodeMethod("onInputAdded" , function(connection) {return that.onInputAdded(this,connection)})
+        LiteGraph.addNodeMethod("onOutputAdded" , function(connection) {return that.onOutputAdded(this,connection)})
         LiteGraph.addNodeMethod("rotateClockwise" , this.rotateClockwise)
         this.graph.onNodeConnectionChange = this.onNodeConnectionChange.bind(this)
 
@@ -32,6 +32,22 @@ class GraphHandler {
 		
 
     }
+
+  onInputAdded(node, connection)
+  {
+        let slot_pos = node.inputs.length -1
+        let req = {name: connection["name"], slot: slot_pos}
+        this.bridge.onGuiAction(node, "onInputAdded",req)
+        return this.onSlotAdded(node,connection,LiteGraph.LEFT)
+  }
+
+  onOutputAdded(node, connection)
+  {
+        let slot_pos = node.outputs.length -1
+        let req = {name: connection["name"], slot: slot_pos}
+        this.bridge.onGuiAction(node, "onOutputAdded",req)
+        return this.onSlotAdded(node,connection,LiteGraph.RIGHT)
+  }
 
   onNodeConnectionChange(...args)
   {
@@ -54,8 +70,8 @@ class GraphHandler {
      }
      let req = {output: dir == LiteGraph.OUTPUT, slot: slot, connected: connected}
 
-    console.log(req)
-     this.bridge.onGuiAction(node, "onConnectionsChange",req)
+    this.bridge.onGuiAction(node, "onConnectionsChange",req)
+
   }
 
   pointerUp(e)
@@ -146,7 +162,7 @@ class GraphHandler {
       node.setDirtyCanvas(true,true)
   }
 
-  onConnectionAdded(node,connection, default_value)
+  onSlotAdded(node,connection, default_value)
   {
      let dir = connection.dir || default_value
         /*UP: 1,

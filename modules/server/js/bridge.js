@@ -707,26 +707,34 @@ class WebBrige {
 
     onGuiAction(node, action_name, args) {
         //console.log(node, action_name,args)
-        let rpc_arguments = {
-            node: node.serialize(),
-            event: action_name,
-            arguments: args
-        }
-        var data = JSON.stringify(rpc_arguments);
-        let xhr = new XMLHttpRequest();
-        try {
-            xhr.open('POST', '/editor/gui_action', false);
-            xhr.setRequestHeader("Content-Type", "application/json")
-            xhr.send(data);
-            var response = JSON.parse(xhr.responseText)
-            console.log("GUI action response:", response)
-        }
-        catch (err)
-        {
-            alert(err)
-            throw err;
-        }
 
+        // TODO: enqueue the action events and dequeue .
+        // cannot handle immediately because the addinput callback is called before the node is fully constructed
+        window.setTimeout( (e) =>
+                {
+
+                    let rpc_arguments = {
+                        //node: node.serialize(),
+                        node: node["type"],
+                        event: action_name,
+                        arguments: args
+                    }
+                    var data = JSON.stringify(rpc_arguments);
+                    let xhr = new XMLHttpRequest();
+                    try {
+                        xhr.open('POST', '/editor/gui_action', false);
+                        xhr.setRequestHeader("Content-Type", "application/json")
+                        xhr.send(data);
+                        var response = JSON.parse(xhr.responseText)
+                        console.log("GUI action response:", response)
+                    }
+                    catch (err)
+                    {
+                        alert(err)
+                        throw err;
+                    }
+                }
+        )
     }
 
     loadBackup() {

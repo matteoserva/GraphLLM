@@ -142,6 +142,7 @@ class EditorHandler():
         content_length = int(server.headers['Content-Length'])
         post_data = server.rfile.read(content_length)
         post_data = json.loads(post_data)
+        #print("gui event:",post_data)
 
         server.send_response(200)
         server.send_header('Connection', 'close')
