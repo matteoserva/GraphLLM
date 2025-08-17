@@ -93,6 +93,20 @@ class GuiClientAPI:
             return res["data"]
         return None
 
+    def async_call(self,node_name,function_name, *function_args):
+        data = [node_name] + [function_name] + [function_args]
+        res = {"type": "async_call",  "data": data}
+        text = json.dumps(res)
+        self._send_text(text)
+        return None
+
+    def assign(self,node_name,attribute_name, value):
+        data = [node_name] + [attribute_name] + [value]
+        res = {"type": "node_assign",  "data": data}
+        text = json.dumps(res)
+        self._send_text(text)
+        return None
+
 # network api
     def notify_client_event(self, event):
         is_response = False

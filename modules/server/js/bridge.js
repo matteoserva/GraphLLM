@@ -428,6 +428,37 @@ class WebBrige {
 
   }
 
+  node_call(node, function_name, args)
+  {
+        const keys = function_name.match(/[^.\[\]]+/g);
+        let func = keys.reduce(
+                    (current,key) => { return key },
+                    node
+                    )
+        let parent = keys.slice(0, -1).reduce(
+                    (current,key) => { return current[key] },
+                    node
+                    )
+
+        let result = parent[func].apply(parent,args)
+        return result
+  }
+
+  node_assign(node, function_name, value)
+  {
+        const keys = function_name.match(/[^.\[\]]+/g);
+        let func = keys.reduce(
+                    (current,key) => { return key },
+                    node
+                    )
+        let parent = keys.slice(0, -1).reduce(
+                    (current,key) => { return current[key] },
+                    node
+                    )
+
+        parent[func] = value
+  }
+
   processMessage(text)
   {
       var obj = JSON.parse(text);
@@ -522,19 +553,7 @@ class WebBrige {
                   if (node)
                   {
                      try {
-
-                         const keys = obj.data[1].split('.');
-                         let func = keys.reduce(
-                                        (current,key) => { return current[key] },
-                                        node
-                                        )
-                         let parent = keys.slice(0, -1).reduce(
-                                        (current,key) => { return current[key] },
-                                        node
-                                        )
-
-
-                         result = func.apply(parent,obj.data[2])
+                        result = this.node_call(node, obj.data[1], obj.data[2])
 
                      } catch (error) {
                          console.error(error);
@@ -577,6 +596,42 @@ class WebBrige {
              this.notifyListeners(eventId)
 		  }
           
+      }
+
+      if(obj.type == "async_call")
+      {
+		  var name = obj.data[0].split("/")[1]
+		  var node = this.graph.getNodeById(name)
+          var result = {}
+          if (node)
+          {
+             try {
+                result = this.node_call(node, obj.data[1], obj.data[2])
+             } catch (error) {
+                 console.error(error);
+                 alert(error)
+                 this.stopGraph()
+             }
+          }
+
+      }
+
+      if(obj.type == "node_assign")
+      {
+		  var name = obj.data[0].split("/")[1]
+		  var node = this.graph.getNodeById(name)
+          var result = {}
+          if (node)
+          {
+             try {
+                result = this.node_assign(node, obj.data[1], obj.data[2])
+             } catch (error) {
+                 console.error(error);
+                 alert(error)
+                 this.stopGraph()
+             }
+          }
+
       }
 
 	  if(obj.type == "stopping")
