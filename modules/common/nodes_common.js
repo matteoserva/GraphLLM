@@ -53,7 +53,13 @@
         {
               if(connected)
               {
-                  if( node.inputs.length <= (slot +1) && !!d)
+                  let should_add = true
+                  if( connection_limits.max_inputs && node.inputs.length >= connection_limits.max_inputs)
+                  {
+                     should_add = false
+                  }
+
+                  if( should_add && node.inputs.length <= (slot +1) && !!d)
                   {
                     node.addInput("N","string");
                   }
