@@ -15,9 +15,14 @@ class JsonParser():
             outputs = node.get("outputs",[])
             new_inputs = [links[str(el["link"])] if el["link"] else None for el in inputs]
             new_inputs = [ nodes[str(el[1])] if el else None for el in new_inputs]
-            new_outputs = [el["links"] if el.get("links",None) else [] for el in outputs]
-            new_outputs = [ [ links[str(el)]  for el in s ] for s in new_outputs ]
-            new_outputs = [ [ nodes[str(el[3])]  for el in s ] for s in new_outputs ]
+            linked_outputs = [el["links"] if el.get("links",None) else [] for el in outputs]
+            new_outputs = []
+            for s in linked_outputs:
+                link_details = [ links[str(el)]  for el in s ]
+                dest_names = [str(el[3]) for el in link_details]
+                output_nodes = [ nodes[el]  for el in dest_names if el in nodes]
+                new_outputs.append(output_nodes)
+
             node["linked_inputs"] = new_inputs
             node["linked_outputs"] = new_outputs
             pass
