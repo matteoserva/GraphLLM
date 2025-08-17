@@ -72,6 +72,11 @@ class HttpDispatcher:
         #self.model.server = server
         server.close_connection = True
         http_path = server.path.split("?", 1)[0]
+
+        if re.match(r"^/editor/.+$", http_path):
+            return self.editor.do_POST(server)
+
+
         split_path = http_path.split("/", 2)
         operation = split_path[2]
         content_length = int(server.headers['Content-Length'])

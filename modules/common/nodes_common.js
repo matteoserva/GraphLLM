@@ -167,11 +167,12 @@
         node.size[1] = Math.max(node.size[1],saved_size[1])
     }
 
-    MyGraphNode.prototype.onConnectionsChange = function(dir,slot,connected,d,e)
+    MyGraphNode.prototype.onConnectionsChange = function(...args)
     {
         let node = this
         setTimeout(function(){
-                        return connectionChangeInner(node, dir,slot,connected,d,e)
+                        web_bridge.onGuiAction(node, "onConnectionsChange",args)
+                        return connectionChangeInner(node, ...args)
                     }
                   );
     }

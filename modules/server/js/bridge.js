@@ -780,6 +780,19 @@ class WebBrige {
    console.log("load called")
   }
 
+  onGuiAction(node, action_name,args)
+  {
+    //console.log(node, action_name,args)
+    let rpc_arguments = {node: node.serialize(), event: action_name, arguments: args}
+    var data = JSON.stringify( rpc_arguments);
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/editor/gui_action',false);
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.send(data);
+    var response = JSON.parse(xhr.responseText)
+    console.log(response)
+  }
+
   loadBackup()
   {
     var data = localStorage.getItem("litegraphg demo backup");

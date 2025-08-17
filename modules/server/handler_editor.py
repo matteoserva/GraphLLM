@@ -2,6 +2,7 @@ import os
 from glob import glob
 import uuid
 import re
+import json
 
 from modules.executors import get_gui_nodes
 from modules.common.gui_node_builder import GuiNodeBuilder
@@ -135,3 +136,16 @@ class EditorHandler():
             print(server.path)
             raise HandlerException(code=404)
 
+    def do_POST(self, server):
+        content_length = int(server.headers['Content-Length'])
+        post_data = server.rfile.read(content_length)
+        post_data = json.loads(post_data)
+
+        server.send_response(200)
+        server.send_header('Connection', 'close')
+        server.send_header('Content-type', 'application/json')
+        server.end_headers()
+
+        response = {"ciao":1}
+        response = json.dumps(response)
+        server.wfile.write(response.encode())
