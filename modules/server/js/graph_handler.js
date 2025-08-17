@@ -36,9 +36,25 @@ class GraphHandler {
   onNodeConnectionChange(...args)
   {
      let [dir, node,slot, other_node,other_slot] = args
-     let req = [dir,slot, !!other_node]
+     let connected = !!other_node
 
+     //workaround, recompute the output slot at disconnection
+     if(LiteGraph.OUTPUT == dir && !connected)
+     {
+        let maxSlot = 0;
+        let numElements = node.outputs.length
+        for (let i = 0; i < numElements; i++) {
+            let links = node.outputs[i].links
+            if((!!links) && links.length > 0)
+            {
+                maxSlot = i + 1
+            }
+        }
+        slot = maxSlot
+     }
+     let req = {output: dir == LiteGraph.OUTPUT, slot: slot, connected: connected}
 
+    console.log(req)
      this.bridge.onGuiAction(node, "onConnectionsChange",req)
   }
 
