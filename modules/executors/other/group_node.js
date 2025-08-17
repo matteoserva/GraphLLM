@@ -132,8 +132,11 @@
                 for(let el in this.collapse_state.node_info)
                 {
                     var node = this.graph.getNodeById(el)
-                    node.parent_group = this
-                    this._nodes.push(node);
+                    if(node)
+                    {
+                        node.parent_group = this
+                        this._nodes.push(node);
+                    }
                 }
             }
         }
