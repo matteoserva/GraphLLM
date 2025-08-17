@@ -1,8 +1,9 @@
 class GraphHandler {
-    constructor(graph,canvas)
+    constructor(bridge, graph,canvas)
     {
         this.graph = graph
         this.canvas = canvas
+        this.bridge = bridge
     }
 
     connect()
@@ -34,9 +35,11 @@ class GraphHandler {
 
   onNodeConnectionChange(...args)
   {
-     // chiamato troppe volte, per esempio quando si sposta un output da un nodo all'altro
-     //console.log(args)
-     //web_bridge.onGuiAction(node, "onConnectionsChange",args)
+     let [dir, node,slot, other_node,other_slot] = args
+     let req = [dir,slot, !!other_node]
+
+
+     this.bridge.onGuiAction(node, "onConnectionsChange",req)
   }
 
   pointerUp(e)
@@ -147,7 +150,6 @@ class GraphHandler {
                                          dir = v
                                     },
                                 });
-     //web_bridge.onGuiAction(node, "onConnectionsChange",args)
      return connection;
   }
 

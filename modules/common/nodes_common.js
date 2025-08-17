@@ -45,6 +45,8 @@
 
     function connectionChangeInner ( node, dir,slot,connected,d,e)
     {
+        //if (dir == LiteGraph.OUTPUT && slot > 0)
+        //     return;
         console.log("dir: " +dir + "  slot: " + slot + "  connected: "  + connected )
 		let gui_node_config = node.gui_node_config || {}
 		let connection_limits = gui_node_config.connection_limits || {}

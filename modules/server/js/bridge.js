@@ -33,7 +33,7 @@ class WebBrige {
         this.select_folder = document.querySelector("div.litegraph .selector-bar #selector-folder")
         this.audio = new Audio();
 
-        this.graph_handler = new GraphHandler(this.graph, this.canvas)
+        this.graph_handler = new GraphHandler(this, this.graph, this.canvas)
     }
 
     setDefaultConnectionEndpoints() {
@@ -714,11 +714,19 @@ class WebBrige {
         }
         var data = JSON.stringify(rpc_arguments);
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', '/editor/gui_action', false);
-        xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.send(data);
-        var response = JSON.parse(xhr.responseText)
-        console.log("GUI action response:", response)
+        try {
+            xhr.open('POST', '/editor/gui_action', false);
+            xhr.setRequestHeader("Content-Type", "application/json")
+            xhr.send(data);
+            var response = JSON.parse(xhr.responseText)
+            console.log("GUI action response:", response)
+        }
+        catch (err)
+        {
+            alert(err)
+            throw err;
+        }
+
     }
 
     loadBackup() {
