@@ -56,11 +56,24 @@ class GuiNodeParser:
             elif not isinstance(res,list):
                 res = [res]
 
+            # map the temporary ids
+            old_ids = {el["id"]: el for el in res if "id" in el}
             if len(res) > 0:
+                #rename the nodes
+                for i, new_node in enumerate(res[:-1]):
+                    new_node["id"] = str(old_config["id"]) + "/" + str(i)
                 res[-1]["id"] = str(old_config["id"])
 
-            for i, new_node in enumerate(res[:-1]):
-                new_node["id"] = str(old_config["id"]) + "/" + str(i)
+            if len(res) >= 2:
+                # replace the input names
+                for node_config in res:
+                    inputs = node_config["exec"] if "exec" in node_config else []
+                    for i, input_data in enumerate(inputs):
+                        source_name = input_data.split("[")[0]
+                        if source_name in old_ids:
+                            new_source = old_ids[source_name]["id"]
+                            inputs[i] = input_data.replace(source_name,new_source)
+
 
 
         return res
