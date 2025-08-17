@@ -19,6 +19,7 @@ class GraphHandler {
         LiteGraph.addNodeMethod("onInputAdded" , function(connection){return that.onConnectionAdded(this,connection,LiteGraph.LEFT)})
         LiteGraph.addNodeMethod("onOutputAdded" , function(connection){return that.onConnectionAdded(this,connection,LiteGraph.RIGHT)})
         LiteGraph.addNodeMethod("rotateClockwise" , this.rotateClockwise)
+        this.graph.onNodeConnectionChange = this.onNodeConnectionChange.bind(this)
 
         var orig = LGraphGroup.prototype.recomputeInsideNodes
         LGraphGroup.prototype.recomputeInsideNodes = function() {
@@ -31,6 +32,12 @@ class GraphHandler {
 
     }
 
+  onNodeConnectionChange(...args)
+  {
+     // chiamato troppe volte, per esempio quando si sposta un output da un nodo all'altro
+     //console.log(args)
+     //web_bridge.onGuiAction(node, "onConnectionsChange",args)
+  }
 
   pointerUp(e)
   {
@@ -140,7 +147,7 @@ class GraphHandler {
                                          dir = v
                                     },
                                 });
-
+     //web_bridge.onGuiAction(node, "onConnectionsChange",args)
      return connection;
   }
 

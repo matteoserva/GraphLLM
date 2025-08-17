@@ -62,6 +62,8 @@ class EditorHandler():
             content = f.read()
             
         server.send_response(200)
+        if endpoint.endswith(".js"):
+            server.send_header('Content-type', 'text/javascript')
         server.end_headers()
         server.wfile.write(content)
         

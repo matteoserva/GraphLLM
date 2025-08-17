@@ -171,7 +171,6 @@
     {
         let node = this
         setTimeout(function(){
-                        web_bridge.onGuiAction(node, "onConnectionsChange",args)
                         return connectionChangeInner(node, ...args)
                     }
                   );

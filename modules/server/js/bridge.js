@@ -183,7 +183,7 @@ class WebBrige {
         fileData.forEach((element) => {
             if (element.folder == selectedFolder) addDemo(this.select, element.file, "/graph/load?file=" + element.path);
         });
-        console.log(xhr.responseText)
+        console.log("available graphs:", lines)
         this.select.selectedIndex = 0
 
         let bridge = this.graph.bridge
@@ -718,7 +718,7 @@ class WebBrige {
         xhr.setRequestHeader("Content-Type", "application/json")
         xhr.send(data);
         var response = JSON.parse(xhr.responseText)
-        console.log(response)
+        console.log("GUI action response:", response)
     }
 
     loadBackup() {
