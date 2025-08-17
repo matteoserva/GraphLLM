@@ -93,14 +93,6 @@ class GuiClientAPI:
             return res["data"]
         return None
 
-    def update_property(self,node_name,property_name, property_value):
-        myuuid = str(uuid.uuid4())
-        data = [node_name] + [property_name] + [property_value]
-        res = {"type": "update_property", "id":myuuid, "data": data}
-        resp = json.dumps(res)
-        encoded = resp
-        el = self._send_text(encoded)
-
 # network api
     def notify_client_event(self, event):
         is_response = False
