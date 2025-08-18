@@ -244,7 +244,8 @@ class CustomTextOutput extends CustomTextCommon{
 
         const now = Date.now();
 
-        if(diffContent && this.config.use_markdown && (now-this.lastRedrawTimestamp)< 500)
+        // Edge case: last chunk is appended, skipped because of timeout. Set is called with forceRedraw==true && diffcontent=="". Don't skip. that's why && !forceRedraw
+        if(diffContent && this.config.use_markdown && (now-this.lastRedrawTimestamp)< 500 && !forceRedraw)
         {
             let currentNode = this.textarea
             let lastTextNode = currentNode;
