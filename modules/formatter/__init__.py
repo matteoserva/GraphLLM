@@ -1,2 +1,2 @@
 from .prompt_builder import *
-from .parser import *
+from .prompt_parser import *

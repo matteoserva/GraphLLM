@@ -1,4 +1,4 @@
-from .parser import parse_raw, check_special_tokens
+#from .parser import parse_raw, check_special_tokens
 from transformers import AutoTokenizer
 import copy
 

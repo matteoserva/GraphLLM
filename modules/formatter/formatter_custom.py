@@ -1,4 +1,4 @@
-from .parser import parse_raw, check_special_tokens
+from .prompt_parser import parse_raw, check_special_tokens
 import copy
 
 
