@@ -721,12 +721,24 @@ class WebBrige {
                     }
                     var data = JSON.stringify(rpc_arguments);
                     let xhr = new XMLHttpRequest();
+					xhr.onloadend = (event) => {
+						if(xhr.status != 0)
+						{
+							var response = JSON.parse(xhr.responseText)
+							console.log("GUI action response:", response)
+						}
+						else
+						{
+							alert("error sending event to server")
+						}
+						
+					};
+					
                     try {
-                        xhr.open('POST', '/editor/gui_action', false);
+                        xhr.open('POST', '/editor/gui_action');
                         xhr.setRequestHeader("Content-Type", "application/json")
                         xhr.send(data);
-                        var response = JSON.parse(xhr.responseText)
-                        console.log("GUI action response:", response)
+                        
                     }
                     catch (err)
                     {
