@@ -8,11 +8,80 @@ function addDemo(select, name, url) {
     select.appendChild(option);
 }
 
+class BridgeNode {
+	constructor() {
+		
+	}
+	
+	node_call(node, function_name, args) {
+        const keys = function_name.match(/[^.\[\]]+/g);
+        let func = keys.reduce(
+            (current, key) => {
+                return key
+            },
+            node
+        )
+        let parent = keys.slice(0, -1).reduce(
+            (current, key) => {
+                return current[key]
+            },
+            node
+        )
 
+        let result = parent[func].apply(parent, args)
+        return result
+    }
+
+    node_assign(node, function_name, value) {
+        const keys = function_name.match(/[^.\[\]]+/g);
+        let func = keys.reduce(
+            (current, key) => {
+                return key
+            },
+            node
+        )
+        let parent = keys.slice(0, -1).reduce(
+            (current, key) => {
+                return current[key]
+            },
+            node
+        )
+
+        parent[func] = value
+    }
+	
+	enqueueGuiEvent(node, action_name, args)
+	{
+		let rpc_arguments = {
+			//node: node.serialize(),
+			node: node["type"],
+			event: action_name,
+			arguments: args
+		}
+		var data = JSON.stringify(rpc_arguments);
+		let xhr = new XMLHttpRequest();
+		xhr.onloadend = (event) => {
+			if(xhr.status != 0)
+			{
+				var response = JSON.parse(xhr.responseText)
+				//console.log("GUI action response:", response)
+			}
+			else
+			{
+				alert("error sending event to server")
+			}
+		};
+		
+		xhr.open('POST', '/editor/gui_action');
+		xhr.setRequestHeader("Content-Type", "application/json")
+		xhr.send(data);
+	}
+}
 
 
 class WebBrige {
     constructor() {
+		this.bridge_node = new BridgeNode()
         this.editor = editor;
         this.graph = editor.graph;
         this.canvas = this.editor.graphcanvas;
@@ -307,42 +376,7 @@ class WebBrige {
 
     }
 
-    node_call(node, function_name, args) {
-        const keys = function_name.match(/[^.\[\]]+/g);
-        let func = keys.reduce(
-            (current, key) => {
-                return key
-            },
-            node
-        )
-        let parent = keys.slice(0, -1).reduce(
-            (current, key) => {
-                return current[key]
-            },
-            node
-        )
 
-        let result = parent[func].apply(parent, args)
-        return result
-    }
-
-    node_assign(node, function_name, value) {
-        const keys = function_name.match(/[^.\[\]]+/g);
-        let func = keys.reduce(
-            (current, key) => {
-                return key
-            },
-            node
-        )
-        let parent = keys.slice(0, -1).reduce(
-            (current, key) => {
-                return current[key]
-            },
-            node
-        )
-
-        parent[func] = value
-    }
 
     processMessage(text) {
         var obj = JSON.parse(text);
@@ -443,7 +477,7 @@ class WebBrige {
                 var result = {}
                 if (node) {
                     try {
-                        result = this.node_call(node, obj.data[1], obj.data[2])
+                        result = this.bridge_node.node_call(node, obj.data[1], obj.data[2])
 
                     } catch (error) {
                         console.error(error);
@@ -500,7 +534,7 @@ class WebBrige {
             var result = {}
             if (node) {
                 try {
-                    result = this.node_call(node, obj.data[1], obj.data[2])
+                    result = this.bridge_node.node_call(node, obj.data[1], obj.data[2])
                 } catch (error) {
                     console.error(error);
                     alert(error)
@@ -516,7 +550,7 @@ class WebBrige {
             var result = {}
             if (node) {
                 try {
-                    result = this.node_assign(node, obj.data[1], obj.data[2])
+                    result = this.bridge_node.node_assign(node, obj.data[1], obj.data[2])
                 } catch (error) {
                     console.error(error);
                     alert(error)
@@ -710,43 +744,10 @@ class WebBrige {
 
         // TODO: enqueue the action events and dequeue .
         // cannot handle immediately because the addinput callback is called before the node is fully constructed
-        window.setTimeout( (e) =>
-                {
-
-                    let rpc_arguments = {
-                        //node: node.serialize(),
-                        node: node["type"],
-                        event: action_name,
-                        arguments: args
-                    }
-                    var data = JSON.stringify(rpc_arguments);
-                    let xhr = new XMLHttpRequest();
-					xhr.onloadend = (event) => {
-						if(xhr.status != 0)
-						{
-							var response = JSON.parse(xhr.responseText)
-							//console.log("GUI action response:", response)
-						}
-						else
-						{
-							alert("error sending event to server")
-						}
-						
-					};
-					
-                    try {
-                        xhr.open('POST', '/editor/gui_action');
-                        xhr.setRequestHeader("Content-Type", "application/json")
-                        xhr.send(data);
-                        
-                    }
-                    catch (err)
-                    {
-                        alert(err)
-                        throw err;
-                    }
-                }
-        )
+        window.setTimeout( (e) => { 
+								this.bridge_node.enqueueGuiEvent(node, action_name, args) 
+							} 
+						)
     }
 
     loadBackup() {
