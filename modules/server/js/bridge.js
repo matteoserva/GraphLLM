@@ -210,7 +210,11 @@ class WebBrige {
 		this.select.innerHTML = "<option>--Loading...--</option>"
         let xhr = new XMLHttpRequest();
 		
-		xhr.onloadend = (e) => {
+		xhr.onerror = (e) => {
+			this.select.innerHTML = "<option>--Error--</option>"
+		}
+		
+		xhr.onload = (e) => {
 			
 			var lines = xhr.responseText.split("\n")
 			this.select.innerHTML = "<option>--select--</option>"
