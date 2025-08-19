@@ -11,7 +11,7 @@ class GraphHandler {
 		this.canvas.onMouse = this.processMouseDownPre.bind(this)
         this.canvas.onMouseDown = this.processMouseDown.bind(this)
         this.canvas.onNodeMoved = this.onNodeMoved.bind(this)
-		this.canvas.onRender = this.onRender.bind(this)
+		
 		this.canvas.onDrawForeground = this.onDrawForeground.bind(this)
         LiteGraph.pointerListenerAdd(document,"up", this.processMouseUp.bind(this),true);
         LiteGraph.addNodeMethod("getConnectionPos",this.over_getConnectionPos)
@@ -27,6 +27,9 @@ class GraphHandler {
             var group = this
             that.recomputeInsideNodes(group,orig)
         };
+		
+		this.canvas.show_info = false;
+		this.canvas.onRender = this.onRender.bind(this)
 		
 		//this.rebindMouseEvents()
 		
@@ -205,7 +208,28 @@ class GraphHandler {
   }
 
   onRender(canvas, ctx){ // after background, before nodes
-	//console.log("onrender")
+    let x = 0;
+	let y = 0;
+	x = x || 10;
+	y = y || this.canvas.canvas.height - 80;
+
+	ctx.save();
+	ctx.translate(x, y);
+
+	ctx.font = "10px Arial";
+	ctx.fillStyle = "#888";
+	ctx.textAlign = "left";
+	if (this.canvas.graph) {
+		ctx.fillText( "GraphLLM", 5, 13 * 0 );
+		ctx.fillText( "T: " + this.graph.globaltime.toFixed(2) + "s", 5, 13 * 1 );
+		ctx.fillText("I: " + this.graph.iteration, 5, 13 * 2 );
+		ctx.fillText("N: " + this.graph._nodes.length + " [" + this.canvas.visible_nodes.length + "]", 5, 13 * 3 );
+		ctx.fillText("V: " + this.graph._version, 5, 13 * 4);
+		ctx.fillText("FPS:" + this.canvas.fps.toFixed(2), 5, 13 * 5);
+	} else {
+		ctx.fillText("No graph selected", 5, 13 * 1);
+	}
+	ctx.restore();
 	
   }
   onDrawForeground(ctx, visible_rect)
