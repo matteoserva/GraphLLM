@@ -207,57 +207,61 @@ class WebBrige {
     }
 
     loadList() {
-
+		this.select.innerHTML = "<option>--Loading...--</option>"
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', '/graph/list', false);
-        var response = xhr.send({});
-        var lines = xhr.responseText.split("\n")
+		
+		xhr.onloadend = (e) => {
+			
+			var lines = xhr.responseText.split("\n")
+			this.select.innerHTML = "<option>--select--</option>"
 
-        this.select.innerHTML = "<option>--select--</option>"
+			// extract folder names
+			var folderNames = new Set();
+			var fileData = []
+			lines.forEach(filePath => {
+				const parts = filePath.split('/');
+				if (parts.length > 1) {
+					folderNames.add(parts[0]);
+					fileData.push({
+						folder: parts[0],
+						file: parts[1],
+						path: filePath
+					})
+				} else {
+					folderNames.add(".");
+					fileData.push({
+						folder: ".",
+						file: parts[0],
+						path: filePath
+					})
+				}
+			});
+			folderNames = Array.from(folderNames).sort();
 
-        // extract folder names
-        var folderNames = new Set();
-        var fileData = []
-        lines.forEach(filePath => {
-            const parts = filePath.split('/');
-            if (parts.length > 1) {
-                folderNames.add(parts[0]);
-                fileData.push({
-                    folder: parts[0],
-                    file: parts[1],
-                    path: filePath
-                })
-            } else {
-                folderNames.add(".");
-                fileData.push({
-                    folder: ".",
-                    file: parts[0],
-                    path: filePath
-                })
-            }
-        });
-        folderNames = Array.from(folderNames).sort();
+			var selectedFolder = this.select_folder.options[this.select_folder.selectedIndex].text
+			this.select_folder.innerHTML = ""
+			folderNames.forEach((element) => {
+				var option = document.createElement("option");
+				option.innerHTML = element;
+				this.select_folder.appendChild(option);
+			});
+			let folderIndex = folderNames.indexOf(selectedFolder);
+			this.select_folder.selectedIndex = folderIndex >= 0 ? folderIndex : 0;
+			selectedFolder = this.select_folder.options[this.select_folder.selectedIndex].text;
 
-        var selectedFolder = this.select_folder.options[this.select_folder.selectedIndex].text
-        this.select_folder.innerHTML = ""
-        folderNames.forEach((element) => {
-            var option = document.createElement("option");
-            option.innerHTML = element;
-            this.select_folder.appendChild(option);
-        });
-        let folderIndex = folderNames.indexOf(selectedFolder);
-        this.select_folder.selectedIndex = folderIndex >= 0 ? folderIndex : 0;
-        selectedFolder = this.select_folder.options[this.select_folder.selectedIndex].text;
+			fileData.forEach((element) => {
+				if (element.folder == selectedFolder) addDemo(this.select, element.file, "/graph/load?file=" + element.path);
+			});
+			console.log("available graphs:", lines)
+			this.select.selectedIndex = 0
 
-        fileData.forEach((element) => {
-            if (element.folder == selectedFolder) addDemo(this.select, element.file, "/graph/load?file=" + element.path);
-        });
-        console.log("available graphs:", lines)
-        this.select.selectedIndex = 0
-
-        let bridge = this.graph.bridge
-        bridge.graphs_list = lines
-
+			let bridge = this.graph.bridge
+			bridge.graphs_list = lines
+		}
+		
+        xhr.open('GET', '/graph/list');
+        xhr.send({});
+        
     }
 
     startWebSocket(data) {
