@@ -725,7 +725,7 @@ class WebBrige {
 						if(xhr.status != 0)
 						{
 							var response = JSON.parse(xhr.responseText)
-							console.log("GUI action response:", response)
+							//console.log("GUI action response:", response)
 						}
 						else
 						{
