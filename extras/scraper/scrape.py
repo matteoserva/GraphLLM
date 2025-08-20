@@ -44,7 +44,7 @@ url="https://news.ycombinator.com/"
 if len(sys.argv) > 1:
   url = sys.argv[1]
 
-debug_mode = True
+debug_mode = False
 
 if(len(sys.argv) > 1):
     url = sys.argv[1]
@@ -78,6 +78,13 @@ class Scraper():
     def __init__(self):
         self.driver = None
         self.debug_mode = debug_mode
+
+    def _applyScript(self,script_name):
+        f = open(currentdir + "/" + script_name, "r")
+        s = f.read()
+        f.close()
+        retVal = self.driver.execute_script(s)
+        return retVal
 
     def initialize_driver(self):
         service = Service()
@@ -126,13 +133,14 @@ class Scraper():
             time.sleep(.1)
 
         if driver.execute_script("return window.running_fetches") > 0:
-              h = [0]*10
+              h = [-1]*10
+              # if no changes for 1 second or timeout of 10 seconds
               print("waiting for extra components to load (reddit?)", file=sys.stderr)
               for i in range(50):
                 r = driver.execute_script("return window.running_fetches")
                 h=h[1:]
                 h.append(r)
-                if(sum(h) == 0):
+                if h.count(h[0]) == len(h):
                   break
                 #print(r, file=sys.stderr)
                 time.sleep(.1)
@@ -163,12 +171,9 @@ class Scraper():
             driver.execute_script(scrpt)
             self._wait_dynamic_components()
 
-        print("Apply reddit fixes...", file=sys.stderr)
-        driver.execute_script(reddit_fixer)
-        self._wait_dynamic_components()
-
-        print("deleting nodes identified by ublock origin.", file=sys.stderr)
-        driver.execute_script(script_removeHiddenNodes)
+        #print("Apply reddit fixes...", file=sys.stderr)
+        #driver.execute_script(reddit_fixer)
+        #self._wait_dynamic_components()
 
         print("Web page loaded.", file=sys.stderr)
 
@@ -177,12 +182,30 @@ class Scraper():
 
         return driver.page_source
 
+    def _apply_fixes(self):
+        print("deleting nodes identified by ublock origin.", file=sys.stderr)
+        self.driver.execute_script(script_removeHiddenNodes)
+
+        self._applyScript("fixUnknownTags.js")
+        hostname = self.driver.current_url.split("//",1)[1].split("/")[0]
+        if "reddit" in hostname:
+            self._applyScript("redditFixer2.js")
+        return self.driver.page_source
+
+    def _isReaderable(self):
+        should_keep = self.driver.execute_script(readerable + "\n" + "return isProbablyReaderable(document);")
+        hostname = self.driver.current_url.split("//", 1)[1].split("/")[0]
+        if "reddit" in hostname:
+            should_keep = False
+
+        print("reader mode available?", should_keep, file=sys.stderr)
+        return should_keep
+
     def extract_content(self):
         driver = self.driver
 
         ## check
-        should_keep = driver.execute_script(readerable + "\n" + "return isProbablyReaderable(document);")
-        print("reader mode available?", should_keep, file=sys.stderr)
+
 
         ## readability per estrarre il contenuto
         pagina_rjs = driver.execute_script(scr + "\n" + "return new Readability(document.cloneNode(true)).parse();")
@@ -211,16 +234,7 @@ class Scraper():
           print("closing firefox", file=sys.stderr)
           self.driver.quit()
 
-def apply_static_readability(content):
-  ## ora riparso e rimuovo i link
-  from readabilipy import simple_json_from_html_string
-  print("static readability", file=sys.stderr)
 
-  article = simple_json_from_html_string(content,use_readability=False)
-  article["plain_text"]
-
-  scraper_utils.write_file(tempfile.gettempdir() + "/pagina2.html",article["plain_content"])
-  return article
 
 
 ## carico i dati in bs per eventuali riprocessamenti
@@ -247,25 +261,61 @@ def convert_to_md(title, data):
   converter = html2text.HTML2Text()
   converter.ignore_links=False
   converter.ignore_images=True
+  converter.protect_links = False
   markdown_content = "# " + title + "\n\n" + converter.handle(data).strip()
   scraper_utils.write_file(tempfile.gettempdir() + "/pagina.md",markdown_content)
   return markdown_content
-  
+
+def apply_static_readability(content):
+  ## ora riparso e rimuovo i link
+  import readabilipy
+  print("static readability", file=sys.stderr)
+
+  orig = readabilipy.simplifiers.html.elements_to_replace_with_contents
+  def wrapper_replace():
+      res = orig()
+      res = [el for el in res if el != "a"]
+      return res
+  readabilipy.simplifiers.html.elements_to_replace_with_contents = wrapper_replace
+
+  orig = readabilipy.simplifiers.html.block_level_whitelist
+  def wrapper_replace():
+      res = orig()
+      res = ["a"] + res
+      return res
+  readabilipy.simplifiers.html.block_level_whitelist = wrapper_replace
+
+
+  article = readabilipy.simple_json_from_html_string(content,use_readability=False)
+
+  scraper_utils.write_file(tempfile.gettempdir() + "/pagina2.html",article["content"])
+
+  conveted_static = convert_to_md(article["title"], article["content"])
+  return conveted_static
+
+def apply_dynamic_readability(scraper):
+    pagina_rjs = scraper.extract_content()
+    clean_html = clean_soup(pagina_rjs["content"])
+    scraper_utils.write_file(tempfile.gettempdir() + "/pagina3.html", clean_html)
+    markdown_content = convert_to_md(pagina_rjs["title"], clean_html)
+    return markdown_content
+
 def scrape(url):
   scraper = Scraper()
   scraper.initialize_driver()
-  html_content = scraper.load_page(url)
-  article = apply_static_readability(html_content)
+  scraper.load_page(url)
+  html_content = scraper._apply_fixes()
 
-  pagina_rjs = scraper.extract_content()
+  static_parsed = apply_static_readability(html_content)
+  dynamic_parsed = apply_dynamic_readability(scraper)
 
-  clean_html = clean_soup(pagina_rjs["content"])
-  scraper_utils.write_file(tempfile.gettempdir() + "/pagina3.html", clean_html)
-  markdown_content = convert_to_md(pagina_rjs["title"], clean_html)
+  good_dynamic = scraper._isReaderable()
+
+  parsed_markdown = dynamic_parsed if (good_dynamic and dynamic_parsed) else static_parsed
 
   scraper.close_driver()
 
-  return markdown_content
+  return parsed_markdown
 
 if __name__ == "__main__":
     import getopt
