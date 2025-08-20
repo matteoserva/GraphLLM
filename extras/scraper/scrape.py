@@ -187,6 +187,9 @@ class Scraper():
         self.driver.execute_script(script_removeHiddenNodes)
 
         self._applyScript("fixUnknownTags.js")
+
+        self._applyScript("fixRelativeLinks.js")
+
         hostname = self.driver.current_url.split("//",1)[1].split("/")[0]
         if "reddit" in hostname:
             self._applyScript("redditFixer2.js")
@@ -262,6 +265,7 @@ def convert_to_md(title, data):
   converter.ignore_links=False
   converter.ignore_images=True
   converter.protect_links = False
+  converter.body_width = None
   markdown_content = "# " + title + "\n\n" + converter.handle(data).strip()
   scraper_utils.write_file(tempfile.gettempdir() + "/pagina.md",markdown_content)
   return markdown_content
