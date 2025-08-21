@@ -1,16 +1,17 @@
-import re
 import sys
-from piper.__main__ import main
-import numpy as np
+
 from piper import PiperVoice
-from piper.download import ensure_voice_exists, find_voice, get_voices
+from piper.voice import AudioChunk
+from piper.download_voices import VOICES_JSON,download_voice
+from urllib.request import urlopen
+
+from pathlib import Path
 import logging
 import os
 import wave
 import io
-
+import json
 #python3 -m modules.executors.tts.parla |aplay -r 16000 -f S16_LE -t raw -
-
 
 PIPER_DIR = os.path.dirname(__file__)
 
@@ -22,13 +23,19 @@ class EngineTTS:
     def load_voice(self, language):
 
         if os.path.exists(PIPER_DIR + "/voices.json"):
-            all_voices = get_voices(self.download_dir,False)
+            with open(PIPER_DIR + "/voices.json") as f:
+                voices_s = f.read()
+                all_voices = json.loads(voices_s)
         else:
-            all_voices = get_voices(self.download_dir, True)
+            with urlopen(VOICES_JSON) as response:
+                all_voices = json.loads(response.fp.read())
+                with open(PIPER_DIR + "/voices.json", "w") as f:
+                    f.write(json.dumps(all_voices, indent=4))
         filtered_voices = [el for el in all_voices if el.startswith(language)]
         selected_voice = filtered_voices[0]
-        ensure_voice_exists(selected_voice,[self.download_dir],self.download_dir,all_voices)
+        #ensure_voice_exists(selected_voice,[self.download_dir],self.download_dir,all_voices)
         self.selected_voice = selected_voice
+        download_voice(selected_voice,Path(self.download_dir))
         self.synthesizer = PiperVoice.load(self.download_dir + "/" + selected_voice + ".onnx", config_path=None, use_cuda=False)
         
         return selected_voice
@@ -47,7 +54,7 @@ class EngineTTS:
         for phonemes in sentence_phonemes:
             #print("processing: ", "".join(phonemes), file=sys.stderr)
             phoneme_ids = self.synthesizer.phonemes_to_ids(phonemes)
-            yield self.synthesizer.synthesize_ids_to_raw(phoneme_ids,**synthesize_args) + silence_bytes
+            yield self.synthesizer.phoneme_ids_to_audio(phoneme_ids) + silence_bytes
 
     def phonemize(self,text):
         sentence_phonemes = self.synthesizer.phonemize(text)
@@ -58,13 +65,22 @@ class EngineTTS:
         silence_bytes = bytes(num_silence_samples * 2)
         synthesize_args = {'speaker_id': None, 'length_scale': None, 'noise_scale': None, 'noise_w': None}
         phoneme_ids = self.synthesizer.phonemes_to_ids(phonemes)
-        audio_bytes = self.synthesizer.synthesize_ids_to_raw(phoneme_ids,**synthesize_args) + silence_bytes
+        audio_floats = self.synthesizer.phoneme_ids_to_audio(phoneme_ids)
+
+        audio_chunk = AudioChunk(
+                sample_rate=self.synthesizer.config.sample_rate,
+                sample_width=2,
+                sample_channels=1,
+                audio_float_array=audio_floats,
+            )
+
         with io.BytesIO() as dest, wave.open(dest, "wb") as f:
             f.setnchannels(1)
             # 2 bytes per sample.
             f.setsampwidth(2)
             f.setframerate(self.synthesizer.config.sample_rate)
-            f.writeframes(audio_bytes)
+            f.writeframes(audio_chunk.audio_int16_bytes)
+            f.writeframes(silence_bytes)
             val = dest.getvalue()
         return val
 
