@@ -136,7 +136,7 @@ class FormatterJinja:
         return current_prompt
 
     def build_prompt(self, *args,**kwargs):
-        prompt_sm = self.build_prompt_sm(*args,**kwargs)
+        #prompt_sm = self.build_prompt_sm(*args,**kwargs)
         prompt_j = build_prompt_j(self, *args,**kwargs)
         return prompt_j
 
