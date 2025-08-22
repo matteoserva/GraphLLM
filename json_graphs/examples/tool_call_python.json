@@ -9,10 +9,10 @@
                 -860,
                 610
             ],
-            "size": [
-                1880,
-                820
-            ],
+            "size": {
+                "0": 1880,
+                "1": 820
+            },
             "flags": {
                 "pinned": true,
                 "collapsed": false
@@ -161,7 +161,7 @@
                 "1": 110
             },
             "flags": {},
-            "order": 2,
+            "order": 1,
             "mode": 0,
             "outputs": [
                 {
@@ -236,14 +236,14 @@
                 610,
                 670
             ],
-            "size": [
-                360,
-                220
-            ],
+            "size": {
+                "0": 360,
+                "1": 220
+            },
             "flags": {
                 "collapsed": false
             },
-            "order": 4,
+            "order": 3,
             "mode": 0,
             "inputs": [
                 {
@@ -284,100 +284,6 @@
             }
         },
         {
-            "id": 53,
-            "type": "python/python_console",
-            "pos": [
-                10,
-                810
-            ],
-            "size": {
-                "0": 210,
-                "1": 106
-            },
-            "flags": {
-                "collapsed": false
-            },
-            "order": 11,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 97
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        91,
-                        146
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "echo": "NO",
-                "strip": "AUTO",
-                "stop_exception": "NO",
-                "Echo": "YES",
-                "Strip sysPS": "AUTO",
-                "Stop at Error": "NO"
-            }
-        },
-        {
-            "id": 21,
-            "type": "llm/llm_call",
-            "pos": [
-                -350,
-                720
-            ],
-            "size": {
-                "0": 270,
-                "1": 160
-            },
-            "flags": {
-                "collapsed": false
-            },
-            "order": 6,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 117,
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        73,
-                        97
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "{stop: \"\\n```\"}",
-                "template": "",
-                "subtype": "stateless"
-            }
-        },
-        {
             "id": 37,
             "type": "agent/tools_list",
             "pos": [
@@ -389,7 +295,7 @@
                 "1": 360
             },
             "flags": {},
-            "order": 1,
+            "order": 2,
             "mode": 0,
             "outputs": [
                 {
@@ -521,189 +427,6 @@
             "properties": {}
         },
         {
-            "id": 50,
-            "type": "other/memory",
-            "pos": [
-                550,
-                1220
-            ],
-            "size": {
-                "0": 210,
-                "1": 67
-            },
-            "flags": {
-                "collapsed": false
-            },
-            "order": 10,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 83
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        84,
-                        114,
-                        144
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "separator": "\"\\n\\n\""
-            }
-        },
-        {
-            "id": 66,
-            "type": "text/text_switch_case",
-            "pos": [
-                180,
-                1190
-            ],
-            "size": {
-                "0": 210,
-                "1": 177
-            },
-            "flags": {
-                "collapsed": false
-            },
-            "order": 14,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 144
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "index",
-                    "type": "string",
-                    "links": [],
-                    "slot_index": 0
-                },
-                {
-                    "name": "default",
-                    "type": "string",
-                    "links": [
-                        145
-                    ],
-                    "slot_index": 1
-                },
-                {
-                    "name": "case0",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "case_insensitive": "YES",
-                "Case insensitive": "YES",
-                "cases": [
-                    "tools.answer"
-                ]
-            }
-        },
-        {
-            "id": 60,
-            "type": "llm/prompt_builder",
-            "pos": [
-                -170,
-                980
-            ],
-            "size": {
-                "0": 210,
-                "1": 300
-            },
-            "flags": {
-                "collapsed": false
-            },
-            "order": 12,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 129
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": 145
-                },
-                {
-                    "name": "N",
-                    "type": "string",
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "simple",
-                    "type": "string",
-                    "links": [
-                        117
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "GraphLLM",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {
-                "conf": "",
-                "subtype": "stateless",
-                "template": "{p:user}\n{p:exec1}\n{p:eom}\n\n{p:assistant}\n{p:exec2}\n\n### call\n\n```python\n{p:eom}"
-            }
-        },
-        {
-            "id": 39,
-            "type": "other/repeat",
-            "pos": [
-                -160,
-                1340
-            ],
-            "size": {
-                "0": 210,
-                "1": 58
-            },
-            "flags": {
-                "collapsed": false
-            },
-            "order": 5,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 56,
-                    "slot_index": 0
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        129
-                    ],
-                    "slot_index": 0
-                }
-            ],
-            "properties": {
-                "repetitions": 0
-            }
-        },
-        {
             "id": 38,
             "type": "agent/agent_prompt_builder",
             "pos": [
@@ -717,7 +440,7 @@
             "flags": {
                 "collapsed": false
             },
-            "order": 3,
+            "order": 4,
             "mode": 0,
             "inputs": [
                 {
@@ -816,6 +539,283 @@
                 "conf": "",
                 "subtype": "stateless",
                 "template": "### call\n\n```python\n{p:exec1}\n```\n\n### result\n```\n{p:exec2}\n```"
+            }
+        },
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                -240,
+                730
+            ],
+            "size": {
+                "0": 270,
+                "1": 160
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 117,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        73,
+                        97
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{stop: \"\\n```\"}",
+                "template": "",
+                "subtype": "stateless"
+            }
+        },
+        {
+            "id": 60,
+            "type": "llm/prompt_builder",
+            "pos": [
+                -340,
+                940
+            ],
+            "size": {
+                "0": 210,
+                "1": 300
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 12,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 129
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 145
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "simple",
+                    "type": "string",
+                    "links": [
+                        117
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "GraphLLM",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": "{p:user}\n{p:exec1}\n{p:eom}\n\n{p:assistant}\n{p:exec2}\n\n### call\n\n```python\n{p:eom}"
+            }
+        },
+        {
+            "id": 39,
+            "type": "other/repeat",
+            "pos": [
+                -660,
+                1260
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 56,
+                    "slot_index": 0
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        129
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "repetitions": 0
+            }
+        },
+        {
+            "id": 53,
+            "type": "python/python_console",
+            "pos": [
+                80,
+                830
+            ],
+            "size": {
+                "0": 210,
+                "1": 106
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 97
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        91,
+                        146
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "echo": "NO",
+                "strip": "AUTO",
+                "stop_exception": "NO",
+                "Echo": "YES",
+                "Strip sysPS": "AUTO",
+                "Stop at Error": "NO"
+            }
+        },
+        {
+            "id": 50,
+            "type": "other/memory",
+            "pos": [
+                520,
+                1180
+            ],
+            "size": {
+                "0": 210,
+                "1": 67
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 83
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        84,
+                        114,
+                        144
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "separator": "\"\\n\\n\""
+            }
+        },
+        {
+            "id": 66,
+            "type": "text/text_switch_case",
+            "pos": [
+                90,
+                1250
+            ],
+            "size": {
+                "0": 210,
+                "1": 177
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 14,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 144
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "index",
+                    "type": "string",
+                    "links": [],
+                    "slot_index": 0
+                },
+                {
+                    "name": "default",
+                    "type": "string",
+                    "links": [
+                        145
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "case0",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "case_insensitive": "YES",
+                "Case insensitive": "YES",
+                "cases": [
+                    "tools.answer"
+                ]
             }
         }
     ],
@@ -1017,13 +1017,13 @@
             "rotation": 1
         },
         "60": {
-            "rotation": 2
+            "rotation": 3
         },
         "65": {
             "rotation": 0
         },
         "66": {
-            "rotation": 3
+            "rotation": 2
         }
     }
 }
