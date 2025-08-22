@@ -80,17 +80,23 @@ class ParseToolCallNode(GenericExecutor):
         return result
 
     def _execute_tools(self,tool_call_data):
+        tool_result = {}
+        tool_result["is_final_answer"] = "answer" in [el["name"] for el in tool_call_data["tool_calls"]]
+
         if (tool_call_data["type"] == "react"):
-            result = self._execute_react(tool_call_data)
+            response = self._execute_react(tool_call_data)
+            response = [el["result"] for el in response]
+            loop_response = "\n".join([str(el) for el in response])
+            tool_result["response"] = loop_response
+            tool_result["loop_data"] = tool_call_data["content"] + "\n" + "<result>" + loop_response + "</result>"
         else:
             result = self._execute_json(tool_call_data)
-            result = ["<tool_response>\n" + json.dumps(el)[1:-1] + "\n</tool_response>" for el in result]
-            result = "\n".join(result)
+            response = ["<tool_response>\n" + json.dumps(el)[1:-1] + "\n</tool_response>" for el in result]
+            response = "\n".join(response)
+            tool_result["response"] = response
+            tool_result["loop_data"] = {"role": "tool", "content": str(response)}
 
-        tool_call_data["result"] = result
-        tool_call_data["content"] = str(result)
-        tool_call_data["role"] = "tool"
-        return result
+        return tool_result
 
     def _parse_tool_calls(self,wrapped_llm_output):
         llm_output = str(wrapped_llm_output.data)
@@ -113,16 +119,13 @@ class ParseToolCallNode(GenericExecutor):
 
         if tool_call_data:
             tool_result = self._execute_tools(tool_call_data)
-            outwrapped = ExecutorOutput(tool_call_data)
+            outwrapped = ExecutorOutput(tool_result["loop_data"])
 
-            if "source_llm" in wrapped_llm_output.meta and tool_call_data["type"] == "native":
-                outwrapped.meta["destination"] = (wrapped_llm_output.meta["source_llm"], 0)
-                res = [None, tool_result, outwrapped]
+            llm_result = None
+            if tool_result["is_final_answer"]:
+                res = [tool_result["response"], tool_result["response"],None]
             else:
-                llm_result = None
-                if "answer" in [el["name"] for el in tool_call_data["tool_calls"]]:
-                    llm_result = llm_output
-                res = [llm_result, tool_result,outwrapped]
+                res = [None, tool_result["response"],outwrapped]
 
         else:
             res = [llm_output, None, None]

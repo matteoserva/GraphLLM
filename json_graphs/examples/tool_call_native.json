@@ -1,36 +1,63 @@
 {
-    "last_node_id": 22,
-    "last_link_id": 36,
+    "last_node_id": 26,
+    "last_link_id": 45,
     "nodes": [
         {
-            "id": 20,
-            "type": "output/watch",
+            "id": 19,
+            "type": "input/text_input",
             "pos": [
-                840,
-                450
+                170,
+                -50
             ],
             "size": {
-                "0": 430,
-                "1": 230
+                "0": 660,
+                "1": 90
             },
             "flags": {},
-            "order": 5,
+            "order": 0,
             "mode": 0,
-            "inputs": [
+            "outputs": [
                 {
-                    "name": "in",
+                    "name": "out",
                     "type": "string",
-                    "link": 33
+                    "links": [
+                        32
+                    ]
                 }
             ],
-            "properties": {}
+            "properties": {
+                "parameters": "What's the temperature in San Francisco now? How about tomorrow?"
+            },
+            "color": "#322",
+            "bgcolor": "#533"
+        },
+        {
+            "id": 22,
+            "type": "graph/variable",
+            "pos": [
+                960,
+                -50
+            ],
+            "size": {
+                "0": 590,
+                "1": 110
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "Native tool calling for Qwen LLM"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
         },
         {
             "id": 14,
             "type": "agent/agent_prompt_builder",
             "pos": [
-                180,
-                100
+                -20,
+                110
             ],
             "size": {
                 "0": 600,
@@ -73,8 +100,8 @@
                     "name": "prompt",
                     "type": "string",
                     "links": [
-                        26,
-                        33
+                        33,
+                        38
                     ],
                     "slot_index": 0
                 },
@@ -98,24 +125,147 @@
             }
         },
         {
+            "id": 25,
+            "type": "graph/standard_mux",
+            "pos": [
+                680,
+                200
+            ],
+            "size": {
+                "0": 140,
+                "1": 66
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in1",
+                    "type": "string",
+                    "link": 38
+                },
+                {
+                    "name": "in2",
+                    "type": "string",
+                    "link": 44
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        39
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "sel",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 26,
+            "type": "agent/execute_tool_call",
+            "pos": [
+                1150,
+                230
+            ],
+            "size": {
+                "0": 140,
+                "1": 66
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 42
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "final answer",
+                    "type": "string",
+                    "links": [
+                        43
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "tool out",
+                    "type": "string",
+                    "links": [
+                        45
+                    ]
+                },
+                {
+                    "name": "tool raw",
+                    "type": "string",
+                    "links": [
+                        44
+                    ],
+                    "slot_index": 2
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 5,
+            "type": "output/watch",
+            "pos": [
+                1430,
+                120
+            ],
+            "size": {
+                "0": 680,
+                "1": 240
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 43,
+                    "pos": null,
+                    "dir": 4
+                }
+            ],
+            "properties": {},
+            "color": "#2a363b",
+            "bgcolor": "#3f5159"
+        },
+        {
             "id": 2,
             "type": "llm/llm_call",
             "pos": [
-                860,
-                120
+                780,
+                340
             ],
             "size": {
                 "0": 380,
                 "1": 260
             },
             "flags": {},
-            "order": 4,
+            "order": 5,
             "mode": 0,
             "inputs": [
                 {
                     "name": "in",
                     "type": "string",
-                    "link": 26,
+                    "link": 39,
                     "pos": null,
                     "dir": 3
                 },
@@ -133,7 +283,7 @@
                     "type": "string",
                     "links": [
                         10,
-                        34
+                        42
                     ],
                     "slot_index": 0
                 },
@@ -150,191 +300,18 @@
             }
         },
         {
-            "id": 3,
-            "type": "output/watch",
-            "pos": [
-                1320,
-                560
-            ],
-            "size": {
-                "0": 590,
-                "1": 250
-            },
-            "flags": {},
-            "order": 6,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 10,
-                    "pos": null,
-                    "dir": 3
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 5,
-            "type": "output/watch",
-            "pos": [
-                1410,
-                110
-            ],
-            "size": {
-                "0": 680,
-                "1": 240
-            },
-            "flags": {},
-            "order": 8,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 35,
-                    "pos": null,
-                    "dir": 4
-                }
-            ],
-            "properties": {},
-            "color": "#2a363b",
-            "bgcolor": "#3f5159"
-        },
-        {
-            "id": 21,
-            "type": "agent/execute_tool_call",
-            "pos": [
-                1340,
-                420
-            ],
-            "size": {
-                "0": 140,
-                "1": 66
-            },
-            "flags": {},
-            "order": 7,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 34
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "final result",
-                    "type": "string",
-                    "links": [
-                        35
-                    ],
-                    "slot_index": 0
-                },
-                {
-                    "name": "tool out",
-                    "type": "string",
-                    "links": [
-                        36
-                    ],
-                    "slot_index": 1
-                },
-                {
-                    "name": "tool raw",
-                    "type": "string",
-                    "links": null
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 9,
-            "type": "output/watch",
-            "pos": [
-                1940,
-                560
-            ],
-            "size": {
-                "0": 650,
-                "1": 250
-            },
-            "flags": {},
-            "order": 9,
-            "mode": 0,
-            "inputs": [
-                {
-                    "name": "in",
-                    "type": "string",
-                    "link": 36,
-                    "pos": null,
-                    "dir": 3
-                }
-            ],
-            "properties": {}
-        },
-        {
-            "id": 19,
-            "type": "input/text_input",
-            "pos": [
-                170,
-                -50
-            ],
-            "size": {
-                "0": 660,
-                "1": 90
-            },
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "outputs": [
-                {
-                    "name": "out",
-                    "type": "string",
-                    "links": [
-                        32
-                    ]
-                }
-            ],
-            "properties": {
-                "parameters": "What's the temperature in San Francisco now? How about tomorrow?"
-            },
-            "color": "#322",
-            "bgcolor": "#533"
-        },
-        {
-            "id": 22,
-            "type": "graph/variable",
-            "pos": [
-                960,
-                -50
-            ],
-            "size": {
-                "0": 590,
-                "1": 110
-            },
-            "flags": {},
-            "order": 2,
-            "mode": 0,
-            "properties": {
-                "identifier": "",
-                "parameters": "Native tool calling for Qwen LLM"
-            },
-            "color": "#432",
-            "bgcolor": "#653"
-        },
-        {
             "id": 15,
             "type": "agent/tools_list",
             "pos": [
-                -210,
-                120
+                -420,
+                130
             ],
-            "size": [
-                320,
-                380
-            ],
+            "size": {
+                "0": 320,
+                "1": 380
+            },
             "flags": {},
-            "order": 0,
+            "order": 2,
             "mode": 0,
             "outputs": [
                 {
@@ -413,6 +390,80 @@
                     }
                 }
             }
+        },
+        {
+            "id": 3,
+            "type": "output/watch",
+            "pos": [
+                1430,
+                410
+            ],
+            "size": {
+                "0": 590,
+                "1": 250
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 10,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 9,
+            "type": "output/watch",
+            "pos": [
+                1430,
+                710
+            ],
+            "size": {
+                "0": 650,
+                "1": 250
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 45,
+                    "pos": null,
+                    "dir": 3,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 20,
+            "type": "output/watch",
+            "pos": [
+                -20,
+                720
+            ],
+            "size": [
+                600,
+                370
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 33
+                }
+            ],
+            "properties": {}
         }
     ],
     "links": [
@@ -421,14 +472,6 @@
             2,
             0,
             3,
-            0,
-            "string"
-        ],
-        [
-            26,
-            14,
-            0,
-            2,
             0,
             "string"
         ],
@@ -457,24 +500,48 @@
             "string"
         ],
         [
-            34,
-            2,
+            38,
+            14,
             0,
-            21,
+            25,
             0,
             "string"
         ],
         [
-            35,
-            21,
+            39,
+            25,
+            0,
+            2,
+            0,
+            "string"
+        ],
+        [
+            42,
+            2,
+            0,
+            26,
+            0,
+            "string"
+        ],
+        [
+            43,
+            26,
             0,
             5,
             0,
             "string"
         ],
         [
-            36,
-            21,
+            44,
+            26,
+            2,
+            25,
+            1,
+            "string"
+        ],
+        [
+            45,
+            26,
             1,
             9,
             0,
@@ -495,7 +562,7 @@
             "rotation": 0
         },
         "5": {
-            "rotation": 3
+            "rotation": 0
         },
         "9": {
             "rotation": 0
@@ -510,13 +577,16 @@
             "rotation": 0
         },
         "20": {
-            "rotation": 0
-        },
-        "21": {
-            "rotation": 0
+            "rotation": 2
         },
         "22": {
             "rotation": 0
+        },
+        "25": {
+            "rotation": 1
+        },
+        "26": {
+            "rotation": 3
         }
     }
 }
