@@ -14,7 +14,7 @@ def build_prompt_j(self, messages, force_system=False, custom_sysprompt=False, *
         else:
             updated_messages.append({"role": "assistant", "content": "<<<RAW_TEMPLATE2>>>"})
 
-    if messages[0]["role"] == "system" and not self.has_system and force_system:
+    if messages[0]["role"] == "system" and not self.has_system and (force_system or custom_sysprompt):
         assert (messages[1]["role"] == "user")
         updated_messages[1] = {"role": "user", "content": messages[0]["content"] + "\n\n" + messages[1]["content"]}
         updated_messages = updated_messages[1:]
