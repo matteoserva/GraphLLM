@@ -11,11 +11,12 @@ class SwitchGui(BaseGuiNode):
         builder = self._initBuilder()
 
         builder.addInput("in", "string");
+        builder.addOutput("index", "string");
         builder.addOutput("default", "string");
 
         builder.addStandardWidget("combo", "Case insensitive", "YES", None, {"property": "case_insensitive", "values": ["NO", "YES"]})
         builder.addCustomWidget("list","Switch",{ "property": "cases"})
-        builder.setConnectionLimits({"min_outputs": 1, "min_inputs": 1, "max_inputs": 1})
+        builder.setConnectionLimits({"min_outputs": 2, "min_inputs": 1, "max_inputs": 1})
         builder.setTitle("Switch case")
         return builder
 
@@ -51,7 +52,8 @@ class SwitchNode(GenericExecutor):
             input = input.lower()
 
         match_index = self._find_match(input,self.test_cases)
-        outputs = [None] * (1+match_index)
-        outputs[match_index] = input
+        outputs = [None] * (2+match_index)
+        outputs[0] = match_index
+        outputs[1+match_index] = input
 
         return outputs
