@@ -20,6 +20,16 @@ class SwitchGui(BaseGuiNode):
         builder.setTitle("Switch case")
         return builder
 
+    def onOutputAdded(self,post_data):
+        slot = post_data["arguments"]["slot"]
+        node_id = post_data["node_id"]
+        if slot > 1:
+            slot_string = "outputs[" + str(slot) + "].name"
+            slot_name = "case" + str(slot-2)
+            ret = [{"type": "node_assign",  "data": [slot_string, slot_name]}]
+        else:
+            ret = []
+        return ret
 
 from modules.executors.common import BaseGuiParser
 

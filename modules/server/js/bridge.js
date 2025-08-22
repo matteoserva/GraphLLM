@@ -10,7 +10,7 @@ function addDemo(select, name, url) {
 
 class BridgeNode {
 	constructor() {
-		
+		self.server_lost = false
 	}
 	
 	node_call(node, function_name, args) {
@@ -50,11 +50,12 @@ class BridgeNode {
         parent[func] = value
     }
 	
-	enqueueGuiEvent(node, action_name, args)
+	enqueueGuiEvent(node, action_name, args, responseCB)
 	{
 		let rpc_arguments = {
 			//node: node.serialize(),
 			node: node["type"],
+			node_id: node["id"],
 			event: action_name,
 			arguments: args
 		}
@@ -64,11 +65,18 @@ class BridgeNode {
 			if(xhr.status != 0)
 			{
 				var response = JSON.parse(xhr.responseText)
+				response.forEach((el) => responseCB(el))
+
+				self.server_lost = false
 				//console.log("GUI action response:", response)
 			}
 			else
 			{
-				alert("error sending event to server")
+			    if(!self.server_lost)
+			    {
+				    alert("error sending event to server")
+				}
+				self.server_lost = true
 			}
 		};
 		
@@ -752,8 +760,17 @@ class WebBrige {
 
         // TODO: enqueue the action events and dequeue .
         // cannot handle immediately because the addinput callback is called before the node is fully constructed
+
+        function responseCB(el){
+            el.data.unshift("/" + node.id)
+            this.processMessage(JSON.stringify(el))
+
+
+        }
+
+
         window.setTimeout( (e) => { 
-								this.bridge_node.enqueueGuiEvent(node, action_name, args) 
+								this.bridge_node.enqueueGuiEvent(node, action_name, args, responseCB.bind(this))
 							} 
 						)
     }

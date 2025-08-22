@@ -21,6 +21,7 @@ class EditorHandler():
             setattr(el,"builder",GuiNodeBuilder())
         builders = [el.buildNode() for el in gui_nodes]
         generated_nodes = [{"name": "generated/" + el.config["node_type"] + ".js", "value": el.getNodeString()} for el in builders]
+        self.builders_map = {el.config["node_type"]:el for el in builders}
 
         raw_nodes = []
         node_files = glob(COMMON_PATH + "/*.js")
@@ -149,6 +150,13 @@ class EditorHandler():
         server.send_header('Content-type', 'application/json')
         server.end_headers()
 
-        response = {"ciao":1}
+        response = []
+        if post_data["node"] in self.builders_map:
+            builder = self.builders_map[post_data["node"]]
+            node = builder.node
+            if hasattr(node,post_data["event"]):
+                f = getattr(node,post_data["event"])
+                response = f(post_data)
+
         response = json.dumps(response)
         server.wfile.write(response.encode())
