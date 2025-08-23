@@ -1,4 +1,4 @@
-from .formatter_common import build_prompt_j
+from .template_renderer import TemplateRenderer
 
 placeholder_system = "<<<SYSTEM>>>"
 placeholder_user = "<<<USER>>>"
@@ -21,6 +21,7 @@ class FormatterLlamacpp:
         self.generation_prompt_prefix = ""
         self.tokenizer = Renderer(self)
         self.has_bos_token = False
+        self.renderer = TemplateRenderer()
 
     def _evaluate_template(self):
         messages = [
@@ -63,6 +64,6 @@ class FormatterLlamacpp:
 
     def build_prompt(self, *args, **kwargs):
 
-        prompt_j = build_prompt_j(self, *args, **kwargs)
+        prompt_j = self.renderer.build_prompt_j(self, *args, **kwargs)
         return prompt_j
 

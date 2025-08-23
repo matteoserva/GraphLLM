@@ -2,7 +2,7 @@ import jinja2
 from jinja2.ext import Extension
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 from sympy import false
-from .formatter_common import build_prompt_j
+from .template_renderer import TemplateRenderer
 
 placeholder_system = "<<<SYSTEM>>>"
 placeholder_user = "<<<USER>>>"
@@ -16,7 +16,7 @@ class FormatterJinja:
         self.has_system = False
         self.optional_system = False
         self.transitions = {"init":{}, "raw": {} , "system": {}, "user": {} , "assistant": {}}
-
+        self.renderer = TemplateRenderer()
 
     def load_template_with_system(self,rendered):
         pos = rendered.find(placeholder_system)
@@ -137,7 +137,7 @@ class FormatterJinja:
 
     def build_prompt(self, *args,**kwargs):
         #prompt_sm = self.build_prompt_sm(*args,**kwargs)
-        prompt_j = build_prompt_j(self, *args,**kwargs)
+        prompt_j = self.renderer.build_prompt_j(self, *args,**kwargs)
         return prompt_j
 
 def execute_test_full(tokenizer_path):
