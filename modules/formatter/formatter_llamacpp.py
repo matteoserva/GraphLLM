@@ -56,18 +56,18 @@ class FormatterLlamacpp:
             return False
 
         try:
-            self._evaluate_template()
+            self.renderer._evaluate_template()
         except:
             return False
 
-        if not self.multi_turn:
+        if not self.renderer.multi_turn:
             return False
 
-        if not self.has_system:
+        if not self.renderer.has_system:
             pass
 
         if model_name.lower().find("deepseek-r1") == 0:
-            self.optional_system = True
+            self.renderer.optional_system = True
             return True
 
         if model_name.lower().find("mistral") == 0 and model_name.lower().find("instruct") >= 0:
@@ -78,6 +78,6 @@ class FormatterLlamacpp:
 
     def build_prompt(self, *args, **kwargs):
 
-        prompt_j = self.renderer.build_prompt_j(self, *args, **kwargs)
+        prompt_j = self.renderer.build_prompt_j(*args, **kwargs)
         return prompt_j
 
