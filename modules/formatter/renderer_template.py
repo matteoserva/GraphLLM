@@ -11,7 +11,6 @@ class TemplateRenderer():
         return current_date
 
     def _render(self,*args,**kwargs):
-        kwargs["strftime_now"] = self._strftime
         return self.render_function(*args,**kwargs)
 
     def apply_generation_prompt_fixes(self,formatter, rendered):

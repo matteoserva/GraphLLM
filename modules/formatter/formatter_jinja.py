@@ -20,6 +20,7 @@ class FormatterJinja:
         self.renderer = TemplateRenderer(self._render)
 
     def _render(self,*args,**kwargs):
+        kwargs["strftime_now"] = self._strftime
         rendered = self.tokenizer.render(*args,**kwargs)
         return rendered
 

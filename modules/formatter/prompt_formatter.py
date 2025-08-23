@@ -1,6 +1,6 @@
 
-from transformers import AutoTokenizer
-from .formatter_hf import FormatterHF
+#from transformers import AutoTokenizer
+#from .formatter_hf import FormatterHF
 from .formatter_custom import FormatterCustom
 from .formatter_llamacpp import FormatterLlamacpp
 
@@ -28,6 +28,7 @@ class Formatter:
 
         self.model_name = model_name
 
+        """
         if "use_hf" in model_props: #this is not used
             try:
                 self.formatter = FormatterHF()
@@ -35,6 +36,7 @@ class Formatter:
                     pass
             except:
                 pass
+        """
 
         if chat_template is not None:
             try:
