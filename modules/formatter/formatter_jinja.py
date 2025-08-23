@@ -35,7 +35,7 @@ class FormatterJinja:
             return False
         try:
             self.tokenizer = self.jinja_env.from_string(chat_template)
-            self.renderer._evaluate_template()
+            self.renderer.evaluate_template()
 
         except:
             return False

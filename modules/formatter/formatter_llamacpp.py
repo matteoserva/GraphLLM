@@ -56,7 +56,7 @@ class FormatterLlamacpp:
             return False
 
         try:
-            self.renderer._evaluate_template()
+            self.renderer.evaluate_template()
         except:
             return False
 

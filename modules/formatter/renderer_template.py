@@ -9,10 +9,13 @@ placeholder_user2 = "<<<USER2>>>"
 class TemplateRenderer():
     def __init__(self,render_function):
         self.render_function = render_function
+
         self.has_system = False
         self.optional_system = False
         self.multi_turn = False
         self.generation_prompt_prefix = ""
+        self.has_bos_token = False
+        self.has_eos_token = False
 
     def _strftime(self,x):
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -27,7 +30,7 @@ class TemplateRenderer():
         rendered += self.generation_prompt_prefix
         return rendered
 
-    def _evaluate_template(self):
+    def evaluate_template(self):
         messages = [
             {"role": "system", "content": placeholder_system},
             {"role": "user", "content": placeholder_user},
