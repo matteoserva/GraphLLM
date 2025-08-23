@@ -1,3 +1,4 @@
+import re
 
 raw_tokens = ["<s>","<|begin_of_text|>","[INST]","<|im_start|>",
               "<|START_OF_TURN_TOKEN|>","<BOS_TOKEN>","<|user|>","<|start_header_id|>","<bos>",
@@ -49,6 +50,15 @@ def parse_raw(message):
 def parse_graphllm(message):
     token = ""
     res = []
+
+    # test cases: test_bos_raw, test_bos_optional
+    if message.startswith("{p:bos}\n"):
+        content = message[8:]
+        if content.lstrip().startswith("{p:") or content.lstrip().startswith("{r:"):
+            message = content.lstrip()
+        else:
+            res.append({"role": "raw", "content": content})
+            message = ""
 
     while True:
         m1 = -1
