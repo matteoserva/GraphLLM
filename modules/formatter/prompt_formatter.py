@@ -36,19 +36,19 @@ class Formatter:
             except:
                 pass
 
+        if chat_template is not None:
+            try:
+                self.formatter = FormatterJinja()
+                if self.formatter.load_template(model_props):
+                    return True
+            except:
+                pass
+
         if "apply_template" in model_props:
             try:
                 self.formatter = FormatterLlamacpp()
                 if self.formatter.load_template(model_props):
                     self.use_template = True
-                    return True
-            except:
-                pass
-
-        if chat_template is not None:
-            try:
-                self.formatter = FormatterJinja()
-                if self.formatter.load_template(model_props):
                     return True
             except:
                 pass
