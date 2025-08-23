@@ -1,0 +1,3 @@
+
+class UserDisconnectedException(BrokenPipeError):
+    pass

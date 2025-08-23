@@ -8,7 +8,7 @@ import time
 import copy
 from threading import BoundedSemaphore
 from .client_llamacpp import LLamaCppClient
-
+from modules.common.exceptions import UserDisconnectedException
 
 
 class ONNXClient(object):
@@ -117,10 +117,9 @@ class ClientWrapper:
                     client = cache_row["client"]
                 attr = getattr(client, method_name)
                 return attr(*args,**kwargs)
-            except BrokenPipeError as e:
+            except UserDisconnectedException as e:
                 last_exc = e
-                if str(e) == "user connection closed":
-                    break;
+                break;
             except Exception as e:
                last_exc = e
         raise last_exc from None

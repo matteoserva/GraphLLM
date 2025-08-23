@@ -12,6 +12,7 @@ from modules.client_api.logger import Logger
 from websockets.frames import Opcode
 from websockets.server import ServerProtocol
 from modules.client_api import GuiClientAPI
+from modules.common.exceptions import UserDisconnectedException
 
 class WebExec():
     def __init__(self,client_api,blob):
@@ -160,7 +161,7 @@ class ExecHandler():
                 self.protocol.send_text(text.encode())
                 self._send_queued_data()
         if not self.alive:
-            raise BrokenPipeError("user connection closed")
+            raise UserDisconnectedException("user connection closed")
 
     def _handshake(self):
         headers = self.server.headers.items()
