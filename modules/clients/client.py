@@ -117,6 +117,10 @@ class ClientWrapper:
                     client = cache_row["client"]
                 attr = getattr(client, method_name)
                 return attr(*args,**kwargs)
+            except BrokenPipeError as e:
+                last_exc = e
+                if str(e) == "user connection closed":
+                    break;
             except Exception as e:
                last_exc = e
         raise last_exc from None

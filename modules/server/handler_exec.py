@@ -160,7 +160,7 @@ class ExecHandler():
                 self.protocol.send_text(text.encode())
                 self._send_queued_data()
         if not self.alive:
-            raise BrokenPipeError("connection closed")
+            raise BrokenPipeError("user connection closed")
 
     def _handshake(self):
         headers = self.server.headers.items()
