@@ -1,4 +1,4 @@
-from .template_renderer import TemplateRenderer
+from .renderer_template import TemplateRenderer
 
 placeholder_system = "<<<SYSTEM>>>"
 placeholder_user = "<<<USER>>>"
@@ -21,7 +21,10 @@ class FormatterLlamacpp:
         self.generation_prompt_prefix = ""
         self.tokenizer = Renderer(self)
         self.has_bos_token = False
-        self.renderer = TemplateRenderer()
+        self.renderer = TemplateRenderer(self._render)
+
+    def _render(self,messages,*args,**kwargs):
+        return self.apply_template(messages)
 
     def _evaluate_template(self):
         messages = [

@@ -1,7 +1,12 @@
+import datetime
 
 class TemplateRenderer():
-    def __init__(self):
-        pass
+    def __init__(self,render_function):
+        self._render = render_function
+
+    def _strftime(self,x):
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        return current_date
 
     def apply_generation_prompt_fixes(self,formatter, rendered):
         if rendered.endswith("<think>\n"):
@@ -31,11 +36,11 @@ class TemplateRenderer():
             updated_messages = updated_messages[1:]
 
         if updated_messages[-1]["role"] == "assistant":
-            rendered += formatter.tokenizer.render(messages=updated_messages[:-1], add_generation_prompt=True)
+            rendered += self._render(messages=updated_messages[:-1], add_generation_prompt=True,strftime_now = self._strftime)
             rendered = self.apply_generation_prompt_fixes(formatter, rendered)
             rendered += updated_messages[-1]["content"]
         else:
-            rendered += formatter.tokenizer.render(messages=updated_messages, add_generation_prompt=True)
+            rendered += self._render(messages=updated_messages, add_generation_prompt=True,strftime_now = self._strftime)
             rendered = self.apply_generation_prompt_fixes(formatter, rendered)
 
         if messages[0]["role"] == "raw":
