@@ -48,7 +48,6 @@ class Formatter:
             try:
                 self.formatter = FormatterLlamacpp()
                 if self.formatter.load_template(model_props):
-                    self.use_template = True
                     return True
             except:
                 pass

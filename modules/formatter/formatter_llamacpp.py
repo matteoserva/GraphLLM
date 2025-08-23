@@ -37,6 +37,17 @@ class FormatterLlamacpp:
         self.has_system = placeholder_system in rendered
         self.multi_turn = "<<<USER2>>>" in rendered
 
+        if self.has_system:
+            messages = [
+                {"role": "user", "content": placeholder_user},
+            ]
+            self.optional_system = False
+            try:
+                rendered = self._render(messages)
+                self.optional_system = placeholder_user in rendered
+            except:
+                pass
+
     def load_template(self, model_props):
         self.model_props = model_props
         model_name = model_props["model_name"]
@@ -62,7 +73,7 @@ class FormatterLlamacpp:
         if model_name.lower().find("mistral") == 0 and model_name.lower().find("instruct") >= 0:
             return True
 
-        return False
+        return True
 
 
     def build_prompt(self, *args, **kwargs):

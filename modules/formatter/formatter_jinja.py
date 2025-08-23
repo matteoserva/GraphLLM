@@ -38,6 +38,17 @@ class FormatterJinja:
         self.has_eos_token = "<<<EOS>>>" in rendered
         self.generation_prompt_prefix = ""
 
+        if self.has_system:
+            messages = [
+                {"role": "user", "content": placeholder_user},
+            ]
+            self.optional_system = False
+            try:
+                rendered = self.tokenizer.render(messages=messages, add_generation_prompt=True,bos_token = "<<<BOS>>>",eos_token = "<<<EOS>>>",strftime_now = self._strftime)
+                self.optional_system = placeholder_user in rendered
+            except:
+                pass
+
     def _strftime(self,x):
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
         return current_date

@@ -88,8 +88,8 @@
             ],
             "properties": {
                 "conf": "{stop: \"```\"}",
-                "subtype": "stateless",
-                "template": "{p:bos}\nThe 5 best pizza toppings are:\n```\n"
+                "template": "{p:raw}\nThe 5 best pizza toppings are:\n```\n",
+                "subtype": "stateless"
             }
         }
     ],
@@ -106,5 +106,18 @@
     "groups": [],
     "config": {},
     "extra": {},
-    "version": 0.4
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "examples/raw",
+    "node_states": {
+        "16": {
+            "rotation": 0
+        },
+        "21": {
+            "rotation": 0
+        },
+        "22": {
+            "rotation": 0
+        }
+    }
 }

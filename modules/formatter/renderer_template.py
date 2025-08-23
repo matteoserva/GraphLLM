@@ -1,12 +1,18 @@
 import datetime
 
+RAW_TEMPLATE_TAG = "<<<RAW_TEMPLATE2>>>"
+
 class TemplateRenderer():
     def __init__(self,render_function):
-        self._render = render_function
+        self.render_function = render_function
 
     def _strftime(self,x):
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
         return current_date
+
+    def _render(self,*args,**kwargs):
+        kwargs["strftime_now"] = self._strftime
+        return self.render_function(*args,**kwargs)
 
     def apply_generation_prompt_fixes(self,formatter, rendered):
         if rendered.endswith("<think>\n"):
@@ -23,12 +29,12 @@ class TemplateRenderer():
         updated_messages = [el for el in messages]
 
         if messages[0]["role"] == "raw":
-            updated_messages[0] = {"role": "user", "content": "<<<RAW_TEMPLATE1>>>"}
+            updated_messages[0] = {"role": "user", "content": "<<<UNUSED_RAW_TEMPLATE1>>>"}
             if len(messages) > 1:
                 assert (messages[1]["role"] == "assistant")
-                updated_messages[1] = {"role": "assistant", "content": "<<<RAW_TEMPLATE2>>>" + messages[1]["content"]}
+                updated_messages[1] = {"role": "assistant", "content": RAW_TEMPLATE_TAG + messages[1]["content"]}
             else:
-                updated_messages.append({"role": "assistant", "content": "<<<RAW_TEMPLATE2>>>"})
+                updated_messages.append({"role": "assistant", "content": RAW_TEMPLATE_TAG})
 
         if messages[0]["role"] == "system" and not formatter.has_system and (force_system or custom_sysprompt):
             assert (messages[1]["role"] == "user")
@@ -36,15 +42,15 @@ class TemplateRenderer():
             updated_messages = updated_messages[1:]
 
         if updated_messages[-1]["role"] == "assistant":
-            rendered += self._render(messages=updated_messages[:-1], add_generation_prompt=True,strftime_now = self._strftime)
+            rendered += self._render(messages=updated_messages[:-1], add_generation_prompt=True)
             rendered = self.apply_generation_prompt_fixes(formatter, rendered)
             rendered += updated_messages[-1]["content"]
         else:
-            rendered += self._render(messages=updated_messages, add_generation_prompt=True,strftime_now = self._strftime)
+            rendered += self._render(messages=updated_messages, add_generation_prompt=True)
             rendered = self.apply_generation_prompt_fixes(formatter, rendered)
 
         if messages[0]["role"] == "raw":
-            pos = rendered.find("<<<RAW_TEMPLATE2>>>") + len("<<<RAW_TEMPLATE2>>>")
+            pos = rendered.find(RAW_TEMPLATE_TAG) + len(RAW_TEMPLATE_TAG)
             a = messages[0]["content"].replace("{p:bos}\n", "")
             a = a.replace("{p:bos}", "")
             rendered = a + rendered[pos:]
