@@ -3,6 +3,7 @@
 #from .formatter_hf import FormatterHF
 from .formatter_custom import FormatterCustom
 from .formatter_llamacpp import FormatterLlamacpp
+from .formatter_template import TemplateRenderer
 
 try:
     from .formatter_jinja import FormatterJinja
@@ -40,17 +41,23 @@ class Formatter:
 
         if chat_template is not None:
             try:
-                self.formatter = FormatterJinja()
-                if self.formatter.load_template(model_props):
-                    return True
+                ll_formatter = FormatterJinja()
+                res1 = ll_formatter.load_template(model_props)
+                if res1:
+                    self.formatter = TemplateRenderer(ll_formatter)
+                    if self.formatter.load_template(model_props):
+                        return True
             except:
                 pass
 
         if "apply_template" in model_props:
             try:
-                self.formatter = FormatterLlamacpp()
-                if self.formatter.load_template(model_props):
-                    return True
+                ll_formatter = FormatterLlamacpp()
+                res1 = ll_formatter.load_template(model_props)
+                if res1:
+                    self.formatter = TemplateRenderer(ll_formatter)
+                    if self.formatter.load_template(model_props):
+                        return True
             except:
                 pass
 

@@ -1,4 +1,5 @@
-from .renderer_template import TemplateRenderer
+from .formatter_template import TemplateRenderer
+from .formatter_common import evaluate_template
 
 placeholder_system = "<<<SYSTEM>>>"
 placeholder_user = "<<<USER>>>"
@@ -34,7 +35,7 @@ class FormatterLlamacpp:
             return False
 
         try:
-            self.renderer.evaluate_template()
+            evaluate_template(self)
         except:
             return False
 
@@ -45,17 +46,11 @@ class FormatterLlamacpp:
             pass
 
         if model_name.lower().find("deepseek-r1") == 0:
-            self.renderer.optional_system = True
+            self.optional_system = True
             return True
 
         if model_name.lower().find("mistral") == 0 and model_name.lower().find("instruct") >= 0:
             return True
 
         return True
-
-
-    def build_prompt(self, *args, **kwargs):
-
-        prompt_j = self.renderer.build_prompt_j(*args, **kwargs)
-        return prompt_j
 

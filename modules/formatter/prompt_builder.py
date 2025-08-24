@@ -1,5 +1,6 @@
 from .prompt_formatter import Formatter
 from .prompt_parser import parse_raw, check_special_tokens, parse_graphllm
+from .formatter_graphllm import RendererGraphLLM
 import re
 
 ## questa è la parte che non ha bisongno di conoscere il modello
@@ -59,8 +60,8 @@ class PromptBuilder:
             serialize_format=format.lower()
 
         if serialize_format == "graphllm":
-            decorated_messages = ["{p:" + el["role"] + "}\n" + el["content"] + "{p:eom}" for el in self.messages]
-            text_prompt = "{p:bos}\n\n" + "\n\n".join(decorated_messages)
+            renderer = RendererGraphLLM()
+            text_prompt = renderer.build_prompt_j(self.messages)
         elif serialize_format == "text" or serialize_format == "last":
             if self.messages[-1]["role"] == "assistant" and self.last_message is not None:
                 text_prompt = self.last_message

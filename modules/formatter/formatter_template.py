@@ -7,8 +7,8 @@ placeholder_assistant = "<<<ASSISTANT>>>"
 placeholder_user2 = "<<<USER2>>>"
 
 class TemplateRenderer():
-    def __init__(self,render_function):
-        self.render_function = render_function
+    def __init__(self,formatter):
+        self.formatter = formatter
 
         self.has_system = False
         self.optional_system = False
@@ -17,12 +17,8 @@ class TemplateRenderer():
         self.has_bos_token = False
         self.has_eos_token = False
 
-    def _strftime(self,x):
-        current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-        return current_date
-
     def _render(self,*args,**kwargs):
-        return self.render_function(*args,**kwargs)
+        return self.formatter._render(*args,**kwargs)
 
     def apply_generation_prompt_fixes(self, rendered):
         if rendered.endswith("<think>\n"):
@@ -30,31 +26,10 @@ class TemplateRenderer():
         rendered += self.generation_prompt_prefix
         return rendered
 
-    def evaluate_template(self):
-        messages = [
-            {"role": "system", "content": placeholder_system},
-            {"role": "user", "content": placeholder_user},
-            {"role": "assistant", "content": placeholder_assistant},
-            {"role": "user", "content": placeholder_user2},
-        ]
-        rendered = self._render(messages,bos_token = "<<<BOS>>>",eos_token = "<<<EOS>>>")
-        self.has_system = placeholder_system in rendered
-        self.multi_turn = placeholder_user2 in rendered
-        self.has_bos_token = "<<<BOS>>>" in rendered
-        self.has_eos_token = "<<<EOS>>>" in rendered
+    def load_template(self,model_props):
+        return True
 
-        if self.has_system:
-            messages = [
-                {"role": "user", "content": placeholder_user},
-            ]
-            self.optional_system = False
-            try:
-                rendered = self._render(messages,bos_token = "<<<BOS>>>",eos_token = "<<<EOS>>>")
-                self.optional_system = placeholder_user in rendered
-            except:
-                pass
-
-    def build_prompt_j(self, messages, force_system=False, custom_sysprompt=False, **kwargs):
+    def build_prompt(self, messages, force_system=False, custom_sysprompt=False, **kwargs):
         rendered = ""
 
         if messages[0]["role"] == "system" and (not custom_sysprompt) and self.optional_system:

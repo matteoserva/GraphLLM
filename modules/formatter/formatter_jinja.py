@@ -1,14 +1,9 @@
 import jinja2
 from jinja2.ext import Extension
 from jinja2.sandbox import ImmutableSandboxedEnvironment
-from sympy import false
-from .renderer_template import TemplateRenderer
-import datetime
 
-placeholder_system = "<<<SYSTEM>>>"
-placeholder_user = "<<<USER>>>"
-placeholder_assistant = "<<<ASSISTANT>>>"
-placeholder_user2 = "<<<USER2>>>"
+import datetime
+from .formatter_common import evaluate_template
 
 class FormatterJinja:
     def __init__(self):
@@ -16,43 +11,42 @@ class FormatterJinja:
         self.tokenizer = None
         self.has_system = False
         self.optional_system = False
-
-        self.renderer = TemplateRenderer(self._render)
+        self.has_bos_token = False
+        self.bos_token = ""
+        self.has_eos_token = False
+        self.multi_turn = False
 
     def _render(self,*args,**kwargs):
         kwargs["strftime_now"] = self._strftime
+        kwargs["bos_token"] = self.bos_token
         rendered = self.tokenizer.render(*args,**kwargs)
         return rendered
 
-    def _strftime(self,x):
+    @staticmethod
+    def _strftime(x):
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
         return current_date
+
 
     def load_template(self,model_props):
         #model_name = model_props["model_name"]
         chat_template = model_props.get("chat_template",None)
+        self.bos_token = model_props.get("bos_token","")
         if not chat_template:
             return False
         try:
             self.tokenizer = self.jinja_env.from_string(chat_template)
-            self.renderer.evaluate_template()
-
+            evaluate_template(self)
         except:
             return False
         
-        if not self.renderer.multi_turn:
+        if not self.multi_turn:
             return False
 
-        if not self.renderer.has_system:
+        if not self.has_system:
             pass
 
-        if self.renderer.has_bos_token and len(model_props.get("bos_token","")) == 0 :
+        if self.has_bos_token and len(model_props.get("bos_token","")) == 0 :
             return False
 
-
         return True
-
-    def build_prompt(self, *args,**kwargs):
-        #prompt_sm = self.build_prompt_sm(*args,**kwargs)
-        prompt_j = self.renderer.build_prompt_j(*args,**kwargs)
-        return prompt_j
