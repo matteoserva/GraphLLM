@@ -30,8 +30,11 @@ class TemplateRenderer():
 
     def load_template(self,model_props):
         template_props = self.formatter.load_template(model_props)
+        if not template_props:
+            return False
         for el in template_props:
             setattr(self, el, template_props[el])
+        return True
 
     def build_prompt(self, messages, **kwargs):
         rendered = ""

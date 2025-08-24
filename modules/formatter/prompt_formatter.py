@@ -42,10 +42,8 @@ class Formatter:
         if chat_template is not None:
             try:
                 ll_formatter = FormatterJinja()
-                res1 = ll_formatter.load_template(model_props)
-                if res1:
-                    self.formatter = TemplateRenderer(ll_formatter)
-                    if self.formatter.load_template(model_props):
+                self.formatter = TemplateRenderer(ll_formatter)
+                if self.formatter.load_template(model_props):
                         return True
             except:
                 pass
@@ -53,11 +51,9 @@ class Formatter:
         if "apply_template" in model_props:
             try:
                 ll_formatter = FormatterLlamacpp()
-                res1 = ll_formatter.load_template(model_props)
-                if res1:
-                    self.formatter = TemplateRenderer(ll_formatter)
-                    if self.formatter.load_template(model_props):
-                        return True
+                self.formatter = TemplateRenderer(ll_formatter)
+                if self.formatter.load_template(model_props):
+                    return True
             except:
                 pass
 
