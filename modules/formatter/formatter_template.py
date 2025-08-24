@@ -6,6 +6,8 @@ placeholder_user = "<<<USER>>>"
 placeholder_assistant = "<<<ASSISTANT>>>"
 placeholder_user2 = "<<<USER2>>>"
 
+DEFAULT_SYSPROMPT = "You are a helpful assistant"
+
 class TemplateRenderer():
     def __init__(self,formatter):
         self.formatter = formatter
@@ -27,13 +29,12 @@ class TemplateRenderer():
         return rendered
 
     def load_template(self,model_props):
-        return True
+        template_props = self.formatter.load_template(model_props)
+        for el in template_props:
+            setattr(self, el, template_props[el])
 
-    def build_prompt(self, messages, force_system=False, custom_sysprompt=False, **kwargs):
+    def build_prompt(self, messages, **kwargs):
         rendered = ""
-
-        if messages[0]["role"] == "system" and (not custom_sysprompt) and self.optional_system:
-            messages = messages[1:]
 
         updated_messages = [el for el in messages]
 
@@ -45,10 +46,13 @@ class TemplateRenderer():
             else:
                 updated_messages.append({"role": "assistant", "content": TAG_RAW_TEMPLATE})
 
-        if messages[0]["role"] == "system" and not self.has_system and (force_system or custom_sysprompt):
+        if messages[0]["role"] == "system" and not self.has_system:
             assert (messages[1]["role"] == "user")
             updated_messages[1] = {"role": "user", "content": messages[0]["content"] + "\n\n" + messages[1]["content"]}
             updated_messages = updated_messages[1:]
+
+        if messages[0]["role"] == "user" and self.has_system and not self.optional_system:
+            updated_messages.insert(0,{"role": "user", "content":DEFAULT_SYSPROMPT})
 
         if updated_messages[-1]["role"] == "assistant":
             rendered += self._render(messages=updated_messages[:-1], add_generation_prompt=True)

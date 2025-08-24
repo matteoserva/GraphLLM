@@ -121,7 +121,7 @@
                 "agent_type": "ReAct(xml)",
                 "Tools": "markdown",
                 "Agent": "ReAct(xml)",
-                "template": "{p:system}\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.\n\nCurrent Date: 2024-09-30\n\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{p:tools}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call>{p:end}\n{p:user}\n{p:exec1}{p:end}"
+                "template": "{p:system}\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.\n\nCurrent Date: 2024-09-30\n\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{p:tools}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call>{p:eom}\n{p:user}\n{p:exec1}{p:eom}"
             }
         },
         {
@@ -449,10 +449,10 @@
                 -20,
                 720
             ],
-            "size": [
-                600,
-                370
-            ],
+            "size": {
+                "0": 600,
+                "1": 370
+            },
             "flags": {},
             "order": 4,
             "mode": 0,

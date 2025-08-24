@@ -35,7 +35,9 @@ class FormatterLlamacpp:
             return False
 
         try:
-            evaluate_template(self)
+            template_props = evaluate_template(self._render)
+            for el in template_props:
+                setattr(self, el, template_props[el])
         except:
             return False
 
@@ -52,5 +54,5 @@ class FormatterLlamacpp:
         if model_name.lower().find("mistral") == 0 and model_name.lower().find("instruct") >= 0:
             return True
 
-        return True
+        return template_props
 

@@ -12,8 +12,7 @@ class PromptBuilder:
 
     def __init__(self):
 
-        self.sysprompt = "You are a helpful assistant"
-        self.force_system=False
+        self.sysprompt = None
         self.custom_default_sysprompt =  False
         self.updated_sysprompt = False
         self.messages = []
@@ -28,11 +27,7 @@ class PromptBuilder:
         return is_raw
 
     def set_param(self,name,val):
-        if name == "force_system":
-             self.force_system = val
-        elif name == "sysprompt":
-             self.custom_default_sysprompt = True
-             self.updated_sysprompt = True
+        if name == "sysprompt":
              self.sysprompt = val
              self.reset()
 
@@ -49,7 +44,7 @@ class PromptBuilder:
         if len(multimodal_inputs) > 0:
             raise MultimodalPromptException("Multimodal input not supported by this client")
 
-        text_prompt = formatter.build_prompt(self.messages,force_system=self.force_system, custom_sysprompt = self.updated_sysprompt)
+        text_prompt = formatter.build_prompt(self.messages)
         print(text_prompt, end="")
         return text_prompt
 
@@ -75,9 +70,9 @@ class PromptBuilder:
     def reset(self):
         self.messages = []
         self.last_message = None
-        self.messages.append({"role":"system","content":self.sysprompt})
+        if self.sysprompt:
+            self.messages.append({"role":"system","content":self.sysprompt})
         self.first_prompt = True
-        self.updated_sysprompt = self.custom_default_sysprompt
 
     def set_from_raw(self,message):
         self.messages = parse_raw(message)
@@ -131,9 +126,10 @@ class PromptBuilder:
             if el["role"] == "raw":
                 self.messages = [el]
             elif el["role"] == "system":
-                if self.messages[0]["role"] == "system":
-                    self.updated_sysprompt = True
+                if len(self.messages) > 0 and self.messages[0]["role"] == "system":
                     self.messages[0] = el
+                else:
+                    self.messages.insert(0,el)
             elif el["role"] == "user":
                 message = self._parse_user_message(el,variables)
                 self.messages.append(message)
