@@ -26,28 +26,6 @@ class FormatterLlamacpp:
     def _render(self,messages,*args,**kwargs):
         return self.apply_template(messages)
 
-    def _evaluate_template(self):
-        messages = [
-            {"role": "system", "content": placeholder_system},
-            {"role": "user", "content": placeholder_user},
-            {"role": "assistant", "content": placeholder_assistant},
-            {"role": "user", "content": placeholder_user2},
-        ]
-        rendered = self.apply_template(messages)
-        self.has_system = placeholder_system in rendered
-        self.multi_turn = "<<<USER2>>>" in rendered
-
-        if self.has_system:
-            messages = [
-                {"role": "user", "content": placeholder_user},
-            ]
-            self.optional_system = False
-            try:
-                rendered = self._render(messages)
-                self.optional_system = placeholder_user in rendered
-            except:
-                pass
-
     def load_template(self, model_props):
         self.model_props = model_props
         model_name = model_props["model_name"]
