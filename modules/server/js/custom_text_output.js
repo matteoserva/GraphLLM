@@ -157,23 +157,29 @@ class CustomTextOutput extends CustomTextCommon{
                 converter.setOption('tables', true);
                 converter.setOption('disableForced4SpacesIndentedSublists', true)
 
+                const regexList = [
+                    /* $$ ... $$ */
+                    /\$\$ ([^\n]+) \$\$/g,
+                    /* $variable$ */
+                    /\$\w+\$/g,
+                    /* $...\\frac...$ */
+                    /\$(\S[^\n]*)?(\\text\{|\\boxed\{|\\frac\{)[^\n]+\S\$/g,
+                    /* $ ... $ */
+                    /\$ ([^\n]+) \$/g,
+                    /* $$\n...\n$$ */
+                    /\$\$\n([^\n]+\n)+?\s*\$\$(\n|$)/g,
+                    /* \[\n...\n\] */
+                    /\\\[\n([^\n]+\n)+?\s*\\\](\n|$)/g,
+                    /* \( ... \) */
+                    /\\\( ([^\n]+) \\\)/g,
+                    /* \[ ... \] */
+                    /\\\[ ([^\n]+) \\\]/g,
 
-                // replace inline $$ ... $$ with $ ... $
-                text = text.replace(/\$\$ ([^\n]+) \$\$/g,'$ $1 $')
+                ]
 
-                // replace $r$ with $ r $
-                text = text.replace(/\$(\w)\$/g,'$ $1 $')
-
-                // replace inline $...$ with $ ... $   offender: - $H = 16 \text{ cm}$
-                text = text.replace(/\$(\S[^\n]+(\\text\{|\\boxed\{)[^\n]+\S)\$/g,'$ $1 $')
-
-                text = text.replace(/\$ ([^\n]+) \$/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
-                text = text.replace(/\$\$\n([^\n]+\n)+?\s*\$\$(\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
-
-                // replace multiline \[ \]  and inline \( ... \) and inline \[ ... \]
-                text = text.replace(/\\\[\n([^\n]+\n)+?\s*\\\](\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
-                text = text.replace(/\\\( ([^\n]+) \\\)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
-                text = text.replace(/\\\[ ([^\n]+) \\\]/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
+                regexList.forEach(r => {
+                        text = text.replace(r,(match,p1) => katexFixer[0].filter(katex[0].filter(match)))
+                    })
 
                 var d = document.createElement("div")
                 d.innerHTML = text
