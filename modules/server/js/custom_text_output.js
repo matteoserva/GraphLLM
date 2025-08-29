@@ -170,9 +170,10 @@ class CustomTextOutput extends CustomTextCommon{
                 text = text.replace(/\$ ([^\n]+) \$/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
                 text = text.replace(/\$\$\n([^\n]+\n)+?\s*\$\$(\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
 
-                // replace multiline \[ \]  and inline \( ... \)
+                // replace multiline \[ \]  and inline \( ... \) and inline \[ ... \]
                 text = text.replace(/\\\[\n([^\n]+\n)+?\s*\\\](\n|$)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
                 text = text.replace(/\\\( ([^\n]+) \\\)/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
+                text = text.replace(/\\\[ ([^\n]+) \\\]/g,(match,p1) => katexFixer[0].filter(katex[0].filter(match)) )
 
                 var d = document.createElement("div")
                 d.innerHTML = text

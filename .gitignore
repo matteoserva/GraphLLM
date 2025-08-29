@@ -11,4 +11,4 @@ __pycache__
 /.aider*
 *.bak
 /pyproject.toml
-
+/tokenizers
