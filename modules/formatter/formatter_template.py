@@ -1,4 +1,5 @@
 import datetime
+from .models import apply_generation_prompt_fixes, preprocess_messages_list
 
 TAG_RAW_TEMPLATE = "<<<RAW_TEMPLATE2>>>"
 placeholder_system = "<<<SYSTEM>>>"
@@ -18,17 +19,13 @@ class TemplateRenderer():
         self.generation_prompt_prefix = ""
         self.has_bos_token = False
         self.has_eos_token = False
+        self.extra_props = None
 
     def _render(self,*args,**kwargs):
         return self.formatter._render(*args,**kwargs)
 
-    def apply_generation_prompt_fixes(self, rendered):
-        if rendered.endswith("<think>\n"):
-            rendered = rendered[:-8]
-        rendered += self.generation_prompt_prefix
-        return rendered
-
-    def load_template(self,model_props):
+    def load_template(self,model_props,extra_props):
+        self.extra_props = extra_props
         template_props = self.formatter.load_template(model_props)
         if not template_props:
             return False
@@ -39,7 +36,7 @@ class TemplateRenderer():
     def build_prompt(self, messages, **kwargs):
         rendered = ""
 
-        updated_messages = [el for el in messages]
+        updated_messages = preprocess_messages_list(messages,self.extra_props)
 
         if messages[0]["role"] == "raw":
             updated_messages[0] = {"role": "user", "content": "<<<UNUSED_RAW_TEMPLATE1>>>"}
@@ -59,11 +56,11 @@ class TemplateRenderer():
 
         if updated_messages[-1]["role"] == "assistant":
             rendered += self._render(messages=updated_messages[:-1], add_generation_prompt=True)
-            rendered = self.apply_generation_prompt_fixes(rendered)
+            rendered = apply_generation_prompt_fixes(self,rendered)
             rendered += updated_messages[-1]["content"]
         else:
             rendered += self._render(messages=updated_messages, add_generation_prompt=True)
-            rendered = self.apply_generation_prompt_fixes(rendered)
+            rendered = apply_generation_prompt_fixes(self,rendered)
 
         if messages[0]["role"] == "raw":
             pos = rendered.find(TAG_RAW_TEMPLATE) + len(TAG_RAW_TEMPLATE)

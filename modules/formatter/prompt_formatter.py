@@ -46,7 +46,7 @@ class Formatter:
             try:
                 ll_formatter = FormatterJinja()
                 self.formatter = TemplateRenderer(ll_formatter)
-                if self.formatter.load_template(model_props):
+                if self.formatter.load_template(model_props, extra_props):
                         return True
             except:
                 pass
@@ -55,7 +55,7 @@ class Formatter:
             try:
                 ll_formatter = FormatterLlamacpp()
                 self.formatter = TemplateRenderer(ll_formatter)
-                if self.formatter.load_template(model_props):
+                if self.formatter.load_template(model_props, extra_props):
                     return True
             except:
                 pass

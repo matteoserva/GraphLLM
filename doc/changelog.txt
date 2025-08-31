@@ -3,6 +3,7 @@
 #
 
 # ???
+- new models: glm-4, gpt-oss
 - Refactoring the engine
 - Documentation for custom nodes
 - Tutorial examples
