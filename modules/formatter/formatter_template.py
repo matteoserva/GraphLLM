@@ -1,5 +1,5 @@
 import datetime
-from .models import apply_generation_prompt_fixes, preprocess_messages_list
+from .models import apply_generation_prompt_fixes, preprocess_messages_list, format_prefill_message
 
 TAG_RAW_TEMPLATE = "<<<RAW_TEMPLATE2>>>"
 placeholder_system = "<<<SYSTEM>>>"
@@ -57,7 +57,7 @@ class TemplateRenderer():
         if updated_messages[-1]["role"] == "assistant":
             rendered += self._render(messages=updated_messages[:-1], add_generation_prompt=True)
             rendered = apply_generation_prompt_fixes(self,rendered)
-            rendered += updated_messages[-1]["content"]
+            rendered += format_prefill_message(updated_messages[-1]["content"],self.extra_props)
         else:
             rendered += self._render(messages=updated_messages, add_generation_prompt=True)
             rendered = apply_generation_prompt_fixes(self,rendered)

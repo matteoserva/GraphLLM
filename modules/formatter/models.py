@@ -36,3 +36,14 @@ def preprocess_messages_list(messages, extra_props):
         for el in messages:
             updated_messages.append(el)
     return updated_messages
+
+def format_prefill_message(message, extra_props):
+    if extra_props["model_type"] == "gpt-oss":
+        if message.startswith("<|channel|>"):
+            formatted = message
+        else:
+            formatted = "<|channel|>final<|message|>" + message
+    else:
+        formatted = message
+
+    return formatted

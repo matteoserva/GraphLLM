@@ -22,7 +22,7 @@ class FormatterLlamacpp:
         self.generation_prompt_prefix = ""
         self.tokenizer = Renderer(self)
         self.has_bos_token = False
-        self.renderer = TemplateRenderer(self._render)
+
 
     def _render(self,messages,*args,**kwargs):
         return self.apply_template(messages)
@@ -41,10 +41,10 @@ class FormatterLlamacpp:
         except:
             return False
 
-        if not self.renderer.multi_turn:
+        if not self.multi_turn:
             return False
 
-        if not self.renderer.has_system:
+        if not self.has_system:
             pass
 
         if model_name.lower().find("deepseek-r1") == 0:
