@@ -162,6 +162,8 @@ class CustomTextOutput extends CustomTextCommon{
                     /\$\$ ([^\n]+) \$\$/g,
                     /* $variable$ */
                     /\$\w+\$/g,
+                    /* \(variable\) */
+                    /\\\(\w+\\\)/g,
                     /* $...\\frac...$ */
                     /\$(\S[^\n]*)?(\\text\{|\\boxed\{|\\frac\{)[^\n]+\S\$/g,
                     /* $ ... $ */
