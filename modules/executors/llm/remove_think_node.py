@@ -11,5 +11,6 @@ class RemoveThinkNode(GenericExecutor):
         stripped = text.lstrip("\n ")
         if stripped.startswith("<think>"):
             text = text.split("</think>")[-1].lstrip()
-
+        elif stripped.startswith("<|channel|>analysis<|message|>"):
+            text = text.split("<|message|>")[-1]
         return [text]
