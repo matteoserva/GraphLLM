@@ -184,7 +184,10 @@ class CustomTextOutput extends CustomTextCommon{
                     })
 
                 var d = document.createElement("div")
-                d.innerHTML = text
+                const oai_think_begin = "<|channel|>analysis<|message|>"
+                const oai_think_end = "<|start|>assistant<|channel|>final<|message|>"
+                const oai_regexp = new RegExp(`^(${escapeRegExp(oai_think_begin)}.+?($|${escapeRegExp(oai_think_end)}))`,"sg")
+                d.innerHTML = text.replace(oai_regexp,"<think>$1</think>")
                 var t = d.querySelector("think")
                 if(t)
                 {
