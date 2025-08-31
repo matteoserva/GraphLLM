@@ -3,7 +3,7 @@ from jinja2.ext import Extension
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 
 import datetime
-from .formatter_common import evaluate_template
+from modules.formatter.formatter_common import evaluate_template
 
 class FormatterJinja:
     def __init__(self):

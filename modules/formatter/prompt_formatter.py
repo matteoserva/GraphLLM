@@ -1,13 +1,13 @@
 
 #from transformers import AutoTokenizer
 #from .formatter_hf import FormatterHF
-from .formatter_custom import FormatterCustom
-from .formatter_llamacpp import FormatterLlamacpp
-from .formatter_template import TemplateRenderer
-from .models import process_model_props
+from modules.formatter.high_level.formatter_custom import FormatterCustom
+from modules.formatter.low_level.formatter_llamacpp import FormatterLlamacpp
+from modules.formatter.high_level.formatter_template import TemplateRenderer
+from .model_parameters import process_model_props
 
 try:
-    from .formatter_jinja import FormatterJinja
+    from modules.formatter.low_level.formatter_jinja import FormatterJinja
 except:
     pass
 

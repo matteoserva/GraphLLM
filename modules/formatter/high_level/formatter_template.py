@@ -1,5 +1,5 @@
 import datetime
-from .models import apply_generation_prompt_fixes, preprocess_messages_list, format_prefill_message
+from modules.formatter.model_parameters import apply_generation_prompt_fixes, preprocess_messages_list, format_prefill_message
 
 TAG_RAW_TEMPLATE = "<<<RAW_TEMPLATE2>>>"
 placeholder_system = "<<<SYSTEM>>>"

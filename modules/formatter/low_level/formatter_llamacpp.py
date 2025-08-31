@@ -1,5 +1,4 @@
-from .formatter_template import TemplateRenderer
-from .formatter_common import evaluate_template
+from modules.formatter.formatter_common import evaluate_template
 
 placeholder_system = "<<<SYSTEM>>>"
 placeholder_user = "<<<USER>>>"

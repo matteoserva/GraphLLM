@@ -1,6 +1,5 @@
-from .prompt_formatter import Formatter
 from .prompt_parser import parse_raw, check_special_tokens, parse_graphllm
-from .formatter_graphllm import RendererGraphLLM
+from modules.formatter.high_level.formatter_graphllm import RendererGraphLLM
 import re
 
 ## questa è la parte che non ha bisongno di conoscere il modello
