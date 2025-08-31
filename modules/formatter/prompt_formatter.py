@@ -4,6 +4,7 @@
 from .formatter_custom import FormatterCustom
 from .formatter_llamacpp import FormatterLlamacpp
 from .formatter_template import TemplateRenderer
+from .models import process_model_props
 
 try:
     from .formatter_jinja import FormatterJinja
@@ -24,6 +25,8 @@ class Formatter:
         if not isinstance(model_props, dict):
             model_props = {"model_name": model_props, "chat_template": None}
 
+        extra_props = process_model_props(model_props)
+
         model_name = model_props["model_name"]
         chat_template = model_props.get("chat_template", None)
 
@@ -39,7 +42,7 @@ class Formatter:
                 pass
         """
 
-        if chat_template is not None:
+        if extra_props["enable_formatter_template"]:
             try:
                 ll_formatter = FormatterJinja()
                 self.formatter = TemplateRenderer(ll_formatter)
@@ -48,7 +51,7 @@ class Formatter:
             except:
                 pass
 
-        if "apply_template" in model_props:
+        if extra_props["enable_formatter_llamacpp"]:
             try:
                 ll_formatter = FormatterLlamacpp()
                 self.formatter = TemplateRenderer(ll_formatter)
