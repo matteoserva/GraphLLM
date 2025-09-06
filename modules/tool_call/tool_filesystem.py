@@ -26,7 +26,7 @@ class AgentFilesystem(GenericTool):
         try:
             files = os.listdir(dirname)
         except OSError as e:
-            return f"Error accessing directory: {str(e)}"
+            raise Exception(f"Error accessing directory: {str(e)}") from None
 
         return "\n".join(files)
 

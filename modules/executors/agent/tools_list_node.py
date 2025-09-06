@@ -1,6 +1,7 @@
 import json
 from modules.executors.common import GenericExecutor
 from modules.tool_call.tools_factory import ToolsFactory
+from modules.common.tools_list_container import ToolsListContainer
 
 class ToolsListNode(GenericExecutor):
     node_type = "tools_list"
@@ -18,5 +19,6 @@ class ToolsListNode(GenericExecutor):
         selected_operators = [op for cat in tools_list for op in tools_list[cat] if tools_list[cat][op]["enabled"]]
 
         operators = [el for el in all_operators if el["name"] in selected_operators]
+        operators = ToolsListContainer(operators)
         #self.properties["free_runs"] = 1
         return [operators]

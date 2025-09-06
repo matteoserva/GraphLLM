@@ -8,18 +8,20 @@ class MyLLMCallNode(BaseGuiNode):
         pass
 
     def buildNode(self):
-        builder = self
-        builder._reset()
-        builder._addInput("in", "string");
-        builder._addOutput("out", "string");
-        builder._addOutput("json", "string");
-        self._addSimpleProperty("conf", "")
-        self._addSimpleProperty("template", "")
-        builder._setConnectionLimits({"max_outputs":2, "min_outputs":2})
+        builder = self._initBuilder()
 
-        builder._addStandardWidget("combo","subtype","stateless",None, { "property": "subtype", "values": ["stateless","stateful"] })
+        builder.addInput("in", "string");
+        builder.addOutput("out", "string");
+        builder.addOutput("json", "string");
+        builder.addSimpleProperty("conf", "")
+        builder.addSimpleProperty("template", "")
+        builder.setConnectionLimits({"max_outputs":2, "min_outputs":2})
 
-        builder._addCustomWidget("text_input","Config",{ "property": "conf"})
-        builder._addCustomWidget("textarea","template",{ "property": "template"})
-        builder._setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")
-        builder._setPath("llm/llm_call")
+        builder.addStandardWidget("combo","subtype","stateless",None, { "property": "subtype", "values": ["stateless","stateful"] })
+
+        builder.addCustomWidget("text_input","Config",{ "property": "conf"})
+        builder.addCustomWidget("textarea","template",{ "property": "template"})
+        builder.setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")
+        builder.setPath("llm/llm_call")
+
+        return builder

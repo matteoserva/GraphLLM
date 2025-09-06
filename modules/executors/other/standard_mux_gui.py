@@ -9,16 +9,18 @@ class StandardMuxGui(BaseGuiNode):
 
 
     def buildNode(self):
-        builder = self
-        builder._reset()
-        builder._addInput("in1","string");
-        builder._addInput("in2", "string");
-        builder._addOutput("out", "string");
-        builder._addOutput("sel", "string");
+        builder = self._initBuilder()
+
+        builder.addInput("in1","string");
+        builder.addInput("in2", "string");
+        builder.addOutput("out", "string");
+        builder.addOutput("sel", "string");
         #builder.addOutput("i", "string");
-        builder._setConnectionLimits ({"max_outputs": 1, "min_outputs": 1, "min_inputs": 2})
-        builder._setPath("graph/standard_mux")
-        builder._setCallback("onConnectionsChange","MyGraphNode.prototype.onConnectionsChange")
+        builder.setConnectionLimits ({"max_outputs": 1, "min_outputs": 1, "min_inputs": 2})
+        builder.setPath("graph/standard_mux")
+        builder.setCallback("onConnectionsChange","MyGraphNode.prototype.onConnectionsChange")
+
+        return builder
 
 class DemuxGui(BaseGuiNode):
     node_title="Demux"
@@ -28,13 +30,15 @@ class DemuxGui(BaseGuiNode):
 
 
     def buildNode(self):
-        builder = self
-        builder._reset()
-        builder._addInput("in","string");
-        builder._addInput("sel", "string");
-        builder._addOutput("out1", "string");
-        builder._addOutput("out2", "string");
+        builder = self._initBuilder()
+
+        builder.addInput("in","string");
+        builder.addInput("sel", "string");
+        builder.addOutput("out1", "string");
+        builder.addOutput("out2", "string");
         #builder.addOutput("i", "string");
-        builder._setConnectionLimits ({"max_inputs": 1, "min_inputs": 1, "min_outputs": 2})
-        builder._setPath("graph/demux")
-        builder._setCallback("onConnectionsChange","MyGraphNode.prototype.onConnectionsChange")
+        builder.setConnectionLimits ({"max_inputs": 1, "min_inputs": 1, "min_outputs": 2})
+        builder.setPath("graph/demux")
+        builder.setCallback("onConnectionsChange","MyGraphNode.prototype.onConnectionsChange")
+
+        return builder

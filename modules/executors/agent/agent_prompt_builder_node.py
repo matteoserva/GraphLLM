@@ -3,7 +3,7 @@ from modules.executors.common import solve_placeholders,solve_prompt_args
 from modules.formatter import solve_templates
 from modules.formatter import PromptBuilder
 from modules.tool_call.tools_factory import ToolsFactory
-import json
+from modules.common.tools_list_container import ToolsListContainer
 
 
 class AgentHistoryBuilderNode(GenericExecutor):
@@ -52,66 +52,6 @@ class AgentHistoryBuilderNode(GenericExecutor):
             res += "</result>\n"
         return res
 
-    def _format_tools_markdown(self,tools):
-        ops = [el for el in tools]
-        textlist = []
-        for op in ops:
-            row = ""
-            row = row + "- " + op["name"]
-            if op["doc"] is not None:
-                row = row + ": " + op["doc"]
-            param_names = [el["name"] for el in op["params"]]
-            params_string = ",".join(param_names)
-            if row[-1] == ".":
-                row = row[:-1]
-            row = row + ". Parameters: " + params_string
-            textlist.append(row)
-        res = "\n".join(textlist)
-        return res
-
-    def _format_tools_json(self,tools):
-        {"type": "function", "function": {"name": "get_current_temperature", "description": "Get current temperature at a location.", "parameters": {"type": "object", "properties": {"location": {"type": "string", "description": "The location to get the temperature for, in the format \"City, State, Country\"."}, "unit": {"type": "string", "enum": ["celsius", "fahrenheit"], "description": "The unit to return the temperature in. Defaults to \"celsius\"."}}, "required": ["location"]}}}
-        ops = [el for el in tools]
-        textlist = []
-        for op in ops:
-            row = {"type":"function"}
-            function = {"name": op["name"]}
-            row["function"] = function
-
-            if op["doc"] is not None:
-                function["description"] = op["doc"]
-            parameters = {"type":"object"}
-            function["parameters"] = parameters
-            properties = [el["name"] for el in op["params"]]
-            parameters["properties"] = properties
-            rowstring = json.dumps(row)
-            textlist.append(rowstring)
-        res = "\n".join(textlist)
-        return res
-
-    def _format_tools_python(self,tools):
-        ops = [el for el in tools]
-        textlist = []
-        for op in ops:
-            row = ""
-            row += "def " + op["name"] + "("
-            param_names = [el["name"] for el in op["params"]]
-            params_string = ",".join(param_names)
-            row += params_string + ")\n"
-            if op["doc"] is not None:
-                row += '    """' + op["doc"] + '"""\n'
-            textlist.append(row)
-        res = "\n".join(textlist)
-        return res
-
-    def _format_tools(self,tools,format="markdown"):
-        if format == "json":
-            res = self._format_tools_json(tools)
-        elif format == "python":
-            res = self._format_tools_python(tools)
-        else:
-            res = self._format_tools_markdown(tools)
-        return res
 
     def __call__(self,prompt_args):
         single_shot = len(prompt_args) == 0 or (prompt_args[0] is None and len(prompt_args)< 3) # no controller and no exec
@@ -119,6 +59,7 @@ class AgentHistoryBuilderNode(GenericExecutor):
             self.node.disable_execution = True
         agent_variables = prompt_args[0] if len(prompt_args) > 0 and prompt_args[0] is not None else {}
         tools_list = prompt_args[1] if len(prompt_args) > 1 and prompt_args[1] is not None else self.full_tools_list
+
         prompt_subs = prompt_args[2:]
 
         history = agent_variables.get("history",[])
@@ -129,7 +70,15 @@ class AgentHistoryBuilderNode(GenericExecutor):
             agent_variables["history"] = "<!-- no action performed yet -->"
 
         tools_format = self.properties.get("tools_format","markdown")
-        formatted_ops = self._format_tools(tools_list,tools_format)
+        namespace = self.properties.get("namespace","")
+        if len(namespace) > 0:
+            namespace = namespace + "."
+
+        if not isinstance(tools_list, ToolsListContainer):
+            tools_list = ToolsListContainer(tools_list)
+            formatted_ops = tools_list.getFormattedOps(tools_format, namespace)
+        else:
+            formatted_ops = tools_list.getFormattedOps(tools_format,namespace)
         agent_variables["tools"] = formatted_ops
 
         m = solve_prompt_args(self.current_prompt, prompt_subs)

@@ -8,27 +8,29 @@ class WebsocketClientGui(BaseGuiNode):
         pass
 
     def buildNode(self):
-        builder = self
-        builder._reset()
-        #builder._addInput("send", "string");
-        builder._addOutput("LLM", "string");
-        builder._addOutput("code", "string");
-        builder._addCustomWidget("text_input", "repo_name", {"property": "repo_name", "default":"test"})
+        builder = self._initBuilder()
 
-        builder._addCustomWidget("file_drop", "files", {"property": "files"})
-        builder._setPath("text/code_infill")
+        #builder._addInput("send", "string");
+        builder.addOutput("LLM", "string");
+        builder.addOutput("code", "string");
+        builder.addCustomWidget("text_input", "repo_name", {"property": "repo_name", "default":"test"})
+
+        builder.addCustomWidget("file_drop", "files", {"property": "files"})
+        builder.setPath("text/code_infill")
 
         source_location = {"position": "output", "slot": 0, "filter": "llm_call"}
         eventId = {"type": "print"};
         action = {"type": "widget_action", "target": "append", "property": "files"}
-        builder._subscribe(source_location, eventId, action)
+        builder.subscribe(source_location, eventId, action)
 
         source_location = {"position": "output", "slot": 0, "filter": "llm_call"}
         eventId = {"type": "starting"};
         action = {"type": "widget_action", "target": "reset", "property": "files"}
-        builder._subscribe(source_location, eventId, action)
+        builder.subscribe(source_location, eventId, action)
 
         source_location = {"position": "output", "slot": 0, "filter": "llm_call"}
         eventId = {"type": "output", "slot": 0};
         action = {"type": "widget_action", "target": "set", "property": "files"}
-        builder._subscribe(source_location, eventId, action)
+        builder.subscribe(source_location, eventId, action)
+
+        return builder

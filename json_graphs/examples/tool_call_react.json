@@ -1,0 +1,841 @@
+{
+    "last_node_id": 75,
+    "last_link_id": 138,
+    "nodes": [
+        {
+            "id": 51,
+            "type": "agent/tools_list",
+            "pos": [
+                20,
+                300
+            ],
+            "size": {
+                "0": 310,
+                "1": 330
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "tools",
+                    "type": "string",
+                    "links": [
+                        119
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "tools_list": {
+                    "answer": {
+                        "answer": {
+                            "enabled": true
+                        }
+                    },
+                    "eval": {
+                        "eval": {
+                            "enabled": true
+                        },
+                        "python_exec": {
+                            "enabled": false
+                        }
+                    },
+                    "llm": {
+                        "query_file": {
+                            "enabled": false
+                        },
+                        "summarize": {
+                            "enabled": false
+                        }
+                    },
+                    "web": {
+                        "download": {
+                            "enabled": false
+                        },
+                        "web_search": {
+                            "enabled": false
+                        }
+                    },
+                    "filesystem": {
+                        "answer_file": {
+                            "enabled": false
+                        },
+                        "read_file": {
+                            "enabled": false
+                        },
+                        "write_file": {
+                            "enabled": false
+                        }
+                    },
+                    "fake weather": {
+                        "get_current_temperature": {
+                            "enabled": false
+                        },
+                        "get_temperature_date": {
+                            "enabled": false
+                        }
+                    }
+                },
+                "answer": true,
+                "eval": true,
+                "llm": false,
+                "web": false,
+                "filesystem": false,
+                "fake weather": false
+            }
+        },
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                1110,
+                290
+            ],
+            "size": {
+                "0": 420,
+                "1": 160
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 130,
+                    "pos": null,
+                    "dir": 3,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        95
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{\"grammar\": \"react_deepseek\", \"stop\": \"<result>\"}",
+                "template": "",
+                "subtype": "stateless"
+            }
+        },
+        {
+            "id": 55,
+            "type": "llm/remove_think",
+            "pos": [
+                1610,
+                290
+            ],
+            "size": {
+                "0": 140,
+                "1": 26
+            },
+            "flags": {},
+            "order": 12,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "llm",
+                    "type": "string",
+                    "link": 95,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "clean text",
+                    "type": "string",
+                    "links": [
+                        133
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 63,
+            "type": "agent/execute_tool_call",
+            "pos": [
+                1810,
+                290
+            ],
+            "size": {
+                "0": 140,
+                "1": 66
+            },
+            "flags": {},
+            "order": 13,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 133
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "final answer",
+                    "type": "string",
+                    "links": [
+                        134
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "tool out",
+                    "type": "string",
+                    "links": [
+                        113
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "tool raw",
+                    "type": "string",
+                    "links": [
+                        135
+                    ],
+                    "slot_index": 2
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 69,
+            "type": "graph/standard_mux",
+            "pos": [
+                1330,
+                580
+            ],
+            "size": {
+                "0": 140,
+                "1": 66
+            },
+            "flags": {},
+            "order": 16,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in1",
+                    "type": "string",
+                    "link": 135
+                },
+                {
+                    "name": "in2",
+                    "type": "string",
+                    "link": 136,
+                    "slot_index": 1
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        118
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "sel",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 24,
+            "type": "graph/variable",
+            "pos": [
+                700,
+                720
+            ],
+            "size": {
+                "0": 680,
+                "1": 340
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "properties": {
+                "identifier": "react_deepseek",
+                "parameters": "root ::= (planning? thought action observation)\n\nplanning ::=  \"<think>\\n\" sentencen \"</think>\" \"\\n\"+\nthought ::=   \"<thinking>\" sentencen \"</thinking>\\n\"\n#le parentesi in action per evitare che ce ne siano di innestate\naction  ::= \"<action>\" actionname actionparam* \"</action>\\n\"\nactionname ::= \"<action_name>\" sentence \"</action_name>\"\nactionparam ::= \"<action_parameter name=\\\"\" word \"\\\">\" sentencen \"</action_parameter>\"\nobservation  ::= \"<result>\" sentencen \"</result>\\n\"\n\n\nsentence ::= [^\\n<]+\nsentencep ::= [^\\n.]+ \".\"\nsentencen ::= ([^<] | \"< \")+\nword ::= [^\\n<>\"]+"
+            }
+        },
+        {
+            "id": 27,
+            "type": "graph/variable",
+            "pos": [
+                -10,
+                730
+            ],
+            "size": {
+                "0": 680,
+                "1": 340
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "prompt_template",
+                "parameters": "{p:bos}\n\n{p:system}\nYou are a AI task scheduler. Your job is to find the next logical step toward solving the user problem.\n\n## Tools\n{p:tools}\n\n## Objective\n\nUse the following template to process the next logical step:\n```\n<thinking> Your comments about what you achieved so far and what to do next </thinking>\n<action> The action to perform and its parameters. The specific format is described later. </action>\n<result> The result of the action </result>\n```\n\nformat of the action field:\n- The action field is enclosed between <action> and </action> tags.\n- The name of the action is inserted between <action_name> and </action_name> tags.\n- Each optional parameters must be enclosed between <action_parameter> and </action_parameter> tags.\n- Only the value of the parameter is specified. The name of the parameter is omitted.\n- The parameters can be multiline strings\n- Example: <action><action_name>eval</action_name><action_parameter name=\"expression\">2+3</action_parameter></action>\n\n## Rules\n- If a task cannot be directly executed, use the provided tools to execute the task in a indirect way\n- The input to query_file() should be a very detailed question about what you want from the external agent.\n- Use only information obtained from executing the provided tools, ignoring all your previous knowledge\n- Use query_file() to analyze downloaded web pages\n- use the eval tool or python code to perform math calculations.\n- each call to the eval tool should contain only one mathematical expression. Use multiple calls to eval() for complex operations.\n{p:eom}\n\n{p:user}\nYour job is to analyze the trace log and then determine what step should follow next.\n\nTrace log:\n```\n{p:exec1}\n```\n\nTell me the next step to complete the trace log.\n{p:eom}\n\n{p:assistant}\n{p:eom}\n\n"
+            }
+        },
+        {
+            "id": 65,
+            "type": "output/watch",
+            "pos": [
+                2060,
+                310
+            ],
+            "size": {
+                "0": 210,
+                "1": 88
+            },
+            "flags": {},
+            "order": 14,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 113
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 70,
+            "type": "llm/prompt_builder",
+            "pos": [
+                1610,
+                590
+            ],
+            "size": {
+                "0": 260,
+                "1": 110
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 138,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "simple",
+                    "type": "string",
+                    "links": [
+                        136
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "GraphLLM",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": "Question: {p:exec1}"
+            }
+        },
+        {
+            "id": 75,
+            "type": "graph/virtual_source",
+            "pos": [
+                1930,
+                590
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "sink",
+                    "type": "virtual",
+                    "link": null,
+                    "shape": 5
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        138
+                    ]
+                }
+            ],
+            "properties": {
+                "identifier": "user_query"
+            }
+        },
+        {
+            "id": 58,
+            "type": "other/repeat",
+            "pos": [
+                420,
+                300
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 119,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        120
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "repetitions": 0
+            }
+        },
+        {
+            "id": 22,
+            "type": "graph/variable",
+            "pos": [
+                360,
+                410
+            ],
+            "size": {
+                "0": 370,
+                "1": 140
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "ReAct agent\n"
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 46,
+            "type": "agent/agent_prompt_builder",
+            "pos": [
+                800,
+                290
+            ],
+            "size": {
+                "0": 250,
+                "1": 225
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "controller",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": 3
+                },
+                {
+                    "name": "tools",
+                    "type": "string",
+                    "link": 120,
+                    "pos": null,
+                    "dir": 3,
+                    "slot_index": 1
+                },
+                {
+                    "name": "exec",
+                    "type": "string",
+                    "link": 127,
+                    "pos": null,
+                    "dir": 3,
+                    "slot_index": 2
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "prompt",
+                    "type": "string",
+                    "links": [
+                        130
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "GraphLLM",
+                    "type": "string",
+                    "links": null
+                },
+                {
+                    "name": "variables",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "tools_format": "markdown",
+                "agent_type": "ReAct(xml)",
+                "Tools": "markdown",
+                "Agent": "ReAct(xml)",
+                "template": "{v:prompt_template}"
+            }
+        },
+        {
+            "id": 68,
+            "type": "other/memory",
+            "pos": [
+                800,
+                580
+            ],
+            "size": {
+                "0": 210,
+                "1": 67
+            },
+            "flags": {},
+            "order": 15,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 118
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        127
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "separator": "\"\\n\\n\""
+            }
+        },
+        {
+            "id": 41,
+            "type": "output/watch",
+            "pos": [
+                990,
+                50
+            ],
+            "size": [
+                910,
+                160
+            ],
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 134,
+                    "pos": null,
+                    "dir": 4
+                }
+            ],
+            "properties": {},
+            "color": "#223",
+            "bgcolor": "#335"
+        },
+        {
+            "id": 74,
+            "type": "graph/virtual_sink",
+            "pos": [
+                750,
+                60
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 137
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "source",
+                    "type": "virtual",
+                    "links": null,
+                    "shape": 5,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "identifier": "user_query"
+            }
+        },
+        {
+            "id": 40,
+            "type": "input/text_input",
+            "pos": [
+                20,
+                60
+            ],
+            "size": [
+                690,
+                140
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        137
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "Compute the cube of the sum of the first 10 even natural numbers."
+            },
+            "color": "#2a363b",
+            "bgcolor": "#3f5159"
+        }
+    ],
+    "links": [
+        [
+            95,
+            21,
+            0,
+            55,
+            0,
+            "string"
+        ],
+        [
+            113,
+            63,
+            1,
+            65,
+            0,
+            "string"
+        ],
+        [
+            118,
+            69,
+            0,
+            68,
+            0,
+            "string"
+        ],
+        [
+            119,
+            51,
+            0,
+            58,
+            0,
+            "string"
+        ],
+        [
+            120,
+            58,
+            0,
+            46,
+            1,
+            "string"
+        ],
+        [
+            127,
+            68,
+            0,
+            46,
+            2,
+            "string"
+        ],
+        [
+            130,
+            46,
+            0,
+            21,
+            0,
+            "string"
+        ],
+        [
+            133,
+            55,
+            0,
+            63,
+            0,
+            "string"
+        ],
+        [
+            134,
+            63,
+            0,
+            41,
+            0,
+            "string"
+        ],
+        [
+            135,
+            63,
+            2,
+            69,
+            0,
+            "string"
+        ],
+        [
+            136,
+            70,
+            0,
+            69,
+            1,
+            "string"
+        ],
+        [
+            137,
+            40,
+            0,
+            74,
+            0,
+            "string"
+        ],
+        [
+            138,
+            75,
+            0,
+            70,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "examples/tool_call_react",
+    "node_states": {
+        "21": {
+            "rotation": 0
+        },
+        "22": {
+            "rotation": 0
+        },
+        "24": {
+            "rotation": 0
+        },
+        "27": {
+            "rotation": 0
+        },
+        "40": {
+            "rotation": 0
+        },
+        "41": {
+            "rotation": 2
+        },
+        "46": {
+            "rotation": 0
+        },
+        "51": {
+            "rotation": 0
+        },
+        "55": {
+            "rotation": 0
+        },
+        "58": {
+            "rotation": 0
+        },
+        "63": {
+            "rotation": 0
+        },
+        "65": {
+            "rotation": 0
+        },
+        "68": {
+            "rotation": 2
+        },
+        "69": {
+            "rotation": 2
+        },
+        "70": {
+            "rotation": 2
+        },
+        "74": {
+            "rotation": 0
+        },
+        "75": {
+            "rotation": 2
+        }
+    }
+}

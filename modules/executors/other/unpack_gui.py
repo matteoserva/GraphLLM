@@ -9,9 +9,11 @@ class StandardMuxGui(BaseGuiNode):
 
 
     def buildNode(self):
-        builder = self
-        builder._reset()
-        builder._addInput("vector_in","string");
-        builder._addOutput("out", "string");
-        builder._setConnectionLimits ({"max_outputs": 1, "min_outputs": 1, "min_inputs": 1, "max_inputs": 1})
-        builder._setPath("other/copy_unpack")
+        builder = self._initBuilder()
+
+        builder.addInput("vector_in","string");
+        builder.addOutput("out", "string");
+        builder.setConnectionLimits ({"max_outputs": 1, "min_outputs": 1, "min_inputs": 1, "max_inputs": 1})
+        builder.setPath("other/copy_unpack")
+
+        return builder

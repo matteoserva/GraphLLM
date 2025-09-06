@@ -40,7 +40,7 @@ class RequestsTracker:
         with self.requests_lock:
             for el in self.pending_requests:
                 self.set_response(el,None)
-            self.pending_requests = None
+            #self.pending_requests = None
     
 
 class GuiClientAPI:
@@ -77,7 +77,7 @@ class GuiClientAPI:
         print(*args, **kwargs)
         self._send_text(text)
 
-    def play_audio(self,audio_data):
+    def play_audio(self,source_node, audio_data):
         binary_data = audio_data
 
         data_index = self.blob.add_binary_data(binary_data)
@@ -85,13 +85,27 @@ class GuiClientAPI:
         self._remote_call(res)
 
 
-    def rpc_call(self,node_name,function_name, function_args):
-        myuuid = str(uuid.uuid4())
-        data = [node_name] + [function_name] + list(function_args)
-        res = {"type": "call", "id":myuuid, "data": data}
-        resp = json.dumps(res)
-        encoded = resp
-        el = self._send_text(encoded)
+    def rpc_call(self,node_name,function_name, *function_args):
+        data = [node_name] + [function_name] + [function_args]
+        res = {"subtype": "call",  "data": data}
+        res = self._remote_call(res)
+        if "data" in res:
+            return res["data"]
+        return None
+
+    def async_call(self,node_name,function_name, *function_args):
+        data = [node_name] + [function_name] + [function_args]
+        res = {"type": "async_call",  "data": data}
+        text = json.dumps(res)
+        self._send_text(text)
+        return None
+
+    def assign(self,node_name,attribute_name, value):
+        data = [node_name] + [attribute_name] + [value]
+        res = {"type": "node_assign",  "data": data}
+        text = json.dumps(res)
+        self._send_text(text)
+        return None
 
 # network api
     def notify_client_event(self, event):

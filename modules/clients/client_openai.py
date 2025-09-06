@@ -116,7 +116,7 @@ class OpenAIClient():
         res = ""
         for chunk in completion:
 
-            val = chunk.choices[0].delta.content or ""
+            val = chunk.choices[0].delta.content if len(chunk.choices) > 0 and chunk.choices[0].delta.content else ""
             res += val
             if callback:
                 try:

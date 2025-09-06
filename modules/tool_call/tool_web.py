@@ -2,6 +2,7 @@ from .common import GenericTool,RunGraphMixin
 import subprocess
 import json
 import tempfile
+import sys
 
 class AgentWeb(GenericTool,RunGraphMixin):
     tool_name = "web"
@@ -12,7 +13,8 @@ class AgentWeb(GenericTool,RunGraphMixin):
         """Downloads the webpage at url {url} and saves its html content to a temporary file"""
         fullargs = ["python3", "extras/scraper/scrape.py", url]
         result = subprocess.run(fullargs, capture_output=True, text=True, input="")
-        return "Webpage at url " + url + " successfully saved at " + tempfile.gettempdir() + "/pagina.md"
+        retString = "Webpage at url " + url + " successfully saved at " + tempfile.gettempdir() + "/pagina.md"
+        return retString
 
     def web_search(self,query):
         """performs a web search using a search engine."""

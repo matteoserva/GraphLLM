@@ -1,0 +1,529 @@
+{
+    "last_node_id": 12,
+    "last_link_id": 14,
+    "nodes": [
+        {
+            "id": 1,
+            "type": "input/text_input",
+            "pos": [
+                30,
+                60
+            ],
+            "size": {
+                "0": 250,
+                "1": 470
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        11
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "### registers\n\neax: 00000000\nebx: 00000000\necx: 00000000\nedx: 00000000\n\nesi: 00000000\nedi: 00000000\nesp: 00000000\nebp: 00000000\n\n\n### memory\n\n00: 00000000\n04: 00000000\n08: 00000000\n0C: 00000000\n\n10: 00000000\n14: 00000000\n18: 00000000\n1C: 00000000"
+            },
+            "color": "#432",
+            "bgcolor": "#653"
+        },
+        {
+            "id": 3,
+            "type": "input/list",
+            "pos": [
+                30,
+                590
+            ],
+            "size": {
+                "0": 250,
+                "1": 270
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        2
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": [
+                    "mov eax, 0x20",
+                    "mov esp, eax",
+                    "push eax",
+                    "pop esi"
+                ]
+            },
+            "color": "#2a363b",
+            "bgcolor": "#3f5159"
+        },
+        {
+            "id": 9,
+            "type": "graph/standard_mux",
+            "pos": [
+                310,
+                120
+            ],
+            "size": {
+                "0": 140,
+                "1": 66
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in1",
+                    "type": "string",
+                    "link": 11
+                },
+                {
+                    "name": "in2",
+                    "type": "string",
+                    "link": 12
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        9
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "sel",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 4,
+            "type": "llm/llm_call",
+            "pos": [
+                1040,
+                230
+            ],
+            "size": {
+                "0": 210,
+                "1": 161
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 3,
+                    "pos": null,
+                    "dir": 3
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        4,
+                        5
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "json",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{grammar: gthink}",
+                "template": "",
+                "subtype": "stateless"
+            }
+        },
+        {
+            "id": 8,
+            "type": "output/watch",
+            "pos": [
+                1530,
+                220
+            ],
+            "size": {
+                "0": 310,
+                "1": 640
+            },
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 6,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "properties": {
+                "parameters": {
+                    "use_markdown": true
+                }
+            },
+            "color": "#2a363b",
+            "bgcolor": "#3f5159"
+        },
+        {
+            "id": 5,
+            "type": "output/watch",
+            "pos": [
+                1040,
+                480
+            ],
+            "size": {
+                "0": 450,
+                "1": 380
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 4,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "properties": {
+                "parameters": {
+                    "use_markdown": false
+                }
+            }
+        },
+        {
+            "id": 6,
+            "type": "graph/variable",
+            "pos": [
+                360,
+                600
+            ],
+            "size": {
+                "0": 610,
+                "1": 260
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "properties": {
+                "identifier": "gthink",
+                "parameters": "# here is the full grammar\nroot ::= thought? answer\nthought ::= \"<think>\\n\" ([a-zA-Z] think-token+)? \"\\n</think>\\n\\n\"\nthink-token ::= [^\\n] | (\"\\n\"+ [^<\\n]) | (\"\\n\"+ \"<\" [^\\n/]) \n\nanswer ::= last-instruction? registers \"\\n\\n\" memory\nlast-instruction ::= \"### last instruction\\n\" [^\\n]+ \"\\n\\n\"\nhex-digit ::= [0-9A-Fa-f]\nregisters ::= \"### registers\\n\\n\" register{4} \"\\n\" register{4}\nregister ::= [a-z]{3} \": \" \"**\"? hex-digit{8} \"**\"? \"\\n\"\nmemory ::= \"### memory\\n\\n\" mem-location{4} \"\\n\" mem-location{4}\nmem-location ::= hex-digit{2} \": \" \"**\"? hex-digit{8} \"**\"? \"\\n\""
+            }
+        },
+        {
+            "id": 2,
+            "type": "llm/prompt_builder",
+            "pos": [
+                360,
+                230
+            ],
+            "size": {
+                "0": 610,
+                "1": 300
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 9,
+                    "pos": null,
+                    "dir": 3
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 2,
+                    "pos": null,
+                    "dir": 3
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "simple",
+                    "type": "string",
+                    "links": [
+                        3
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "GraphLLM",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": "Your job is to emulate a simplified x86 machine.\n\nThere are 8 registers and 32 bytes of memory.\n\nFrom the current state of the machine, execute the provided instruction.\nHighlight the modified registers in bold, **like this**.\n\n# current state\n\n{}\n\n# instruction\n\n{}"
+            }
+        },
+        {
+            "id": 10,
+            "type": "graph/variable",
+            "pos": [
+                560,
+                60
+            ],
+            "size": {
+                "0": 690,
+                "1": 120
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "properties": {
+                "identifier": "",
+                "parameters": "This example simulates a x86 machine using a grammar."
+            },
+            "color": "#232",
+            "bgcolor": "#353"
+        },
+        {
+            "id": 12,
+            "type": "graph/connection",
+            "pos": [
+                1530,
+                90
+            ],
+            "size": {
+                "0": 210,
+                "1": 78
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 14
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "output",
+                "template": ""
+            }
+        },
+        {
+            "id": 7,
+            "type": "llm/remove_think",
+            "pos": [
+                1290,
+                230
+            ],
+            "size": {
+                "0": 140,
+                "1": 26
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "llm",
+                    "type": "string",
+                    "link": 5,
+                    "pos": null,
+                    "dir": 3
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "clean text",
+                    "type": "string",
+                    "links": [
+                        6,
+                        12,
+                        14
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        }
+    ],
+    "links": [
+        [
+            2,
+            3,
+            0,
+            2,
+            1,
+            "string"
+        ],
+        [
+            3,
+            2,
+            0,
+            4,
+            0,
+            "string"
+        ],
+        [
+            4,
+            4,
+            0,
+            5,
+            0,
+            "string"
+        ],
+        [
+            5,
+            4,
+            0,
+            7,
+            0,
+            "string"
+        ],
+        [
+            6,
+            7,
+            0,
+            8,
+            0,
+            "string"
+        ],
+        [
+            9,
+            9,
+            0,
+            2,
+            0,
+            "string"
+        ],
+        [
+            11,
+            1,
+            0,
+            9,
+            0,
+            "string"
+        ],
+        [
+            12,
+            7,
+            0,
+            9,
+            1,
+            "string"
+        ],
+        [
+            14,
+            7,
+            0,
+            12,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "examples/x86_asm_simulator",
+    "node_states": {
+        "1": {
+            "rotation": 0
+        },
+        "2": {
+            "rotation": 0
+        },
+        "3": {
+            "rotation": 0
+        },
+        "4": {
+            "rotation": 0
+        },
+        "5": {
+            "rotation": 1
+        },
+        "6": {
+            "rotation": 0
+        },
+        "7": {
+            "rotation": 0
+        },
+        "8": {
+            "rotation": 0
+        },
+        "9": {
+            "rotation": 1
+        },
+        "10": {
+            "rotation": 0
+        },
+        "12": {
+            "rotation": 0
+        }
+    }
+}

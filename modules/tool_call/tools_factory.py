@@ -14,7 +14,16 @@ def _load_available_tools():
     sub_path = module_path
     # now locates all classes
     modules = [el[len(sub_path) + 1:-3] for el in glob(sub_path + "/*.py")]
-    modules = [base_module + "." + el for el in modules if el.startswith("tool_")]
+    modules1 = [base_module + "." + el for el in modules if el.startswith("tool_")]
+
+    module_path = os.path.relpath(os.path.dirname(__file__)+"/../custom_tools")  # modules/executors
+    base_module = ".".join(base_module.split(".")[:-1] + ["custom_tools"])
+    sub_path = module_path
+    # now locates all classes
+    modules = [el[len(sub_path) + 1:-3] for el in glob(sub_path + "/*.py")]
+    modules2 = [base_module + "." + el for el in modules if el.startswith("tool_")]
+
+    modules = modules1 + modules2
     found_classes = []
     for m in modules:
         try:
@@ -52,10 +61,21 @@ def _load_available_tools():
             params = d[0][1:]
             e = len(params)
             default_params = d.defaults if d.defaults else []
-            params = [{"name": el, "required": ((i + len(default_params)) < len(params))} for i,el in enumerate(params) ]
+            params = [{"name": el, "required": True} for i, el in enumerate(params)]
+            for i, el in enumerate(default_params[::-1]):
+                parPos = len(params) -1 - i
+                params[parPos]["required"] = False
+                params[parPos]["default"] = el
+
+            for annotated in [el for el in params if el["name"] in d.annotations]:
+                typehint = d.annotations[annotated["name"]]
+                annotated["type"] = typehint.__name__
+
             row = {}
             row["name"] = op
             row["params"] = params
+            if "return" in d.annotations:
+                row["type"] = d.annotations["return"].__name__
             function_priority = class_priority
             if op in function_priorities:
                 function_priority = function_priorities[op]

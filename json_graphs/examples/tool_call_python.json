@@ -1,0 +1,1029 @@
+{
+    "last_node_id": 69,
+    "last_link_id": 146,
+    "nodes": [
+        {
+            "id": 54,
+            "type": "graph/group",
+            "pos": [
+                -860,
+                610
+            ],
+            "size": {
+                "0": 1880,
+                "1": 820
+            },
+            "flags": {
+                "pinned": true,
+                "collapsed": false
+            },
+            "order": 0,
+            "mode": 0,
+            "properties": {
+                "collapse_state": {
+                    "is_collapsed": false,
+                    "node_info": {
+                        "21": {
+                            "id": 21,
+                            "size": {
+                                "0": 270,
+                                "1": 160
+                            },
+                            "pos": [
+                                510,
+                                110
+                            ],
+                            "collapsed": false
+                        },
+                        "38": {
+                            "id": 38,
+                            "size": {
+                                "0": 730,
+                                "1": 420
+                            },
+                            "pos": [
+                                -260,
+                                110
+                            ],
+                            "collapsed": false
+                        },
+                        "39": {
+                            "id": 39,
+                            "size": {
+                                "0": 210,
+                                "1": 58
+                            },
+                            "pos": [
+                                700,
+                                730
+                            ],
+                            "collapsed": false
+                        },
+                        "47": {
+                            "id": 47,
+                            "size": {
+                                "0": 210,
+                                "1": 300
+                            },
+                            "pos": [
+                                1190,
+                                120
+                            ],
+                            "collapsed": false
+                        },
+                        "49": {
+                            "id": 49,
+                            "size": {
+                                "0": 140,
+                                "1": 66
+                            },
+                            "pos": [
+                                1450,
+                                430
+                            ],
+                            "collapsed": false
+                        },
+                        "50": {
+                            "id": 50,
+                            "size": {
+                                "0": 210,
+                                "1": 67
+                            },
+                            "pos": [
+                                1410,
+                                610
+                            ],
+                            "collapsed": false
+                        },
+                        "53": {
+                            "id": 53,
+                            "size": {
+                                "0": 210,
+                                "1": 106
+                            },
+                            "pos": [
+                                870,
+                                200
+                            ],
+                            "collapsed": false
+                        },
+                        "59": {
+                            "id": 59,
+                            "size": [
+                                360,
+                                220
+                            ],
+                            "pos": [
+                                1470,
+                                60
+                            ],
+                            "collapsed": false
+                        },
+                        "60": {
+                            "id": 60,
+                            "size": {
+                                "0": 210,
+                                "1": 300
+                            },
+                            "pos": [
+                                690,
+                                370
+                            ],
+                            "collapsed": false
+                        },
+                        "66": {
+                            "id": 66,
+                            "size": {
+                                "0": 210,
+                                "1": 177
+                            },
+                            "pos": [
+                                1040,
+                                580
+                            ],
+                            "collapsed": false
+                        }
+                    }
+                }
+            },
+            "bgcolor": "#45453580",
+            "shape": 1
+        },
+        {
+            "id": 42,
+            "type": "input/text_input",
+            "pos": [
+                380,
+                50
+            ],
+            "size": {
+                "0": 640,
+                "1": 110
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        67,
+                        105
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "parameters": "Find a three digit number with these properties:\n- The product of the digits is 27\n- The sum of the digits is 9."
+            }
+        },
+        {
+            "id": 65,
+            "type": "output/watch",
+            "pos": [
+                400,
+                260
+            ],
+            "size": {
+                "0": 620,
+                "1": 130
+            },
+            "flags": {},
+            "order": 13,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 146,
+                    "slot_index": 0
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 43,
+            "type": "output/watch",
+            "pos": [
+                1090,
+                50
+            ],
+            "size": {
+                "0": 980,
+                "1": 1290
+            },
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 114
+                }
+            ],
+            "properties": {
+                "parameters": {
+                    "use_markdown": true
+                }
+            }
+        },
+        {
+            "id": 59,
+            "type": "llm/prompt_builder",
+            "pos": [
+                610,
+                670
+            ],
+            "size": {
+                "0": 360,
+                "1": 220
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 105
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "simple",
+                    "type": "string",
+                    "links": [
+                        125
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "GraphLLM",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": "### call\n\n```python\n# First I want to retrieve the user query\nquery = tools.getUserQuery()\nprint(query)\n```\n\n### result\n```\n{p:exec1}\n```"
+            }
+        },
+        {
+            "id": 37,
+            "type": "agent/tools_list",
+            "pos": [
+                30,
+                70
+            ],
+            "size": {
+                "0": 270,
+                "1": 360
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "outputs": [
+                {
+                    "name": "tools",
+                    "type": "string",
+                    "links": [
+                        59
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "tools_list": {
+                    "answer": {
+                        "answer": {
+                            "enabled": true
+                        }
+                    },
+                    "eval": {
+                        "eval": {
+                            "enabled": true
+                        },
+                        "python_exec": {
+                            "enabled": false
+                        }
+                    },
+                    "filesystem": {
+                        "answer_file": {
+                            "enabled": false
+                        },
+                        "ls": {
+                            "enabled": false
+                        },
+                        "read_file": {
+                            "enabled": false
+                        },
+                        "write_file": {
+                            "enabled": false
+                        }
+                    },
+                    "llm": {
+                        "query_file": {
+                            "enabled": false
+                        },
+                        "summarize": {
+                            "enabled": false
+                        }
+                    },
+                    "web": {
+                        "download": {
+                            "enabled": false
+                        },
+                        "web_search": {
+                            "enabled": false
+                        }
+                    },
+                    "fake weather": {
+                        "get_current_temperature": {
+                            "enabled": false
+                        },
+                        "get_humidity": {
+                            "enabled": false
+                        },
+                        "get_precipitation_probability": {
+                            "enabled": false
+                        },
+                        "get_temperature_date": {
+                            "enabled": false
+                        },
+                        "get_weather_forecast": {
+                            "enabled": false
+                        },
+                        "get_wind_speed": {
+                            "enabled": false
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 49,
+            "type": "graph/standard_mux",
+            "pos": [
+                590,
+                1040
+            ],
+            "size": {
+                "0": 140,
+                "1": 66
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in1",
+                    "type": "string",
+                    "link": 124
+                },
+                {
+                    "name": "in2",
+                    "type": "string",
+                    "link": 125
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        78,
+                        83
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "sel",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "id": 38,
+            "type": "agent/agent_prompt_builder",
+            "pos": [
+                -1120,
+                720
+            ],
+            "size": {
+                "0": 730,
+                "1": 420
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "controller",
+                    "type": "string",
+                    "link": null
+                },
+                {
+                    "name": "tools",
+                    "type": "string",
+                    "link": 59
+                },
+                {
+                    "name": "exec",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "prompt",
+                    "type": "string",
+                    "links": [
+                        56
+                    ]
+                },
+                {
+                    "name": "GraphLLM",
+                    "type": "string",
+                    "links": null
+                },
+                {
+                    "name": "variables",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "tools_format": "python",
+                "agent_type": "ReAct(xml)",
+                "Tools": "markdown",
+                "Agent": "ReAct(xml)",
+                "template": "You have full access to an interactive python shell.\n\nRetrieve the user query and then execute it using the provided tools and the python shell.\nEach intermediate result must be generated by executing code in the shell.\n\nThe following python methods are available inside the shell:\n```python_api.py\n\ndef tools.getUserQuery():\n    \"\"\"retrieves the user query\"\"\"\n\n{p:tools}\n```",
+                "namespace": "tools"
+            }
+        },
+        {
+            "id": 47,
+            "type": "llm/prompt_builder",
+            "pos": [
+                330,
+                730
+            ],
+            "size": {
+                "0": 210,
+                "1": 300
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 73
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 91
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "simple",
+                    "type": "string",
+                    "links": [
+                        124
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "GraphLLM",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": "### call\n\n```python\n{p:exec1}\n```\n\n### result\n```\n{p:exec2}\n```"
+            }
+        },
+        {
+            "id": 21,
+            "type": "llm/llm_call",
+            "pos": [
+                -240,
+                730
+            ],
+            "size": {
+                "0": 270,
+                "1": 160
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 117,
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        73,
+                        97
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "{stop: \"\\n```\"}",
+                "template": "",
+                "subtype": "stateless"
+            }
+        },
+        {
+            "id": 60,
+            "type": "llm/prompt_builder",
+            "pos": [
+                -340,
+                940
+            ],
+            "size": {
+                "0": 210,
+                "1": 300
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 12,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 129
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": 145
+                },
+                {
+                    "name": "N",
+                    "type": "string",
+                    "link": null
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "simple",
+                    "type": "string",
+                    "links": [
+                        117
+                    ],
+                    "slot_index": 0
+                },
+                {
+                    "name": "GraphLLM",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "conf": "",
+                "subtype": "stateless",
+                "template": "{p:user}\n{p:exec1}\n{p:eom}\n\n{p:assistant}\n{p:exec2}\n\n### call\n\n```python\n{p:eom}"
+            }
+        },
+        {
+            "id": 39,
+            "type": "other/repeat",
+            "pos": [
+                -660,
+                1260
+            ],
+            "size": {
+                "0": 210,
+                "1": 58
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 56,
+                    "slot_index": 0
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        129
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "repetitions": 0
+            }
+        },
+        {
+            "id": 53,
+            "type": "python/python_console",
+            "pos": [
+                80,
+                830
+            ],
+            "size": {
+                "0": 210,
+                "1": 106
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 97
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        91,
+                        146
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "echo": "NO",
+                "strip": "AUTO",
+                "stop_exception": "NO",
+                "Echo": "YES",
+                "Strip sysPS": "AUTO",
+                "Stop at Error": "NO"
+            }
+        },
+        {
+            "id": 50,
+            "type": "other/memory",
+            "pos": [
+                520,
+                1180
+            ],
+            "size": {
+                "0": 210,
+                "1": 67
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 83
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "out",
+                    "type": "string",
+                    "links": [
+                        84,
+                        114,
+                        144
+                    ],
+                    "slot_index": 0
+                }
+            ],
+            "properties": {
+                "separator": "\"\\n\\n\""
+            }
+        },
+        {
+            "id": 66,
+            "type": "text/text_switch_case",
+            "pos": [
+                90,
+                1250
+            ],
+            "size": {
+                "0": 210,
+                "1": 177
+            },
+            "flags": {
+                "collapsed": false
+            },
+            "order": 14,
+            "mode": 0,
+            "inputs": [
+                {
+                    "name": "in",
+                    "type": "string",
+                    "link": 144
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "index",
+                    "type": "string",
+                    "links": [],
+                    "slot_index": 0
+                },
+                {
+                    "name": "default",
+                    "type": "string",
+                    "links": [
+                        145
+                    ],
+                    "slot_index": 1
+                },
+                {
+                    "name": "case0",
+                    "type": "string",
+                    "links": null
+                }
+            ],
+            "properties": {
+                "case_insensitive": "YES",
+                "Case insensitive": "YES",
+                "cases": [
+                    "tools.answer"
+                ]
+            }
+        }
+    ],
+    "links": [
+        [
+            50,
+            27,
+            0,
+            34,
+            1,
+            "string"
+        ],
+        [
+            56,
+            38,
+            0,
+            39,
+            0,
+            "string"
+        ],
+        [
+            59,
+            37,
+            0,
+            38,
+            1,
+            "string"
+        ],
+        [
+            67,
+            42,
+            0,
+            34,
+            1,
+            "string"
+        ],
+        [
+            73,
+            21,
+            0,
+            47,
+            0,
+            "string"
+        ],
+        [
+            78,
+            49,
+            0,
+            34,
+            1,
+            "string"
+        ],
+        [
+            83,
+            49,
+            0,
+            50,
+            0,
+            "string"
+        ],
+        [
+            84,
+            50,
+            0,
+            34,
+            1,
+            "string"
+        ],
+        [
+            91,
+            53,
+            0,
+            47,
+            1,
+            "string"
+        ],
+        [
+            97,
+            21,
+            0,
+            53,
+            0,
+            "string"
+        ],
+        [
+            105,
+            42,
+            0,
+            59,
+            0,
+            "string"
+        ],
+        [
+            114,
+            50,
+            0,
+            43,
+            0,
+            "string"
+        ],
+        [
+            117,
+            60,
+            0,
+            21,
+            0,
+            "string"
+        ],
+        [
+            124,
+            47,
+            0,
+            49,
+            0,
+            "string"
+        ],
+        [
+            125,
+            59,
+            0,
+            49,
+            1,
+            "string"
+        ],
+        [
+            129,
+            39,
+            0,
+            60,
+            0,
+            "string"
+        ],
+        [
+            144,
+            50,
+            0,
+            66,
+            0,
+            "string"
+        ],
+        [
+            145,
+            66,
+            1,
+            60,
+            1,
+            "string"
+        ],
+        [
+            146,
+            53,
+            0,
+            65,
+            0,
+            "string"
+        ]
+    ],
+    "groups": [],
+    "config": {},
+    "extra": {},
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "examples/tool_call_python",
+    "node_states": {
+        "21": {
+            "rotation": 0
+        },
+        "37": {
+            "rotation": 1
+        },
+        "38": {
+            "rotation": 1
+        },
+        "39": {
+            "rotation": 0
+        },
+        "42": {
+            "rotation": 0
+        },
+        "43": {
+            "rotation": 3
+        },
+        "47": {
+            "rotation": 0
+        },
+        "49": {
+            "rotation": 1
+        },
+        "50": {
+            "rotation": 1
+        },
+        "53": {
+            "rotation": 0
+        },
+        "54": {
+            "rotation": 0
+        },
+        "59": {
+            "rotation": 1
+        },
+        "60": {
+            "rotation": 3
+        },
+        "65": {
+            "rotation": 0
+        },
+        "66": {
+            "rotation": 2
+        }
+    }
+}

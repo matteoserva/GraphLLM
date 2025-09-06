@@ -74,146 +74,170 @@ f.close()
 
 driver = None
 
-def load_page(url):
-  global driver
-  service = Service()
+class Scraper():
+    def __init__(self):
+        self.driver = None
+        self.debug_mode = debug_mode
 
-  print("Started processing url: " + url, file=sys.stderr)
+    def _applyScript(self,script_name):
+        f = open(currentdir + "/" + script_name, "r")
+        s = f.read()
+        f.close()
+        retVal = self.driver.execute_script(s)
+        return retVal
 
-  options = webdriver.FirefoxOptions()
-  #options.add_argument('--safe-mode')
-  if not debug_mode:
-    options.add_argument('--headless')
+    def initialize_driver(self):
+        service = Service()
+        options = webdriver.FirefoxOptions()
+        # options.add_argument('--safe-mode')
+        if not debug_mode:
+            options.add_argument('--headless')
 
-  home_dir = expanduser("~")
-  profile_path = home_dir + "/.mozilla/firefox/profile.bot"
-  print("Loading the firefox profile", profile_path, file=sys.stderr)
-  if not exists(profile_path):
-      print("WARNING: profile not found. check the documentation.", profile_path, file=sys.stderr)
-  
-  try:
-      profile=webdriver.FirefoxProfile(profile_path)
-  except:
-      print("profile.bot not found. Using default with degraded performance", file=sys.stderr)
+        home_dir = expanduser("~")
+        profile_path = home_dir + "/.mozilla/firefox/profile.bot"
+        print("Loading the firefox profile", profile_path, file=sys.stderr)
+        if not exists(profile_path):
+            print("WARNING: profile not found. check the documentation.", profile_path, file=sys.stderr)
 
-      profile=webdriver.FirefoxProfile()
+        try:
+            profile = webdriver.FirefoxProfile(profile_path)
+        except:
+            print("profile.bot not found. Using default with degraded performance", file=sys.stderr)
+            profile = webdriver.FirefoxProfile()
 
-  options.profile = profile
+        options.profile = profile
 
-  print("launching firefox via geckodriver", file=sys.stderr)
+        print("launching firefox via geckodriver", file=sys.stderr)
 
-  if not driver:
-    try:
-        driver = webdriver.Firefox(options=options, service=service)
-    except:
-        service.path = currentdir + "/geckodriver"
-        if not exists(service.path):
-          print("WARNING: geckodriver not found. download it and put it here.", service.path, file=sys.stderr)
-        
-        driver = webdriver.Firefox(options=options, service=service)
+        try:
+            self.driver = webdriver.Firefox(options=options, service=service)
+        except:
+            service.path = currentdir + "/geckodriver"
+            if not exists(service.path):
+              print("WARNING: geckodriver not found. download it and put it here.", service.path, file=sys.stderr)
+
+            self.driver = webdriver.Firefox(options=options, service=service)
+
+    def _wait_page_load(self):
+        driver = self.driver
+
+        # aspetto che il documento sia caricato
+        while driver.execute_script("return document.readyState") != "complete":
+            time.sleep(.1)
 
 
-  start_url = "about:reader?url=" + url # not used anymore
-  print("loading webpage", url,file=sys.stderr)
+    def _wait_dynamic_components(self):
+        driver = self.driver
 
-  driver.get(url)
+        while driver.execute_script("return (window.jQuery != null) && (jQuery.active > 0);"):
+            time.sleep(.1)
 
-  print("waiting for readyState complete", file=sys.stderr)
+        if driver.execute_script("return window.running_fetches") > 0:
+              h = [-1]*10
+              # if no changes for 1 second or timeout of 10 seconds
+              print("waiting for extra components to load (reddit?)", file=sys.stderr)
+              for i in range(50):
+                r = driver.execute_script("return window.running_fetches")
+                h=h[1:]
+                h.append(r)
+                if h.count(h[0]) == len(h):
+                  break
+                #print(r, file=sys.stderr)
+                time.sleep(.1)
+              print("after wait, running:",r, file=sys.stderr)
 
-  # aspetto che il documento sia caricato
-  while driver.execute_script("return document.readyState") != "complete":
-      time.sleep(.1)
+    def load_page(self,url):
+        driver=self.driver
 
-  driver.execute_script(fetch_wrapper)
-  print("waiting for jquery scripts to terminate", file=sys.stderr)
+        print("Started processing url: " + url, file=sys.stderr)
 
-  #aspetto che javascript finisca
-  while driver.execute_script("return (window.jQuery != null) && (jQuery.active > 0);") :
-      time.sleep(.1)
-  #sposto in basso per attivare il caricamento di pagine extra
-  driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-  #mezzo secondo di attesa per far partire eventuali ajax
+        start_url = "about:reader?url=" + url # not used anymore
+        print("loading webpage", url,file=sys.stderr)
 
-  print("waiting for dynamic components", file=sys.stderr)
-  for i in range(20):
-    #print(driver.execute_script("return document.readyState") != "complete", file=sys.stderr)
-    time.sleep(.1)
-  time.sleep(.5)
-  #aspetto eventuali ajax
-  while driver.execute_script("return (window.jQuery != null) && (jQuery.active > 0);") :
-      time.sleep(.1)
+        driver.get(url)
 
-  if driver.execute_script("return window.running_fetches") > 0:
-    h = [0] * 10
-    for i in range(50):
-      r = driver.execute_script("return window.running_fetches")
-      h = h[1:]
-      h.append(r)
-      if(sum(h) == 0):
-        break
-      #print(r, file=sys.stderr)
-      time.sleep(.1)
-  print("wait complete for dynamic components", file=sys.stderr)
+        print("waiting for static components...", file=sys.stderr)
+        self._wait_page_load()
 
-  # trying to avoid special cases
-  driver.execute_script(reddit_fixer)
+        print("waiting for dynamic components...", file=sys.stderr)
+        driver.execute_script(fetch_wrapper)
+        self._wait_dynamic_components()
 
-  if driver.execute_script("return window.running_fetches") > 0:
-    h = [0]*10
-    print("waiting for extra components to load (reddit?)", file=sys.stderr)
-    for i in range(50):
-      r = driver.execute_script("return window.running_fetches")
-      h=h[1:]
-      h.append(r)
-      if(sum(h) == 0):
-        break
-      #print(r, file=sys.stderr)
-      time.sleep(.1)
-    print("after wait, running:",r, file=sys.stderr)
-    
-  # cancello i nodi nascosti da ublock
+        print("Scrolling the page...", file=sys.stderr)
+        for i in range(4):
+            scrpt = """ let options = {top: (document.body.scrollHeight - window.innerHeight), left: 0, behavior: "smooth", }
+            if (window.pageYOffset + window.innerHeight < document.body.scrollHeight) { window.scrollTo(options) }
+            """
+            driver.execute_script(scrpt)
+            self._wait_dynamic_components()
 
-  print("deleting nodes identified by ublock origin.", file=sys.stderr)
-  driver.execute_script(script_removeHiddenNodes)
+        #print("Apply reddit fixes...", file=sys.stderr)
+        #driver.execute_script(reddit_fixer)
+        #self._wait_dynamic_components()
 
-  print("readability.js", file=sys.stderr)
+        print("Web page loaded.", file=sys.stderr)
 
-  ## readability per estrarre il contenuto
-  pagina_rjs = driver.execute_script(scr + "\n" + "return new Readability(document.cloneNode(true)).parse();")
-  
-  # fallback if readability fails
-  if (not debug_mode) and not pagina_rjs:
-    driver.execute_script(scr + "\n" + "return new Readability(document).parse();")
-    pagina_rjs = {}
-    pagina_rjs["title"] = url
-    pagina_rjs["content"] = driver.page_source
-  scraper_utils.write_file(tempfile.gettempdir() + "/pagina1.html",str(pagina_rjs["content"]))
+        html_content = driver.page_source
+        scraper_utils.write_file(tempfile.gettempdir() + "/pagina0.html", html_content)
 
-  ## check
-  should_keep = driver.execute_script(readerable + "\n" + "return isProbablyReaderable(document);")
-  print("reader mode available?", should_keep, file=sys.stderr)
+        return driver.page_source
 
-  html_content = driver.page_source
+    def _apply_fixes(self):
+        print("deleting nodes identified by ublock origin.", file=sys.stderr)
+        self.driver.execute_script(script_removeHiddenNodes)
 
-  #if not should_keep:
-  #    pagina_rjs["content"] = html_content
+        self._applyScript("fixUnknownTags.js")
 
-  scraper_utils.write_file(tempfile.gettempdir() + "/pagina0.html",html_content)
-  if not debug_mode:
-    print("closing firefox", file=sys.stderr)
-    driver.quit()
-  return pagina_rjs
+        self._applyScript("fixRelativeLinks.js")
 
-def apply_static_readability(content):
-  ## ora riparso e rimuovo i link
-  from readabilipy import simple_json_from_html_string
-  print("static readability", file=sys.stderr)
+        hostname = self.driver.current_url.split("//",1)[1].split("/")[0]
+        if "reddit" in hostname:
+            self._applyScript("redditFixer2.js")
+        return self.driver.page_source
 
-  article = simple_json_from_html_string(content,use_readability=False)
-  article["plain_text"]
+    def _isReaderable(self):
+        should_keep = self.driver.execute_script(readerable + "\n" + "return isProbablyReaderable(document);")
+        hostname = self.driver.current_url.split("//", 1)[1].split("/")[0]
+        if "reddit" in hostname:
+            should_keep = False
 
-  scraper_utils.write_file(tempfile.gettempdir() + "/pagina2.html",article["plain_content"])
-  return article
+        print("reader mode available?", should_keep, file=sys.stderr)
+        return should_keep
+
+    def extract_content(self):
+        driver = self.driver
+
+        ## check
+
+
+        ## readability per estrarre il contenuto
+        pagina_rjs = driver.execute_script(scr + "\n" + "return new Readability(document.cloneNode(true)).parse();")
+
+        # fallback if readability fails
+        if (not debug_mode) and not pagina_rjs:
+          driver.execute_script(scr + "\n" + "return new Readability(document).parse();")
+          pagina_rjs = {}
+          pagina_rjs["title"] = url
+          pagina_rjs["content"] = driver.page_source
+        scraper_utils.write_file(tempfile.gettempdir() + "/pagina1.html",str(pagina_rjs["content"]))
+
+
+
+        html_content = driver.page_source
+
+        #if not should_keep:
+        #    pagina_rjs["content"] = html_content
+
+
+
+        return pagina_rjs
+
+    def close_driver(self):
+        if not self.debug_mode:
+          print("closing firefox", file=sys.stderr)
+          self.driver.quit()
+
+
 
 
 ## carico i dati in bs per eventuali riprocessamenti
@@ -229,7 +253,9 @@ def clean_soup(content):
       
   for el in soup.select("shreddit-post>p[slot=title]"):
       el.extract()
-  return soup
+
+  cleaned_content = str(soup)
+  return cleaned_content
   
 ##converto in md
 def convert_to_md(title, data):
@@ -238,23 +264,68 @@ def convert_to_md(title, data):
   converter = html2text.HTML2Text()
   converter.ignore_links=False
   converter.ignore_images=True
+  converter.protect_links = False
+  converter.body_width = None
   markdown_content = "# " + title + "\n\n" + converter.handle(data).strip()
   scraper_utils.write_file(tempfile.gettempdir() + "/pagina.md",markdown_content)
   return markdown_content
-  
+
+def apply_static_readability(content):
+  ## ora riparso e rimuovo i link
+  import readabilipy
+  print("static readability", file=sys.stderr)
+
+  orig = readabilipy.simplifiers.html.elements_to_replace_with_contents
+  def wrapper_replace():
+      res = orig()
+      res = [el for el in res if el != "a"]
+      return res
+  readabilipy.simplifiers.html.elements_to_replace_with_contents = wrapper_replace
+
+  orig = readabilipy.simplifiers.html.block_level_whitelist
+  def wrapper_replace():
+      res = orig()
+      res = ["a"] + res
+      return res
+  readabilipy.simplifiers.html.block_level_whitelist = wrapper_replace
+
+
+  article = readabilipy.simple_json_from_html_string(content,use_readability=False)
+
+  scraper_utils.write_file(tempfile.gettempdir() + "/pagina2.html",article["content"])
+
+  conveted_static = convert_to_md(article["title"], article["content"])
+  return conveted_static
+
+def apply_dynamic_readability(scraper):
+    pagina_rjs = scraper.extract_content()
+    clean_html = clean_soup(pagina_rjs["content"])
+    scraper_utils.write_file(tempfile.gettempdir() + "/pagina3.html", clean_html)
+    markdown_content = convert_to_md(pagina_rjs["title"], clean_html)
+    return markdown_content
+
 def scrape(url):
-  pagina_rjs = load_page(url)
-  article = apply_static_readability(pagina_rjs["content"])
-  soup = clean_soup(pagina_rjs["content"])
-  clean_html = str(soup)
-  scraper_utils.write_file(tempfile.gettempdir() + "/pagina3.html",clean_html)
-  markdown_content = convert_to_md(pagina_rjs["title"], clean_html)
-  return markdown_content
+  scraper = Scraper()
+  scraper.initialize_driver()
+  scraper.load_page(url)
+  html_content = scraper._apply_fixes()
+
+  static_parsed = apply_static_readability(html_content)
+  dynamic_parsed = apply_dynamic_readability(scraper)
+
+  good_dynamic = scraper._isReaderable()
+
+  parsed_markdown = dynamic_parsed if (good_dynamic and dynamic_parsed) else static_parsed
+
+  scraper.close_driver()
+
+  return parsed_markdown
 
 if __name__ == "__main__":
     import getopt
     opts, args = getopt.getopt(sys.argv[1:], 'd')
     for (k, v) in opts:
        if k == "-d": debug_mode = True
+
     markdown_content = scrape(args[0])
     print(markdown_content)

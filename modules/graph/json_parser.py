@@ -15,9 +15,14 @@ class JsonParser():
             outputs = node.get("outputs",[])
             new_inputs = [links[str(el["link"])] if el["link"] else None for el in inputs]
             new_inputs = [ nodes[str(el[1])] if el else None for el in new_inputs]
-            new_outputs = [el["links"] if el.get("links",None) else [] for el in outputs]
-            new_outputs = [ [ links[str(el)]  for el in s ] for s in new_outputs ]
-            new_outputs = [ [ nodes[str(el[3])]  for el in s ] for s in new_outputs ]
+            linked_outputs = [el["links"] if el.get("links",None) else [] for el in outputs]
+            new_outputs = []
+            for s in linked_outputs:
+                link_details = [ links[str(el)]  for el in s ]
+                dest_names = [str(el[3]) for el in link_details]
+                output_nodes = [ nodes[el]  for el in dest_names if el in nodes]
+                new_outputs.append(output_nodes)
+
             node["linked_inputs"] = new_inputs
             node["linked_outputs"] = new_outputs
             pass
@@ -28,18 +33,20 @@ class JsonParser():
         links = {str(el[0]):el for el in jval.get("links",[])}
         #valid_sections = ["graph","llm","tools"]
 
-        nodes = { str(el["id"]):el for el in jval.get("nodes",[]) if el["type"].split("/")[0]}
+        gui_nodes = { str(el["id"]):el for el in jval.get("nodes",[]) if el["type"].split("/")[0]}
         #print(jval)
 
-        self._solve_links(nodes,links)
+        self._solve_links(gui_nodes,links)
 
         gui_node_parser = GuiNodeParser()
         new_nodes = {}
-        for el in nodes:
-                old_config = nodes[el]
+        for el in gui_nodes:
+                old_config = gui_nodes[el]
                 new_config = gui_node_parser.parse_node(old_config,links)
-                if new_config:
-                    new_nodes[el] = new_config
+                for new_node in new_config:
+                    node_id = new_node["id"]
+                    del new_node["id"]
+                    new_nodes[node_id] = new_node
 
         gui_node_parser.postprocess_nodes(new_nodes)
 
