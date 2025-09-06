@@ -2,7 +2,7 @@
 # CHANGELOG for GraphLLM
 #
 
-# ???
+# 06/09/2025
 - new models: glm-4, gpt-oss
 - Refactoring the engine
 - Documentation for custom nodes
