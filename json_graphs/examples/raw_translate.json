@@ -9,10 +9,10 @@
                 125,
                 305
             ],
-            "size": [
-                349,
-                453
-            ],
+            "size": {
+                "0": 349,
+                "1": 453
+            },
             "flags": {},
             "order": 2,
             "mode": 0,
@@ -46,8 +46,8 @@
             ],
             "properties": {
                 "conf": "{stop: \"```\"}",
-                "subtype": "stateless",
-                "template": "\n{p:bos}\n# Languages\n- italian\n- english\n- french\n\n# Sample 1\n```\n- buongiorno\n- good morning\n- bonjour\n```\n\n# sample 2\n```\n- {}\n"
+                "template": "{p:bos}\n# Languages\n- italian\n- english\n- french\n\n# Sample 1\n```\n- buongiorno\n- good morning\n- bonjour\n```\n\n# sample 2\n```\n- {}\n",
+                "subtype": "stateless"
             }
         },
         {
@@ -57,10 +57,10 @@
                 526,
                 131
             ],
-            "size": [
-                515,
-                122
-            ],
+            "size": {
+                "0": 515,
+                "1": 122
+            },
             "flags": {},
             "order": 0,
             "mode": 0,
@@ -78,10 +78,10 @@
                 123,
                 132
             ],
-            "size": [
-                389,
-                120
-            ],
+            "size": {
+                "0": 389,
+                "1": 120
+            },
             "flags": {},
             "order": 1,
             "mode": 0,
@@ -106,10 +106,10 @@
                 509,
                 310
             ],
-            "size": [
-                540,
-                440
-            ],
+            "size": {
+                "0": 540,
+                "1": 440
+            },
             "flags": {},
             "order": 3,
             "mode": 0,
@@ -147,5 +147,21 @@
     "groups": [],
     "config": {},
     "extra": {},
-    "version": 0.4
+    "version": 0.4,
+    "group_states": {},
+    "graph_name": "examples/raw_translate",
+    "node_states": {
+        "16": {
+            "rotation": 0
+        },
+        "21": {
+            "rotation": 0
+        },
+        "22": {
+            "rotation": 0
+        },
+        "24": {
+            "rotation": 0
+        }
+    }
 }
