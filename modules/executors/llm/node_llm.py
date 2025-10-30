@@ -45,7 +45,7 @@ class LlmExecutor(GenericExecutor):
                 executor_parameters = self.graph.client_parameters
             self._set_client_parameters(executor_parameters)
             new_obj = {}
-            for key in ["stop", "n_predict","temperature","top_k"]:
+            for key in ["stop", "n_predict","temperature","top_k","chat_template_kwargs"]:
                 if key in args:
                     new_obj[key] = args[key]
 
