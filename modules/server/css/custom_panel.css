@@ -1,0 +1,54 @@
+
+
+div.CustomPanelDiv {
+border: 1px solid gray;
+
+
+}
+
+div.CustomPanelDiv > div.CustomPanelHeader {
+cursor: pointer;
+width: 100%;
+display: flex;
+background-color: #202030;
+padding-left: 4px;
+padding-right: 4px;
+}
+
+div.CustomPanelDiv > div.CustomPanelHeader > .CustomPanelTitleDiv{
+flex: 1 0 auto;
+position: relative;
+
+}
+
+div.CustomPanelDiv > div.CustomPanelHeader > .CustomPanelTitleDiv > .CustomPanelTitle{
+right: 0px;
+position: absolute;
+}
+
+div.CustomPanelDiv > div.div-innercontainer > div{
+min-height: 30px;
+}
+
+div.CustomPanelDiv > div.div-innercontainer {
+position: absolute;
+width: 100%;
+z-index: 1;
+left: 0;
+background-color: #303030;
+}
+
+div.CustomPanelDiv.deselected > div.div-innercontainer {
+display: none;
+
+}
+
+div.CustomPanelDiv.selected > div.div-innercontainer {
+border: 2px solid gray;
+padding: 4px;
+border-radius: 15px;
+}
+
+div.CustomPanelDiv .CustomTextInput {
+min-height: 25px;
+}

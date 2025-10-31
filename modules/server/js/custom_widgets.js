@@ -340,6 +340,8 @@ class CustomHtmlCanvas {
 
 }
 
+
+
 class CustomTextInput extends CustomTextCommon{
     constructor(parent,name,options)
     {

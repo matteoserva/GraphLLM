@@ -1,4 +1,5 @@
 import json
+import uuid
 
 _template_global = """\
 (function(global) {
@@ -8,6 +9,32 @@ _template_global = """\
 
 class RawGuiArg(str):
     pass
+
+class GuiNodeWidget:
+    def __init__(self, t):
+        self.t = t
+
+    def render(self,container = "this.container"):
+        res = "        " + container + ".addWidget" + str(self.t) + "\n"
+        return res
+
+class GuiNodePanel(GuiNodeWidget):
+    def __init__(self, t):
+        super(GuiNodePanel, self).__init__(t)
+        self.children = []
+        self.var_name = "w_" + uuid.uuid4().hex
+
+    def addCustomWidget(self, *args):
+        widget = GuiNodeWidget(args)
+        self.children.append(widget)
+
+    def render(self,container = "this.container"):
+        res = super().render(container)
+        i = len(res) - len(res.lstrip(' '))
+        res = res[:i] + self.var_name + " = " + res[i:]
+        for el in self.children:
+            res += el.render(self.var_name)
+        return res
 
 class GuiNodeBuilder:
     def _reset(self):
@@ -72,8 +99,12 @@ class GuiNodeBuilder:
         self.config["outputs"].append((name, type))
 
     def addCustomWidget(self, *args):
-        # print("custom widget:",args)
-        self.config["custom_widgets"].append(args)
+        if args[0] == "panel":
+            widget = GuiNodePanel(args)
+        else:
+            widget = GuiNodeWidget(args)
+        self.config["custom_widgets"].append(widget)
+        return widget
 
     def _addTitlebarWidget(self, *args):
         # print("custom widget:",args)
@@ -148,7 +179,8 @@ class GuiNodeBuilder:
             res += "        this.addCustomWidget( this.container);\n"
 
         for el in self.config["custom_widgets"]:
-            res += "        this.container.addWidget" + str(el) + "\n"
+            rendered = el.render()
+            res += rendered
 
         if len(self.config["titlebar_widgets"]) > 0:
             res += "        let titlebar_container = new TitlebarContainer(this);\n"
