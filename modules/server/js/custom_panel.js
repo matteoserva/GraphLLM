@@ -77,7 +77,7 @@ class CustomPanel extends CustomWidgetsContainer{
     {
         var div = document.createElement("div");
 		div.className = "CustomPanelDiv";
-        div.classList.add('selected');
+        div.classList.add('deselected');
         div.tabIndex = "0"
 
 		var innercontainer = document.createElement("div");
@@ -117,13 +117,13 @@ class CustomPanel extends CustomWidgetsContainer{
 
         const configSpan = document.createElement('span');
 		configSpan.className = 'CustomPanelConfig';
-		configSpan.textContent = "prova";
+		configSpan.textContent = "{}";
 
         const titleDiv = document.createElement('div');
 		titleDiv.className = 'CustomPanelTitleDiv';
 
-		titleDiv.appendChild(configSpan)
-        titleDiv.appendChild(titleSpan)
+		header.appendChild(configSpan)
+        header.appendChild(titleSpan)
 
 
 		const titleArrow = document.createElement('span');

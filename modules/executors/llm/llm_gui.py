@@ -19,12 +19,16 @@ class MyLLMCallNode(BaseGuiNode):
 
         builder.addStandardWidget("combo","subtype","stateless",None, { "property": "subtype", "values": ["stateless","stateful"] })
 
-        #panel = builder.addCustomWidget("panel","Config",{ "property": "test1"})
-        #panel.addCustomWidget("text_input","Test2",{ "property": "test2"})
-        #panel.addCustomWidget("text_input", "Test3", {"property": "test3"})
-        #panel.addCustomWidget("toggle", "Test4", {"property": "test4"})
+        panel = builder.addCustomWidget("panel","Config",{ "property": "extra_config"})
+        panel.addCustomWidget("text_input","chat_template_kwargs",{ "property": "chat_template_kwargs", "format": "json"})
+        panel.addCustomWidget("text_input", "Grammar", {"property": "grammar",})
+        panel.addCustomWidget("text_input", "Client", {"property": "client", })
+        panel.addCustomWidget("text_input", "Temperature", {"property": "temperature" , "format": "json"})
+        panel.addCustomWidget("text_input", "Stopping words", {"property": "stop", "format": "json"})
+        # panel.addCustomWidget("text_input", "Test3", {"property": "test3"})
+        # panel.addCustomWidget("toggle", "Test4", {"property": "test4"})
 
-        builder.addCustomWidget("text_input","Config",{ "property": "conf"})
+        builder.addCustomWidget("text_input","Extra Config",{ "property": "conf"})
         builder.addCustomWidget("textarea","template",{ "property": "template"})
         
         builder.setCallback("onConnectionsChange", "MyGraphNode.prototype.onConnectionsChange")

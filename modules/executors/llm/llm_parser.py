@@ -14,10 +14,14 @@ class LLMParser(BaseGuiParser):
             new_config["type"] = "stateful"
         template = properties.get("template", "")
 
-        conf = properties.get("conf", "")
+        conf = properties.get("conf", "{}")
         conf = yaml.safe_load(conf)
-        if conf:
-            new_config["conf"] = conf
+        if not conf:
+            conf = {}
+        extra_conf = properties.get("extra_config", {})
+        conf.update(extra_conf)
+
+        new_config["conf"] = conf
         new_config["init"] = [template]
         
         new_inputs = old_config.get("inputs", [])
