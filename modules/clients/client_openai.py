@@ -104,7 +104,8 @@ class OpenAIClient():
             extra_body["continue_final_message"] = True
 
         if user_params and "grammar" in user_params:
-            extra_body["guided_grammar"] = user_params["grammar"]
+            extra_body["guided_grammar"] = user_params["grammar"] #for vllm
+            extra_body["grammar"] = user_params["grammar"] #for llama.cpp
 
         if user_params and "chat_template_kwargs" in user_params:
             extra_body["chat_template_kwargs"] = user_params["chat_template_kwargs"]
