@@ -287,7 +287,11 @@ class WebBrige {
         });
         socket.addEventListener("close", (event) => {
             window.setTimeout(this.stopGraph, 200)
-            if (!event.wasClean) {
+            if(event.code === 1009) {
+                console.error(`WebSocket closed with code 1009: Message too big. Reason: "${event.reason}"`);
+                alert("Error: The data you tried to send is too large for the server to accept.");
+            }
+            else if (!event.wasClean) {
                 alert("connection lost")
             }
         });

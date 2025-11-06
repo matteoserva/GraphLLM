@@ -97,7 +97,7 @@ class ExecHandler():
     def __init__(self,server,blob = None):
         self.blob = blob
         self.server = server
-        self.protocol = ServerProtocol()
+        self.protocol = ServerProtocol(max_size=32*1024*1024)
         self.socket = server.request
         self.alive = False
         self.send_lock = Lock()
