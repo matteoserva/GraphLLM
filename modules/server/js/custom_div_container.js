@@ -261,6 +261,11 @@ class DivContainer {
             var elem = new CustomToolSelector(this, name,options)
             this.addElement(elem)
         }
+		else if(type=="panel")
+        {
+            var elem = new CustomPanel(this, name,options)
+            this.addElement(elem)
+        }
         else
         {
             var elem = new CustomTextarea(this, name,options)

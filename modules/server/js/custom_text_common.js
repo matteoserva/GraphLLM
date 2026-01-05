@@ -19,6 +19,7 @@ class CustomTextCommon{
                 this.textarea.value=options.default
                 this.parent.notifyValue(this,this.property,options.default)
             }
+            this.format = options.format
         }
 
     appendElement(dialog)
@@ -36,6 +37,12 @@ class CustomTextCommon{
         var value = this.textarea.value
         if(this.property && (typeof value !== 'undefined'))
         {
+            if(this.format == "json")
+            {
+                try {
+                    value = JSON.parse(value)
+                } catch (error) {}
+            }
             this.parent.notifyValue(this,this.property,value)
         }
         this.configureSizeInFocus()
@@ -98,6 +105,10 @@ class CustomTextCommon{
     }
     setValue(k,v)
     {
+        if(this.format == "json")
+        {
+            v = JSON.stringify(v)
+        }
         if(this.property && this.property == k && this.textarea.value!=v)
         {
             var scrollTop = this.textarea.scrollTop //BUG WORKAROUND:save the scroll before playing with size

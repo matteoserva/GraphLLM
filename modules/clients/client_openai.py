@@ -104,7 +104,11 @@ class OpenAIClient():
             extra_body["continue_final_message"] = True
 
         if user_params and "grammar" in user_params:
-            extra_body["guided_grammar"] = user_params["grammar"]
+            extra_body["guided_grammar"] = user_params["grammar"] #for vllm
+            extra_body["grammar"] = user_params["grammar"] #for llama.cpp
+
+        if user_params and "chat_template_kwargs" in user_params:
+            extra_body["chat_template_kwargs"] = user_params["chat_template_kwargs"]
 
         if len(extra_body) > 0:
             params["extra_body"] = extra_body
@@ -114,9 +118,27 @@ class OpenAIClient():
 
     def ricevi(self, completion, callback=None):
         res = ""
+        thinking = False
+        
         for chunk in completion:
 
-            val = chunk.choices[0].delta.content if len(chunk.choices) > 0 and chunk.choices[0].delta.content else ""
+            val_thinking = ""
+            val_content = "c"
+            try:
+                val_content = chunk.choices[0].delta.content or ""
+                val_thinking = chunk.choices[0].delta.reasoning_content or ""
+            except:
+                pass
+            
+            if len(val_thinking) > 0 and not thinking:
+                val = "<think>\n" + val_thinking
+                thinking = True
+            elif len(val_content) > 0 and thinking:
+                thinking = False
+                val = "\n</think>\n" + val_content
+            else:
+                val = val_thinking + val_content
+            
             res += val
             if callback:
                 try:
